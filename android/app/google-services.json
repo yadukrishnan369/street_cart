@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "274190319065",
+    "project_id": "street-cart-57dc1",
+    "storage_bucket": "street-cart-57dc1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274190319065:android:2a10efb71baa640b6a6dc8",
+        "android_client_info": {
+          "package_name": "com.example.street_cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "274190319065-mvhaoj8kk3echdfmergan0j44rp32kmn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.street_cart",
+            "certificate_hash": "aae318ed009670955d5d9118811f175b8313e78a"
+          }
+        },
+        {
+          "client_id": "274190319065-5693fsktr3kejpmlod1anmlq46jb7ed0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwNtz3GP_5aUt-1ldGjO_tLZ0P57T-bf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "274190319065-5693fsktr3kejpmlod1anmlq46jb7ed0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,160 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/utils/validators.dart';
+import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
+import 'package:street_cart/features/customer/profile/presentation/bloc/address_bloc.dart';
+import 'package:street_cart/features/customer/profile/presentation/bloc/address_event.dart';
+import 'package:street_cart/features/customer/profile/presentation/bloc/address_state.dart';
+import 'package:street_cart/features/customer/profile/presentation/widgets/address_type_selector.dart';
+import 'package:street_cart/shared/widgets/custom_text_field.dart';
+import 'package:street_cart/shared/widgets/primary_button.dart';
+
+class AddressFormSection extends StatefulWidget {
+  final AddressModel? address;
+
+  const AddressFormSection({super.key, this.address});
+
+  @override
+  State<AddressFormSection> createState() => _AddressFormSectionState();
+}
+
+class _AddressFormSectionState extends State<AddressFormSection> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _line1Controller;
+  late TextEditingController _line2Controller;
+  late TextEditingController _cityController;
+  late TextEditingController _pincodeController;
+  String _selectedType = 'HOME';
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.address?.fullName);
+    _phoneController = TextEditingController(text: widget.address?.phone);
+    _line1Controller = TextEditingController(
+      text: widget.address?.addressLine1,
+    );
+    _line2Controller = TextEditingController(
+      text: widget.address?.addressLine2,
+    );
+    _cityController = TextEditingController(text: widget.address?.city);
+    _pincodeController = TextEditingController(text: widget.address?.pincode);
+    _selectedType = widget.address?.type ?? 'HOME';
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _line1Controller.dispose();
+    _line2Controller.dispose();
+    _cityController.dispose();
+    _pincodeController.dispose();
+    super.dispose();
+  }
+
+  void _saveAddress() {
+    if (_formKey.currentState!.validate()) {
+      final address = AddressModel(
+        id: widget.address?.id ?? '',
+        fullName: _nameController.text.trim(),
+        phone: _phoneController.text.trim(),
+        addressLine1: _line1Controller.text.trim(),
+        addressLine2: _line2Controller.text.trim(),
+        city: _cityController.text.trim(),
+        pincode: _pincodeController.text.trim(),
+        type: _selectedType,
+        isDefault: widget.address?.isDefault ?? false,
+      );
+
+      if (widget.address == null) {
+        context.read<AddressBloc>().add(AddAddressEvent(address));
+      } else {
+        context.read<AddressBloc>().add(UpdateAddressEvent(address));
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextField(
+            label: 'Full Name',
+            hintText: 'e.g., Rahul Nair',
+            controller: _nameController,
+            validator: Validators.validateName,
+          ),
+          SizedBox(height: 20.h),
+          CustomTextField(
+            label: 'Phone Number',
+            hintText: 'e.g., 9876543210',
+            controller: _phoneController,
+            validator: Validators.validateAddressPhone,
+          ),
+          SizedBox(height: 20.h),
+          CustomTextField(
+            label: 'Address Line 1',
+            hintText: 'House No., Building Name',
+            controller: _line1Controller,
+            validator: Validators.validateAddress1,
+          ),
+          SizedBox(height: 20.h),
+          CustomTextField(
+            label: 'Address Line 2',
+            hintText: 'Street Name, Locality - e.g., Mavoor Road',
+            controller: _line2Controller,
+            validator: Validators.validateAddress2,
+          ),
+          SizedBox(height: 20.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  label: 'City',
+                  hintText: 'Kozhikode',
+                  controller: _cityController,
+                  validator: Validators.validateCity,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: CustomTextField(
+                  label: 'Pincode',
+                  hintText: '673001',
+                  controller: _pincodeController,
+                  validator: Validators.validatePincode,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          AddressTypeSelector(
+            selectedType: _selectedType,
+            onTypeChanged: (type) => setState(() => _selectedType = type),
+          ),
+          SizedBox(height: 48.h),
+          BlocBuilder<AddressBloc, AddressState>(
+            builder: (context, state) {
+              return PrimaryButton(
+                text: widget.address == null
+                    ? 'Save Address'
+                    : 'Update Address',
+                isLoading: state is AddressActionLoading,
+                onPressed: _saveAddress,
+              );
+            },
+          ),
+          SizedBox(height: 20.h),
+        ],
+      ),
+    );
+  }
+}

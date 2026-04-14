@@ -1,16 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:street_cart/apps/shop_app/shop_app.dart';
 
-void main() {
-  runApp(const CustomerApp());
-}
-
-class CustomerApp extends StatelessWidget {
-  const CustomerApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text("Admin App"))),
-    );
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const ShopApp());
 }

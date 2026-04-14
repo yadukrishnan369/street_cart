@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>mailto</string>
+	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Street Cart needs access to your gallery to let you pick a profile picture.</string>
 </dict>
 </plist>
