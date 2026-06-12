@@ -5,8 +5,16 @@ import 'package:street_cart/core/theme/customer/Customer_app_colors.dart';
 class AppLogo extends StatefulWidget {
   final bool isDark;
   final double size;
+  final Color? backgroundColor;
+  final Color? logoColor;
 
-  const AppLogo({super.key, this.isDark = false, this.size = 80});
+  const AppLogo({
+    super.key,
+    this.isDark = false,
+    this.size = 80,
+    this.backgroundColor,
+    this.logoColor,
+  });
 
   @override
   State<AppLogo> createState() => _AppLogoState();
@@ -43,6 +51,15 @@ class _AppLogoState extends State<AppLogo> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // Default colors if not provided
+    final bgColor = widget.backgroundColor ??
+        (widget.isDark
+            ? CustomerAppColors.primary
+            : CustomerAppColors.primaryLight);
+    
+    final iconColor = widget.logoColor ?? 
+        (widget.isDark ? Colors.white : CustomerAppColors.primary);
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: ScaleTransition(
@@ -51,13 +68,11 @@ class _AppLogoState extends State<AppLogo> with SingleTickerProviderStateMixin {
           width: widget.size.w,
           height: widget.size.w,
           decoration: BoxDecoration(
-            color: widget.isDark
-                ? CustomerAppColors.primary
-                : CustomerAppColors.primaryLight,
+            color: bgColor,
             borderRadius: BorderRadius.circular((widget.size * 0.3).r),
             boxShadow: [
               BoxShadow(
-                color: CustomerAppColors.primary.withOpacity(0.3),
+                color: bgColor.withOpacity(0.3),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),
@@ -70,7 +85,7 @@ class _AppLogoState extends State<AppLogo> with SingleTickerProviderStateMixin {
                 'assets/icons/logo.png',
                 width: (widget.size * 0.9).w,
                 height: (widget.size * 0.9).w,
-                color: widget.isDark ? Colors.white : CustomerAppColors.primary,
+                color: iconColor,
               ),
             ),
           ),

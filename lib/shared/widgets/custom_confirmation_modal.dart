@@ -9,6 +9,8 @@ class ConfirmationModal extends StatelessWidget {
   final String cancelText;
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
+  final Color? confirmColor;
+  final Color? surfaceColor;
 
   const ConfirmationModal({
     super.key,
@@ -18,6 +20,8 @@ class ConfirmationModal extends StatelessWidget {
     required this.onCancel,
     this.confirmText = 'Yes',
     this.cancelText = 'Cancel',
+    this.confirmColor,
+    this.surfaceColor,
   });
 
   @override
@@ -31,7 +35,7 @@ class ConfirmationModal extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: CustomerAppColors.surface,
+          color: surfaceColor ?? CustomerAppColors.surface,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
@@ -79,7 +83,7 @@ class ConfirmationModal extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onConfirm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: CustomerAppColors.primary,
+                    backgroundColor: confirmColor ?? CustomerAppColors.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),

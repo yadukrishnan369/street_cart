@@ -55,6 +55,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
         'is_profile_completed': false,
         'created_at': FieldValue.serverTimestamp(),
         'profile_image_url': '',
+        'role': 'customer',
       });
     } catch (e) {
       throw ServerException(e.toString());
@@ -90,6 +91,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
             'is_profile_completed': false,
             'created_at': FieldValue.serverTimestamp(),
             'profile_image_url': userCredential.user!.photoURL ?? '',
+            'role': 'customer',
           });
         }
       }

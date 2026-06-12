@@ -5,16 +5,22 @@ import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isLoading;
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Color? backgroundColor;
+  final TextStyle? textStyle;
 
   const PrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.isLoading = false,
+    this.prefixIcon,
     this.suffixIcon,
+    this.backgroundColor,
+    this.textStyle,
   });
 
   @override
@@ -24,7 +30,7 @@ class PrimaryButton extends StatelessWidget {
       height: 56.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: CustomerAppColors.primary,
+          backgroundColor: backgroundColor ?? CustomerAppColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
@@ -40,16 +46,20 @@ class PrimaryButton extends StatelessWidget {
                   strokeWidth: 3,
                 ),
               )
-            : suffixIcon != null
-            ? Row(
+            : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(text, style: CustomerAppTextStyles.buttonText),
-                  8.horizontalSpace,
-                  suffixIcon!,
+                  if (prefixIcon != null) ...[
+                    prefixIcon!,
+                    8.horizontalSpace,
+                  ],
+                  Text(text, style: textStyle ?? CustomerAppTextStyles.buttonText),
+                  if (suffixIcon != null) ...[
+                    8.horizontalSpace,
+                    suffixIcon!,
+                  ],
                 ],
-              )
-            : Text(text, style: CustomerAppTextStyles.buttonText),
+              ),
       ),
     );
   }

@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 
 class ShopAppColors {
-  // Primary Theme: Vibrant Orange/Red for appetite stimulation
-  static const Color primaryColor = Color(0xFFE65100); 
-  static const Color primaryLight = Color(0xFFFF833A);
-  static const Color primaryDark = Color(0xFFAC1900);
-
-  // Secondary Accents: Yellow/Amber
-  static const Color accentColor = Color(0xFFFFB300);
-
-  // Standard Colors
-  static const Color backgroundLight = Color(0xFFF8F9FA); // Off-white
-  static const Color backgroundDark = Color(0xFF121212); // Deep dark
-  static const Color surfaceWhite = Colors.white;
-  static const Color surfaceDark = Color(0xFF1E1E1E);
-
+  // Primary Theme Colors (Matched to provided UI)
+  static const Color primary = Color(0xFF00674F); // Deep Emerald/Teal
+  static const Color primaryLight = Color(0xFFE6F2F0); // Very light teal for cards
+  static const Color accent = Color(0xFFE7F3EF); 
+  
+  // Neutral Colors
+  static const Color background = Color(0xFFF9F9F9); 
+  static const Color surface = Colors.white;
+  
   // Text Colors
-  static const Color textPrimary = Color(0xFF212121); // Almost black
-  static const Color textSecondary = Color(0xFF757575); // Grey
+  static const Color textPrimary = Color(0xFF1B242C); 
+  static const Color textSecondary = Color(0xFF5A6A85); 
+  static const Color textTertiary = Color(0xFF94A3B8); 
   static const Color textLight = Colors.white;
 
   // Status Colors
-  static const Color errorColor = Color(0xFFD32F2F);
-  static const Color successColor = Color(0xFF388E3C);
-  static const Color warningColor = Color(0xFFF57C00);
+  static const Color success = Color(0xFF10B981);
+  static const Color successBg = Color(0xFFDCFCE7);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFEF4444);
 
-  // Borders & Dividers
-  static const Color borderLight = Color(0xFFE0E0E0);
-  static const Color borderDark = Color(0xFF424242);
+  // Border & Divider
+  static const Color border = Color(0xFFE2E8F0);
 }

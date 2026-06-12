@@ -89,4 +89,47 @@ class Validators {
     }
     return null;
   }
+
+  // Shop Specific Validators
+  static String? validateShopName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Shop name is required';
+    }
+    if (value.length < 3) {
+      return 'Shop name must be at least 3 characters';
+    }
+    return null;
+  }
+
+  static String? validateGST(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'GST number is required';
+    }
+    if (value.length != 15) {
+    return 'GST number must be 15 characters';
+  }
+    final gstRegExp =
+        RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$');
+    if (!gstRegExp.hasMatch(value)) {
+      return 'Enter a valid GST number';
+    }
+    return null;
+  }
+
+  static String? validateCategory(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please select a business category';
+    }
+    return null;
+  }
+
+  static String? validateDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Shop description is required';
+    }
+    if (value.length < 20) {
+      return 'Description should be at least 20 characters';
+    }
+    return null;
+  }
 }

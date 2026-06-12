@@ -9,6 +9,7 @@ import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/error/exceptions.dart';
 
 class LocationPermissionPage extends StatefulWidget {
   final bool isProfileCompleted;
@@ -65,8 +66,8 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
 
       CustomSnackBar.show(
         context,
-        message: e.runtimeType.toString().contains('LocationException')
-            ? e.toString().replaceFirst('LocationException: ', '')
+        message: e is LocationException
+            ? errorMessage
             : "An unexpected error occurred while requesting location.",
         isError: true,
         actionLabel: isPermanentlyDenied ? "Settings" : null,
