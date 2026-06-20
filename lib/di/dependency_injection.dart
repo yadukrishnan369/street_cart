@@ -127,7 +127,6 @@ import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onbo
 
 // SHOP - HOME
 import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource.dart';
-import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource_impl.dart';
 import 'package:street_cart/features/shop/home/domain/repositories/i_shop_home_repository.dart';
 import 'package:street_cart/features/shop/home/data/repositories/shop_home_repository_impl.dart';
 import 'package:street_cart/features/shop/home/domain/usecases/check_first_home_visit.dart';
@@ -276,22 +275,14 @@ Future<void> _initShopSplash() async {
     () => ShopSplashLocalDataSourceImpl(sl()),
   );
   sl.registerLazySingleton<IShopSplashRemoteDataSource>(
-    () => ShopSplashRemoteDataSourceImpl(
-      firebaseAuth: sl(),
-      firestore: sl(),
-    ),
+    () => ShopSplashRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
   );
   sl.registerLazySingleton<IShopSplashRepository>(
-    () => ShopSplashRepositoryImpl(
-      local: sl(),
-      remote: sl(),
-    ),
+    () => ShopSplashRepositoryImpl(local: sl(), remote: sl()),
   );
   sl.registerLazySingleton(() => CheckShopAppStatus(sl()));
 
-  sl.registerFactory(
-    () => ShopSplashBloc(checkShopAppStatus: sl()),
-  );
+  sl.registerFactory(() => ShopSplashBloc(checkShopAppStatus: sl()));
 }
 
 // ================= SHOP ONBOARDING =================
@@ -304,9 +295,7 @@ Future<void> _initShopOnboarding() async {
   );
   sl.registerLazySingleton(() => CompleteShopOnboarding(sl()));
 
-  sl.registerFactory(
-    () => ShopOnboardingBloc(completeShopOnboarding: sl()),
-  );
+  sl.registerFactory(() => ShopOnboardingBloc(completeShopOnboarding: sl()));
 }
 
 // ================= SHOP LOCATION =================
@@ -326,10 +315,7 @@ Future<void> _initShopLocation() async {
   sl.registerLazySingleton(() => SkipShopLocation(sl()));
 
   sl.registerFactory(
-    () => ShopLocationBloc(
-      requestLocationAndSave: sl(),
-      skipLocation: sl(),
-    ),
+    () => ShopLocationBloc(requestLocationAndSave: sl(), skipLocation: sl()),
   );
 }
 
@@ -351,10 +337,7 @@ Future<void> _initShopHome() async {
 
   // Bloc
   sl.registerFactory(
-    () => ShopHomeBloc(
-      checkFirstHomeVisit: sl(),
-      completeFirstHomeVisit: sl(),
-    ),
+    () => ShopHomeBloc(checkFirstHomeVisit: sl(), completeFirstHomeVisit: sl()),
   );
 }
 
@@ -402,9 +385,7 @@ Future<void> _initShopAuth() async {
       deleteShopAuthAccount: sl(),
     ),
   );
-  sl.registerFactory(
-    () => ShopCategoriesCubit(getBusinessCategories: sl()),
-  );
+  sl.registerFactory(() => ShopCategoriesCubit(getBusinessCategories: sl()));
   sl.registerFactory(
     () => ShopPaymentSettingsCubit(getShopPaymentSettings: sl()),
   );
@@ -554,10 +535,7 @@ void _initCustomerLocation() {
   sl.registerLazySingleton(() => SkipLocation(sl()));
 
   sl.registerFactory(
-    () => LocationBloc(
-      requestLocationAndSave: sl(),
-      skipLocation: sl(),
-    ),
+    () => LocationBloc(requestLocationAndSave: sl(), skipLocation: sl()),
   );
 }
 
@@ -573,9 +551,7 @@ void _initCustomerOnboarding() {
 
   sl.registerLazySingleton(() => CompleteOnboarding(sl()));
 
-  sl.registerFactory(
-    () => OnboardingBloc(completeOnboarding: sl()),
-  );
+  sl.registerFactory(() => OnboardingBloc(completeOnboarding: sl()));
 }
 
 // ================= CUSTOMER SPLASH =================
@@ -593,9 +569,7 @@ void _initCustomerSplash() {
 
   sl.registerLazySingleton(() => CheckAppStatus(sl()));
 
-  sl.registerFactory(
-    () => SplashBloc(checkAppStatus: sl()),
-  );
+  sl.registerFactory(() => SplashBloc(checkAppStatus: sl()));
 }
 
 // ================= CUSTOMER SETTINGS =================
@@ -666,10 +640,8 @@ Future<void> _initShopSettings() async {
   sl.registerLazySingleton(() => DeleteShopAuthAccount(sl()));
 
   sl.registerFactory(
-    () => ShopSettingsBloc(
-      changeShopPassword: sl(),
-      deleteShopAuthAccount: sl(),
-    ),
+    () =>
+        ShopSettingsBloc(changeShopPassword: sl(), deleteShopAuthAccount: sl()),
   );
 }
 
@@ -677,17 +649,12 @@ Future<void> _initShopSettings() async {
 void _initAdminAuth() {
   // Datasource
   sl.registerLazySingleton<IAdminAuthRemoteDataSource>(
-    () => AdminAuthRemoteDataSourceImpl(
-      authService: sl(),
-      firestore: sl(),
-    ),
+    () => AdminAuthRemoteDataSourceImpl(authService: sl(), firestore: sl()),
   );
 
   // Repository
   sl.registerLazySingleton<IAdminAuthRepository>(
-    () => AdminAuthRepositoryImpl(
-      remoteDataSource: sl(),
-    ),
+    () => AdminAuthRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Use cases
@@ -720,9 +687,7 @@ void _initAdminSplash() {
   sl.registerLazySingleton(() => CheckAdminSplashSession(sl()));
 
   // Bloc
-  sl.registerFactory(
-    () => AdminSplashBloc(checkAdminSplashSession: sl()),
-  );
+  sl.registerFactory(() => AdminSplashBloc(checkAdminSplashSession: sl()));
 }
 
 // ================= ADMIN DASHBOARD =================
@@ -747,10 +712,7 @@ void _initAdminDashboard() {
 
   // Bloc
   sl.registerFactory(
-    () => AdminDashboardBloc(
-      getDashboardData: sl(),
-      firestore: sl(),
-    ),
+    () => AdminDashboardBloc(getDashboardData: sl(), firestore: sl()),
   );
   sl.registerFactory(
     () => AdminRegistrationsBloc(
@@ -771,10 +733,7 @@ void _initAdminDashboard() {
 void _initAdminSettings() {
   // Datasource
   sl.registerLazySingleton<IAdminSettingsRemoteDataSource>(
-    () => AdminSettingsRemoteDataSourceImpl(
-      firestore: sl(),
-      authService: sl(),
-    ),
+    () => AdminSettingsRemoteDataSourceImpl(firestore: sl(), authService: sl()),
   );
 
   // Repository
@@ -805,17 +764,12 @@ void _initAdminSettings() {
 void _initAdminProfile() {
   // Datasource
   sl.registerLazySingleton<IAdminProfileRemoteDataSource>(
-    () => AdminProfileRemoteDataSourceImpl(
-      auth: sl(),
-      firestore: sl(),
-    ),
+    () => AdminProfileRemoteDataSourceImpl(auth: sl(), firestore: sl()),
   );
 
   // Repository
   sl.registerLazySingleton<IAdminProfileRepository>(
-    () => AdminProfileRepositoryImpl(
-      remoteDataSource: sl(),
-    ),
+    () => AdminProfileRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Usecase
@@ -824,10 +778,7 @@ void _initAdminProfile() {
 
   // Bloc
   sl.registerFactory(
-    () => AdminProfileBloc(
-      getProfileData: sl(),
-      updateProfileName: sl(),
-    ),
+    () => AdminProfileBloc(getProfileData: sl(), updateProfileName: sl()),
   );
 }
 
@@ -850,10 +801,7 @@ void _initAdminShop() {
 
   // Bloc
   sl.registerFactory(
-    () => AdminShopBloc(
-      getAdminShop: sl(),
-      toggleShopSuspension: sl(),
-    ),
+    () => AdminShopBloc(getAdminShop: sl(), toggleShopSuspension: sl()),
   );
   sl.registerFactory(
     () => AdminShopDetailBloc(
@@ -896,4 +844,3 @@ void _initAdminCustomers() {
     ),
   );
 }
-
