@@ -64,13 +64,13 @@ class TermsConditionsPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // 1. Acceptance of Terms
+            // Acceptance of Terms
             _buildSectionHeader('1. Acceptance of Terms'),
             _buildSectionBody(
               'Welcome to Street Cart. By using our platform to manage your shop, you agree to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Street Cart\'s relationship with you.',
             ),
 
-            // 2. Merchant Responsibilities
+            // Merchant Responsibilities
             _buildSectionHeader('2. Merchant Responsibilities'),
             _buildSectionBody(
               'As a shop owner on Street Cart, you are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.',
@@ -81,25 +81,25 @@ class TermsConditionsPage extends StatelessWidget {
             _buildBulletItem('You must comply with all local tax and business regulations.'),
             SizedBox(height: 12.h),
 
-            // 3. Fees and Payments
+            // Fees and Payments
             _buildSectionHeader('3. Fees and Payments'),
             _buildSectionBody(
               'Street Cart charges a processing fee on each transaction completed through the platform. These fees are subject to change with a 30-day notice. All payouts are processed within 3-5 business days of order completion.',
             ),
 
-            // 4. Prohibited Content
+            // Prohibited Content
             _buildSectionHeader('4. Prohibited Content'),
             _buildSectionBody(
               'Users may not list items that are illegal, hazardous, or infringe on the intellectual property rights of others. Street Cart reserves the right to remove any product listing that violates these terms.',
             ),
 
-            // 5. Privacy and Data
+            // Privacy and Data
             _buildSectionHeader('5. Privacy and Data'),
             _buildSectionBody(
               'We value your privacy. Merchant data is used solely for the purpose of facilitating transactions and improving our service. We do not sell your business data to third parties.',
             ),
 
-            // 6. Limitation of Liability
+            // Limitation of Liability
             _buildSectionHeader('6. Limitation of Liability'),
             _buildSectionBody(
               'Street Cart shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use the service.',

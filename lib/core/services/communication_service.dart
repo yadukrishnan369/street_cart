@@ -13,11 +13,17 @@ class CommunicationService {
 
   /// open the email client with the email
   Future<void> sendEmail(String email) async {
-    final Uri launchUri = Uri.parse('mailto:$email');
-    if (await canLaunchUrl(launchUri)) {
-      await launchUrl(launchUri);
-    } else {
-      throw 'Could not launch email client for $email';
+    final String gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=$email';
+    final Uri launchUri = Uri.parse(gmailUrl);
+    try {
+      await launchUrl(launchUri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      final Uri mailtoUri = Uri.parse('mailto:$email');
+      try {
+        await launchUrl(mailtoUri, mode: LaunchMode.externalApplication);
+      } catch (err) {
+        throw 'Could not launch email client: $err';
+      }
     }
   }
 }

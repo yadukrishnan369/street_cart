@@ -51,4 +51,8 @@ abstract class IShopAuthRepository {
     required String currentPassword,
     required String newPassword,
   });
+
+  Future<List<String>> getBusinessCategories();
+
+  Future<Map<String, bool>> getPaymentSettings();
 }

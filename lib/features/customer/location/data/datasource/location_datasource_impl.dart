@@ -22,29 +22,37 @@ class LocationDataSourceImpl implements LocationDataSource {
 
   @override
   Future<bool> requestAndSave() async {
-    // 1. Check if location services are enabled
+    // Check if location services are enabled
     final isEnabled = await locationService.isServiceEnabled();
     if (!isEnabled) {
-      throw LocationException("Location services are disabled. Please enable GPS in your device settings.");
+      throw LocationException(
+        "Location services are disabled. Please enable GPS in your device settings.",
+      );
     }
 
-    // 2. Standardize permission request flow for maximum reliability
+    // Standardize permission request flow for maximum reliability
     LocationPermission permission = await locationService.checkPermission();
-    
+
     // If permission is permanently denied, we can't show the modal anymore
     if (permission == LocationPermission.deniedForever) {
-      throw LocationException("Location permissions are permanently denied. Please enable them in App Settings to proceed.");
+      throw LocationException(
+        "Location permissions are permanently denied. Please enable them in App Settings to proceed.",
+      );
     }
 
     // If permission is denied or not determined, request it
-    if (permission == LocationPermission.denied || permission == LocationPermission.unableToDetermine) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.unableToDetermine) {
       permission = await locationService.requestPermission();
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        throw LocationException("Location permission was denied. We need this to show nearby shops.");
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw LocationException(
+          "Location permission was denied. We need this to show nearby shops.",
+        );
       }
     }
 
-    // 3. Get current location once permission is definitely granted
+    // Get current location once permission is definitely granted
     double? latitude;
     double? longitude;
     bool success = false;
@@ -56,31 +64,31 @@ class LocationDataSourceImpl implements LocationDataSource {
       success = true;
     } on LocationException catch (e, stack) {
       AppLogger.error(e.message, e, stack);
-      throw LocationException("We couldn't get a precise location. Please check your signal and try again.");
+      throw LocationException(
+        "We couldn't get a precise location. Please check your signal and try again.",
+      );
     }
 
-    // 4. Save to Firestore
+    // Save to Firestore
     final user = firebaseAuth.currentUser;
 
     if (user != null) {
       try {
         await firebaseFirestore.collection('customers').doc(user.uid).update({
           'location_permission': true,
-          'location': {
-            'latitude': latitude,
-            'longitude': longitude,
-          },
+          'location': {'latitude': latitude, 'longitude': longitude},
           'location_updated_at': FieldValue.serverTimestamp(),
         });
-        
+
         // SYNC PREFERENCE
         await sharedPreferences.setBool('locationServices', true);
-        
       } catch (e) {
-        throw Exception('An error occurred while saving your location to your profile.');
+        throw Exception(
+          'An error occurred while saving your location to your profile.',
+        );
       }
     }
-    
+
     return success;
   }
 
@@ -94,10 +102,9 @@ class LocationDataSourceImpl implements LocationDataSource {
           'location_permission': false,
           'location_updated_at': FieldValue.serverTimestamp(),
         });
-        
+
         // SYNC PREFERENCE
         await sharedPreferences.setBool('locationServices', false);
-        
       } catch (e) {
         throw Exception('An error occurred while updating user location: $e');
       }

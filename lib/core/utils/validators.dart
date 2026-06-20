@@ -101,15 +101,26 @@ class Validators {
     return null;
   }
 
+  static String? validateShopPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
   static String? validateGST(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'GST number is required';
     }
     if (value.length != 15) {
-    return 'GST number must be 15 characters';
-  }
-    final gstRegExp =
-        RegExp(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$');
+      return 'GST number must be 15 characters';
+    }
+    final gstRegExp = RegExp(
+      r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$',
+    );
     if (!gstRegExp.hasMatch(value)) {
       return 'Enter a valid GST number';
     }
@@ -130,6 +141,34 @@ class Validators {
     if (value.length < 20) {
       return 'Description should be at least 20 characters';
     }
+    return null;
+  }
+
+  // Admin Specific Validators
+  static String? validateAdminPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    // if (!RegExp(r'[!@#$%^&*(),.?":{}|<>_]').hasMatch(value)) {
+    //   return 'Password must contain at least one special character';
+    // }
+    return null;
+  }
+
+  static String? adminValidatePercentage(String? value) {
+    final percentage = double.tryParse(value ?? '');
+
+    if (percentage == null) {
+      return 'Please enter a valid number';
+    }
+
+    if (percentage < 0 || percentage > 100) {
+      return 'Percentage must be between 0 and 100';
+    }
+
     return null;
   }
 }

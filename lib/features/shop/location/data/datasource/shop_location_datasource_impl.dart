@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:street_cart/core/services/location_service.dart';
 import 'package:street_cart/core/error/exceptions.dart';
@@ -22,13 +23,13 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
 
   @override
   Future<bool> requestAndSave() async {
-    // 1. Check if location services are enabled
+    // Check if location services are enabled
     final isEnabled = await locationService.isServiceEnabled();
     if (!isEnabled) {
       throw LocationException("Location services are disabled. Please enable GPS in your device settings.");
     }
 
-    // 2. Standardize permission request flow for maximum reliability
+    // Standardize permission request flow for maximum reliability
     LocationPermission permission = await locationService.checkPermission();
     
     // If permission is permanently denied, we can't show the modal anymore
@@ -44,7 +45,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
       }
     }
 
-    // 3. Get current location once permission is definitely granted
+    // Get current location once permission is definitely granted
     double? latitude;
     double? longitude;
     bool success = false;
@@ -59,19 +60,69 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
       throw LocationException("We couldn't get a precise location. Please check your signal and try again.");
     }
 
-    // 4. Save to Firestore under shops collection
+    // Save to Firestore under shops collection
     final user = firebaseAuth.currentUser;
 
     if (user != null) {
       try {
-        await firebaseFirestore.collection('shops').doc(user.uid).update({
+        String? city;
+        String? state;
+        String? district;
+        String? pincode;
+        String? fullAddress;
+
+        if (success) {
+          try {
+            final placemarks = await placemarkFromCoordinates(latitude, longitude);
+            if (placemarks.isNotEmpty) {
+              final place = placemarks.first;
+              city = place.locality ?? place.subLocality;
+              state = place.administrativeArea;
+              district = place.subAdministrativeArea;
+              pincode = place.postalCode;
+
+              final addressParts = [
+                if (place.name != null && place.name!.isNotEmpty) place.name,
+                if (place.street != null && place.street!.isNotEmpty && place.street != place.name) place.street,
+                if (place.subLocality != null && place.subLocality!.isNotEmpty) place.subLocality,
+                if (place.locality != null && place.locality!.isNotEmpty && place.locality != place.subLocality) place.locality,
+                if (place.subAdministrativeArea != null && place.subAdministrativeArea!.isNotEmpty) place.subAdministrativeArea,
+                if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) place.administrativeArea,
+                if (place.postalCode != null && place.postalCode!.isNotEmpty) place.postalCode,
+              ];
+              fullAddress = addressParts.join(', ');
+            }
+          } catch (e) {
+            AppLogger.error("Failed to reverse geocode shop coordinates: $e");
+          }
+        }
+
+        final updateData = <String, dynamic>{
           'location_permission': true,
           'location': {
             'latitude': latitude,
             'longitude': longitude,
           },
           'location_updated_at': FieldValue.serverTimestamp(),
-        });
+        };
+
+        if (city != null && city.isNotEmpty) {
+          updateData['city'] = city;
+        }
+        if (state != null && state.isNotEmpty) {
+          updateData['state'] = state;
+        }
+        if (district != null && district.isNotEmpty) {
+          updateData['district'] = district;
+        }
+        if (pincode != null && pincode.isNotEmpty) {
+          updateData['pincode'] = pincode;
+        }
+        if (fullAddress != null && fullAddress.isNotEmpty) {
+          updateData['full_address'] = fullAddress;
+        }
+
+        await firebaseFirestore.collection('shops').doc(user.uid).update(updateData);
         
         // SYNC PREFERENCE
         await sharedPreferences.setBool('shopLocationServices', true);

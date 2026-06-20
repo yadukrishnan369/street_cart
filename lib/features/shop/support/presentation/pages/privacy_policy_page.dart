@@ -110,7 +110,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // 1. Data Collection container card
+            // Data Collection container card
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(20.w),
@@ -158,7 +158,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // 2. Use of Information
+            // Use of Information
             Text(
               '2. Use of Information',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -177,7 +177,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // 3. Security Measures
+            // Security Measures
             Text(
               '3. Security Measures',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(

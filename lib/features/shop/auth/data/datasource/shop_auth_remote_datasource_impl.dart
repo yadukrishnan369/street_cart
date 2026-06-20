@@ -33,7 +33,20 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   @override
   Future<void> login({required String email, required String password}) async {
     try {
-      await _authService.signInWithEmail(email: email, password: password);
+      final userCredential = await _authService.signInWithEmail(email: email, password: password);
+      final uid = userCredential.user?.uid;
+      if (uid != null) {
+        final doc = await _firestore.collection('shops').doc(uid).get();
+        if (!doc.exists) {
+          await _authService.signOut();
+          throw ServerException('Access denied. You do not have a merchant account.');
+        }
+        final data = doc.data();
+        if (data != null && data['is_suspended'] == true) {
+          await _authService.signOut();
+          throw ServerException('Your shop account is suspended. Please contact support.');
+        }
+      }
     } on ServerException {
       rethrow;
     } catch (e) {
@@ -73,7 +86,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     required File ownerIdFile,
   }) async {
     try {
-      // 1. Upload images to Cloudinary
+      // Upload images to Cloudinary
       final licenseUrl = await _cloudinaryService.uploadImage(businessLicenseFile);
       final ownerIdUrl = await _cloudinaryService.uploadImage(ownerIdFile);
 
@@ -81,7 +94,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         throw ServerException('Failed to upload documents. Please try again.');
       }
 
-      // 2. Update Shop document
+      // Update Shop document
       await _firestore.collection('shops').doc(userId).update({
         'category': category,
         'description': description,
@@ -116,6 +129,42 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      // Check if the email belongs to an admin
+      final adminQuery = await _firestore
+          .collection('admins')
+          .where('email', isEqualTo: email)
+          .get();
+      
+      bool isAdmin = adminQuery.docs.isNotEmpty;
+
+      if (!isAdmin) {
+        final userQuery = await _firestore
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .get();
+        for (var doc in userQuery.docs) {
+          final role = doc.data()['role'];
+          if (role == 'admin' || role == 'super_admin') {
+            isAdmin = true;
+            break;
+          }
+        }
+      }
+
+      if (isAdmin) {
+        throw ServerException('This email is registered as an another account.');
+      }
+    } catch (e) {
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('permission-denied') || errorStr.contains('permission denied') || errorStr.contains('insufficient permission')) {
+        // If firestore rules block unauthenticated reads, fallback to direct firebase reset
+        await _authService.sendPasswordResetEmail(email);
+        return;
+      }
+      rethrow;
+    }
+
     await _authService.sendPasswordResetEmail(email);
   }
 
@@ -140,11 +189,10 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       final uid = _authService.getCurrentUserId();
       if (uid == null) throw ServerException('No user logged in');
 
-      // Delete Firestore data (if any was created)
-      await _firestore.collection('shops').doc(uid).delete();
-
-      // Delete from Firebase Auth
-      await _authService.deleteAuthAccount();
+      await Future.wait([
+        _firestore.collection('shops').doc(uid).delete(),
+        _authService.deleteAuthAccount(),
+      ]);
 
       // Sign out
       await _authService.signOut();
@@ -169,6 +217,46 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       rethrow;
     } catch (e) {
       throw ServerException('Failed to change password: $e');
+    }
+  }
+
+  @override
+  Future<List<String>> getBusinessCategories() async {
+    try {
+      final doc = await _firestore.collection('config').doc('categories').get();
+      if (doc.exists && doc.data() != null) {
+        final rawBusinessCats = doc.data()!['business_categories'] as List<dynamic>?;
+        if (rawBusinessCats != null) {
+          return rawBusinessCats
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .where((e) => e['is_visible'] == true)
+              .map((e) => e['name'] as String)
+              .where((name) => name.isNotEmpty)
+              .toList();
+        }
+      }
+      return [];
+    } catch (e) {
+      throw ServerException('Failed to load business categories: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, bool>> getPaymentSettings() async {
+    try {
+      final doc = await _firestore.collection('config').doc('settings').get();
+      if (doc.exists && doc.data() != null) {
+        return {
+          'enable_cod': doc.data()!['enable_cod'] ?? true,
+          'enable_online': doc.data()!['enable_online'] ?? true,
+        };
+      }
+      return {
+        'enable_cod': true,
+        'enable_online': true,
+      };
+    } catch (e) {
+      throw ServerException('Failed to load payment settings: $e');
     }
   }
 }

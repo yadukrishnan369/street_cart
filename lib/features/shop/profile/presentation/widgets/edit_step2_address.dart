@@ -21,6 +21,8 @@ class EditStep2Address extends StatelessWidget {
 
   final List<String> selectedPaymentMethods;
   final Function(String, bool) onPaymentMethodChanged;
+  final bool enableCod;
+  final bool enableOnline;
 
   const EditStep2Address({
     super.key,
@@ -37,6 +39,8 @@ class EditStep2Address extends StatelessWidget {
     required this.onStateChanged,
     required this.selectedPaymentMethods,
     required this.onPaymentMethodChanged,
+    required this.enableCod,
+    required this.enableOnline,
   });
 
   @override
@@ -197,22 +201,28 @@ class EditStep2Address extends StatelessWidget {
             ],
           ),
           SizedBox(height: 28.h),
-          Text(
-            'Payment Methods',
-            style: ShopAppTextStyles.heading1.copyWith(fontSize: 18.sp),
-          ),
-          SizedBox(height: 12.h),
-          _buildPaymentOption(
-            title: 'Google Pay',
-            icon: Icons.account_balance_wallet_outlined,
-            value: 'Google Pay',
-          ),
-          SizedBox(height: 8.h),
-          _buildPaymentOption(
-            title: 'Cash on Delivery',
-            icon: Icons.money_outlined,
-            value: 'Cash on Delivery',
-          ),
+          if (enableCod || enableOnline) ...[
+            Text(
+              'Payment Methods',
+              style: ShopAppTextStyles.heading1.copyWith(fontSize: 18.sp),
+            ),
+            SizedBox(height: 12.h),
+          ],
+          if (enableOnline) ...[
+            _buildPaymentOption(
+              title: 'Google Pay',
+              icon: Icons.account_balance_wallet_outlined,
+              value: 'Google Pay',
+            ),
+            SizedBox(height: 8.h),
+          ],
+          if (enableCod) ...[
+            _buildPaymentOption(
+              title: 'Cash on Delivery',
+              icon: Icons.money_outlined,
+              value: 'Cash on Delivery',
+            ),
+          ],
         ],
       ),
     );

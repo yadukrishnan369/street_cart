@@ -11,11 +11,15 @@ class CustomSnackBar {
     String? actionLabel,
     VoidCallback? onActionPressed,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth > 600;
+
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       duration: Duration(seconds: actionLabel != null ? 5 : 3),
+      width: isLargeScreen ? 400.0 : null,
       content: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(

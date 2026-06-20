@@ -1,0 +1,133 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/core/services/communication_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
+import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
+
+class AdminCustomerContactInfoCard extends StatelessWidget {
+  final CustomerModel customer;
+  final List<AddressModel> addresses;
+
+  const AdminCustomerContactInfoCard({
+    super.key,
+    required this.customer,
+    required this.addresses,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Determine primary address
+    String primaryAddressText = 'No address provided';
+    if (addresses.isNotEmpty) {
+      final defaultAddr = addresses.firstWhere(
+        (a) => a.isDefault,
+        orElse: () => addresses.first,
+      );
+      primaryAddressText =
+          '${defaultAddr.addressLine1}, ${defaultAddr.addressLine2}\n${defaultAddr.city} - ${defaultAddr.pincode}';
+    } else {
+      primaryAddressText = 'No address registered yet.';
+    }
+
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.info_outline,
+                color: AdminAppColors.primaryColor,
+                size: 18.sp,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                'CONTACT INFORMATION',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w800,
+                  color: AdminAppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
+
+          // Email Address
+          Text(
+            'Email Address',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF8A8A9E),
+            ),
+          ),
+          SizedBox(height: 6.h),
+          Tooltip(
+            message: "Send a mail",
+            child: InkWell(
+              onTap: () => sl<CommunicationService>().sendEmail(customer.email),
+              child: Text(
+                customer.email.isNotEmpty ? customer.email : 'Unknown',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AdminAppColors.primaryColor,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20.h),
+
+          // Phone Number
+          Text(
+            'Phone Number',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF8A8A9E),
+            ),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            customer.phone.isNotEmpty ? customer.phone : 'Not Provided',
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF1E1E2F),
+            ),
+          ),
+          SizedBox(height: 20.h),
+
+          // Primary Address
+          Text(
+            'Primary Address',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF8A8A9E),
+            ),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            primaryAddressText,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF1E1E2F),
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

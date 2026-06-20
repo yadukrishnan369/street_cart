@@ -46,4 +46,8 @@ abstract class IShopAuthRemoteDataSource {
     required String currentPassword,
     required String newPassword,
   });
+
+  Future<List<String>> getBusinessCategories();
+
+  Future<Map<String, bool>> getPaymentSettings();
 }

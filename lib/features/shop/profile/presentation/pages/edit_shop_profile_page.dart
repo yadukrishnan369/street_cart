@@ -15,6 +15,8 @@ import 'package:street_cart/core/utils/image_picker_helper.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_payment_settings_cubit.dart';
 
 class EditShopProfilePage extends StatefulWidget {
   final ShopProfileModel profile;
@@ -272,8 +274,10 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
     final isUploadingAny =
         _isUploadingImage || _isUploadingLicense || _isUploadingOwnerId;
 
-    return BlocListener<ShopProfileBloc, ShopProfileState>(
-      listener: (context, state) {
+    return BlocProvider<ShopPaymentSettingsCubit>(
+      create: (context) => sl<ShopPaymentSettingsCubit>()..loadPaymentSettings(),
+      child: BlocListener<ShopProfileBloc, ShopProfileState>(
+        listener: (context, state) {
         if (state is ShopProfileImageUploaded) {
           setState(() {
             _profileImageUrl = state.imageUrl;
@@ -344,31 +348,45 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
                   onCategoryChanged: (val) =>
                       setState(() => _selectedCategory = val),
                 )
-              else if (_currentStep == 2)
-                EditStep2Address(
-                  formKey: _formKeyStep2,
-                  fullAddressController: _fullAddressController,
-                  landmarkController: _landmarkController,
-                  cityController: _cityController,
-                  pincodeController: _pincodeController,
-                  selectedDistrict: _selectedDistrict,
-                  districts: ProfileConstants.districts,
-                  onDistrictChanged: (val) =>
-                      setState(() => _selectedDistrict = val),
-                  selectedState: _selectedState,
-                  states: ProfileConstants.states,
-                  onStateChanged: (val) => setState(() => _selectedState = val),
-                  selectedPaymentMethods: _selectedPaymentMethods,
-                  onPaymentMethodChanged: (method, isSelected) {
-                    setState(() {
-                      if (isSelected) {
-                        if (!_selectedPaymentMethods.contains(method)) {
-                          _selectedPaymentMethods.add(method);
-                        }
-                      } else {
-                        _selectedPaymentMethods.remove(method);
-                      }
-                    });
+               else if (_currentStep == 2)
+                BlocBuilder<ShopPaymentSettingsCubit, ShopPaymentSettingsState>(
+                  builder: (context, state) {
+                    bool enableCod = true;
+                    bool enableOnline = true;
+
+                    if (state is ShopPaymentSettingsLoaded) {
+                      enableCod = state.settings['enable_cod'] ?? true;
+                      enableOnline = state.settings['enable_online'] ?? true;
+                    }
+
+                    return EditStep2Address(
+                      formKey: _formKeyStep2,
+                      fullAddressController: _fullAddressController,
+                      landmarkController: _landmarkController,
+                      cityController: _cityController,
+                      pincodeController: _pincodeController,
+                      selectedDistrict: _selectedDistrict,
+                      districts: ProfileConstants.districts,
+                      onDistrictChanged: (val) =>
+                          setState(() => _selectedDistrict = val),
+                      selectedState: _selectedState,
+                      states: ProfileConstants.states,
+                      onStateChanged: (val) => setState(() => _selectedState = val),
+                      selectedPaymentMethods: _selectedPaymentMethods,
+                      enableCod: enableCod,
+                      enableOnline: enableOnline,
+                      onPaymentMethodChanged: (method, isSelected) {
+                        setState(() {
+                          if (isSelected) {
+                            if (!_selectedPaymentMethods.contains(method)) {
+                              _selectedPaymentMethods.add(method);
+                            }
+                          } else {
+                            _selectedPaymentMethods.remove(method);
+                          }
+                        });
+                      },
+                    );
                   },
                 )
               else
@@ -435,6 +453,7 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

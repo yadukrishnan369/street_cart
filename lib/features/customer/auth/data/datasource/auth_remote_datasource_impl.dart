@@ -11,8 +11,8 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
   AuthRemoteDataSourceImpl({
     required FirebaseAuthService authService,
     required FirebaseFirestore firestore,
-  })  : _authService = authService,
-        _firestore = firestore;
+  }) : _authService = authService,
+       _firestore = firestore;
 
   @override
   Future<void> initiateSignUp({
@@ -20,10 +20,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     required String password,
   }) async {
     try {
-      await _authService.signUpWithEmail(
-        email: email,
-        password: password,
-      );
+      await _authService.signUpWithEmail(email: email, password: password);
     } on ServerException {
       rethrow;
     } catch (e) {
@@ -64,7 +61,33 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
   @override
   Future<void> login({required String email, required String password}) async {
-    await _authService.signInWithEmail(email: email, password: password);
+    try {
+      final userCredential = await _authService.signInWithEmail(
+        email: email,
+        password: password,
+      );
+      final uid = userCredential.user?.uid;
+      if (uid != null) {
+        final doc = await _firestore.collection('customers').doc(uid).get();
+        if (!doc.exists) {
+          await _authService.signOut();
+          throw ServerException(
+            'Access denied. You do not have a customer account.',
+          );
+        }
+        final data = doc.data();
+        if (data != null && data['is_blocked'] == true) {
+          await _authService.signOut();
+          throw ServerException(
+            'Your account is blocked. Please contact support.',
+          );
+        }
+      }
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 
   @override
@@ -86,13 +109,13 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
               .collection('customers')
               .doc(userCredential.user!.uid)
               .set({
-            'full_name': userCredential.user!.displayName ?? '',
-            'email': userCredential.user!.email ?? '',
-            'is_profile_completed': false,
-            'created_at': FieldValue.serverTimestamp(),
-            'profile_image_url': userCredential.user!.photoURL ?? '',
-            'role': 'customer',
-          });
+                'full_name': userCredential.user!.displayName ?? '',
+                'email': userCredential.user!.email ?? '',
+                'is_profile_completed': false,
+                'created_at': FieldValue.serverTimestamp(),
+                'profile_image_url': userCredential.user!.photoURL ?? '',
+                'role': 'customer',
+              });
         }
       }
 
@@ -111,6 +134,46 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      // Check if the email belongs to an admin
+      final adminQuery = await _firestore
+          .collection('admins')
+          .where('email', isEqualTo: email)
+          .get();
+
+      bool isAdmin = adminQuery.docs.isNotEmpty;
+
+      if (!isAdmin) {
+        final userQuery = await _firestore
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .get();
+        for (var doc in userQuery.docs) {
+          final role = doc.data()['role'];
+          if (role == 'admin' || role == 'super_admin') {
+            isAdmin = true;
+            break;
+          }
+        }
+      }
+
+      if (isAdmin) {
+        throw ServerException(
+          'This email is registered as an another account.',
+        );
+      }
+    } catch (e) {
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('permission-denied') ||
+          errorStr.contains('permission denied') ||
+          errorStr.contains('insufficient permission')) {
+        // If firestore rules block unauthenticated reads, fallback to direct firebase reset
+        await _authService.sendPasswordResetEmail(email);
+        return;
+      }
+      rethrow;
+    }
+
     await _authService.sendPasswordResetEmail(email);
   }
 
@@ -125,7 +188,8 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
       }
     } catch (e) {
       throw ServerException(
-          'An error occurred while fetching customer profile: $e');
+        'An error occurred while fetching customer profile: $e',
+      );
     }
   }
 
@@ -138,7 +202,8 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
       await _firestore.collection('customers').doc(userId).update(data.toMap());
     } catch (e) {
       throw ServerException(
-          'An error occurred while updating customer profile: $e');
+        'An error occurred while updating customer profile: $e',
+      );
     }
   }
 

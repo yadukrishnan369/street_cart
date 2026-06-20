@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/features/customer/auth/presentation/bloc/auth_event.dart';
 import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
@@ -13,8 +14,9 @@ import 'package:street_cart/features/customer/home/presentation/bloc/home_event.
 import 'package:street_cart/features/customer/home/presentation/bloc/home_state.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_event.dart';
-
-// UI Components
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/shared/components/customer_search_bar.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
 import 'package:street_cart/shared/components/customer_product_card.dart';
@@ -33,9 +35,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  StreamSubscription<DocumentSnapshot>? _blockListenerSubscription;
+
   @override
   void initState() {
     super.initState();
+    _setupBlockListener();
     if (widget.showProfileModal) {
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
@@ -43,6 +48,33 @@ class _HomePageState extends State<HomePage> {
         }
       });
     }
+  }
+
+  void _setupBlockListener() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      _blockListenerSubscription = FirebaseFirestore.instance
+          .collection('customers')
+          .doc(currentUser.uid)
+          .snapshots()
+          .listen((doc) {
+        if (!doc.exists || doc.data()?['is_blocked'] == true) {
+          if (mounted) {
+            context.read<AuthBloc>().add(LogoutRequested());
+          }
+        }
+      }, onError: (error) {
+        if (mounted) {
+          context.read<AuthBloc>().add(LogoutRequested());
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _blockListenerSubscription?.cancel();
+    super.dispose();
   }
 
   void _showWelcomeModal() {
@@ -173,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.black87,
                     ),
                     onPressed: () {
-                      // Future notification center
+                      // notification
                     },
                   ),
                 ],
@@ -183,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomSearchBar(
-                      hintText: "Search for 'Shirts' or 'Stores' in $city",
+                      hintText: "Search for 'Product' or 'Stores' in $city",
                     ),
                     const HomeBanner(),
                     const CategoriesRow(),
@@ -266,7 +298,7 @@ class _HomePageState extends State<HomePage> {
           child: GridView.builder(
             shrinkWrap: true,
             physics:
-                const NeverScrollableScrollPhysics(), // since it's inside SingleChildScrollView
+                const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.75, // adjust for card proportions

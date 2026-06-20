@@ -11,6 +11,7 @@ class CustomAlertDialog extends StatelessWidget {
   final VoidCallback onPrimaryAction;
   final IconData? icon;
   final Color? iconColor;
+  final Color? primaryActionColor;
 
   const CustomAlertDialog({
     super.key,
@@ -22,6 +23,7 @@ class CustomAlertDialog extends StatelessWidget {
     required this.onPrimaryAction,
     this.icon,
     this.iconColor,
+    this.primaryActionColor,
   });
 
   @override
@@ -30,106 +32,106 @@ class CustomAlertDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      child: Container(
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          color: CustomerAppColors.surface,
-          borderRadius: BorderRadius.circular(24.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: (iconColor ?? Theme.of(context).primaryColor)
-                      .withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  size: 32.sp,
-                  color: iconColor ?? Theme.of(context).primaryColor,
-                ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 400.w),
+        child: Container(
+          padding: EdgeInsets.all(24.w),
+          decoration: BoxDecoration(
+            color: CustomerAppColors.surface,
+            borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
-              SizedBox(height: 16.h),
             ],
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: (iconColor ?? Theme.of(context).primaryColor)
+                        .withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 32.sp,
+                    color: iconColor ?? Theme.of(context).primaryColor,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+              ],
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              content,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-                height: 1.5,
+              SizedBox(height: 12.h),
+              Text(
+                content,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.grey[600],
+                  height: 1.5,
+                ),
               ),
-            ),
-            SizedBox(height: 24.h),
-            Row(
-              children: [
-                if (secondaryActionLabel != null) ...[
+              SizedBox(height: 24.h),
+              Row(
+                children: [
+                  if (secondaryActionLabel != null) ...[
+                    Expanded(
+                      child: TextButton(
+                        onPressed:
+                            onSecondaryAction ?? () => Navigator.pop(context),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        child: Text(
+                          secondaryActionLabel!,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                  ],
                   Expanded(
-                    child: TextButton(
-                      onPressed:
-                          onSecondaryAction ?? () => Navigator.pop(context),
-                      style: TextButton.styleFrom(
+                    child: ElevatedButton(
+                      onPressed: onPrimaryAction,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryActionColor ?? Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(vertical: 12.h),
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                       ),
                       child: Text(
-                        secondaryActionLabel!,
+                        primaryActionLabel,
                         style: TextStyle(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           fontSize: 14.sp,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 12.w),
                 ],
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPrimaryAction,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                    ),
-                    child: Text(
-                      primaryActionLabel,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

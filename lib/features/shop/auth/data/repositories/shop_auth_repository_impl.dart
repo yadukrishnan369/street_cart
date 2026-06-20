@@ -79,8 +79,6 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
 
   @override
   Stream<ShopProfileModel?> getShopStatus() {
-    // This doesn't strictly need network check as it returns a stream
-    // but in a real app, you'd handle offline states in the UI.
     return Stream.fromFuture(_remoteDataSource.getCurrentUserId()).asyncExpand((uid) {
       if (uid == null) return Stream.value(null);
       return _remoteDataSource.getShopStatus(uid);
@@ -173,6 +171,34 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
         currentPassword: currentPassword,
         newPassword: newPassword,
       );
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<String>> getBusinessCategories() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      return await _remoteDataSource.getBusinessCategories();
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, bool>> getPaymentSettings() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      return await _remoteDataSource.getPaymentSettings();
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {

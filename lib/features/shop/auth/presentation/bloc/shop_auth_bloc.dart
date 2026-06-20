@@ -204,9 +204,16 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
       ShopStatusSubscriptionRequested event, Emitter<ShopAuthState> emit) async {
     await emit.forEach<ShopProfileModel?>(
       _getStatus(),
-      onData: (shop) => ShopStatusLoaded(shop),
+      onData: (shop) {
+        if (shop == null || shop.isSuspended == true) {
+          add(ShopLogoutRequested());
+          return ShopAuthInitial();
+        }
+        return ShopStatusLoaded(shop);
+      },
       onError: (e, _) {
         if (e.toString().contains('PERMISSION_DENIED') || e.toString().contains('permission-denied')) {
+          add(ShopLogoutRequested());
           return ShopAuthInitial();
         }
         return ShopAuthFailure("Failed to load shop details: ${e.toString()}");

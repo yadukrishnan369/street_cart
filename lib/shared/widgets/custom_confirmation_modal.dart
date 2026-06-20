@@ -33,6 +33,9 @@ class ConfirmationModal extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width > 600 ? 400 : 320,
+        ),
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
           color: surfaceColor ?? CustomerAppColors.surface,

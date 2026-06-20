@@ -12,4 +12,8 @@ class DateFormatter {
   static String formatToDateTime(DateTime date) {
     return DateFormat('MMM dd, yyyy - hh:mm a').format(date);
   }
+
+  static String formatToLoginDateTime(DateTime date) {
+    return DateFormat("MMM dd, yyyy 'at' hh:mm a").format(date);
+  }
 }

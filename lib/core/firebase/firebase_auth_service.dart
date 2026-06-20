@@ -9,8 +9,8 @@ class FirebaseAuthService {
   FirebaseAuthService({
     required FirebaseAuth auth,
     required GoogleSignIn googleSignIn,
-  })  : _auth = auth,
-        _googleSignIn = googleSignIn;
+  }) : _auth = auth,
+       _googleSignIn = googleSignIn;
 
   Future<UserCredential> signUpWithEmail({
     required String email,
@@ -64,7 +64,11 @@ class FirebaseAuthService {
 
   Future<void> signOut() async {
     try {
-      await _googleSignIn.signOut();
+      try {
+        await _googleSignIn.signOut();
+      } catch (_) {
+        // Ignore Google sign-in sign-out errors
+      }
       await _auth.signOut();
     } catch (e) {
       throw ServerException(e.toString());
@@ -74,6 +78,19 @@ class FirebaseAuthService {
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  Future<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  }) async {
+    try {
+      await _auth.confirmPasswordReset(code: code, newPassword: newPassword);
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
@@ -140,6 +157,15 @@ class FirebaseAuthService {
     return _auth.currentUser?.uid;
   }
 
+  Future<String?> getCurrentUserIdAsync() async {
+    final user = await _auth.authStateChanges().first;
+    return user?.uid;
+  }
+
+  String? getCurrentUserEmail() {
+    return _auth.currentUser?.email;
+  }
+
   bool isEmailPasswordUser() {
     final user = _auth.currentUser;
     if (user == null) return false;
@@ -179,7 +205,8 @@ class FirebaseAuthService {
     switch (e.code) {
       case 'email-already-in-use':
         return ServerException(
-            'The email address is already in use by another account.');
+          'The email address is already in use by another account.',
+        );
       case 'invalid-email':
         return ServerException('The email address is invalid.');
       case 'weak-password':
@@ -190,7 +217,8 @@ class FirebaseAuthService {
         return ServerException('Incorrect email or password.');
       case 'requires-recent-login':
         return ServerException(
-            'For security reasons, you need to log in again before performing this action.');
+          'For security reasons, you need to log in again before performing this action.',
+        );
       default:
         return ServerException(e.message ?? 'An unknown error occurred.');
     }

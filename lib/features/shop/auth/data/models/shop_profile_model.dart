@@ -11,6 +11,7 @@ class ShopProfileModel {
   final String businessLicenseUrl;
   final String ownerIdUrl;
   final bool isApproved;
+  final bool isSuspended;
   final String role;
   final DateTime? createdAt;
   final bool isProfileCompleted;
@@ -24,6 +25,8 @@ class ShopProfileModel {
   final String district;
   final String state;
   final List<String> paymentMethods;
+  final double? latitude;
+  final double? longitude;
 
   ShopProfileModel({
     required this.uid,
@@ -36,6 +39,7 @@ class ShopProfileModel {
     required this.businessLicenseUrl,
     required this.ownerIdUrl,
     required this.isApproved,
+    this.isSuspended = false,
     required this.role,
     this.createdAt,
     required this.isProfileCompleted,
@@ -49,6 +53,8 @@ class ShopProfileModel {
     required this.district,
     required this.state,
     required this.paymentMethods,
+    this.latitude,
+    this.longitude,
   });
 
   factory ShopProfileModel.fromMap(Map<String, dynamic> map, String id) {
@@ -63,6 +69,7 @@ class ShopProfileModel {
       businessLicenseUrl: map['business_license_url'] ?? '',
       ownerIdUrl: map['owner_id_url'] ?? '',
       isApproved: map['is_approved'] ?? false,
+      isSuspended: map['is_suspended'] ?? false,
       role: map['role'] ?? 'shop',
       createdAt: (map['created_at'] as Timestamp?)?.toDate(),
       isProfileCompleted: map['is_profile_completed'] ?? false,
@@ -76,6 +83,8 @@ class ShopProfileModel {
       district: map['district'] ?? '',
       state: map['state'] ?? '',
       paymentMethods: List<String>.from(map['payment_methods'] ?? []),
+      latitude: map['location'] != null ? (map['location']['latitude'] as num?)?.toDouble() : null,
+      longitude: map['location'] != null ? (map['location']['longitude'] as num?)?.toDouble() : null,
     );
   }
 
@@ -90,6 +99,7 @@ class ShopProfileModel {
       'business_license_url': businessLicenseUrl,
       'owner_id_url': ownerIdUrl,
       'is_approved': isApproved,
+      'is_suspended': isSuspended,
       'role': role,
       'created_at': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
       'is_profile_completed': isProfileCompleted,
@@ -103,6 +113,11 @@ class ShopProfileModel {
       'district': district,
       'state': state,
       'payment_methods': paymentMethods,
+      if (latitude != null && longitude != null)
+        'location': {
+          'latitude': latitude,
+          'longitude': longitude,
+        },
     };
   }
 
@@ -116,6 +131,7 @@ class ShopProfileModel {
     String? businessLicenseUrl,
     String? ownerIdUrl,
     bool? isApproved,
+    bool? isSuspended,
     String? role,
     DateTime? createdAt,
     bool? isProfileCompleted,
@@ -129,6 +145,8 @@ class ShopProfileModel {
     String? district,
     String? state,
     List<String>? paymentMethods,
+    double? latitude,
+    double? longitude,
   }) {
     return ShopProfileModel(
       uid: uid,
@@ -141,6 +159,7 @@ class ShopProfileModel {
       businessLicenseUrl: businessLicenseUrl ?? this.businessLicenseUrl,
       ownerIdUrl: ownerIdUrl ?? this.ownerIdUrl,
       isApproved: isApproved ?? this.isApproved,
+      isSuspended: isSuspended ?? this.isSuspended,
       role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
       isProfileCompleted: isProfileCompleted ?? this.isProfileCompleted,
@@ -154,6 +173,8 @@ class ShopProfileModel {
       district: district ?? this.district,
       state: state ?? this.state,
       paymentMethods: paymentMethods ?? this.paymentMethods,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }

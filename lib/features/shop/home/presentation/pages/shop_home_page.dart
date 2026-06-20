@@ -6,7 +6,9 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/profile_setup_page.dart';
-import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_event.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/performance_stats.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/weekly_sales_card.dart';
@@ -26,29 +28,23 @@ class ShopHomePage extends StatefulWidget {
 }
 
 class _ShopHomePageState extends State<ShopHomePage> {
+  late ShopHomeBloc _homeBloc;
+
   @override
   void initState() {
     super.initState();
+    _homeBloc = sl<ShopHomeBloc>();
     // Subscribe to shop status to get shop name
     context.read<ShopAuthBloc>().add(ShopStatusSubscriptionRequested());
 
     // Check for first visit to show modal
-    _checkFirstVisit();
+    _homeBloc.add(CheckFirstHomeVisitEvent());
   }
 
-  Future<void> _checkFirstVisit() async {
-    final localDS = sl<IShopHomeLocalDataSource>();
-    final isFirstVisit = await localDS.isFirstHomeVisit();
-
-    if (isFirstVisit) {
-      // Delay for 2 seconds as requested
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          _showProfileCompletionDialog();
-          localDS.setFirstHomeVisitFalse();
-        }
-      });
-    }
+  @override
+  void dispose() {
+    _homeBloc.close();
+    super.dispose();
   }
 
   void _showProfileCompletionDialog() {
@@ -72,112 +68,134 @@ class _ShopHomePageState extends State<ShopHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ShopAuthBloc, ShopAuthState>(
-      listener: (context, state) {
-        if (state is ShopAuthInitial) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const ShopLoginPage()),
-            (route) => false,
-          );
-        }
-      },
-      child: Scaffold(
-        backgroundColor: ShopAppColors.background,
-        drawer: const ShopSupportDrawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: false,
-          titleSpacing: 0,
-          leadingWidth: 70.w,
-          leading: Builder(
-            builder: (context) {
-              return GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(left: 20.w, right: 10.w),
-                  child: Center(
-                    child: AppLogo(
-                      size: 40,
-                      backgroundColor: ShopAppColors.primary,
-                      logoColor: Colors.white,
-                    ),
-                  ),
-                ),
-              );
+    return BlocProvider.value(
+      value: _homeBloc,
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<ShopAuthBloc, ShopAuthState>(
+            listener: (context, state) {
+              if (state is ShopAuthInitial) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ShopLoginPage()),
+                  (route) => false,
+                );
+              }
             },
           ),
-          title: BlocBuilder<ShopAuthBloc, ShopAuthState>(
-            builder: (context, state) {
-              String shopName = "My Shop";
-              if (state is ShopStatusLoaded) {
-                shopName = state.shop?.shopName ?? "My Shop";
+          BlocListener<ShopHomeBloc, ShopHomeState>(
+            listener: (context, state) {
+              if (state is ShopHomeFirstVisitCheckCompleted) {
+                if (state.isFirstVisit) {
+                  // Delay for 2 seconds as requested
+                  Future.delayed(const Duration(seconds: 2), () {
+                    if (mounted) {
+                      _showProfileCompletionDialog();
+                      _homeBloc.add(CompleteFirstHomeVisitEvent());
+                    }
+                  });
+                }
               }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            },
+          ),
+        ],
+        child: Scaffold(
+          backgroundColor: ShopAppColors.background,
+          drawer: const ShopSupportDrawer(),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            centerTitle: false,
+            titleSpacing: 0,
+            leadingWidth: 70.w,
+            leading: Builder(
+              builder: (context) {
+                return GestureDetector(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20.w, right: 10.w),
+                    child: Center(
+                      child: AppLogo(
+                        size: 40,
+                        backgroundColor: ShopAppColors.primary,
+                        logoColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            title: BlocBuilder<ShopAuthBloc, ShopAuthState>(
+              builder: (context, state) {
+                String shopName = "My Shop";
+                if (state is ShopStatusLoaded) {
+                  shopName = state.shop?.shopName ?? "My Shop";
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(shopName, style: ShopAppTextStyles.heading4),
+                    Text(
+                      'Street Cart Partner',
+                      style: ShopAppTextStyles.labelBold,
+                    ),
+                  ],
+                );
+              },
+            ),
+            actions: [
+              Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(shopName, style: ShopAppTextStyles.heading4),
-                  Text(
-                    'Street Cart Partner',
-                    style: ShopAppTextStyles.labelBold,
+                  IconButton(
+                    icon: Icon(
+                      Icons.notifications_none_rounded,
+                      color: ShopAppColors.textSecondary,
+                      size: 26.sp,
+                    ),
+                    onPressed: () {
+                      _showLogoutConfirmation();
+                    },
+                  ),
+                  Positioned(
+                    right: 12.w,
+                    top: 12.h,
+                    child: Container(
+                      height: 8.r,
+                      width: 8.r,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
                   ),
                 ],
-              );
-            },
-          ),
-          actions: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.notifications_none_rounded,
-                    color: ShopAppColors.textSecondary,
-                    size: 26.sp,
-                  ),
-                  onPressed: () {
-                    _showLogoutConfirmation();
-                  },
-                ),
-                Positioned(
-                  right: 12.w,
-                  top: 12.h,
-                  child: Container(
-                    height: 8.r,
-                    width: 8.r,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(width: 8.w),
-          ],
-        ),
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20.h),
-              const PerformanceStats(),
-              SizedBox(height: 20.h),
-              const WeeklySalesCard(),
-              SizedBox(height: 20.h),
-              const QuickActions(),
-              SizedBox(height: 20.h),
-              const RecentOrdersList(),
-              SizedBox(height: 100.h), // Bottom nav padding
+              ),
+              SizedBox(width: 8.w),
             ],
           ),
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                const PerformanceStats(),
+                SizedBox(height: 20.h),
+                const WeeklySalesCard(),
+                SizedBox(height: 20.h),
+                const QuickActions(),
+                SizedBox(height: 20.h),
+                const RecentOrdersList(),
+                SizedBox(height: 100.h), // Bottom nav padding
+              ],
+            ),
+          ),
+          bottomNavigationBar: const ShopBottomNavigation(currentIndex: 0),
         ),
-        bottomNavigationBar: const ShopBottomNavigation(currentIndex: 0),
       ),
     );
   }

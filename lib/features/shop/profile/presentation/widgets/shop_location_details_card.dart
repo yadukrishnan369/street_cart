@@ -17,7 +17,9 @@ class ShopLocationDetailsCard extends StatelessWidget {
         children: [
           ShopProfileGridItem(
             label: 'Full Address',
-            value: profile.fullAddress.isNotEmpty ? profile.fullAddress : 'Not provided',
+            value: profile.fullAddress.isNotEmpty
+                ? profile.fullAddress
+                : 'Not provided',
           ),
           SizedBox(height: 16.h),
           Row(
@@ -25,13 +27,17 @@ class ShopLocationDetailsCard extends StatelessWidget {
               Expanded(
                 child: ShopProfileGridItem(
                   label: 'Landmark',
-                  value: profile.landmark.isNotEmpty ? profile.landmark : 'Not provided',
+                  value: profile.landmark.isNotEmpty
+                      ? profile.landmark
+                      : 'Not provided',
                 ),
               ),
               Expanded(
                 child: ShopProfileGridItem(
                   label: 'City',
-                  value: profile.city.isNotEmpty ? profile.city : 'Not provided',
+                  value: profile.city.isNotEmpty
+                      ? profile.city
+                      : 'Not provided',
                 ),
               ),
             ],
@@ -42,13 +48,17 @@ class ShopLocationDetailsCard extends StatelessWidget {
               Expanded(
                 child: ShopProfileGridItem(
                   label: 'District',
-                  value: profile.district.isNotEmpty ? profile.district : 'Not provided',
+                  value: profile.district.isNotEmpty
+                      ? profile.district
+                      : 'Not provided',
                 ),
               ),
               Expanded(
                 child: ShopProfileGridItem(
                   label: 'State',
-                  value: profile.state.isNotEmpty ? profile.state : 'Not provided',
+                  value: profile.state.isNotEmpty
+                      ? profile.state
+                      : 'Not provided',
                 ),
               ),
             ],
@@ -56,7 +66,9 @@ class ShopLocationDetailsCard extends StatelessWidget {
           SizedBox(height: 16.h),
           ShopProfileGridItem(
             label: 'Pincode',
-            value: profile.pincode.isNotEmpty ? profile.pincode : 'Not provided',
+            value: profile.pincode.isNotEmpty
+                ? profile.pincode
+                : 'Not provided',
           ),
         ],
       ),
