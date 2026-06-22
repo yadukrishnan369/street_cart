@@ -35,7 +35,7 @@ class AdminDashboardRepositoryImpl implements IAdminDashboardRepository {
   }
 
   @override
-  Future<void> rejectShop(String shopId) async {
-    return await remoteDataSource.rejectShop(shopId);
+  Future<void> rejectShop(String shopId, String rejectionReason) async {
+    return await remoteDataSource.rejectShop(shopId, rejectionReason);
   }
 }

@@ -79,7 +79,7 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
 
   @override
   Stream<ShopProfileModel?> getShopStatus() {
-    return Stream.fromFuture(_remoteDataSource.getCurrentUserId()).asyncExpand((uid) {
+    return _remoteDataSource.getAuthUserIdChanges().asyncExpand((uid) {
       if (uid == null) return Stream.value(null);
       return _remoteDataSource.getShopStatus(uid);
     });

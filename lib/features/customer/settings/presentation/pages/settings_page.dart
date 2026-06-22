@@ -16,7 +16,7 @@ import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
 import 'package:street_cart/features/customer/auth/presentation/pages/login_page.dart';
-import 'package:street_cart/features/customer/settings/presentation/widgets/delete_account_modal.dart';
+import 'package:street_cart/features/customer/settings/presentation/pages/delete_account_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -200,23 +200,25 @@ class SettingsPage extends StatelessWidget {
                           }
                         },
                       ),
-                      SettingsActionTile(
+                       SettingsActionTile(
                         icon: Icons.delete_outline,
                         iconColor: Colors.red,
                         backgroundColor: Colors.red.withOpacity(0.1),
                         title: 'Delete Account',
                         titleColor: Colors.red,
+                        showArrow: true,
                         onTap: () async {
                           final checkUser = sl<CheckEmailPasswordUser>();
                           final isEmailUser = await checkUser();
 
                           if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (dialogContext) => BlocProvider.value(
-                                value: context.read<AuthBloc>(),
-                                child: DeleteAccountModal(
-                                  isEmailUser: isEmailUser,
+                            final authBloc = context.read<AuthBloc>();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: authBloc,
+                                  child: DeleteAccountPage(isEmailUser: isEmailUser),
                                 ),
                               ),
                             );

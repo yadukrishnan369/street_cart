@@ -1,5 +1,5 @@
 class ShopConstants {
-  static const String supportEmail = 'yadukrish9656@gmail.com';
+  static const String supportEmail = 'adminstreetcart@gmail.com';
   static const String supportPhoneNumber = '9745303779';
   static const String supportHours = 'Monday to Friday, 9:00 AM - 6:00 PM EST';
 

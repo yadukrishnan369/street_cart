@@ -191,32 +191,14 @@ class _ShopSettingsPageState extends State<ShopSettingsPage> {
                 _buildSectionCard(
                   children: [
                     _buildSettingRow(
-                      icon: Icons.storage_outlined,
-                      title: 'Clear Data',
-                      trailing: Icon(
-                        Icons.delete_sweep_outlined,
-                        size: 20.sp,
-                        color: const Color(0xFF90A4AE),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ClearDataPage(),
-                          ),
-                        );
-                      },
-                    ),
-                    _buildRowDivider(),
-                    _buildSettingRow(
                       icon: Icons.block_outlined,
                       iconBgColor: const Color(0xFFFFEBEE),
                       iconColor: const Color(0xFFD32F2F),
                       title: 'Delete Account',
                       titleColor: const Color(0xFFD32F2F),
                       trailing: Icon(
-                        Icons.warning_amber_rounded,
-                        size: 20.sp,
+                        Icons.arrow_forward_ios,
+                        size: 12.sp,
                         color: const Color(0xFFD32F2F),
                       ),
                       onTap: () {
@@ -228,6 +210,24 @@ class _ShopSettingsPageState extends State<ShopSettingsPage> {
                               value: settingsBloc,
                               child: const DeleteAccountPage(),
                             ),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildRowDivider(),
+                    _buildSettingRow(
+                      icon: Icons.storage_outlined,
+                      title: 'Clear Data',
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12.sp,
+                        color: ShopAppColors.textSecondary,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ClearDataPage(),
                           ),
                         );
                       },

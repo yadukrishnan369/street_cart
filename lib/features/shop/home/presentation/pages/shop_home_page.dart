@@ -5,7 +5,6 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
-import 'package:street_cart/features/shop/auth/presentation/pages/profile_setup_page.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_event.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
@@ -19,6 +18,9 @@ import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/shop_support_drawer.dart';
+import 'package:street_cart/features/shop/profile/presentation/pages/edit_shop_profile_page.dart';
+import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
+import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
 class ShopHomePage extends StatefulWidget {
   const ShopHomePage({super.key});
@@ -48,20 +50,38 @@ class _ShopHomePageState extends State<ShopHomePage> {
   }
 
   void _showProfileCompletionDialog() {
+    final authState = context.read<ShopAuthBloc>().state;
+    ShopProfileModel? profile;
+    if (authState is ShopStatusLoaded) {
+      profile = authState.shop;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => ProfileCompletionModal(
+      builder: (dialogContext) => ProfileCompletionModal(
         onCompleteNow: () {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ShopProfileSetupPage(),
-            ),
-          );
+          Navigator.pop(dialogContext);
+          if (profile != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => sl<ShopProfileBloc>(),
+                  child: EditShopProfilePage(profile: profile!),
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Loading profile details, please try again in a moment.'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         },
-        onMaybeLater: () => Navigator.pop(context),
+        onMaybeLater: () => Navigator.pop(dialogContext),
       ),
     );
   }

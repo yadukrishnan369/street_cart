@@ -17,6 +17,7 @@ import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_payment_settings_cubit.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
 
 class EditShopProfilePage extends StatefulWidget {
   final ShopProfileModel profile;
@@ -76,9 +77,7 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
     _phoneController = TextEditingController(text: p.phone);
     _gstController = TextEditingController(text: p.gstNumber);
 
-    _selectedCategory = ProfileConstants.categories.contains(p.category)
-        ? p.category
-        : ProfileConstants.categories.first;
+    _selectedCategory = p.category;
     _profileImageUrl = p.profileImageUrl;
     _businessLicenseUrl = p.businessLicenseUrl;
     _ownerIdUrl = p.ownerIdUrl;
@@ -264,6 +263,10 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
       businessLicenseUrl: _businessLicenseUrl ?? '',
       ownerIdUrl: _ownerIdUrl ?? '',
       isProfileCompleted: true,
+      isApproved: widget.profile.isApproved,
+      isRejected: widget.profile.isApproved ? false : widget.profile.isRejected,
+      rejectionReason: widget.profile.isApproved ? widget.profile.rejectionReason : '',
+      isReRegistered: widget.profile.isApproved ? false : (widget.profile.isRejected ? true : widget.profile.isReRegistered),
     );
 
     context.read<ShopProfileBloc>().add(UpdateShopProfileDataEvent(updated));
@@ -274,8 +277,15 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
     final isUploadingAny =
         _isUploadingImage || _isUploadingLicense || _isUploadingOwnerId;
 
-    return BlocProvider<ShopPaymentSettingsCubit>(
-      create: (context) => sl<ShopPaymentSettingsCubit>()..loadPaymentSettings(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ShopPaymentSettingsCubit>(
+          create: (context) => sl<ShopPaymentSettingsCubit>()..loadPaymentSettings(),
+        ),
+        BlocProvider<ShopCategoriesCubit>(
+          create: (context) => sl<ShopCategoriesCubit>()..loadCategories(),
+        ),
+      ],
       child: BlocListener<ShopProfileBloc, ShopProfileState>(
         listener: (context, state) {
         if (state is ShopProfileImageUploaded) {
@@ -334,19 +344,38 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (_currentStep == 1)
-                EditStep1Info(
-                  formKey: _formKeyStep1,
-                  ownerNameController: _ownerNameController,
-                  shopNameController: _shopNameController,
-                  descriptionController: _descriptionController,
-                  profileImageUrl: _profileImageUrl,
-                  onPickImage: _pickProfileImage,
-                  onRemoveImage: _onRemoveProfileImage,
-                  isUploadingImage: _isUploadingImage,
-                  selectedCategory: _selectedCategory,
-                  categories: ProfileConstants.categories,
-                  onCategoryChanged: (val) =>
-                      setState(() => _selectedCategory = val),
+                BlocBuilder<ShopCategoriesCubit, ShopCategoriesState>(
+                  builder: (context, state) {
+                    List<String> categories = [];
+                    if (state is ShopCategoriesLoaded) {
+                      categories = state.categories;
+                    }
+                    
+                    if (categories.isNotEmpty && (_selectedCategory == null || _selectedCategory!.isEmpty || !categories.contains(_selectedCategory))) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) {
+                          setState(() {
+                            _selectedCategory = categories.first;
+                          });
+                        }
+                      });
+                    }
+
+                    return EditStep1Info(
+                      formKey: _formKeyStep1,
+                      ownerNameController: _ownerNameController,
+                      shopNameController: _shopNameController,
+                      descriptionController: _descriptionController,
+                      profileImageUrl: _profileImageUrl,
+                      onPickImage: _pickProfileImage,
+                      onRemoveImage: _onRemoveProfileImage,
+                      isUploadingImage: _isUploadingImage,
+                      selectedCategory: _selectedCategory,
+                      categories: categories.isNotEmpty ? categories : (widget.profile.category.isNotEmpty ? [widget.profile.category] : []),
+                      onCategoryChanged: (val) =>
+                          setState(() => _selectedCategory = val),
+                    );
+                  },
                 )
                else if (_currentStep == 2)
                 BlocBuilder<ShopPaymentSettingsCubit, ShopPaymentSettingsState>(
@@ -452,8 +481,8 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
             ],
           ),
         ),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

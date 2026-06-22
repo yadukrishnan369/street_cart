@@ -82,20 +82,25 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                             width: 1,
                           ),
                         ),
-                        child: Text(
-                          isSuspended
-                              ? 'SUSPENDED'
-                              : !isApproved
-                              ? 'PENDING'
-                              : 'ACTIVE',
-                          style: TextStyle(
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w800,
-                            color: isSuspended
-                                ? const Color(0xFF9B1C1C)
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            isSuspended
+                                ? 'SUSPENDED'
                                 : !isApproved
-                                ? const Color(0xFF856404)
-                                : const Color(0xFF03543F),
+                                ? (shop.isReRegistered
+                                      ? 'RE-REGISTERED'
+                                      : 'PENDING')
+                                : 'ACTIVE',
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isSuspended
+                                  ? const Color(0xFF9B1C1C)
+                                  : !isApproved
+                                  ? const Color(0xFF856404)
+                                  : const Color(0xFF03543F),
+                            ),
                           ),
                         ),
                       ),

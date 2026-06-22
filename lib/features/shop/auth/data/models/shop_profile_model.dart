@@ -27,6 +27,9 @@ class ShopProfileModel {
   final List<String> paymentMethods;
   final double? latitude;
   final double? longitude;
+  final bool isRejected;
+  final String rejectionReason;
+  final bool isReRegistered;
 
   ShopProfileModel({
     required this.uid,
@@ -55,6 +58,9 @@ class ShopProfileModel {
     required this.paymentMethods,
     this.latitude,
     this.longitude,
+    this.isRejected = false,
+    this.rejectionReason = '',
+    this.isReRegistered = false,
   });
 
   factory ShopProfileModel.fromMap(Map<String, dynamic> map, String id) {
@@ -85,6 +91,9 @@ class ShopProfileModel {
       paymentMethods: List<String>.from(map['payment_methods'] ?? []),
       latitude: map['location'] != null ? (map['location']['latitude'] as num?)?.toDouble() : null,
       longitude: map['location'] != null ? (map['location']['longitude'] as num?)?.toDouble() : null,
+      isRejected: map['is_rejected'] ?? false,
+      rejectionReason: map['rejection_reason'] ?? '',
+      isReRegistered: map['is_reregistered'] ?? false,
     );
   }
 
@@ -118,6 +127,9 @@ class ShopProfileModel {
           'latitude': latitude,
           'longitude': longitude,
         },
+      'is_rejected': isRejected,
+      'rejection_reason': rejectionReason,
+      'is_reregistered': isReRegistered,
     };
   }
 
@@ -147,6 +159,9 @@ class ShopProfileModel {
     List<String>? paymentMethods,
     double? latitude,
     double? longitude,
+    bool? isRejected,
+    String? rejectionReason,
+    bool? isReRegistered,
   }) {
     return ShopProfileModel(
       uid: uid,
@@ -175,6 +190,9 @@ class ShopProfileModel {
       paymentMethods: paymentMethods ?? this.paymentMethods,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      isRejected: isRejected ?? this.isRejected,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      isReRegistered: isReRegistered ?? this.isReRegistered,
     );
   }
 }

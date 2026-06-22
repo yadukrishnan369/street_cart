@@ -10,8 +10,16 @@ import 'package:street_cart/features/shop/location/presentation/pages/shop_locat
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 
-class ShopProfileSetupPage extends StatelessWidget {
+
+class ShopProfileSetupPage extends StatefulWidget {
   const ShopProfileSetupPage({super.key});
+
+  @override
+  State<ShopProfileSetupPage> createState() => _ShopProfileSetupPageState();
+}
+
+class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
+  bool _navigated = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +27,16 @@ class ShopProfileSetupPage extends StatelessWidget {
       create: (context) => sl<ShopCategoriesCubit>()..loadCategories(),
       child: BlocListener<ShopAuthBloc, ShopAuthState>(
         listener: (context, state) {
-          if (state is ShopAuthSuccess) {
+          final bool isSuccess = state is ShopAuthSuccess ||
+              (state is ShopStatusLoaded &&
+                  state.shop != null &&
+                  state.shop!.isProfileCompleted &&
+                  !state.shop!.isRejected);
+
+          if (isSuccess && !_navigated) {
+            setState(() {
+              _navigated = true;
+            });
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

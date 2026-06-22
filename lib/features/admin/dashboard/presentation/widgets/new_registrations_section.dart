@@ -111,13 +111,46 @@ class NewRegistrationsSection extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              reg.shopName,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF1E1E2F),
-                              ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    reg.shopName,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF1E1E2F),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                if (reg.isReRegistered) ...[
+                                  SizedBox(width: 8.w),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFFF3CD),
+                                      borderRadius: BorderRadius.circular(4.r),
+                                      border: Border.all(
+                                        color: const Color(0xFFFFEBAA),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Re-registered',
+                                      style: TextStyle(
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.w800,
+                                        color: const Color(0xFF856404),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                             SizedBox(height: 4.h),
                             Text(

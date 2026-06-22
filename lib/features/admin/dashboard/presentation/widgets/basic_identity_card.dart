@@ -91,12 +91,15 @@ class BasicIdentityCard extends StatelessWidget {
                           color: AdminAppColors.primaryColor,
                         ),
                         SizedBox(width: 8.w),
-                        Text(
-                          shop.category,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1E1E2F),
+                        Expanded(
+                          child: Text(
+                            shop.category,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF1E1E2F),
+                            ),
+                            maxLines: 2,
                           ),
                         ),
                       ],

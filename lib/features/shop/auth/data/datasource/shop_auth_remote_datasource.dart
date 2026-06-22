@@ -30,6 +30,8 @@ abstract class IShopAuthRemoteDataSource {
 
   Stream<ShopProfileModel?> getShopStatus(String userId);
 
+  Stream<String?> getAuthUserIdChanges();
+
   Future<void> logout();
 
   Future<String?> getCurrentUserId();

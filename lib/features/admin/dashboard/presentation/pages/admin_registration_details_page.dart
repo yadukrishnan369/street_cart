@@ -15,6 +15,7 @@ import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_reg
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/features/admin/dashboard/presentation/widgets/rejection_reason_modal.dart';
 
 class AdminRegistrationDetailsPage extends StatefulWidget {
   final String shopId;
@@ -217,19 +218,11 @@ class _AdminRegistrationDetailsPageState
   void _showRejectConfirmation(BuildContext context, ShopProfileModel shop) {
     showDialog(
       context: context,
-      builder: (dialogCtx) => CustomAlertDialog(
-        title: 'Reject Application',
-        content:
-            'Are you sure you want to reject "${shop.shopName}"? This will delete their registration profile permanently.',
-        secondaryActionLabel: 'Cancel',
-        primaryActionLabel: 'Reject',
-        icon: Icons.cancel_outlined,
-        iconColor: AdminAppColors.errorColor,
-        primaryActionColor: AdminAppColors.errorColor,
-        onPrimaryAction: () {
-          Navigator.pop(dialogCtx);
+      barrierDismissible: false,
+      builder: (dialogCtx) => RejectionReasonModal(
+        onSubmit: (reason) {
           context.read<AdminRegistrationDetailsBloc>().add(
-                RejectShopRequested(shop.uid),
+                RejectShopRequested(shopId: shop.uid, rejectionReason: reason),
               );
         },
       ),

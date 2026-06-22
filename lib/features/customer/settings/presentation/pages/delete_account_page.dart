@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
-import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_event.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_state.dart';
-import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
+import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
+import 'package:street_cart/features/customer/auth/presentation/bloc/auth_event.dart';
+import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
+import 'package:street_cart/features/customer/auth/presentation/pages/login_page.dart';
 
 class DeleteAccountPage extends StatefulWidget {
-  const DeleteAccountPage({super.key});
+  final bool isEmailUser;
+
+  const DeleteAccountPage({super.key, required this.isEmailUser});
 
   @override
   State<DeleteAccountPage> createState() => _DeleteAccountPageState();
@@ -31,15 +33,16 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
   }
 
   void _confirmDelete() {
-    if (!_formKey.currentState!.validate()) return;
+    if (widget.isEmailUser && !_formKey.currentState!.validate()) return;
 
+    // Show first confirmation modal
     showDialog(
       context: context,
       builder: (dialogContext) => ConfirmationModal(
         title: 'Delete Account?',
-        content: 'Are you sure you want to permanently delete your merchant account? This action cannot be undone.',
+        content: 'Are you sure you want to permanently delete your account? This action cannot be undone.',
         confirmText: 'Yes, Delete',
-        confirmColor: ShopAppColors.error,
+        confirmColor: Colors.red,
         onConfirm: () {
           Navigator.pop(dialogContext);
           _confirmDeleteDouble();
@@ -50,13 +53,14 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
   }
 
   void _confirmDeleteDouble() {
+    // Show second confirmation modal (double confirmation)
     showDialog(
       context: context,
       builder: (dialogContext) => ConfirmationModal(
-        title: 'Permanently Erase Data?',
-        content: 'Warning: This action will permanently erase your store profile, active products, and past order records. Proceed?',
+        title: 'Permanently Erase All Data?',
+        content: 'Warning: This will immediately delete all your profile details, orders history, and addresses. Proceed?',
         confirmText: 'Delete Permanently',
-        confirmColor: ShopAppColors.error,
+        confirmColor: Colors.red,
         onConfirm: () {
           Navigator.pop(dialogContext);
           _performDelete();
@@ -67,43 +71,45 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
   }
 
   void _performDelete() {
-    context.read<ShopSettingsBloc>().add(
-          DeleteAccountRequested(password: _passwordController.text.trim()),
+    context.read<AuthBloc>().add(
+          DeleteAccountRequested(
+            widget.isEmailUser ? _passwordController.text.trim() : null,
+          ),
         );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShopSettingsBloc, ShopSettingsState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is DeleteAccountSuccess) {
+        if (state is AuthAccountDeleted) {
           CustomSnackBar.show(context, message: 'Account deleted successfully.');
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) => const ShopLoginPage()),
+            MaterialPageRoute(builder: (_) => const LoginPage()),
             (route) => false,
           );
-        } else if (state is ShopSettingsFailure) {
+        } else if (state is AuthError) {
           CustomSnackBar.show(context, message: state.message, isError: true);
         }
       },
       builder: (context, state) {
-        final isLoading = state is ShopSettingsLoading;
+        final isLoading = state is AuthLoading;
 
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: CustomerAppColors.background,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: CustomerAppColors.background,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
+              icon: const Icon(Icons.arrow_back, color: Colors.black87),
               onPressed: () => Navigator.pop(context),
             ),
             title: Text(
               'Delete Account',
-              style: ShopAppTextStyles.heading4.copyWith(
-                color: ShopAppColors.textPrimary,
-                fontWeight: FontWeight.bold,
+              style: CustomerAppTextStyles.heading2.copyWith(
+                color: Colors.black87,
+                fontSize: 20.sp,
               ),
             ),
             centerTitle: true,
@@ -117,46 +123,50 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                 children: [
                   Text(
                     'Verify Identity',
-                    style: ShopAppTextStyles.heading2.copyWith(
+                    style: CustomerAppTextStyles.heading2.copyWith(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'For security, you must enter your current password to confirm account deletion. This process cannot be undone.',
-                    style: ShopAppTextStyles.bodyMedium.copyWith(
-                      color: ShopAppColors.textSecondary,
+                    widget.isEmailUser
+                        ? 'For security, you must enter your current password to confirm account deletion. This process cannot be undone.'
+                        : 'Your account is linked with Google. You do not need to enter a password to delete your account, but this action is permanent.',
+                    style: CustomerAppTextStyles.body.copyWith(
+                      color: CustomerAppColors.textSecondary,
                       height: 1.4,
                     ),
                   ),
                   SizedBox(height: 32.h),
 
-                  // Password input field
-                  CustomTextField(
-                    label: 'Password',
-                    controller: _passwordController,
-                    hintText: 'Enter your password',
-                    isPassword: _obscurePassword,
-                    labelStyle: ShopAppTextStyles.bodyMediumBold,
-                    textStyle: ShopAppTextStyles.bodyMedium,
-                    fillColor: const Color(0xFFF8F9FA),
-                    borderColor: ShopAppColors.border,
-                    focusedBorderColor: const Color(0xFFD32F2F),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        color: ShopAppColors.textTertiary,
-                        size: 20.sp,
+                  if (widget.isEmailUser) ...[
+                    // Password input field
+                    CustomTextField(
+                      label: 'Password',
+                      controller: _passwordController,
+                      hintText: 'Enter your password',
+                      isPassword: _obscurePassword,
+                      labelStyle: CustomerAppTextStyles.body.copyWith(fontWeight: FontWeight.bold),
+                      textStyle: CustomerAppTextStyles.body,
+                      fillColor: Colors.white,
+                      borderColor: CustomerAppColors.border,
+                      focusedBorderColor: Colors.red,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          color: CustomerAppColors.textSecondary,
+                          size: 20.sp,
+                        ),
+                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) return 'Password verification is required';
+                        return null;
+                      },
                     ),
-                    validator: (val) {
-                      if (val == null || val.isEmpty) return 'Password verification is required';
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 40.h),
+                    SizedBox(height: 40.h),
+                  ],
 
                   // Alert container
                   Container(
@@ -171,17 +181,17 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                       children: [
                         const Icon(
                           Icons.warning_amber_rounded,
-                          color: Color(0xFFD32F2F),
+                          color: Colors.red,
                         ),
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
-                            'Confirming deletion will immediately remove your store profile, active products, and past order records from the platform.',
-                            style: ShopAppTextStyles.bodySmall.copyWith(
+                            'Confirming deletion will immediately remove your profile details, past order records, and saved addresses from the platform.',
+                            style: CustomerAppTextStyles.body.copyWith(
                               color: const Color(0xFFC62828),
                               height: 1.4,
                               fontWeight: FontWeight.bold,
-                              fontSize: 11.sp,
+                              fontSize: 12.sp,
                             ),
                           ),
                         ),
@@ -193,8 +203,11 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                   // Action button
                   PrimaryButton(
                     text: 'Delete Account',
-                    backgroundColor: const Color(0xFFD32F2F),
-                    textStyle: ShopAppTextStyles.buttonText,
+                    backgroundColor: Colors.red,
+                    textStyle: CustomerAppTextStyles.body.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                     isLoading: isLoading,
                     suffixIcon: Icon(
                       Icons.delete_forever_outlined,

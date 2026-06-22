@@ -1,6 +1,6 @@
 class CustomerConstants {
   // support information
-  static const String supportEmail = 'yadukrish9656@gmail.com';
+  static const String supportEmail = 'adminstreetcart@gmail.com';
   static const String supportPhoneNumber = '9745303779';
   static const String supportHours = '9 AM - 9 PM, Everyday';
 

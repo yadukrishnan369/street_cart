@@ -157,6 +157,8 @@ class FirebaseAuthService {
     return _auth.currentUser?.uid;
   }
 
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
   Future<String?> getCurrentUserIdAsync() async {
     final user = await _auth.authStateChanges().first;
     return user?.uid;

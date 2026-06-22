@@ -27,9 +27,10 @@ class ApproveShopRequested extends AdminRegistrationDetailsEvent {
 
 class RejectShopRequested extends AdminRegistrationDetailsEvent {
   final String shopId;
+  final String rejectionReason;
 
-  const RejectShopRequested(this.shopId);
+  const RejectShopRequested({required this.shopId, required this.rejectionReason});
 
   @override
-  List<Object?> get props => [shopId];
+  List<Object?> get props => [shopId, rejectionReason];
 }

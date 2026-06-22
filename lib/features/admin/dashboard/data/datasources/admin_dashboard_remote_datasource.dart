@@ -8,5 +8,5 @@ abstract class IAdminDashboardRemoteDataSource {
   Future<int> getPendingRegistrationsCount();
   Future<ShopProfileModel> getShopDetails(String shopId);
   Future<void> approveShop(String shopId);
-  Future<void> rejectShop(String shopId);
+  Future<void> rejectShop(String shopId, String rejectionReason);
 }

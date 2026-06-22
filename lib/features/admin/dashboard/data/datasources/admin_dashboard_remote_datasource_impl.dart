@@ -36,7 +36,9 @@ class AdminDashboardRemoteDataSourceImpl
           .where('is_approved', isEqualTo: false)
           .get();
       if (pendingQuery.docs.isNotEmpty) {
-        newRegistrations = pendingQuery.docs.map((doc) {
+        newRegistrations = pendingQuery.docs
+            .where((doc) => doc.data()['is_rejected'] != true)
+            .map((doc) {
           final data = doc.data();
           final shopName = data['shop_name'] ?? 'Unknown Shop';
           final category = data['category'] ?? 'New Merchant';
@@ -50,6 +52,7 @@ class AdminDashboardRemoteDataSourceImpl
             address: '$category • $timeAgoStr',
             timeAgo: timeAgoStr,
             createdAt: timestamp?.toDate(),
+            isReRegistered: data['is_reregistered'] ?? false,
           );
         }).toList();
 
@@ -139,8 +142,10 @@ class AdminDashboardRemoteDataSourceImpl
           .where('is_approved', isEqualTo: false)
           .get();
 
+      final filteredDocs = query.docs.where((doc) => doc.data()['is_rejected'] != true);
+
       final sortedDocs = List<QueryDocumentSnapshot<Map<String, dynamic>>>.from(
-        query.docs,
+        filteredDocs,
       );
       sortedDocs.sort((a, b) {
         final aTime = a.data()['created_at'] as Timestamp?;
@@ -165,6 +170,7 @@ class AdminDashboardRemoteDataSourceImpl
           address: '$category • $timeAgoStr',
           timeAgo: timeAgoStr,
           createdAt: timestamp?.toDate(),
+          isReRegistered: data['is_reregistered'] ?? false,
         );
       }).toList();
 
@@ -188,7 +194,8 @@ class AdminDashboardRemoteDataSourceImpl
           .collection('shops')
           .where('is_approved', isEqualTo: false)
           .get();
-      return query.docs.length;
+      final filteredDocs = query.docs.where((doc) => doc.data()['is_rejected'] != true);
+      return filteredDocs.length;
     } catch (e) {
       throw Exception('Failed to get pending registrations count: $e');
     }
@@ -219,9 +226,14 @@ class AdminDashboardRemoteDataSourceImpl
   }
 
   @override
-  Future<void> rejectShop(String shopId) async {
+  Future<void> rejectShop(String shopId, String rejectionReason) async {
     try {
-      await _firestore.collection('shops').doc(shopId).delete();
+      await _firestore.collection('shops').doc(shopId).update({
+        'is_approved': false,
+        'is_rejected': true,
+        'rejection_reason': rejectionReason,
+        'is_reregistered': false,
+      });
     } catch (e) {
       throw Exception('Failed to reject shop: $e');
     }

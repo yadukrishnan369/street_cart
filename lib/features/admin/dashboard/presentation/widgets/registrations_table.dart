@@ -182,15 +182,16 @@ class RegistrationsTable extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: const Color(0xFFF4EBFF),
+                color: reg.isReRegistered ? const Color(0xFFFFF3CD) : const Color(0xFFF4EBFF),
                 borderRadius: BorderRadius.circular(100.r),
+                border: reg.isReRegistered ? Border.all(color: const Color(0xFFFFEBAA)) : null,
               ),
               child: Text(
-                'Pending Review',
+                reg.isReRegistered ? 'Re-registered' : 'Pending Review',
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.bold,
-                  color: AdminAppColors.primaryColor,
+                  color: reg.isReRegistered ? const Color(0xFF856404) : AdminAppColors.primaryColor,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

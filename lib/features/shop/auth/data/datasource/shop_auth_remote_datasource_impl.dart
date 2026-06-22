@@ -10,6 +10,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   final FirebaseAuthService _authService;
   final FirebaseFirestore _firestore;
   final CloudinaryService _cloudinaryService;
+  bool _isDeleting = false;
 
   ShopAuthRemoteDataSourceImpl({
     required FirebaseAuthService authService,
@@ -22,6 +23,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   @override
   Future<void> signUp({required String email, required String password}) async {
     try {
+      _isDeleting = false;
       await _authService.signUpWithEmail(email: email, password: password);
     } on ServerException {
       rethrow;
@@ -33,6 +35,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   @override
   Future<void> login({required String email, required String password}) async {
     try {
+      _isDeleting = false;
       final userCredential = await _authService.signInWithEmail(email: email, password: password);
       final uid = userCredential.user?.uid;
       if (uid != null) {
@@ -70,6 +73,9 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         'is_approved': false,
         'is_profile_completed': false,
         'created_at': FieldValue.serverTimestamp(),
+        'is_rejected': false,
+        'rejection_reason': '',
+        'is_reregistered': false,
       });
     } catch (e) {
       throw ServerException(e.toString());
@@ -94,6 +100,9 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         throw ServerException('Failed to upload documents. Please try again.');
       }
 
+      final doc = await _firestore.collection('shops').doc(userId).get();
+      final bool wasRejected = doc.exists && (doc.data()?['is_rejected'] == true);
+
       // Update Shop document
       await _firestore.collection('shops').doc(userId).update({
         'category': category,
@@ -102,6 +111,10 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         'business_license_url': licenseUrl,
         'owner_id_url': ownerIdUrl,
         'is_profile_completed': true,
+        'is_rejected': false,
+        'rejection_reason': '',
+        'is_reregistered': wasRejected ? true : (doc.data()?['is_reregistered'] ?? false),
+        'is_approved': false,
       });
     } catch (e) {
       throw ServerException(e.toString());
@@ -114,7 +127,13 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         .collection('shops')
         .doc(userId)
         .snapshots()
+        .where((_) => !_isDeleting)
         .map((doc) => doc.exists ? ShopProfileModel.fromMap(doc.data()!, doc.id) : null);
+  }
+
+  @override
+  Stream<String?> getAuthUserIdChanges() {
+    return _authService.authStateChanges.map((user) => user?.uid);
   }
 
   @override
@@ -182,6 +201,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   @override
   Future<void> deleteAccount(String? password) async {
     try {
+      _isDeleting = true;
       if (password != null) {
         await _authService.reauthenticate(password);
       }
@@ -189,16 +209,19 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       final uid = _authService.getCurrentUserId();
       if (uid == null) throw ServerException('No user logged in');
 
-      await Future.wait([
-        _firestore.collection('shops').doc(uid).delete(),
-        _authService.deleteAuthAccount(),
-      ]);
+      // Delete Firestore data first while authenticated
+      await _firestore.collection('shops').doc(uid).delete();
+
+      // Then delete from Firebase Auth
+      await _authService.deleteAuthAccount();
 
       // Sign out
       await _authService.signOut();
     } on ServerException {
+      _isDeleting = false;
       rethrow;
     } catch (e) {
+      _isDeleting = false;
       throw ServerException('An error occurred during account deletion: $e');
     }
   }

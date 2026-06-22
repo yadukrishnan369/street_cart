@@ -7,6 +7,7 @@ class NewRegistrationModel extends Equatable {
   final String address;
   final String timeAgo;
   final DateTime? createdAt;
+  final bool isReRegistered;
 
   const NewRegistrationModel({
     required this.id,
@@ -14,6 +15,7 @@ class NewRegistrationModel extends Equatable {
     required this.address,
     required this.timeAgo,
     this.createdAt,
+    this.isReRegistered = false,
   });
 
   factory NewRegistrationModel.fromMap(Map<String, dynamic> map, String id) {
@@ -24,6 +26,7 @@ class NewRegistrationModel extends Equatable {
       address: map['address'] ?? '',
       timeAgo: map['timeAgo'] ?? map['time_ago'] ?? '',
       createdAt: timestamp?.toDate(),
+      isReRegistered: map['is_reregistered'] ?? false,
     );
   }
 
@@ -33,9 +36,10 @@ class NewRegistrationModel extends Equatable {
       'address': address,
       'time_ago': timeAgo,
       'created_at': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'is_reregistered': isReRegistered,
     };
   }
 
   @override
-  List<Object?> get props => [id, shopName, address, timeAgo, createdAt];
+  List<Object?> get props => [id, shopName, address, timeAgo, createdAt, isReRegistered];
 }

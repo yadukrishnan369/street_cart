@@ -5,7 +5,7 @@ class RejectShop {
 
   const RejectShop(this.repository);
 
-  Future<void> call(String shopId) async {
-    return await repository.rejectShop(shopId);
+  Future<void> call(String shopId, String rejectionReason) async {
+    return await repository.rejectShop(shopId, rejectionReason);
   }
 }

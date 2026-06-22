@@ -6,6 +6,10 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/features/shop/auth/presentation/pages/rejection_details_page.dart';
+
+import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class AccountReviewPage extends StatefulWidget {
   const AccountReviewPage({super.key});
@@ -29,172 +33,339 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          'Account Status',
-          style: ShopAppTextStyles.heading4,
-        ),
+        title: Text('Account Status', style: ShopAppTextStyles.heading4),
       ),
-      body: BlocBuilder<ShopAuthBloc, ShopAuthState>(
-        builder: (context, state) {
-          final bool isApproved =
-              state is ShopStatusLoaded && (state.shop?.isApproved ?? false);
+      body: BlocListener<ShopAuthBloc, ShopAuthState>(
+        listener: (context, state) {
+          if (state is ShopAuthInitial) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const ShopLoginPage()),
+              (route) => false,
+            );
+          } else if (state is ShopAuthFailure) {
+            CustomSnackBar.show(context, message: state.message, isError: true);
+          }
+        },
+        child: BlocBuilder<ShopAuthBloc, ShopAuthState>(
+          builder: (context, state) {
+            print('DEBUG: AccountReviewPage - BlocBuilder state: $state');
+            final shop = state is ShopStatusLoaded ? state.shop : null;
+            final bool isApproved = shop?.isApproved ?? false;
+            final bool isRejected = shop?.isRejected ?? false;
 
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 380.h,
-                  margin: EdgeInsets.all(20.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.r),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/shop_review_waiting.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30.r),
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.black.withOpacity(0.7),
-                                Colors.transparent,
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
+            if (isRejected && shop != null) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 380.h,
+                      margin: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.r),
+                        image: const DecorationImage(
+                          image: AssetImage(
+                            'assets/images/shop_review_waiting.png',
                           ),
+                          fit: BoxFit.cover,
                         ),
-                        Center(
-                          child: Container(
-                            height: 80.r,
-                            width: 80.r,
-                            decoration: const BoxDecoration(
-                              color: ShopAppColors.surface,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.hourglass_bottom_rounded,
-                              size: 36.sp,
-                              color: ShopAppColors.primary,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 20.h,
-                          left: 20.w,
-                          right: 20.w,
-                          child: Text(
-                            'Your shop account is ready!\n(Waiting for Approval)',
-                            textAlign: TextAlign.center,
-                            style: ShopAppTextStyles.heading4.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 12.h),
-                      Text(
-                        isApproved ? "You're All Set!" : 'Account Under Review',
-                        style: ShopAppTextStyles.heading1,
                       ),
-                      SizedBox(height: 32.h),
-                      Container(
-                        padding: EdgeInsets.all(16.w),
-                        decoration: BoxDecoration(
-                          color: ShopAppColors.surface,
-                          borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(
-                            color: ShopAppColors.border,
-                            width: 1.5.w,
-                          ),
-                        ),
-                        child: Row(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30.r),
+                        child: Stack(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
-                                color: ShopAppColors.primary.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(50.r),
-                              ),
-                              child: Icon(
-                                isApproved
-                                    ? Icons.check_circle_outline
-                                    : Icons.verified_user_outlined,
-                                color: ShopAppColors.primary,
-                                size: 20.sp,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.red.shade900.withOpacity(0.45),
+                                    Colors.red.shade700.withOpacity(0.2),
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
                               ),
                             ),
-                            SizedBox(width: 16.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    isApproved
-                                        ? 'Account Approved'
-                                        : 'Reviewing Credentials',
-                                    style: ShopAppTextStyles.bodyMediumBold,
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    isApproved
-                                        ? 'Your shop is now live! Click below to enter.'
-                                        : 'We are currently verifying your business documentation and identity. Expected time: 24-48 hours.',
-                                    style: ShopAppTextStyles.bodySmall,
-                                  ),
-                                ],
+                            Center(
+                              child: Container(
+                                height: 80.r,
+                                width: 80.r,
+                                decoration: const BoxDecoration(
+                                  color: ShopAppColors.surface,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.error_outline_rounded,
+                                  size: 44.sp,
+                                  color: Colors.red.shade700,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 20.h,
+                              left: 20.w,
+                              right: 20.w,
+                              child: Text(
+                                'Application Rejected',
+                                textAlign: TextAlign.center,
+                                style: ShopAppTextStyles.heading3.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 40.h),
-                      PrimaryButton(
-                        text: 'Go to Dashboard',
-                        backgroundColor: isApproved
-                            ? ShopAppColors.primary
-                            : ShopAppColors.primary.withOpacity(0.5),
-                        textStyle: ShopAppTextStyles.buttonText.copyWith(
-                          color: Colors.white.withOpacity(isApproved ? 1 : 0.6),
-                        ),
-                        prefixIcon: isApproved
-                            ? null
-                            : Icon(
-                                Icons.lock_outline,
-                                color: Colors.white.withOpacity(0.6),
-                                size: 18.sp,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 12.h),
+                          Text(
+                            'Action Required',
+                            style: ShopAppTextStyles.heading1.copyWith(
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                          SizedBox(height: 32.h),
+                          Container(
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: ShopAppColors.surface,
+                              borderRadius: BorderRadius.circular(20.r),
+                              border: Border.all(
+                                color: Colors.red.shade200,
+                                width: 1.5.w,
                               ),
-                        onPressed: isApproved
-                            ? () {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ShopHomePage(),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10.w),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade50,
+                                    borderRadius: BorderRadius.circular(50.r),
                                   ),
-                                  (route) => false,
-                                );
-                              }
-                            : null,
+                                  child: Icon(
+                                    Icons.assignment_late_outlined,
+                                    color: Colors.red.shade700,
+                                    size: 20.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Verification Feedback',
+                                        style: ShopAppTextStyles.bodyMediumBold,
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        'Your registration application requires changes before approval. Please view details to make the necessary corrections.',
+                                        style: ShopAppTextStyles.bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 40.h),
+                          PrimaryButton(
+                            text: 'View Rejection Details',
+                            backgroundColor: Colors.red.shade700,
+                            textStyle: ShopAppTextStyles.buttonText.copyWith(
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RejectionDetailsPage(shop: shop),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 40.h),
+                        ],
                       ),
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
+              );
+            }
+
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: 380.h,
+                    margin: EdgeInsets.all(20.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.r),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                          'assets/images/shop_review_waiting.png',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30.r),
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.black.withOpacity(0.7),
+                                  Colors.transparent,
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Container(
+                              height: 80.r,
+                              width: 80.r,
+                              decoration: const BoxDecoration(
+                                color: ShopAppColors.surface,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.hourglass_bottom_rounded,
+                                size: 36.sp,
+                                color: ShopAppColors.primary,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 20.h,
+                            left: 20.w,
+                            right: 20.w,
+                            child: Text(
+                              'Your shop account is ready!\n(Lets Explore Streetcart)',
+                              textAlign: TextAlign.center,
+                              style: ShopAppTextStyles.heading4.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 12.h),
+                        Text(
+                          isApproved
+                              ? "You're All Set!"
+                              : 'Account Under Review',
+                          style: ShopAppTextStyles.heading1,
+                        ),
+                        SizedBox(height: 32.h),
+                        Container(
+                          padding: EdgeInsets.all(16.w),
+                          decoration: BoxDecoration(
+                            color: ShopAppColors.surface,
+                            borderRadius: BorderRadius.circular(20.r),
+                            border: Border.all(
+                              color: ShopAppColors.border,
+                              width: 1.5.w,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(10.w),
+                                decoration: BoxDecoration(
+                                  color: ShopAppColors.primary.withOpacity(
+                                    0.08,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.r),
+                                ),
+                                child: Icon(
+                                  isApproved
+                                      ? Icons.check_circle_outline
+                                      : Icons.verified_user_outlined,
+                                  color: ShopAppColors.primary,
+                                  size: 20.sp,
+                                ),
+                              ),
+                              SizedBox(width: 16.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      isApproved
+                                          ? 'Account Approved'
+                                          : 'Reviewing Credentials',
+                                      style: ShopAppTextStyles.bodyMediumBold,
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      isApproved
+                                          ? 'Your shop is now live! Click below to enter.'
+                                          : 'We are currently verifying your business documentation and identity. Expected time: 24-48 hours.',
+                                      style: ShopAppTextStyles.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 40.h),
+                        PrimaryButton(
+                          text: 'Go to Dashboard',
+                          backgroundColor: isApproved
+                              ? ShopAppColors.primary
+                              : ShopAppColors.primary.withOpacity(0.5),
+                          textStyle: ShopAppTextStyles.buttonText.copyWith(
+                            color: Colors.white.withOpacity(
+                              isApproved ? 1 : 0.6,
+                            ),
+                          ),
+                          prefixIcon: isApproved
+                              ? null
+                              : Icon(
+                                  Icons.lock_outline,
+                                  color: Colors.white.withOpacity(0.6),
+                                  size: 18.sp,
+                                ),
+                          onPressed: isApproved
+                              ? () {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ShopHomePage(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
+                              : null,
+                        ),
+                        SizedBox(height: 40.h),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -202,9 +202,11 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
 
   Future<void> _onStatusSubscription(
       ShopStatusSubscriptionRequested event, Emitter<ShopAuthState> emit) async {
+    print('DEBUG: ShopAuthBloc - _onStatusSubscription started');
     await emit.forEach<ShopProfileModel?>(
       _getStatus(),
       onData: (shop) {
+        print('DEBUG: ShopAuthBloc - _onStatusSubscription received data: shopName=${shop?.shopName}, isApproved=${shop?.isApproved}, isRejected=${shop?.isRejected}, rejectionReason=${shop?.rejectionReason}');
         if (shop == null || shop.isSuspended == true) {
           add(ShopLogoutRequested());
           return ShopAuthInitial();
@@ -212,6 +214,7 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
         return ShopStatusLoaded(shop);
       },
       onError: (e, _) {
+        print('DEBUG: ShopAuthBloc - _onStatusSubscription error: $e');
         if (e.toString().contains('PERMISSION_DENIED') || e.toString().contains('permission-denied')) {
           add(ShopLogoutRequested());
           return ShopAuthInitial();

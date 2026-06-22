@@ -42,9 +42,9 @@ class AdminRegistrationDetailsBloc
     on<RejectShopRequested>((event, emit) async {
       emit(AdminRegistrationActionInProgress());
       try {
-        await rejectShop(event.shopId);
+        await rejectShop(event.shopId, event.rejectionReason);
         emit(const AdminRegistrationActionSuccess(
-          'Shop application rejected and deleted successfully',
+          'Shop application rejected successfully',
           approved: false,
         ));
       } catch (e) {
