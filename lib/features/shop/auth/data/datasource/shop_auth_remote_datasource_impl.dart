@@ -265,6 +265,27 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   }
 
   @override
+  Future<List<String>> getProductCategories() async {
+    try {
+      final doc = await _firestore.collection('config').doc('categories').get();
+      if (doc.exists && doc.data() != null) {
+        final rawProductCats = doc.data()!['product_categories'] as List<dynamic>?;
+        if (rawProductCats != null) {
+          return rawProductCats
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .where((e) => e['is_visible'] == true)
+              .map((e) => e['name'] as String)
+              .where((name) => name.isNotEmpty)
+              .toList();
+        }
+      }
+      return [];
+    } catch (e) {
+      throw ServerException('Failed to load product categories: $e');
+    }
+  }
+
+  @override
   Future<Map<String, bool>> getPaymentSettings() async {
     try {
       final doc = await _firestore.collection('config').doc('settings').get();

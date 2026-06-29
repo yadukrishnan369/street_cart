@@ -53,7 +53,7 @@ class ShopMetricCards extends StatelessWidget {
                 border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF1E1E2F).withOpacity(0.02),
+                    color: const Color(0xFF1E1E2F).withValues(alpha: 0.02),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),

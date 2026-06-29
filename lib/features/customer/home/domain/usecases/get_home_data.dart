@@ -1,11 +1,11 @@
 import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
 
-class GetHomeAddress {
+class GetHomeData {
   final IHomeRepository repository;
 
-  GetHomeAddress(this.repository);
+  GetHomeData(this.repository);
 
-  Future<String?> call() {
-    return repository.getHomeAddress();
+  Future<HomeData> call() {
+    return repository.getHomeData();
   }
 }

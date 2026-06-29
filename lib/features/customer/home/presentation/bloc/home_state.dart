@@ -1,3 +1,5 @@
+import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
+
 abstract class HomeState {}
 
 class HomeInitial extends HomeState {}
@@ -5,9 +7,9 @@ class HomeInitial extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  final String? address;
+  final HomeData homeData;
 
-  HomeLoaded({this.address});
+  HomeLoaded({required this.homeData});
 }
 
 class HomeError extends HomeState {

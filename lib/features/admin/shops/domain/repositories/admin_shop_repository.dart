@@ -1,4 +1,5 @@
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
+import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 
 class AdminShopResponse {
   final List<ShopProfileModel> shops;
@@ -35,4 +36,6 @@ abstract class IAdminShopRepository {
   Future<ShopProfileModel> getShopById(String shopId);
 
   Future<void> deleteShop(String shopId);
+
+  Future<List<ProductModel>> getShopProducts(String shopId);
 }

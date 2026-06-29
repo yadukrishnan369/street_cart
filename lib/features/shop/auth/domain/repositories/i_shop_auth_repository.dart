@@ -54,5 +54,7 @@ abstract class IShopAuthRepository {
 
   Future<List<String>> getBusinessCategories();
 
+  Future<List<String>> getProductCategories();
+
   Future<Map<String, bool>> getPaymentSettings();
 }

@@ -17,6 +17,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_bloc.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_event.dart';
+import 'package:street_cart/features/admin/products/presentation/pages/admin_products_page.dart';
+import 'package:street_cart/features/admin/products/presentation/pages/admin_product_detail_page.dart';
 import 'route_paths.dart';
 
 class AdminRoutes {
@@ -33,10 +35,6 @@ class AdminRoutes {
           path: RoutePaths.forgotPassword,
           builder: (context, state) => const AdminForgotPasswordPage(),
         ),
-        GoRoute(
-          path: RoutePaths.categories,
-          builder: (context, state) => const AdminCategoriesPage(),
-        ),
         ShellRoute(
           builder: (context, state, child) {
             return BlocProvider(
@@ -48,6 +46,10 @@ class AdminRoutes {
             );
           },
           routes: [
+            GoRoute(
+              path: RoutePaths.categories,
+              builder: (context, state) => const AdminCategoriesPage(),
+            ),
             GoRoute(
               path: RoutePaths.dashboard,
               builder: (context, state) => const AdminDashboardPage(),
@@ -92,6 +94,17 @@ class AdminRoutes {
             GoRoute(
               path: RoutePaths.profile,
               builder: (context, state) => const AdminProfilePage(),
+            ),
+            GoRoute(
+              path: RoutePaths.products,
+              builder: (context, state) => const AdminProductsPage(),
+            ),
+            GoRoute(
+              path: RoutePaths.productDetails,
+              builder: (context, state) {
+                final productId = state.pathParameters['id'] ?? '';
+                return AdminProductDetailPage(productId: productId);
+              },
             ),
           ],
         ),

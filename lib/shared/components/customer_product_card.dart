@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 class ProductCard extends StatelessWidget {
   final String imageUrl;
   final String brand;
   final String title;
   final String price;
+  final String? originalPrice;
+  final int? discountPercentage;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteTap;
+  final bool isNew;
 
   const ProductCard({
     super.key,
@@ -13,6 +19,11 @@ class ProductCard extends StatelessWidget {
     required this.brand,
     required this.title,
     required this.price,
+    this.originalPrice,
+    this.discountPercentage,
+    this.isFavorite = false,
+    this.onFavoriteTap,
+    this.isNew = false,
   });
 
   @override
@@ -33,7 +44,7 @@ class ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image and Favorite Button
+          // Image and Wishlist Button
           Expanded(
             flex: 3,
             child: Stack(
@@ -53,19 +64,46 @@ class ProductCard extends StatelessWidget {
                 Positioned(
                   top: 8.h,
                   right: 8.w,
-                  child: Container(
-                    padding: EdgeInsets.all(4.w),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 16.sp,
-                      color: Colors.grey,
+                  child: GestureDetector(
+                    onTap: onFavoriteTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      padding: EdgeInsets.all(8.w),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        size: 18.sp,
+                        color: isFavorite ? Colors.red : Colors.grey,
+                      ),
                     ),
                   ),
                 ),
+                if (isNew)
+                  Positioned(
+                    bottom: 8.h,
+                    left: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: CustomerAppColors.primary,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        'NEW',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -98,12 +136,40 @@ class ProductCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
-                  Text(
-                    price,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                    ),
+                    Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        price,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      if (originalPrice != null) ...[
+                        SizedBox(width: 6.w),
+                        Text(
+                          originalPrice!,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
+                      if (discountPercentage != null && discountPercentage! > 0) ...[
+                        SizedBox(width: 6.w),
+                        Text(
+                          '$discountPercentage% OFF',
+                          style: TextStyle(
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF10B981),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ),

@@ -25,7 +25,7 @@ class ShopsPagination extends StatelessWidget {
         icon: Icon(Icons.chevron_left, size: 20.sp),
         color: currentPage > 1
             ? AdminAppColors.primaryColor
-            : const Color(0xFF8A8A9E).withOpacity(0.5),
+            : const Color(0xFF8A8A9E).withValues(alpha: 0.5),
         onPressed: currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
       ),
     );
@@ -68,7 +68,7 @@ class ShopsPagination extends StatelessWidget {
         icon: Icon(Icons.chevron_right, size: 20.sp),
         color: currentPage < totalPages
             ? AdminAppColors.primaryColor
-            : const Color(0xFF8A8A9E).withOpacity(0.5),
+            : const Color(0xFF8A8A9E).withValues(alpha: 0.5),
         onPressed: currentPage < totalPages ? () => onPageChanged(currentPage + 1) : null,
       ),
     );

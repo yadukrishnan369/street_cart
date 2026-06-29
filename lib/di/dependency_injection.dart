@@ -37,8 +37,31 @@ import 'package:street_cart/features/customer/home/data/datasources/home_remote_
 import 'package:street_cart/features/customer/home/data/datasources/home_remote_datasource_impl.dart';
 import 'package:street_cart/features/customer/home/data/repositories/home_repository_impl.dart';
 import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
-import 'package:street_cart/features/customer/home/domain/usecases/get_home_address.dart';
+import 'package:street_cart/features/customer/home/domain/usecases/get_home_data.dart';
 import 'package:street_cart/features/customer/home/presentation/bloc/home_bloc.dart';
+
+// CUSTOMER - PRODUCTS
+import 'package:street_cart/features/customer/products/data/datasources/customer_products_remote_datasource.dart';
+import 'package:street_cart/features/customer/products/data/datasources/customer_products_remote_datasource_impl.dart';
+import 'package:street_cart/features/customer/products/data/repositories/customer_products_repository_impl.dart';
+import 'package:street_cart/features/customer/products/domain/repositories/i_customer_products_repository.dart';
+import 'package:street_cart/features/customer/products/domain/usecases/get_customer_products.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
+import 'package:street_cart/features/customer/products/domain/usecases/add_to_wishlist.dart';
+import 'package:street_cart/features/customer/products/domain/usecases/remove_from_wishlist.dart';
+import 'package:street_cart/features/customer/products/domain/usecases/get_wishlist.dart';
+import 'package:street_cart/features/customer/products/domain/usecases/clear_wishlist.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_bloc.dart';
+
+// CUSTOMER - SHOPS
+import 'package:street_cart/features/customer/shops/data/datasources/customer_shops_remote_datasource.dart';
+import 'package:street_cart/features/customer/shops/data/datasources/customer_shops_remote_datasource_impl.dart';
+import 'package:street_cart/features/customer/shops/data/repositories/customer_shops_repository_impl.dart';
+import 'package:street_cart/features/customer/shops/domain/repositories/i_customer_shops_repository.dart';
+import 'package:street_cart/features/customer/shops/domain/usecases/get_nearby_shops.dart';
+import 'package:street_cart/features/customer/shops/domain/usecases/get_customer_shop_products.dart';
+import 'package:street_cart/features/customer/shops/presentation/bloc/customer_shops_bloc.dart';
+import 'package:street_cart/features/customer/shops/presentation/bloc/shop_details_bloc.dart';
 
 // CUSTOMER - PROFILE
 import 'package:street_cart/features/customer/profile/data/datasources/profile_remote_datasource.dart';
@@ -108,6 +131,8 @@ import 'package:street_cart/features/shop/auth/domain/usecases/finalize_shop_sig
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_business_categories.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
+import 'package:street_cart/features/shop/auth/domain/usecases/get_product_categories.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_product_categories_cubit.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_shop_payment_settings.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_payment_settings_cubit.dart';
 import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource_impl.dart';
@@ -161,6 +186,19 @@ import 'package:street_cart/features/shop/profile/domain/usecases/update_shop_pr
 import 'package:street_cart/features/shop/profile/domain/usecases/upload_shop_profile_image.dart';
 import 'package:street_cart/features/shop/profile/domain/usecases/remove_shop_profile_image.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
+
+// SHOP - PRODUCTS
+import 'package:street_cart/features/shop/products/data/datasources/shop_products_remote_datasource.dart';
+import 'package:street_cart/features/shop/products/data/datasources/shop_products_remote_datasource_impl.dart';
+import 'package:street_cart/features/shop/products/data/repositories/shop_products_repository_impl.dart';
+import 'package:street_cart/features/shop/products/domain/repositories/i_shop_products_repository.dart';
+import 'package:street_cart/features/shop/products/domain/usecases/get_shop_products.dart';
+import 'package:street_cart/features/shop/products/domain/usecases/add_product.dart';
+import 'package:street_cart/features/shop/products/domain/usecases/update_product.dart';
+import 'package:street_cart/features/shop/products/domain/usecases/delete_product.dart';
+import 'package:street_cart/features/shop/products/domain/usecases/get_shop_product_config.dart';
+import 'package:street_cart/features/shop/products/domain/usecases/save_shop_product_config.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 
 // ADMIN
 import 'package:street_cart/features/admin/auth/data/datasource/admin_auth_remote_datasource.dart';
@@ -235,6 +273,17 @@ import 'package:street_cart/features/admin/customers/domain/usecases/get_admin_c
 import 'package:street_cart/features/admin/customers/domain/usecases/delete_customer.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_bloc.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customer_detail_bloc.dart';
+// ADMIN - PRODUCTS
+import 'package:street_cart/features/admin/products/data/datasources/admin_product_remote_datasource.dart';
+import 'package:street_cart/features/admin/products/data/datasources/admin_product_remote_datasource_impl.dart';
+import 'package:street_cart/features/admin/products/domain/repositories/admin_product_repository.dart';
+import 'package:street_cart/features/admin/products/data/repositories/admin_product_repository_impl.dart';
+import 'package:street_cart/features/admin/products/domain/usecases/get_admin_products.dart';
+import 'package:street_cart/features/admin/products/domain/usecases/get_admin_product_details.dart';
+import 'package:street_cart/features/admin/products/domain/usecases/disable_product.dart';
+import 'package:street_cart/features/admin/products/domain/usecases/admin_delete_product.dart';
+import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_bloc.dart';
+import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_detail_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -244,6 +293,8 @@ Future<void> initDependencies() async {
   // CUSTOMER
   _initCustomerAuth();
   _initCustomerHome();
+  _initCustomerProducts();
+  _initCustomerShops();
   _initCustomerProfile();
   _initCustomerLocation();
   _initCustomerOnboarding();
@@ -258,6 +309,7 @@ Future<void> initDependencies() async {
   await _initShopSplash();
   await _initShopProfile();
   await _initShopSettings();
+  await _initShopProducts();
 
   // ADMIN
   _initAdminAuth();
@@ -267,6 +319,7 @@ Future<void> initDependencies() async {
   _initAdminProfile();
   _initAdminShop();
   _initAdminCustomers();
+  _initAdminProducts();
 }
 
 // ================= SHOP SPLASH =================
@@ -368,6 +421,7 @@ Future<void> _initShopAuth() async {
   sl.registerLazySingleton(() => CheckShopEmailVerification(sl()));
   sl.registerLazySingleton(() => FinalizeShopSignUp(sl()));
   sl.registerLazySingleton(() => GetBusinessCategories(sl()));
+  sl.registerLazySingleton(() => GetProductCategories(sl()));
   sl.registerLazySingleton(() => GetShopPaymentSettings(sl()));
 
   // Bloc
@@ -386,6 +440,9 @@ Future<void> _initShopAuth() async {
     ),
   );
   sl.registerFactory(() => ShopCategoriesCubit(getBusinessCategories: sl()));
+  sl.registerFactory(
+    () => ShopProductCategoriesCubit(getProductCategories: sl()),
+  );
   sl.registerFactory(
     () => ShopPaymentSettingsCubit(getShopPaymentSettings: sl()),
   );
@@ -465,9 +522,9 @@ void _initCustomerHome() {
     () => HomeRepositoryImpl(remoteDataSource: sl()),
   );
 
-  sl.registerLazySingleton(() => GetHomeAddress(sl()));
+  sl.registerLazySingleton(() => GetHomeData(sl()));
 
-  sl.registerFactory(() => HomeBloc(getHomeAddress: sl()));
+  sl.registerLazySingleton(() => HomeBloc(getHomeData: sl()));
 }
 
 // ================= CUSTOMER PROFILE =================
@@ -598,6 +655,62 @@ Future<void> _initCustomerSettings() async {
   );
 }
 
+// ================= CUSTOMER PRODUCTS =================
+void _initCustomerProducts() {
+  sl.registerLazySingleton<ICustomerProductsRemoteDataSource>(
+    () => CustomerProductsRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+  );
+
+  sl.registerLazySingleton<ICustomerProductsRepository>(
+    () => CustomerProductsRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerLazySingleton(() => GetCustomerProducts(repository: sl()));
+  sl.registerLazySingleton(() => AddToWishlist(repository: sl()));
+  sl.registerLazySingleton(() => RemoveFromWishlist(repository: sl()));
+  sl.registerLazySingleton(() => GetWishlist(repository: sl()));
+  sl.registerLazySingleton(() => ClearWishlist(repository: sl()));
+
+  sl.registerFactory(
+    () => CustomerProductsBloc(
+      getCustomerProducts: sl(),
+      sharedPreferences: sl(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => WishlistBloc(
+      addToWishlist: sl(),
+      removeFromWishlist: sl(),
+      getWishlist: sl(),
+      clearWishlist: sl(),
+      auth: sl(),
+    ),
+  );
+}
+
+// ================= CUSTOMER SHOPS =================
+void _initCustomerShops() {
+  sl.registerLazySingleton<ICustomerShopsRemoteDataSource>(
+    () => CustomerShopsRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+  );
+
+  sl.registerLazySingleton<ICustomerShopsRepository>(
+    () => CustomerShopsRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerLazySingleton(() => GetNearbyShops(repository: sl()));
+  sl.registerLazySingleton(() => GetCustomerShopProducts(repository: sl()));
+
+  sl.registerFactory(
+    () => CustomerShopsBloc(
+      getNearbyShops: sl(),
+      sharedPreferences: sl(),
+    ),
+  );
+  sl.registerFactory(() => ShopDetailsBloc(getShopProducts: sl()));
+}
+
 // ================= SHOP PROFILE =================
 Future<void> _initShopProfile() async {
   // Datasource
@@ -642,6 +755,42 @@ Future<void> _initShopSettings() async {
   sl.registerFactory(
     () =>
         ShopSettingsBloc(changeShopPassword: sl(), deleteShopAuthAccount: sl()),
+  );
+}
+
+// ================= SHOP PRODUCTS =================
+Future<void> _initShopProducts() async {
+  // Datasource
+  sl.registerLazySingleton<IShopProductsRemoteDataSource>(
+    () => ShopProductsRemoteDataSourceImpl(
+      firestore: sl(),
+      cloudinaryService: sl(),
+    ),
+  );
+
+  // Repository
+  sl.registerLazySingleton<IShopProductsRepository>(
+    () => ShopProductsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton(() => GetShopProducts(sl()));
+  sl.registerLazySingleton(() => AddProduct(sl()));
+  sl.registerLazySingleton(() => UpdateProduct(sl()));
+  sl.registerLazySingleton(() => DeleteProduct(sl()));
+  sl.registerLazySingleton(() => GetShopProductConfig(sl()));
+  sl.registerLazySingleton(() => SaveShopProductConfig(sl()));
+
+  // Bloc
+  sl.registerFactory(
+    () => ShopProductsBloc(
+      getShopProducts: sl(),
+      addProduct: sl(),
+      updateProduct: sl(),
+      deleteProduct: sl(),
+      getShopProductConfig: sl(),
+      saveShopProductConfig: sl(),
+    ),
   );
 }
 
@@ -808,6 +957,7 @@ void _initAdminShop() {
       getAdminShopDetails: sl(),
       toggleShopSuspension: sl(),
       deleteShop: sl(),
+      shopRepository: sl(),
     ),
   );
 }
@@ -841,6 +991,34 @@ void _initAdminCustomers() {
       getCustomerDetails: sl(),
       toggleBlockStatus: sl(),
       deleteCustomer: sl(),
+    ),
+  );
+}
+
+void _initAdminProducts() {
+  // Datasource
+  sl.registerLazySingleton<IAdminProductRemoteDataSource>(
+    () => AdminProductRemoteDataSourceImpl(firestore: sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<IAdminProductRepository>(
+    () => AdminProductRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use Case
+  sl.registerLazySingleton(() => GetAdminProducts(sl()));
+  sl.registerLazySingleton(() => GetAdminProductDetails(sl()));
+  sl.registerLazySingleton(() => DisableProduct(sl()));
+  sl.registerLazySingleton(() => AdminDeleteProduct(sl()));
+
+  // Bloc
+  sl.registerFactory(() => AdminProductBloc(getAdminProducts: sl()));
+  sl.registerFactory(
+    () => AdminProductDetailBloc(
+      getProductDetails: sl(),
+      disableProduct: sl(),
+      deleteProduct: sl(),
     ),
   );
 }

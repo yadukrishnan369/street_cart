@@ -162,7 +162,7 @@ class _AdminCustomerDetailPageState extends State<AdminCustomerDetailPage> {
           ),
           SizedBox(width: 8.w),
           Text(
-            'Back to Customer',
+            'Go Back',
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w700,

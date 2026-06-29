@@ -1,12 +1,14 @@
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
-import '../../domain/repositories/admin_shop_repository.dart';
-import '../datasources/admin_shop_remote_datasource.dart';
+import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/features/admin/shops/domain/repositories/admin_shop_repository.dart';
+import 'package:street_cart/features/admin/shops/data/datasources/admin_shop_remote_datasource.dart';
 
 class AdminShopRepositoryImpl implements IAdminShopRepository {
   final IAdminShopRemoteDataSource _remoteDataSource;
 
-  AdminShopRepositoryImpl({required IAdminShopRemoteDataSource remoteDataSource})
-      : _remoteDataSource = remoteDataSource;
+  AdminShopRepositoryImpl({
+    required IAdminShopRemoteDataSource remoteDataSource,
+  }) : _remoteDataSource = remoteDataSource;
 
   @override
   Future<AdminShopResponse> getShops({
@@ -22,16 +24,17 @@ class AdminShopRepositoryImpl implements IAdminShopRepository {
     final activeShops = allShops.where((shop) => !shop.isSuspended).length;
     final suspendedShops = allShops.where((shop) => shop.isSuspended).length;
 
-    final configuredCategories = await _remoteDataSource.getBusinessCategoryNames();
+    final configuredCategories = await _remoteDataSource
+        .getBusinessCategoryNames();
     final uniqueCategoriesSet = <String>{};
     uniqueCategoriesSet.addAll(configuredCategories);
-    
+
     for (final shop in allShops) {
       if (shop.category.isNotEmpty) {
         uniqueCategoriesSet.add(shop.category);
       }
     }
-    
+
     final uniqueCategories = uniqueCategoriesSet.toList();
     uniqueCategories.sort();
 
@@ -48,8 +51,12 @@ class AdminShopRepositoryImpl implements IAdminShopRepository {
       filteredShops = filteredShops.where((shop) => !shop.isSuspended).toList();
     } else if (statusFilter == 'Suspended') {
       filteredShops = filteredShops.where((shop) => shop.isSuspended).toList();
-    } else if (statusFilter == 'Category' && categoryFilter != null && categoryFilter.isNotEmpty) {
-      filteredShops = filteredShops.where((shop) => shop.category == categoryFilter).toList();
+    } else if (statusFilter == 'Category' &&
+        categoryFilter != null &&
+        categoryFilter.isNotEmpty) {
+      filteredShops = filteredShops
+          .where((shop) => shop.category == categoryFilter)
+          .toList();
     }
 
     filteredShops.sort((a, b) {
@@ -96,5 +103,10 @@ class AdminShopRepositoryImpl implements IAdminShopRepository {
   @override
   Future<void> deleteShop(String shopId) async {
     await _remoteDataSource.deleteShop(shopId);
+  }
+
+  @override
+  Future<List<ProductModel>> getShopProducts(String shopId) async {
+    return await _remoteDataSource.getProductsByShopId(shopId);
   }
 }

@@ -60,7 +60,7 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
         ),
         SizedBox(width: 24.w),
 
-        // Textual info
+        // shop info
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +233,7 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E1E2F).withOpacity(0.01),
+            color: const Color(0xFF1E1E2F).withValues(alpha: 0.01),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -316,7 +316,7 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
       builder: (dialogCtx) => CustomAlertDialog(
         title: 'Permanently Delete Shop',
         content:
-            'This action is irreversible. All Firestore profile data for "${shop.shopName}" will be permanently deleted. Do you want to proceed?',
+            'This action is irreversible. All profile data for "${shop.shopName}" will be permanently deleted. Do you want to proceed?',
         secondaryActionLabel: 'Cancel',
         primaryActionLabel: 'Permanently Delete',
         icon: Icons.warning_amber_outlined,

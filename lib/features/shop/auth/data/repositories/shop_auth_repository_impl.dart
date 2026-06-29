@@ -193,6 +193,20 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
   }
 
   @override
+  Future<List<String>> getProductCategories() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      return await _remoteDataSource.getProductCategories();
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
   Future<Map<String, bool>> getPaymentSettings() async {
     if (!await _networkInfo.isConnected) {
       throw NetworkException('Please check your internet connection.');

@@ -6,6 +6,9 @@ class CustomSearchBar extends StatelessWidget {
   final VoidCallback? onTap;
   final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final VoidCallback? onFilterTap;
+  final bool autofocus;
+  final bool showFilter;
 
   const CustomSearchBar({
     super.key,
@@ -13,6 +16,9 @@ class CustomSearchBar extends StatelessWidget {
     this.onTap,
     this.controller,
     this.onChanged,
+    this.onFilterTap,
+    this.autofocus = false,
+    this.showFilter = true,
   });
 
   @override
@@ -41,6 +47,7 @@ class CustomSearchBar extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               onTap: onTap,
+              autofocus: autofocus,
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: TextStyle(
@@ -59,7 +66,11 @@ class CustomSearchBar extends StatelessWidget {
             ),
           ),
           SizedBox(width: 8.w),
-          Icon(Icons.tune, color: Colors.grey, size: 24.sp), // Filter icon
+          if (showFilter)
+            GestureDetector(
+              onTap: onFilterTap,
+              child: Icon(Icons.tune, color: Colors.grey, size: 24.sp),
+            ), // Filter icon
         ],
       ),
     );

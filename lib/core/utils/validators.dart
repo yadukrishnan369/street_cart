@@ -171,4 +171,62 @@ class Validators {
 
     return null;
   }
+
+  // Product Specific Validators
+  static String? validateProductName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Product name is mandatory';
+    }
+    return null;
+  }
+
+  static String? validateProductOriginalPrice(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Mandatory';
+    }
+    final price = double.tryParse(value);
+    if (price == null) {
+      return 'Invalid number';
+    }
+    if (price <= 0) {
+      return 'Must be greater than 0';
+    }
+    return null;
+  }
+
+  static String? validateProductOfferPrice(String? value, String? originalPriceStr) {
+    if (value != null && value.trim().isNotEmpty) {
+      final offerPrice = double.tryParse(value);
+      if (offerPrice == null) {
+        return 'Invalid number';
+      }
+      if (offerPrice <= 0) {
+        return 'Must be greater than 0';
+      }
+      if (originalPriceStr != null && originalPriceStr.trim().isNotEmpty) {
+        final originalPrice = double.tryParse(originalPriceStr);
+        if (originalPrice != null && offerPrice >= originalPrice) {
+          return 'Must be less than original price';
+        }
+      }
+    }
+    return null;
+  }
+
+  static String? validateProductDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Description is mandatory';
+    }
+    return null;
+  }
+
+  static String? validateProductStock(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Stock is mandatory';
+    }
+    if (int.tryParse(value) == null) {
+      return 'Invalid integer';
+    }
+    return null;
+  }
 }

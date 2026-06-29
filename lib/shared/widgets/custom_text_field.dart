@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? labelTrailing;
   final String? Function(String?)? validator;
   final int maxLines;
+  final TextInputType? keyboardType;
 
   // Theming parameters
   final TextStyle? labelStyle;
@@ -31,6 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.labelTrailing,
     this.validator,
     this.maxLines = 1,
+    this.keyboardType,
     this.labelStyle,
     this.textStyle,
     this.hintStyle,
@@ -79,6 +81,7 @@ class CustomTextField extends StatelessWidget {
           maxLines: maxLines,
           validator: validator,
           style: effectiveTextStyle,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: effectiveHintStyle,

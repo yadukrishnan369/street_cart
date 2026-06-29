@@ -21,6 +21,9 @@ import 'package:street_cart/features/shop/support/presentation/widgets/shop_supp
 import 'package:street_cart/features/shop/profile/presentation/pages/edit_shop_profile_page.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
+import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 
 class ShopHomePage extends StatefulWidget {
   const ShopHomePage({super.key});
@@ -75,7 +78,9 @@ class _ShopHomePageState extends State<ShopHomePage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Loading profile details, please try again in a moment.'),
+                content: Text(
+                  'Loading profile details, please try again in a moment.',
+                ),
                 duration: Duration(seconds: 2),
               ),
             );
@@ -97,7 +102,9 @@ class _ShopHomePageState extends State<ShopHomePage> {
               if (state is ShopAuthInitial) {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const ShopLoginPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ShopLoginPage(),
+                  ),
                   (route) => false,
                 );
               }
@@ -207,10 +214,45 @@ class _ShopHomePageState extends State<ShopHomePage> {
                 SizedBox(height: 20.h),
                 const WeeklySalesCard(),
                 SizedBox(height: 20.h),
-                const QuickActions(),
+                QuickActions(
+                  onAddProductTap: () {
+                    final authState = context.read<ShopAuthBloc>().state;
+                    if (authState is ShopStatusLoaded) {
+                      final shopId = authState.shop?.uid ?? '';
+                      final productsBloc = sl<ShopProductsBloc>();
+                      productsBloc.add(LoadProductConfigEvent(shopId));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddEditProductPage(
+                            shopId: shopId,
+                            productsBloc: productsBloc,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  onEditProfileTap: () {
+                    final authState = context.read<ShopAuthBloc>().state;
+                    if (authState is ShopStatusLoaded) {
+                      final profile = authState.shop;
+                      if (profile != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => sl<ShopProfileBloc>(),
+                              child: EditShopProfilePage(profile: profile),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                ),
                 SizedBox(height: 20.h),
                 const RecentOrdersList(),
-                SizedBox(height: 100.h), // Bottom nav padding
+                SizedBox(height: 100.h),
               ],
             ),
           ),

@@ -10,7 +10,6 @@ import 'package:street_cart/features/admin/settings/data/models/admin_settings_m
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_bloc.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_event.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_state.dart';
-import 'package:street_cart/features/admin/settings/presentation/widgets/categories_topbar.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/category_item_widget.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/category_tab_selector.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/category_header_section.dart';
@@ -93,7 +92,7 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                       commissionPercentage: 2.0,
                       enableCod: true,
                       enableOnline: true,
-                    );
+                     );
 
               final categoriesList = _isProductTab
                   ? currentSettings.productCategories
@@ -101,8 +100,6 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
 
               return Column(
                 children: [
-                  const CategoriesTopbar(),
-
                   // Main Content Scrollable
                   Expanded(
                     child: SingleChildScrollView(
@@ -132,7 +129,7 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                                       ),
                                       SizedBox(width: 8.w),
                                       Text(
-                                        'Back to Settings',
+                                        'Go Back',
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,

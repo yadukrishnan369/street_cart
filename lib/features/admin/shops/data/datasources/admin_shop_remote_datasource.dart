@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
+import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 
 abstract class IAdminShopRemoteDataSource {
   Future<List<ShopProfileModel>> getAllApprovedShops();
@@ -7,6 +8,7 @@ abstract class IAdminShopRemoteDataSource {
   Future<List<String>> getBusinessCategoryNames();
   Future<ShopProfileModel> getShopById(String shopId);
   Future<void> deleteShop(String shopId);
+  Future<List<ProductModel>> getProductsByShopId(String shopId);
 }
 
 class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
@@ -84,6 +86,29 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
       return categories;
     } catch (e) {
       return [];
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getProductsByShopId(String shopId) async {
+    try {
+      final snap = await _firestore
+          .collection('products')
+          .where('shop_id', isEqualTo: shopId)
+          .get();
+      final products = snap.docs
+          .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+          .toList();
+      // Sort by createdAt descending
+      products.sort((a, b) {
+        if (a.createdAt == null && b.createdAt == null) return 0;
+        if (a.createdAt == null) return 1;
+        if (b.createdAt == null) return -1;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
+      return products;
+    } catch (e) {
+      throw Exception('Failed to get products for shop: $e');
     }
   }
 }

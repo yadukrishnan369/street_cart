@@ -107,7 +107,10 @@ class _AdminShopDetailPageState extends State<AdminShopDetailPage> {
                               ],
                             ),
                           SizedBox(height: 32.h),
-                          const AdminShopProductsCard(),
+                          AdminShopProductsCard(
+                            products: state.products,
+                            shopId: shop.uid,
+                          ),
                         ],
                       );
                     },
@@ -164,7 +167,7 @@ class _AdminShopDetailPageState extends State<AdminShopDetailPage> {
           ),
           SizedBox(width: 8.w),
           Text(
-            'Back to Shop',
+            'Go Back',
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w700,

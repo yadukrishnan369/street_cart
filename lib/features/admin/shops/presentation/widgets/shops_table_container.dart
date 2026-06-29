@@ -41,7 +41,7 @@ class ShopsTableContainer extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E1E2F).withOpacity(0.02),
+            color: const Color(0xFF1E1E2F).withValues(alpha: 0.02),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -50,7 +50,7 @@ class ShopsTableContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // A. Controls Header (Search bar + Filter Dropdown)
+          // Controls Header Search bar + Filter Dropdown
           Padding(
             padding: EdgeInsets.only(
               left: 24.w,
@@ -180,7 +180,7 @@ class ShopsTableContainer extends StatelessWidget {
           else
             const SizedBox(height: 2),
 
-          // B. Data Table
+          //  Data Table
           if (state.shops.isEmpty)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 80.h),
@@ -213,7 +213,7 @@ class ShopsTableContainer extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // C. Pagination
+            // Pagination
             ShopsPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,

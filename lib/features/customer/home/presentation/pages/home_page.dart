@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_event.dart';
-import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
 import 'package:street_cart/features/customer/auth/presentation/pages/login_page.dart';
@@ -19,11 +18,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/shared/components/customer_search_bar.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
-import 'package:street_cart/shared/components/customer_product_card.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/home_banner.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/categories_row.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/shops_list_section.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/complete_profile_modal.dart';
+import 'package:street_cart/features/customer/home/presentation/widgets/home_app_bar.dart';
+import 'package:street_cart/features/customer/home/presentation/widgets/trending_products_section.dart';
+import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
+import 'package:street_cart/features/customer/products/presentation/pages/product_filter_page.dart';
 
 class HomePage extends StatefulWidget {
   final bool showProfileModal;
@@ -36,6 +38,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   StreamSubscription<DocumentSnapshot>? _blockListenerSubscription;
+  String _selectedCategory = 'All';
 
   @override
   void initState() {
@@ -57,17 +60,20 @@ class _HomePageState extends State<HomePage> {
           .collection('customers')
           .doc(currentUser.uid)
           .snapshots()
-          .listen((doc) {
-        if (!doc.exists || doc.data()?['is_blocked'] == true) {
-          if (mounted) {
-            context.read<AuthBloc>().add(LogoutRequested());
-          }
-        }
-      }, onError: (error) {
-        if (mounted) {
-          context.read<AuthBloc>().add(LogoutRequested());
-        }
-      });
+          .listen(
+            (doc) {
+              if (!doc.exists || doc.data()?['is_blocked'] == true) {
+                if (mounted) {
+                  context.read<AuthBloc>().add(LogoutRequested());
+                }
+              }
+            },
+            onError: (error) {
+              if (mounted) {
+                context.read<AuthBloc>().add(LogoutRequested());
+              }
+            },
+          );
     }
   }
 
@@ -101,8 +107,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<HomeBloc>()..add(FetchHomeData()),
+    return BlocProvider.value(
+      value: sl<HomeBloc>()..add(FetchHomeData()),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthInitial || state is AuthError) {
@@ -122,11 +128,11 @@ class _HomePageState extends State<HomePage> {
             String city = "Search";
 
             if (homeState is HomeLoaded) {
-              address = homeState.address;
-              hasLocation = address != null;
-              if (hasLocation) {
-                // Determine city name from string dynamically
-                final parts = address.split(',');
+              final currentAddress = homeState.homeData.address;
+              if (currentAddress != null) {
+                address = currentAddress;
+                hasLocation = true;
+                final parts = currentAddress.split(',');
                 if (parts.isNotEmpty) {
                   city = parts.first.trim();
                 }
@@ -135,96 +141,118 @@ class _HomePageState extends State<HomePage> {
 
             return Scaffold(
               backgroundColor: CustomerAppColors.background,
-              appBar: AppBar(
-                backgroundColor: CustomerAppColors.background,
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                title: isLoading
-                    ? SizedBox(
-                        width: 20.w,
-                        height: 20.h,
-                        child: const CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : GestureDetector(
-                        onTap: hasLocation
-                            ? null
-                            : () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        const LocationPermissionPage(
-                                      isProfileCompleted: true,
-                                    ),
-                                  ),
-                                );
-                              },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+              appBar: HomeAppBar(
+                isLoading: isLoading,
+                hasLocation: hasLocation,
+                address: address,
+              ),
+              body: Column(
+                children: [
+                  CustomSearchBar(
+                    hintText: "Search for 'Product' or 'Stores' in $city",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CustomerProductsPage(
+                            shouldFocusSearch: true,
+                          ),
+                        ),
+                      );
+                    },
+                    onFilterTap: () async {
+                      final cats = (homeState is HomeLoaded)
+                          ? homeState.homeData.categories
+                          : <String>[];
+
+                      final result =
+                          await Navigator.push<Map<String, dynamic>>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductFilterPage(
+                            categories: cats,
+                            selectedSort: 'Newest',
+                            priceRange: const RangeValues(0, 10000),
+                            selectedCategories: const {'All'},
+                            selectedRating: null,
+                          ),
+                          fullscreenDialog: true,
+                        ),
+                      );
+
+                      if (result != null && mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CustomerProductsPage(
+                              initialSelectedSort:
+                                  result['selectedSort'] ?? 'Newest',
+                              initialPriceRange:
+                                  result['priceRange'] ??
+                                  const RangeValues(0, 10000),
+                              initialSelectedCategories: Set<String>.from(
+                                result['selectedCategories'] ?? {'All'},
+                              ),
+                              initialSelectedRating: result['selectedRating'],
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  Expanded(
+                    child: RefreshIndicator(
+                      color: CustomerAppColors.primary,
+                      onRefresh: () async {
+                        context.read<HomeBloc>().add(FetchHomeData());
+                      },
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: CustomerAppColors.primary,
+                            HomeBanner(
+                              shops: homeState is HomeLoaded
+                                  ? homeState.homeData.nearbyShops
+                                  : const [],
+                              products: homeState is HomeLoaded
+                                  ? homeState.homeData.nearbyProducts
+                                  : const [],
                             ),
-                            SizedBox(width: 8.w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Delivering to',
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: Colors.grey,
+                            if (isLoading)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 48.h),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: CustomerAppColors.primary,
                                   ),
                                 ),
-                                Text(
-                                  hasLocation
-                                      ? (address ?? 'Unknown Location')
-                                      : 'Select precise location',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: hasLocation
-                                        ? Colors.black87
-                                        : CustomerAppColors.primary,
-                                    decoration: hasLocation
-                                        ? TextDecoration.none
-                                        : TextDecoration.underline,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              )
+                            else if (homeState is HomeLoaded) ...[
+                              CategoriesRow(
+                                categories: homeState.homeData.categories,
+                                selectedCategory: _selectedCategory,
+                                onCategorySelected: (cat) {
+                                  setState(() {
+                                    _selectedCategory = cat;
+                                  });
+                                },
+                              ),
+                              ShopsListSection(shops: homeState.homeData.nearbyShops),
+                              SizedBox(height: 16.h),
+                              TrendingProductsSection(
+                                products: homeState.homeData.nearbyProducts,
+                                shops: homeState.homeData.nearbyShops,
+                                selectedCategory: _selectedCategory,
+                              ),
+                            ],
+                            SizedBox(height: 24.h),
                           ],
                         ),
                       ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.notifications_none,
-                      color: Colors.black87,
                     ),
-                    onPressed: () {
-                      // notification
-                    },
                   ),
                 ],
-              ),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomSearchBar(
-                      hintText: "Search for 'Product' or 'Stores' in $city",
-                    ),
-                    const HomeBanner(),
-                    const CategoriesRow(),
-                    const ShopsListSection(),
-                    SizedBox(height: 16.h),
-                    _buildTrendingSection(),
-                    SizedBox(height: 24.h),
-                  ],
-                ),
               ),
               bottomNavigationBar: const CustomerBottomNavigation(
                 currentIndex: 0,
@@ -233,91 +261,6 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildTrendingSection() {
-    // Dummy products data
-    final products = [
-      {
-        'brand': 'KOZHIKODE FASHION HUB',
-        'title': 'Linen Shirt',
-        'price': '₹1,299',
-        'image':
-            'https://images.unsplash.com/photo-1596755094514-f87e32f85e23?w=400&fit=crop',
-      },
-      {
-        'brand': 'METRO MEN\'S FASHION',
-        'title': 'Classic Blue Shirt',
-        'price': '₹2,499',
-        'image':
-            'https://plus.unsplash.com/premium_photo-1678128956947-0648210340ed?w=400&fit=crop',
-      },
-      {
-        'brand': 'KOZHIKODE FASHION HUB',
-        'title': 'Cotton Polo',
-        'price': '₹3,200',
-        'image':
-            'https://images.unsplash.com/photo-1628151568212-0941ab2b7572?w=400&fit=crop',
-      },
-      {
-        'brand': 'TRENDY GENTS FASHION',
-        'title': 'Urban Denim Jacket',
-        'price': '₹1,850',
-        'image':
-            'https://images.unsplash.com/photo-1495105787522-5334e1507722?w=400&fit=crop',
-      },
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Trending in Kozhikode',
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'See all',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 12.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics:
-                const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.75, // adjust for card proportions
-              crossAxisSpacing: 16.w,
-              mainAxisSpacing: 16.h,
-            ),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return ProductCard(
-                imageUrl: product['image']!,
-                brand: product['brand']!,
-                title: product['title']!,
-                price: product['price']!,
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }

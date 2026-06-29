@@ -7,11 +7,10 @@ class HomeRepositoryImpl implements IHomeRepository {
   HomeRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<String?> getHomeAddress() async {
+  Future<HomeData> getHomeData() async {
     try {
-      return await remoteDataSource.getCustomerAddress();
+      return await remoteDataSource.getHomeData();
     } catch (e) {
-      // In a real app, you might map this to a specific Failure type
       rethrow;
     }
   }

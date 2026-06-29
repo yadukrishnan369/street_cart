@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'admin_dashboard_remote_datasource.dart';
-import '../models/dashboard_stats_model.dart';
-import '../models/new_registration_model.dart';
-import '../models/recent_order_model.dart';
+import 'package:street_cart/features/admin/dashboard/data/models/dashboard_stats_model.dart';
+import 'package:street_cart/features/admin/dashboard/data/models/new_registration_model.dart';
+import 'package:street_cart/features/admin/dashboard/data/models/recent_order_model.dart';
 
 class AdminDashboardRemoteDataSourceImpl
     implements IAdminDashboardRemoteDataSource {
@@ -26,9 +26,10 @@ class AdminDashboardRemoteDataSourceImpl
           .get();
       shopsCount = shopsSnap.docs.length;
 
-      final customersSnap = await _firestore.collection('customers').where('is_blocked', isEqualTo: false)
-          .get();
-      customersCount = customersSnap.docs.length;
+      final customersSnap = await _firestore.collection('customers').get();
+      customersCount = customersSnap.docs
+          .where((doc) => doc.data()['is_blocked'] != true)
+          .length;
 
       List<NewRegistrationModel> newRegistrations = [];
       final pendingQuery = await _firestore
@@ -39,22 +40,23 @@ class AdminDashboardRemoteDataSourceImpl
         newRegistrations = pendingQuery.docs
             .where((doc) => doc.data()['is_rejected'] != true)
             .map((doc) {
-          final data = doc.data();
-          final shopName = data['shop_name'] ?? 'Unknown Shop';
-          final category = data['category'] ?? 'New Merchant';
-          final timestamp = data['created_at'] as Timestamp?;
-          final timeAgoStr = timestamp != null
-              ? _calculateTimeAgo(timestamp.toDate())
-              : 'Recently';
-          return NewRegistrationModel(
-            id: doc.id,
-            shopName: shopName,
-            address: '$category • $timeAgoStr',
-            timeAgo: timeAgoStr,
-            createdAt: timestamp?.toDate(),
-            isReRegistered: data['is_reregistered'] ?? false,
-          );
-        }).toList();
+              final data = doc.data();
+              final shopName = data['shop_name'] ?? 'Unknown Shop';
+              final category = data['category'] ?? 'New Merchant';
+              final timestamp = data['created_at'] as Timestamp?;
+              final timeAgoStr = timestamp != null
+                  ? _calculateTimeAgo(timestamp.toDate())
+                  : 'Recently';
+              return NewRegistrationModel(
+                id: doc.id,
+                shopName: shopName,
+                address: '$category • $timeAgoStr',
+                timeAgo: timeAgoStr,
+                createdAt: timestamp?.toDate(),
+                isReRegistered: data['is_reregistered'] ?? false,
+              );
+            })
+            .toList();
 
         // Sort - latest registrations first (descending by createdAt)
         newRegistrations.sort((a, b) {
@@ -142,7 +144,9 @@ class AdminDashboardRemoteDataSourceImpl
           .where('is_approved', isEqualTo: false)
           .get();
 
-      final filteredDocs = query.docs.where((doc) => doc.data()['is_rejected'] != true);
+      final filteredDocs = query.docs.where(
+        (doc) => doc.data()['is_rejected'] != true,
+      );
 
       final sortedDocs = List<QueryDocumentSnapshot<Map<String, dynamic>>>.from(
         filteredDocs,
@@ -194,7 +198,9 @@ class AdminDashboardRemoteDataSourceImpl
           .collection('shops')
           .where('is_approved', isEqualTo: false)
           .get();
-      final filteredDocs = query.docs.where((doc) => doc.data()['is_rejected'] != true);
+      final filteredDocs = query.docs.where(
+        (doc) => doc.data()['is_rejected'] != true,
+      );
       return filteredDocs.length;
     } catch (e) {
       throw Exception('Failed to get pending registrations count: $e');

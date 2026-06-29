@@ -53,11 +53,13 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'items': [
         {
           'question': 'How do I change my shop password?',
-          'answer': 'Go to Settings > Change Password. Enter your current password and your new password to update.',
+          'answer':
+              'Go to Settings > Change Password. Enter your current password and your new password to update.',
         },
         {
           'question': 'Can I delete my account?',
-          'answer': 'Yes, you can delete your account by going to Settings > Delete Account. For security reasons, you will need to verify your password before confirmation.',
+          'answer':
+              'Yes, you can delete your account by going to Settings > Delete Account. For security reasons, you will need to verify your password before confirmation.',
         },
       ],
     },
@@ -67,11 +69,13 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'items': [
         {
           'question': 'Updating shop profile picture',
-          'answer': 'Go to Profile > Edit Profile Details and tap the camera icon on your profile picture to upload a new one from gallery or camera.',
+          'answer':
+              'Go to Profile > Edit Profile Details and tap the camera icon on your profile picture to upload a new one from gallery or camera.',
         },
         {
           'question': 'Changing shop name or description',
-          'answer': 'You can edit your shop name, description, and other details by going to Profile > Edit Profile Details.',
+          'answer':
+              'You can edit your shop name, description, and other details by going to Profile > Edit Profile Details.',
         },
       ],
     },
@@ -81,11 +85,13 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'items': [
         {
           'question': 'How to manage multiple locations?',
-          'answer': 'Under location configurations in profile settings, you can register and update multiple outlets or street cart locations.',
+          'answer':
+              'Under location configurations in profile settings, you can register and update multiple outlets or street cart locations.',
         },
         {
           'question': 'Fulfilling orders and shipping',
-          'answer': 'Once an order is accepted, prepare the items and update status to "Out for Delivery" so customers can track you.',
+          'answer':
+              'Once an order is accepted, prepare the items and update status to "Out for Delivery" so customers can track you.',
         },
       ],
     },
@@ -95,11 +101,13 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'items': [
         {
           'question': 'Adding product promotions',
-          'answer': 'You can apply discounts and promotional pricing to your products from the Products management screen.',
+          'answer':
+              'You can apply discounts and promotional pricing to your products from the Products management screen.',
         },
         {
           'question': 'SEO and Catalog optimization',
-          'answer': 'Use descriptive titles and high-quality images for your products to rank higher in customer searches.',
+          'answer':
+              'Use descriptive titles and high-quality images for your products to rank higher in customer searches.',
         },
       ],
     },
@@ -111,19 +119,23 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'faqs': [
         {
           'question': 'How do I change my shop hours?',
-          'answer': 'To change your operating hours, go to Profile > Shop Settings > Operating Hours. You can set specific times for each day of the week or mark your shop as temporarily closed. Changes take effect immediately on the customer app.',
+          'answer':
+              'To change your operating hours, go to Profile > Shop Settings > Operating Hours. You can set specific times for each day of the week or mark your shop as temporarily closed. Changes take effect immediately on the customer app.',
         },
         {
           'question': 'Adding new products to my catalog',
-          'answer': 'Go to the Products tab and click on the "Add Product" button. You can add image, product name, price, description, and category. Click save to publish the product to customers.',
+          'answer':
+              'Go to the Products tab and click on the "Add Product" button. You can add image, product name, price, description, and category. Click save to publish the product to customers.',
         },
         {
           'question': 'Updating shop profile picture',
-          'answer': 'Go to Profile > Edit Profile Details. Tap on your profile image or click the edit icon to choose a new photo from your gallery. Save changes to update.',
+          'answer':
+              'Go to Profile > Edit Profile Details. Tap on your profile image or click the edit icon to choose a new photo from your gallery. Save changes to update.',
         },
         {
           'question': 'How to manage multiple locations?',
-          'answer': 'Under settings, select locations configuration to register multiple outlets or street carts. You can customize the location details for each cart.',
+          'answer':
+              'Under settings, select locations configuration to register multiple outlets or street carts. You can customize the location details for each cart.',
         },
       ],
     },
@@ -132,11 +144,13 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'faqs': [
         {
           'question': 'How do I accept/reject orders?',
-          'answer': 'When an order is received, go to the Orders tab. You will see option to accept or reject the order. An accepted order is ready for delivery.',
+          'answer':
+              'When an order is received, go to the Orders tab. You will see option to accept or reject the order. An accepted order is ready for delivery.',
         },
         {
           'question': 'Changing delivery status',
-          'answer': 'Once you start delivery, change status to "Out for Delivery". After delivery is complete, change status to "Delivered".',
+          'answer':
+              'Once you start delivery, change status to "Out for Delivery". After delivery is complete, change status to "Delivered".',
         },
       ],
     },
@@ -145,9 +159,43 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
       'faqs': [
         {
           'question': 'When do I receive payments?',
-          'answer': 'Payments for Cash on Delivery are collected directly. For online modes, settlements are processed in 2-3 business days.',
+          'answer':
+              'Payments for Cash on Delivery are collected directly. For online modes, settlements are processed in 2-3 business days.',
         },
       ],
     },
+  ];
+
+  static const List<String> defaultProductCategories = [
+    'Shirt',
+    'T-Shirt',
+    'Jeans',
+    'Jacket',
+    'Dress',
+    'Footwear',
+    'Accessories',
+    'Other',
+  ];
+
+  static const List<String> defaultSizeStandards = [
+    'Shirt',
+    'Footwear',
+    'Pants',
+    'Custom',
+  ];
+
+  static const Map<String, List<String>> defaultProductSizes = {
+    'Shirt': ['S', 'M', 'L', 'XL', 'XXL'],
+    'Shoes': ['7', '8', '9', '10', '11'],
+    'Pants': ['28', '30', '32', '34', '36'],
+    'Custom': ['Free Size'],
+  };
+
+  static const List<String> defaultProductColors = [
+    'Black',
+    'Blue',
+    'Red',
+    'White',
+    'Green',
   ];
 }

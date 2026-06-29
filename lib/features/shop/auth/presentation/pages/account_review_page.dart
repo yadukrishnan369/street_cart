@@ -49,7 +49,6 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
         },
         child: BlocBuilder<ShopAuthBloc, ShopAuthState>(
           builder: (context, state) {
-            print('DEBUG: AccountReviewPage - BlocBuilder state: $state');
             final shop = state is ShopStatusLoaded ? state.shop : null;
             final bool isApproved = shop?.isApproved ?? false;
             final bool isRejected = shop?.isRejected ?? false;
@@ -97,7 +96,7 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
                                 child: Icon(
                                   Icons.error_outline_rounded,
                                   size: 44.sp,
-                                  color: Colors.red.shade700,
+                                  color: ShopAppColors.error,
                                 ),
                               ),
                             ),
@@ -125,7 +124,7 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
                           Text(
                             'Action Required',
                             style: ShopAppTextStyles.heading1.copyWith(
-                              color: Colors.red.shade700,
+                              color: ShopAppColors.error,
                             ),
                           ),
                           SizedBox(height: 32.h),
@@ -149,7 +148,7 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
                                   ),
                                   child: Icon(
                                     Icons.assignment_late_outlined,
-                                    color: Colors.red.shade700,
+                                    color: ShopAppColors.error,
                                     size: 20.sp,
                                   ),
                                 ),

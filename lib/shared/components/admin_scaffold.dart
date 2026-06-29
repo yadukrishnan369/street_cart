@@ -75,7 +75,7 @@ class _AdminScaffoldState extends State<AdminScaffold> {
           ),
           body: Row(
             children: [
-              // Sidebar (Desktop view)
+              // Sidebar Desktop view
               LayoutBuilder(
                 builder: (context, constraints) {
                   if (MediaQuery.of(context).size.width > 900) {
@@ -111,6 +111,7 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       },
     );
   }
+
   String _getPageTitle(String route) {
     if (route.contains(RoutePaths.dashboard)) {
       return 'Dashboard';
@@ -126,10 +127,16 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return 'Shop Registration Details';
     } else if (route.contains(RoutePaths.registrations)) {
       return 'New Registrations';
+    } else if (route.contains(RoutePaths.categories)) {
+      return 'Categories';
     } else if (route.contains(RoutePaths.settings)) {
       return 'Settings';
     } else if (route.contains(RoutePaths.profile)) {
       return 'Admin Profile';
+    } else if (route.contains('/products/')) {
+      return 'Product Details';
+    } else if (route.contains(RoutePaths.products)) {
+      return 'Product Management';
     }
     return '';
   }
@@ -149,10 +156,16 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return Icons.assignment_outlined;
     } else if (route.contains(RoutePaths.registrations)) {
       return Icons.assignment_outlined;
+    } else if (route.contains(RoutePaths.categories)) {
+      return Icons.category_outlined;
     } else if (route.contains(RoutePaths.settings)) {
       return Icons.settings_outlined;
     } else if (route.contains(RoutePaths.profile)) {
       return Icons.person_outline;
+    } else if (route.contains('/products/')) {
+      return Icons.inventory_2_outlined;
+    } else if (route.contains(RoutePaths.products)) {
+      return Icons.inventory_2_outlined;
     }
     return Icons.circle;
   }

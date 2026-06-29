@@ -117,7 +117,7 @@ class AdminSidenav extends StatelessWidget {
                   _buildMenuItem(
                     icon: Icons.inventory_2_outlined,
                     label: 'Products',
-                    route: '',
+                    route: '/products',
                   ),
                   _buildMenuItem(
                     icon: Icons.shopping_cart_outlined,

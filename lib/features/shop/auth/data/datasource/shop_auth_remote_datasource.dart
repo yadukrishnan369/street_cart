@@ -51,5 +51,7 @@ abstract class IShopAuthRemoteDataSource {
 
   Future<List<String>> getBusinessCategories();
 
+  Future<List<String>> getProductCategories();
+
   Future<Map<String, bool>> getPaymentSettings();
 }

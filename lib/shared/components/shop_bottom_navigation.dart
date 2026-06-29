@@ -5,6 +5,7 @@ import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page
 import 'package:street_cart/features/shop/profile/presentation/pages/shop_profile_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
+import 'package:street_cart/features/shop/products/presentation/pages/products_page.dart';
 
 class ShopBottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -59,11 +60,7 @@ class ShopBottomNavigation extends StatelessWidget {
             page = const ShopHomePage();
             break;
           case 1:
-            page = Scaffold(
-              appBar: AppBar(title: const Text('Products')),
-              body: const Center(child: Text('Products Page (Coming Soon)')),
-              bottomNavigationBar: const ShopBottomNavigation(currentIndex: 1),
-            );
+            page = const ProductsPage();
             break;
           case 2:
             page = Scaffold(

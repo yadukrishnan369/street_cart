@@ -3,14 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/profile_page.dart';
+import 'package:street_cart/features/customer/shops/presentation/pages/customer_shops_page.dart';
 
 class CustomerBottomNavigation extends StatelessWidget {
   final int currentIndex;
 
-  const CustomerBottomNavigation({
-    super.key,
-    this.currentIndex = 0,
-  });
+  const CustomerBottomNavigation({super.key, this.currentIndex = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +38,10 @@ class CustomerBottomNavigation extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(2.w),
                   decoration: const BoxDecoration(
-                    color: Colors.red,
+                    color: CustomerAppColors.error,
                     shape: BoxShape.circle,
                   ),
-                  constraints: BoxConstraints(
-                    minWidth: 14.w,
-                    minHeight: 14.h,
-                  ),
+                  constraints: BoxConstraints(minWidth: 14.w, minHeight: 14.h),
                   child: Text(
                     '2',
                     style: TextStyle(
@@ -57,7 +52,7 @@ class CustomerBottomNavigation extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              )
+              ),
             ],
           ),
           activeIcon: const Icon(Icons.shopping_cart),
@@ -76,13 +71,22 @@ class CustomerBottomNavigation extends StatelessWidget {
       ],
       onTap: (index) {
         if (index == currentIndex) return;
-        
+
         switch (index) {
           case 0:
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
                 pageBuilder: (_, __, ___) => const HomePage(),
+                transitionDuration: Duration.zero,
+              ),
+            );
+            break;
+          case 1:
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => const CustomerShopsPage(),
                 transitionDuration: Duration.zero,
               ),
             );
@@ -97,7 +101,7 @@ class CustomerBottomNavigation extends StatelessWidget {
             );
             break;
           default:
-            // Placeholder for Shops, Cart, Orders
+            // Placeholder for Cart, Orders
             break;
         }
       },
