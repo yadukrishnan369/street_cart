@@ -3,6 +3,7 @@ import 'package:street_cart/features/shop/profile/domain/usecases/get_shop_profi
 import 'package:street_cart/features/shop/profile/domain/usecases/update_shop_profile_data.dart';
 import 'package:street_cart/features/shop/profile/domain/usecases/upload_shop_profile_image.dart';
 import 'package:street_cart/features/shop/profile/domain/usecases/remove_shop_profile_image.dart';
+import 'package:street_cart/features/shop/auth/domain/usecases/get_shop_payment_settings.dart';
 import 'shop_profile_event.dart';
 import 'shop_profile_state.dart';
 
@@ -11,12 +12,14 @@ class ShopProfileBloc extends Bloc<ShopProfileEvent, ShopProfileState> {
   final UpdateShopProfileData updateProfileData;
   final UploadShopProfileImage uploadProfileImage;
   final RemoveShopProfileImage removeProfileImage;
+  final GetShopPaymentSettings getShopPaymentSettings;
 
   ShopProfileBloc({
     required this.getProfileData,
     required this.updateProfileData,
     required this.uploadProfileImage,
     required this.removeProfileImage,
+    required this.getShopPaymentSettings,
   }) : super(ShopProfileInitial()) {
     on<FetchShopProfileData>((event, emit) async {
       emit(ShopProfileLoading());
@@ -67,6 +70,18 @@ class ShopProfileBloc extends Bloc<ShopProfileEvent, ShopProfileState> {
         }
       } catch (e) {
         emit(ShopProfileError(e.toString()));
+      }
+    });
+
+    on<FetchShopPaymentSettings>((event, emit) async {
+      emit(ShopPaymentSettingsLoading());
+      try {
+        final settings = await getShopPaymentSettings();
+        emit(ShopPaymentSettingsLoaded(settings));
+      } catch (e) {
+        emit(
+          ShopPaymentSettingsError(e.toString().replaceAll('Exception: ', '')),
+        );
       }
     });
   }

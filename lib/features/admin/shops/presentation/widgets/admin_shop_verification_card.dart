@@ -7,10 +7,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 class AdminShopVerificationCard extends StatelessWidget {
   final ShopProfileModel shop;
 
-  const AdminShopVerificationCard({
-    super.key,
-    required this.shop,
-  });
+  const AdminShopVerificationCard({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {

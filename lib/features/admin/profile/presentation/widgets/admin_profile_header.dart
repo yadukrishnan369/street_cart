@@ -85,10 +85,11 @@ class AdminProfileHeader extends StatelessWidget {
                                   children: [
                                     Text(
                                       profile.fullName,
-                                      style: AdminAppTextStyles.heading2.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF1E1E2F),
-                                      ),
+                                      style: AdminAppTextStyles.heading2
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: const Color(0xFF1E1E2F),
+                                          ),
                                     ),
                                     SizedBox(width: 12.w),
                                     Container(
@@ -98,7 +99,9 @@ class AdminProfileHeader extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: AdminAppColors.primaryColor,
-                                        borderRadius: BorderRadius.circular(20.r),
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
@@ -133,9 +136,10 @@ class AdminProfileHeader extends StatelessWidget {
                                     SizedBox(width: 6.w),
                                     Text(
                                       profile.email,
-                                      style: AdminAppTextStyles.bodySmall.copyWith(
-                                        color: const Color(0xFF8A8A9E),
-                                      ),
+                                      style: AdminAppTextStyles.bodySmall
+                                          .copyWith(
+                                            color: const Color(0xFF8A8A9E),
+                                          ),
                                     ),
                                   ],
                                 ),

@@ -12,8 +12,8 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
   ShopAuthRepositoryImpl({
     required IShopAuthRemoteDataSource remoteDataSource,
     required INetworkInfo networkInfo,
-  })  : _remoteDataSource = remoteDataSource,
-        _networkInfo = networkInfo;
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo;
 
   @override
   Future<void> signUp({
@@ -65,7 +65,8 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
     }
 
     final uid = await _remoteDataSource.getCurrentUserId();
-    if (uid == null) throw ServerException('Session expired. Please login again.');
+    if (uid == null)
+      throw ServerException('Session expired. Please login again.');
 
     await _remoteDataSource.setupShopProfile(
       userId: uid,

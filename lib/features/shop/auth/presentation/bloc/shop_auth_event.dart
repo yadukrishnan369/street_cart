@@ -70,4 +70,3 @@ class ShopPasswordResetRequested extends ShopAuthEvent {
   @override
   List<Object?> get props => [email];
 }
-

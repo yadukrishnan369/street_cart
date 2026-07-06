@@ -76,9 +76,15 @@ class TermsConditionsPage extends StatelessWidget {
               'As a shop owner on Street Cart, you are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.',
             ),
             SizedBox(height: 8.h),
-            _buildBulletItem('You must provide accurate information regarding your business and products.'),
-            _buildBulletItem('You are responsible for fulfilling orders in a timely manner.'),
-            _buildBulletItem('You must comply with all local tax and business regulations.'),
+            _buildBulletItem(
+              'You must provide accurate information regarding your business and products.',
+            ),
+            _buildBulletItem(
+              'You are responsible for fulfilling orders in a timely manner.',
+            ),
+            _buildBulletItem(
+              'You must comply with all local tax and business regulations.',
+            ),
             SizedBox(height: 12.h),
 
             // Fees and Payments

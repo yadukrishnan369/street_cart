@@ -1,7 +1,7 @@
+import 'package:street_cart/features/admin/shops/data/datasources/i_admin_shop_remote_datasource.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/admin/shops/domain/repositories/admin_shop_repository.dart';
-import 'package:street_cart/features/admin/shops/data/datasources/admin_shop_remote_datasource.dart';
 
 class AdminShopRepositoryImpl implements IAdminShopRepository {
   final IAdminShopRemoteDataSource _remoteDataSource;

@@ -15,9 +15,9 @@ class ShopProfileRepositoryImpl implements IShopProfileRepository {
     required IShopProfileRemoteDataSource remoteDataSource,
     required INetworkInfo networkInfo,
     required FirebaseAuth auth,
-  })  : _remoteDataSource = remoteDataSource,
-        _networkInfo = networkInfo,
-        _auth = auth;
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo,
+       _auth = auth;
 
   @override
   Future<ShopProfileModel?> getProfileData() async {

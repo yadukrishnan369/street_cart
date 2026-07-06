@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 class ProductCard extends StatelessWidget {
   final String imageUrl;
@@ -13,6 +15,9 @@ class ProductCard extends StatelessWidget {
   final VoidCallback? onFavoriteTap;
   final bool isNew;
 
+  final String? selectedColor;
+  final String? selectedSize;
+
   const ProductCard({
     super.key,
     required this.imageUrl,
@@ -24,6 +29,8 @@ class ProductCard extends StatelessWidget {
     this.isFavorite = false,
     this.onFavoriteTap,
     this.isNew = false,
+    this.selectedColor,
+    this.selectedSize,
   });
 
   @override
@@ -54,10 +61,11 @@ class ProductCard extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     color: Colors.grey[200],
-                    child: Image.network(
-                      imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.image_not_supported, color: Colors.grey)),
+                      placeholder: (context, url) => const ProductImagePlaceholder(),
+                      errorWidget: (context, url, error) => const ProductImagePlaceholder(),
                     ),
                   ),
                 ),

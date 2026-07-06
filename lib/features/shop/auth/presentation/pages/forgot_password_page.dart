@@ -39,7 +39,11 @@ class ShopForgotPasswordPage extends StatelessWidget {
                 );
                 Navigator.pop(context); // Go back to Login
               } else if (state is ShopAuthFailure) {
-                CustomSnackBar.show(context, message: state.message, isError: true);
+                CustomSnackBar.show(
+                  context,
+                  message: state.message,
+                  isError: true,
+                );
               }
             },
             builder: (context, state) {
@@ -55,7 +59,9 @@ class ShopForgotPasswordPage extends StatelessWidget {
                     16.verticalSpace,
                     Text(
                       "Street Cart",
-                      style: ShopAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+                      style: ShopAppTextStyles.heading2.copyWith(
+                        fontSize: 20.sp,
+                      ),
                     ),
                     40.verticalSpace,
                     Text("Forgot Password", style: ShopAppTextStyles.heading1),
@@ -72,7 +78,7 @@ class ShopForgotPasswordPage extends StatelessWidget {
                       ),
                     ),
                     40.verticalSpace,
-                
+
                     ShopForgotPasswordForm(
                       isLoading: state is ShopAuthLoading,
                       onSendResetLink: (email) {
@@ -81,7 +87,7 @@ class ShopForgotPasswordPage extends StatelessWidget {
                         );
                       },
                     ),
-                
+
                     32.verticalSpace,
                     TextButton.icon(
                       onPressed: () => Navigator.pop(context),

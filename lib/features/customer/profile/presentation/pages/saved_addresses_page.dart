@@ -12,6 +12,7 @@ import 'package:street_cart/features/customer/profile/presentation/widgets/addre
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/address_card_shimmer.dart';
 
 class SavedAddressesPage extends StatelessWidget {
   const SavedAddressesPage({super.key});
@@ -52,7 +53,7 @@ class SavedAddressesPage extends StatelessWidget {
         body: BlocBuilder<AddressBloc, AddressState>(
           builder: (context, state) {
             if (state is AddressLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const AddressCardShimmer(itemCount: 3);
             }
 
             if (state is AddressError) {

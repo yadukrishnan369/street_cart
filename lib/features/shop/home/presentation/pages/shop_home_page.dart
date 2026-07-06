@@ -8,22 +8,17 @@ import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dar
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_event.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
-import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/performance_stats.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/weekly_sales_card.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/quick_actions.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/recent_orders_list.dart';
-import 'package:street_cart/features/shop/home/presentation/widgets/profile_completion_modal.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/shop_support_drawer.dart';
-import 'package:street_cart/features/shop/profile/presentation/pages/edit_shop_profile_page.dart';
-import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
-import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
+import 'package:street_cart/features/shop/home/presentation/widgets/shimmer/shop_home_shimmer.dart';
+import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 
 class ShopHomePage extends StatefulWidget {
   const ShopHomePage({super.key});
@@ -39,10 +34,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
   void initState() {
     super.initState();
     _homeBloc = sl<ShopHomeBloc>();
-    // Subscribe to shop status to get shop name
     context.read<ShopAuthBloc>().add(ShopStatusSubscriptionRequested());
-
-    // Check for first visit to show modal
     _homeBloc.add(CheckFirstHomeVisitEvent());
   }
 
@@ -52,43 +44,13 @@ class _ShopHomePageState extends State<ShopHomePage> {
     super.dispose();
   }
 
-  void _showProfileCompletionDialog() {
+  void _triggerProfileCompletionDialog() {
     final authState = context.read<ShopAuthBloc>().state;
     ShopProfileModel? profile;
     if (authState is ShopStatusLoaded) {
       profile = authState.shop;
     }
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => ProfileCompletionModal(
-        onCompleteNow: () {
-          Navigator.pop(dialogContext);
-          if (profile != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => sl<ShopProfileBloc>(),
-                  child: EditShopProfilePage(profile: profile!),
-                ),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Loading profile details, please try again in a moment.',
-                ),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          }
-        },
-        onMaybeLater: () => Navigator.pop(dialogContext),
-      ),
-    );
+    ShopHomeHelper.showProfileCompletionDialog(context, profile);
   }
 
   @override
@@ -114,10 +76,9 @@ class _ShopHomePageState extends State<ShopHomePage> {
             listener: (context, state) {
               if (state is ShopHomeFirstVisitCheckCompleted) {
                 if (state.isFirstVisit) {
-                  // Delay for 2 seconds as requested
                   Future.delayed(const Duration(seconds: 2), () {
                     if (mounted) {
-                      _showProfileCompletionDialog();
+                      _triggerProfileCompletionDialog();
                       _homeBloc.add(CompleteFirstHomeVisitEvent());
                     }
                   });
@@ -183,7 +144,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                       size: 26.sp,
                     ),
                     onPressed: () {
-                      _showLogoutConfirmation();
+                      ShopHomeHelper.showLogoutConfirmation(context);
                     },
                   ),
                   Positioned(
@@ -203,78 +164,50 @@ class _ShopHomePageState extends State<ShopHomePage> {
               SizedBox(width: 8.w),
             ],
           ),
-          body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20.h),
-                const PerformanceStats(),
-                SizedBox(height: 20.h),
-                const WeeklySalesCard(),
-                SizedBox(height: 20.h),
-                QuickActions(
-                  onAddProductTap: () {
-                    final authState = context.read<ShopAuthBloc>().state;
-                    if (authState is ShopStatusLoaded) {
-                      final shopId = authState.shop?.uid ?? '';
-                      final productsBloc = sl<ShopProductsBloc>();
-                      productsBloc.add(LoadProductConfigEvent(shopId));
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddEditProductPage(
-                            shopId: shopId,
-                            productsBloc: productsBloc,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  onEditProfileTap: () {
-                    final authState = context.read<ShopAuthBloc>().state;
-                    if (authState is ShopStatusLoaded) {
-                      final profile = authState.shop;
-                      if (profile != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (context) => sl<ShopProfileBloc>(),
-                              child: EditShopProfilePage(profile: profile),
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  },
+          body: BlocBuilder<ShopHomeBloc, ShopHomeState>(
+            builder: (context, state) {
+              if (state is ShopHomeLoading || state is ShopHomeInitial) {
+                return const ShopHomePageShimmer();
+              }
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.h),
+                    const PerformanceStats(),
+                    SizedBox(height: 20.h),
+                    const WeeklySalesCard(),
+                    SizedBox(height: 20.h),
+                    QuickActions(
+                      onAddProductTap: () {
+                        final authState = context.read<ShopAuthBloc>().state;
+                        if (authState is ShopStatusLoaded) {
+                          final shopId = authState.shop?.uid ?? '';
+                          ShopHomeHelper.onAddProductTap(context, shopId);
+                        }
+                      },
+                      onEditProfileTap: () {
+                        final authState = context.read<ShopAuthBloc>().state;
+                        if (authState is ShopStatusLoaded) {
+                          final profile = authState.shop;
+                          if (profile != null) {
+                            ShopHomeHelper.onEditProfileTap(context, profile);
+                          }
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20.h),
+                    const RecentOrdersList(),
+                    SizedBox(height: 100.h),
+                  ],
                 ),
-                SizedBox(height: 20.h),
-                const RecentOrdersList(),
-                SizedBox(height: 100.h),
-              ],
-            ),
+              );
+            },
           ),
           bottomNavigationBar: const ShopBottomNavigation(currentIndex: 0),
         ),
-      ),
-    );
-  }
-
-  void _showLogoutConfirmation() {
-    showDialog(
-      context: context,
-      builder: (context) => ConfirmationModal(
-        title: 'Logout',
-        content: 'Are you sure you want to logout from your shop account?',
-        confirmText: 'Yes, Logout',
-        confirmColor: ShopAppColors.error,
-        onConfirm: () {
-          Navigator.pop(context);
-          context.read<ShopAuthBloc>().add(ShopLogoutRequested());
-        },
-        onCancel: () => Navigator.pop(context),
       ),
     );
   }

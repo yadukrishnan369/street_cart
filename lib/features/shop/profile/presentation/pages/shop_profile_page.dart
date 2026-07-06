@@ -9,7 +9,6 @@ import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_state.dart';
-import 'package:street_cart/features/shop/profile/presentation/pages/edit_shop_profile_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/shop_settings_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
@@ -22,6 +21,8 @@ import 'package:street_cart/features/shop/profile/presentation/widgets/shop_deli
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_payment_methods_card.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_location_details_card.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_verification_docs_card.dart';
+import 'package:street_cart/features/shop/profile/presentation/widgets/shop_profile_action_buttons.dart';
+import 'package:street_cart/features/shop/profile/presentation/widgets/shimmer/shop_profile_shimmer.dart';
 
 class ShopProfilePage extends StatelessWidget {
   final ShopAuthBloc authBloc;
@@ -62,7 +63,10 @@ class ShopProfilePage extends StatelessWidget {
               backgroundColor: Colors.white,
               elevation: 0.5,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: ShopAppColors.primary,
+                ),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -103,7 +107,9 @@ class ShopProfilePage extends StatelessWidget {
                       ),
                     ).then((_) {
                       if (context.mounted) {
-                        context.read<ShopProfileBloc>().add(FetchShopProfileData());
+                        context.read<ShopProfileBloc>().add(
+                          FetchShopProfileData(),
+                        );
                       }
                     });
                   },
@@ -112,26 +118,32 @@ class ShopProfilePage extends StatelessWidget {
             ),
             body: BlocBuilder<ShopProfileBloc, ShopProfileState>(
               builder: (context, state) {
-                if (state is ShopProfileLoading || state is ShopProfileInitial) {
-                  return const Center(child: CircularProgressIndicator(color: ShopAppColors.primary));
+                if (state is ShopProfileLoading ||
+                    state is ShopProfileInitial) {
+                  return const ShopProfileShimmer();
                 } else if (state is ShopProfileError) {
                   return Center(
                     child: Padding(
                       padding: EdgeInsets.all(24.w),
                       child: Text(
                         state.message,
-                        style: ShopAppTextStyles.bodyMedium.copyWith(color: Colors.redAccent),
+                        style: ShopAppTextStyles.bodyMedium.copyWith(
+                          color: Colors.redAccent,
+                        ),
                       ),
                     ),
                   );
-                } else if (state is ShopProfileLoaded || state is ShopProfileUpdateSuccess) {
+                } else if (state is ShopProfileLoaded ||
+                    state is ShopProfileUpdateSuccess) {
                   final profile = state is ShopProfileLoaded
                       ? state.profile
                       : (state as ShopProfileUpdateSuccess).profile;
 
                   return RefreshIndicator(
                     onRefresh: () async {
-                      context.read<ShopProfileBloc>().add(FetchShopProfileData());
+                      context.read<ShopProfileBloc>().add(
+                        FetchShopProfileData(),
+                      );
                     },
                     color: ShopAppColors.primary,
                     child: SingleChildScrollView(
@@ -155,69 +167,9 @@ class ShopProfilePage extends StatelessWidget {
                           SizedBox(height: 24.h),
 
                           // Action Buttons
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24.w),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 48.h,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      final profileBloc = context.read<ShopProfileBloc>();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => BlocProvider.value(
-                                            value: profileBloc,
-                                            child: EditShopProfilePage(profile: profile),
-                                          ),
-                                        ),
-                                      ).then((_) {
-                                        if (context.mounted) {
-                                          context.read<ShopProfileBloc>().add(FetchShopProfileData());
-                                        }
-                                      });
-                                    },
-                                    icon: Icon(Icons.edit_note_outlined, size: 20.sp, color: Colors.white),
-                                    label: Text(
-                                      'Edit Profile Details',
-                                      style: ShopAppTextStyles.buttonText.copyWith(fontSize: 15.sp),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: ShopAppColors.primary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(24.r),
-                                      ),
-                                      elevation: 0,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 12.h),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 48.h,
-                                  child: OutlinedButton.icon(
-                                    onPressed: () => _onLogout(context),
-                                    icon: Icon(Icons.logout, size: 18.sp, color: ShopAppColors.primary),
-                                    label: Text(
-                                      'Logout',
-                                      style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                                        color: ShopAppColors.primary,
-                                        fontSize: 15.sp,
-                                      ),
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFF4F7F6),
-                                      side: const BorderSide(color: Color(0xFFE2EBE9), width: 1),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(24.r),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          ShopProfileActionButtons(
+                            profile: profile,
+                            onLogout: () => _onLogout(context),
                           ),
                           SizedBox(height: 32.h),
                         ],

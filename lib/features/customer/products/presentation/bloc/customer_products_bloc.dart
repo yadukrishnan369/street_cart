@@ -42,6 +42,8 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
       final selectedSort = event.initialSelectedSort ?? "Newest";
       final priceRange = event.initialPriceRange ?? const RangeValues(0, 10000);
       final selectedRating = event.initialSelectedRating;
+      final selectedColors = event.initialSelectedColors ?? const <String>{};
+      final selectedSizes = event.initialSelectedSizes ?? const <String>{};
 
       final filteredProducts = _filterAndSort(
         allProducts: allProducts,
@@ -51,6 +53,8 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
         selectedSort: selectedSort,
         priceRange: priceRange,
         selectedRating: selectedRating,
+        selectedColors: selectedColors,
+        selectedSizes: selectedSizes,
       );
 
       emit(CustomerProductsLoaded(
@@ -62,6 +66,8 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
         selectedSort: selectedSort,
         priceRange: priceRange,
         selectedRating: selectedRating,
+        selectedColors: selectedColors,
+        selectedSizes: selectedSizes,
       ));
     } catch (e, stack) {
       AppLogger.error('Failed to fetch customer products', e, stack);
@@ -83,6 +89,8 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
         selectedSort: event.selectedSort,
         priceRange: event.priceRange,
         selectedRating: event.selectedRating,
+        selectedColors: event.selectedColors,
+        selectedSizes: event.selectedSizes,
       );
 
       emit(CustomerProductsLoaded(
@@ -94,6 +102,8 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
         selectedSort: event.selectedSort,
         priceRange: event.priceRange,
         selectedRating: event.selectedRating,
+        selectedColors: event.selectedColors,
+        selectedSizes: event.selectedSizes,
       ));
     }
   }
@@ -106,6 +116,8 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
     required String selectedSort,
     required RangeValues priceRange,
     required String? selectedRating,
+    required Set<String> selectedColors,
+    required Set<String> selectedSizes,
   }) {
     final shopNames = {
       for (final s in shops) s.uid: s.shopName,
@@ -129,7 +141,19 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
           productPrice >= priceRange.start &&
           productPrice <= priceRange.end;
 
-      return matchQuery && matchCat && matchPrice;
+      // Color filter matching logic
+      bool matchColor = selectedColors.isEmpty;
+      if (!matchColor) {
+        matchColor = product.allColors.any((c) => selectedColors.contains(c));
+      }
+
+      // Size filter matching logic
+      bool matchSize = selectedSizes.isEmpty;
+      if (!matchSize) {
+        matchSize = product.allSizes.any((s) => selectedSizes.contains(s));
+      }
+
+      return matchQuery && matchCat && matchPrice && matchColor && matchSize;
     }).toList();
 
     if (selectedSort == 'Newest') {

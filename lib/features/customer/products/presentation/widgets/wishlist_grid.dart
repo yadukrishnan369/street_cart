@@ -56,6 +56,8 @@ class WishlistGrid extends StatelessWidget {
                       builder: (_) => CustomerProductDetailPage(
                         product: product,
                         shop: shop,
+                        initialColor: item.selectedColor,
+                        initialSize: item.selectedSize,
                       ),
                     ),
                   ).then((_) {
@@ -93,6 +95,8 @@ class WishlistGrid extends StatelessWidget {
                   isNew:
                       product.createdAt != null &&
                       DateTime.now().difference(product.createdAt!).inDays < 7,
+                  selectedColor: item.selectedColor,
+                  selectedSize: item.selectedSize,
                 ),
               );
             },

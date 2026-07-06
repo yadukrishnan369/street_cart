@@ -20,6 +20,13 @@ class Validators {
     return null;
   }
 
+  static String? validatePasswordVerification(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password verification is required';
+    }
+    return null;
+  }
+
   static String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return null;
@@ -194,7 +201,10 @@ class Validators {
     return null;
   }
 
-  static String? validateProductOfferPrice(String? value, String? originalPriceStr) {
+  static String? validateProductOfferPrice(
+    String? value,
+    String? originalPriceStr,
+  ) {
     if (value != null && value.trim().isNotEmpty) {
       final offerPrice = double.tryParse(value);
       if (offerPrice == null) {

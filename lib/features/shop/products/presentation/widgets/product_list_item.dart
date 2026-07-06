@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/product_detail_page.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
+import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 class ProductListItem extends StatelessWidget {
   final ProductModel product;
@@ -68,20 +69,12 @@ class ProductListItem extends StatelessWidget {
                       ? CachedNetworkImage(
                           imageUrl: product.images[0],
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => const Center(
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: ShopAppColors.primary,
-                              ),
-                            ),
-                          ),
+                          placeholder: (context, url) =>
+                              const ProductImagePlaceholder(),
                           errorWidget: (context, url, error) =>
-                              Icon(Icons.image, color: Colors.grey[400]),
+                              const ProductImagePlaceholder(),
                         )
-                      : Icon(Icons.image, color: Colors.grey[400]),
+                      : const ProductImagePlaceholder(),
                 ),
               ),
               SizedBox(width: 16.w),
@@ -114,8 +107,8 @@ class ProductListItem extends StatelessWidget {
                             color: isDisabledByAdmin
                                 ? ShopAppColors.error
                                 : (isOutOfStock
-                                    ? ShopAppColors.error
-                                    : ShopAppColors.success),
+                                      ? ShopAppColors.error
+                                      : ShopAppColors.success),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -129,8 +122,8 @@ class ProductListItem extends StatelessWidget {
                             color: isDisabledByAdmin
                                 ? ShopAppColors.error
                                 : (isOutOfStock
-                                    ? ShopAppColors.error
-                                    : ShopAppColors.success),
+                                      ? ShopAppColors.error
+                                      : ShopAppColors.success),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -150,39 +143,33 @@ class ProductListItem extends StatelessWidget {
                   ],
                 ),
               ),
-            PopupMenuButton<String>(
-              icon: Icon(
-                Icons.more_vert,
-                color: ShopAppColors.textSecondary,
-              ),
-              onSelected: (val) {
-                if (val == 'edit') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddEditProductPage(
-                        shopId: shopId,
-                        product: product,
-                        productsBloc: productsBloc,
+              PopupMenuButton<String>(
+                icon: Icon(Icons.more_vert, color: ShopAppColors.textSecondary),
+                onSelected: (val) {
+                  if (val == 'edit') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddEditProductPage(
+                          shopId: shopId,
+                          product: product,
+                          productsBloc: productsBloc,
+                        ),
                       ),
-                    ),
-                  );
-                } else if (val == 'delete') {
-                  onDeleteTap();
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Text('Delete'),
-                ),
-              ],
-            ),
-          ],
+                    );
+                  } else if (val == 'delete') {
+                    onDeleteTap();
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                  const PopupMenuItem(value: 'delete', child: Text('Delete')),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

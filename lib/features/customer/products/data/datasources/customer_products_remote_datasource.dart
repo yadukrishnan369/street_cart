@@ -5,7 +5,12 @@ import 'package:street_cart/features/customer/products/domain/repositories/i_cus
 abstract class ICustomerProductsRemoteDataSource {
   Future<List<ProductModel>> getNearbyProducts();
   Future<List<ShopProfileModel>> getNearbyShops();
-  Future<void> addToWishlist(ProductModel product, ShopProfileModel shop);
+  Future<void> addToWishlist(
+    ProductModel product,
+    ShopProfileModel shop, {
+    String? selectedColor,
+    String? selectedSize,
+  });
   Future<void> removeFromWishlist(String productId);
   Future<List<WishlistItem>> getWishlist();
   Future<void> clearWishlist();

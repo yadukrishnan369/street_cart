@@ -26,7 +26,9 @@ class CategoryTabSelector extends StatelessWidget {
           color: isActive ? AdminAppColors.primaryColor : Colors.white,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: isActive ? AdminAppColors.primaryColor : const Color(0xFFE8E7ED),
+            color: isActive
+                ? AdminAppColors.primaryColor
+                : const Color(0xFFE8E7ED),
             width: 1.5,
           ),
         ),

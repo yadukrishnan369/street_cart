@@ -16,9 +16,9 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     required FirebaseAuthService authService,
     required FirebaseFirestore firestore,
     required CloudinaryService cloudinaryService,
-  })  : _authService = authService,
-        _firestore = firestore,
-        _cloudinaryService = cloudinaryService;
+  }) : _authService = authService,
+       _firestore = firestore,
+       _cloudinaryService = cloudinaryService;
 
   @override
   Future<void> signUp({required String email, required String password}) async {
@@ -36,18 +36,25 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   Future<void> login({required String email, required String password}) async {
     try {
       _isDeleting = false;
-      final userCredential = await _authService.signInWithEmail(email: email, password: password);
+      final userCredential = await _authService.signInWithEmail(
+        email: email,
+        password: password,
+      );
       final uid = userCredential.user?.uid;
       if (uid != null) {
         final doc = await _firestore.collection('shops').doc(uid).get();
         if (!doc.exists) {
           await _authService.signOut();
-          throw ServerException('Access denied. You do not have a merchant account.');
+          throw ServerException(
+            'Access denied. You do not have a merchant account.',
+          );
         }
         final data = doc.data();
         if (data != null && data['is_suspended'] == true) {
           await _authService.signOut();
-          throw ServerException('Your shop account is suspended. Please contact support.');
+          throw ServerException(
+            'Your shop account is suspended. Please contact support.',
+          );
         }
       }
     } on ServerException {
@@ -93,7 +100,9 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   }) async {
     try {
       // Upload images to Cloudinary
-      final licenseUrl = await _cloudinaryService.uploadImage(businessLicenseFile);
+      final licenseUrl = await _cloudinaryService.uploadImage(
+        businessLicenseFile,
+      );
       final ownerIdUrl = await _cloudinaryService.uploadImage(ownerIdFile);
 
       if (licenseUrl == null || ownerIdUrl == null) {
@@ -101,7 +110,8 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       }
 
       final doc = await _firestore.collection('shops').doc(userId).get();
-      final bool wasRejected = doc.exists && (doc.data()?['is_rejected'] == true);
+      final bool wasRejected =
+          doc.exists && (doc.data()?['is_rejected'] == true);
 
       // Update Shop document
       await _firestore.collection('shops').doc(userId).update({
@@ -113,7 +123,9 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         'is_profile_completed': true,
         'is_rejected': false,
         'rejection_reason': '',
-        'is_reregistered': wasRejected ? true : (doc.data()?['is_reregistered'] ?? false),
+        'is_reregistered': wasRejected
+            ? true
+            : (doc.data()?['is_reregistered'] ?? false),
         'is_approved': false,
       });
     } catch (e) {
@@ -128,7 +140,10 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         .doc(userId)
         .snapshots()
         .where((_) => !_isDeleting)
-        .map((doc) => doc.exists ? ShopProfileModel.fromMap(doc.data()!, doc.id) : null);
+        .map(
+          (doc) =>
+              doc.exists ? ShopProfileModel.fromMap(doc.data()!, doc.id) : null,
+        );
   }
 
   @override
@@ -154,7 +169,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
           .collection('admins')
           .where('email', isEqualTo: email)
           .get();
-      
+
       bool isAdmin = adminQuery.docs.isNotEmpty;
 
       if (!isAdmin) {
@@ -172,11 +187,15 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       }
 
       if (isAdmin) {
-        throw ServerException('This email is registered as an another account.');
+        throw ServerException(
+          'This email is registered as an another account.',
+        );
       }
     } catch (e) {
       final errorStr = e.toString().toLowerCase();
-      if (errorStr.contains('permission-denied') || errorStr.contains('permission denied') || errorStr.contains('insufficient permission')) {
+      if (errorStr.contains('permission-denied') ||
+          errorStr.contains('permission denied') ||
+          errorStr.contains('insufficient permission')) {
         // If firestore rules block unauthenticated reads, fallback to direct firebase reset
         await _authService.sendPasswordResetEmail(email);
         return;
@@ -248,7 +267,8 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     try {
       final doc = await _firestore.collection('config').doc('categories').get();
       if (doc.exists && doc.data() != null) {
-        final rawBusinessCats = doc.data()!['business_categories'] as List<dynamic>?;
+        final rawBusinessCats =
+            doc.data()!['business_categories'] as List<dynamic>?;
         if (rawBusinessCats != null) {
           return rawBusinessCats
               .map((e) => Map<String, dynamic>.from(e as Map))
@@ -269,7 +289,8 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     try {
       final doc = await _firestore.collection('config').doc('categories').get();
       if (doc.exists && doc.data() != null) {
-        final rawProductCats = doc.data()!['product_categories'] as List<dynamic>?;
+        final rawProductCats =
+            doc.data()!['product_categories'] as List<dynamic>?;
         if (rawProductCats != null) {
           return rawProductCats
               .map((e) => Map<String, dynamic>.from(e as Map))
@@ -295,10 +316,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
           'enable_online': doc.data()!['enable_online'] ?? true,
         };
       }
-      return {
-        'enable_cod': true,
-        'enable_online': true,
-      };
+      return {'enable_cod': true, 'enable_online': true};
     } catch (e) {
       throw ServerException('Failed to load payment settings: $e');
     }

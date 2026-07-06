@@ -11,6 +11,7 @@ class RoutePaths {
   static const registrations = '/registrations';
   static const registrationDetails = '/registrations/:id';
   static const categories = '/settings/categories';
+  static const productConfig = '/settings/product-config';
   static const profile = '/profile';
   static const products = '/products';
   static const productDetails = '/products/:id';

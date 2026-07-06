@@ -11,24 +11,29 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_sett
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_event.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_state.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/category_item_widget.dart';
-import 'package:street_cart/features/admin/settings/presentation/widgets/category_tab_selector.dart';
-import 'package:street_cart/features/admin/settings/presentation/widgets/category_header_section.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/category_dialogs.dart';
+import 'package:street_cart/features/admin/settings/presentation/widgets/shimmer/admin_categories_shimmer.dart';
+import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_bloc.dart';
+import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_event.dart';
+import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_state.dart';
+import 'package:street_cart/features/admin/settings/presentation/widgets/categories_config_header.dart';
 
-class AdminCategoriesPage extends StatefulWidget {
+class AdminCategoriesPage extends StatelessWidget {
   const AdminCategoriesPage({super.key});
 
   @override
-  State<AdminCategoriesPage> createState() => _AdminCategoriesPageState();
-}
-
-class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
-  bool _isProductTab = true;
-
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AdminSettingsBloc>()..add(LoadAdminSettings()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<AdminSettingsBloc>()..add(LoadAdminSettings()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              sl<AdminProductConfigBloc>()..add(LoadProductConfig()),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AdminAppColors.backgroundLight,
         body: BlocListener<AdminSettingsBloc, AdminSettingsState>(
@@ -44,22 +49,18 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
             }
           },
           child: BlocBuilder<AdminSettingsBloc, AdminSettingsState>(
-            builder: (context, state) {
-              if (state is AdminSettingsLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AdminAppColors.primaryColor,
-                  ),
-                );
+            builder: (context, settingsState) {
+              if (settingsState is AdminSettingsLoading) {
+                return const AdminCategoriesShimmer();
               }
 
-              if (state is AdminSettingsLoadFailure) {
+              if (settingsState is AdminSettingsLoadFailure) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Failed to load settings: ${state.message}',
+                        'Failed to load settings: ${settingsState.message}',
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: AdminAppColors.errorColor,
@@ -82,134 +83,129 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
                 );
               }
 
-              final currentSettings = (state is AdminSettingsLoadSuccess)
-                  ? state.settings
-                  : (state is AdminSettingsActionSuccess)
-                  ? state.settings
-                  : (state is AdminSettingsActionFailure)
-                  ? state.settings
+              final currentSettings =
+                  (settingsState is AdminSettingsLoadSuccess)
+                  ? settingsState.settings
+                  : (settingsState is AdminSettingsActionSuccess)
+                  ? settingsState.settings
+                  : (settingsState is AdminSettingsActionFailure)
+                  ? settingsState.settings
                   : const AdminSettingsModel(
                       commissionPercentage: 2.0,
                       enableCod: true,
                       enableOnline: true,
-                     );
+                    );
 
-              final categoriesList = _isProductTab
-                  ? currentSettings.productCategories
-                  : currentSettings.businessCategories;
+              final categoriesList = currentSettings.businessCategories;
 
-              return Column(
-                children: [
-                  // Main Content Scrollable
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          right: 150.w,
-                          left: 80,
-                          top: 32.h,
-                          bottom: 32.h,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Back Button
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return BlocBuilder<
+                AdminProductConfigBloc,
+                AdminProductConfigState
+              >(
+                builder: (context, configState) {
+                  final allSizeGroups = (configState is ProductConfigLoaded)
+                      ? configState.config.sizeGroups
+                      : (configState is ProductConfigActionSuccess)
+                      ? configState.config.sizeGroups
+                      : const <SizeGroupModel>[];
+
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: 150.w,
+                              left: 80,
+                              top: 32.h,
+                              bottom: 32.h,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                InkWell(
-                                  onTap: () => context.pop(),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_back,
-                                        size: 16.sp,
-                                        color: AdminAppColors.primaryColor,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () => context.pop(),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_back,
+                                            size: 16.sp,
+                                            color: AdminAppColors.primaryColor,
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Text(
+                                            'Go Back',
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  AdminAppColors.primaryColor,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(width: 8.w),
-                                      Text(
-                                        'Go Back',
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: AdminAppColors.primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    _activeCategoryCount(categoriesList),
+                                  ],
                                 ),
-                                // category count
+                                SizedBox(height: 24.h),
+                                CategoriesConfigHeader(
+                                  currentSettings: currentSettings,
+                                  allSizeGroups: allSizeGroups,
+                                ),
+                                SizedBox(height: 24.h),
+                                if (categoriesList.isEmpty)
+                                  EmptyCategory()
+                                else
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: categoriesList.length,
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 12.h),
+                                    itemBuilder: (context, index) {
+                                      final category = categoriesList[index];
+                                      return CategoryItemWidget(
+                                        category: category,
+                                        onToggleVisibility: (val) {
+                                          CategoryDialogs.showToggleVisibility(
+                                            context: context,
+                                            settings: currentSettings,
+                                            category: category,
+                                            newVisibility: val,
+                                          );
+                                        },
+                                        onEdit: () => CategoryDialogs.showEdit(
+                                          context: context,
+                                          settings: currentSettings,
+                                          category: category,
+                                          allSizeGroups: allSizeGroups,
+                                        ),
+                                        onDelete: () =>
+                                            CategoryDialogs.showDelete(
+                                              context: context,
+                                              settings: currentSettings,
+                                              category: category,
+                                            ),
+                                      );
+                                    },
+                                  ),
+                                SizedBox(height: 24.h),
                                 _activeCategoryCount(categoriesList),
                               ],
                             ),
-
-                            SizedBox(height: 24.h),
-
-                            // Tab selectors
-                            CategoryTabSelector(
-                              isProductTab: _isProductTab,
-                              onTabChanged: (val) =>
-                                  setState(() => _isProductTab = val),
-                            ),
-                            SizedBox(height: 32.h),
-
-                            // Catalog Title & Add button
-                            CategoryHeaderSection(
-                              isProductTab: _isProductTab,
-                              onAddPressed: () => CategoryDialogs.showAdd(
-                                context: context,
-                                settings: currentSettings,
-                                isProductTab: _isProductTab,
-                              ),
-                            ),
-                            SizedBox(height: 24.h),
-
-                            // List of categories
-                            if (categoriesList.isEmpty)
-                              EmptyCategory()
-                            else
-                              ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: categoriesList.length,
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 12.h),
-                                itemBuilder: (context, index) {
-                                  final category = categoriesList[index];
-                                  return CategoryItemWidget(
-                                    category: category,
-                                    onToggleVisibility: (val) {
-                                      CategoryDialogs.showToggleVisibility(
-                                        context: context,
-                                        settings: currentSettings,
-                                        category: category,
-                                        newVisibility: val,
-                                      );
-                                    },
-                                    onEdit: () => CategoryDialogs.showEdit(
-                                      context: context,
-                                      settings: currentSettings,
-                                      category: category,
-                                    ),
-                                    onDelete: () => CategoryDialogs.showDelete(
-                                      context: context,
-                                      settings: currentSettings,
-                                      category: category,
-                                    ),
-                                  );
-                                },
-                              ),
-
-                            SizedBox(height: 24.h),
-                            // category count
-                            _activeCategoryCount(categoriesList),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               );
             },
           ),
@@ -220,7 +216,7 @@ class _AdminCategoriesPageState extends State<AdminCategoriesPage> {
 
   Text _activeCategoryCount(List<CategoryModel> categoriesList) {
     return Text(
-      'Showing ${categoriesList.where((e) => e.isVisible).length} active categories',
+      'Showing ${categoriesList.where((e) => e.isVisible).length} active configurations',
       style: TextStyle(fontSize: 12.sp, color: const Color(0xFF8A8A9E)),
     );
   }

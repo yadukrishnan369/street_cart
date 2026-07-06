@@ -1,4 +1,4 @@
-import '../repositories/admin_shop_repository.dart';
+import 'package:street_cart/features/admin/shops/domain/repositories/admin_shop_repository.dart';
 
 class DeleteShop {
   final IAdminShopRepository _repository;

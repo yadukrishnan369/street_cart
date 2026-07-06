@@ -24,10 +24,7 @@ abstract class IShopAuthRepository {
     required String email,
   });
 
-  Future<void> login({
-    required String email,
-    required String password,
-  });
+  Future<void> login({required String email, required String password});
 
   Future<void> setupShopProfile({
     required String category,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/customer/profile/data/models/profile_model.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 
 class EditProfileHeader extends StatelessWidget {
   final ProfileModel? profile;
@@ -46,19 +47,25 @@ class EditProfileHeader extends StatelessWidget {
                 ),
                 child: GestureDetector(
                   onTap: onPickImage,
-                  child: CircleAvatar(
-                    radius: 50.r,
-                    backgroundColor: Colors.grey.shade200,
-                    backgroundImage: hasImage
-                        ? CachedNetworkImageProvider(imageUrl)
-                        : null,
-                    child: !hasImage
-                        ? Icon(
-                            Icons.person,
-                            size: 50.sp,
-                            color: Colors.grey.shade400,
-                          )
-                        : null,
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: 110.w,
+                      height: 110.w,
+                      child: hasImage
+                          ? CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => CustomerImagePlaceholder(
+                                size: 110.w,
+                              ),
+                              errorWidget: (context, url, error) => CustomerImagePlaceholder(
+                                size: 110.w,
+                              ),
+                            )
+                          : CustomerImagePlaceholder(
+                              size: 110.w,
+                            ),
+                    ),
                   ),
                 ),
               ),

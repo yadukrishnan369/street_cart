@@ -14,16 +14,12 @@ import 'package:street_cart/core/router/admin/route_paths.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/stat_card.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/new_registrations_section.dart';
+import 'package:street_cart/features/admin/dashboard/presentation/widgets/shimmer/admin_dashboard_shimmer.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/recent_orders_table.dart';
 
-class AdminDashboardPage extends StatefulWidget {
+class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
 
-  @override
-  State<AdminDashboardPage> createState() => _AdminDashboardPageState();
-}
-
-class _AdminDashboardPageState extends State<AdminDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -45,9 +41,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         child: BlocBuilder<AdminDashboardBloc, AdminDashboardState>(
           builder: (context, state) {
             if (state is AdminDashboardLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: Color(0xFF7B2CBF)),
-              );
+              return const AdminDashboardShimmer();
             } else if (state is AdminDashboardLoadSuccess) {
               final stats = state.stats;
               return SingleChildScrollView(
@@ -55,7 +49,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Stats Grid (Responsive columns)
                     LayoutBuilder(
                       builder: (context, constraints) {
                         final isWide = constraints.maxWidth > 900;
@@ -110,8 +103,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       },
                     ),
                     SizedBox(height: 32.h),
-
-                    // New Registrations Section
                     NewRegistrationsSection(
                       registrations: stats.newRegistrations,
                       onSeeAll: () {
@@ -129,8 +120,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       },
                     ),
                     SizedBox(height: 32.h),
-
-                    // Recent Orders Section
                     RecentOrdersTable(
                       orders: stats.recentOrders,
                       onViewAll: () {

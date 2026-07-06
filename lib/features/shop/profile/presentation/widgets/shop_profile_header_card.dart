@@ -38,7 +38,11 @@ class ShopProfileHeaderCard extends StatelessWidget {
                       ? CachedNetworkImageProvider(profile.profileImageUrl)
                       : null,
                   child: !hasImage
-                      ? Icon(Icons.storefront_outlined, size: 56.sp, color: ShopAppColors.textTertiary)
+                      ? Icon(
+                          Icons.storefront_outlined,
+                          size: 56.sp,
+                          color: ShopAppColors.textTertiary,
+                        )
                       : null,
                 ),
               ),
@@ -85,7 +89,8 @@ class ShopProfileHeaderCard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const ShopLocationPermissionPage(isFromProfile: true),
+                  builder: (_) =>
+                      const ShopLocationPermissionPage(isFromProfile: true),
                 ),
               ).then((result) {
                 if (result == true && context.mounted) {
@@ -100,7 +105,11 @@ class ShopProfileHeaderCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.location_on_outlined, size: 14.sp, color: ShopAppColors.textSecondary),
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: 14.sp,
+                    color: ShopAppColors.textSecondary,
+                  ),
                   SizedBox(width: 4.w),
                   Text(
                     '${profile.city.isNotEmpty ? profile.city : 'Location'}, ${profile.state.isNotEmpty ? profile.state : 'State'}',

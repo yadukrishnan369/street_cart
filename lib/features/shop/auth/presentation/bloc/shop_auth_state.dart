@@ -44,4 +44,3 @@ class ShopAuthVerificationWaiting extends ShopAuthState {
 class ShopAuthVerificationSuccess extends ShopAuthState {}
 
 class ShopAuthPasswordResetSuccess extends ShopAuthState {}
-

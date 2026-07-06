@@ -6,10 +6,7 @@ import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 class AdminProfileMetrics extends StatelessWidget {
   final int approvedShopsCount;
 
-  const AdminProfileMetrics({
-    super.key,
-    required this.approvedShopsCount,
-  });
+  const AdminProfileMetrics({super.key, required this.approvedShopsCount});
 
   @override
   Widget build(BuildContext context) {

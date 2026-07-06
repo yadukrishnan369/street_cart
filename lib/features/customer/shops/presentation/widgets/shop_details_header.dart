@@ -4,6 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
+import 'package:street_cart/shared/widgets/image_preview_page.dart';
 
 class ShopDetailsHeader extends StatelessWidget {
   final ShopProfileModel shop;
@@ -16,17 +19,11 @@ class ShopDetailsHeader extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
-          vertical: 24.h,
-          horizontal: 16.w,
-        ),
+        padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: CustomerAppColors.border,
-            width: 1.w,
-          ),
+          border: Border.all(color: CustomerAppColors.border, width: 1.w),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -43,10 +40,7 @@ class ShopDetailsHeader extends StatelessWidget {
               height: 110.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: CustomerAppColors.border,
-                  width: 2.w,
-                ),
+                border: Border.all(color: CustomerAppColors.border, width: 2.w),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.05),
@@ -55,15 +49,32 @@ class ShopDetailsHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              child: ClipOval(
-                child: shop.profileImageUrl.isNotEmpty
-                    ? Image.network(
-                        shop.profileImageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            _buildFallbackIcon(),
-                      )
-                    : _buildFallbackIcon(),
+              child: GestureDetector(
+                onTap: shop.profileImageUrl.isNotEmpty
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ImagePreviewPage(
+                              images: [shop.profileImageUrl],
+                              initialIndex: 0,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+                child: ClipOval(
+                  child: shop.profileImageUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: shop.profileImageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const ShopImagePlaceholder(iconSize: 48),
+                          errorWidget: (context, url, error) =>
+                              const ShopImagePlaceholder(iconSize: 48),
+                        )
+                      : const ShopImagePlaceholder(iconSize: 48),
+                ),
               ),
             ),
 
@@ -115,10 +126,7 @@ class ShopDetailsHeader extends StatelessWidget {
 
             Padding(
               padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Divider(
-                color: CustomerAppColors.border,
-                height: 1,
-              ),
+              child: Divider(color: CustomerAppColors.border, height: 1),
             ),
 
             // Horizontal info stats
@@ -141,15 +149,11 @@ class ShopDetailsHeader extends StatelessWidget {
                   shop.paymentMethods.isNotEmpty
                       ? shop.paymentMethods
                             .map((m) {
-                              final clean = m
-                                  .trim()
-                                  .toLowerCase();
+                              final clean = m.trim().toLowerCase();
                               if (clean.contains('gpay') ||
                                   clean.contains('google pay'))
                                 return 'GPAY';
-                              if (clean.contains(
-                                    'cash on delivery',
-                                  ) ||
+                              if (clean.contains('cash on delivery') ||
                                   clean.contains('cash'))
                                 return 'COD';
                               return m.toUpperCase();
@@ -178,8 +182,7 @@ class ShopDetailsHeader extends StatelessWidget {
                         secondaryActionLabel: 'Cancel',
                         icon: Icons.phone_forwarded_rounded,
                         iconColor: CustomerAppColors.primary,
-                        primaryActionColor:
-                            CustomerAppColors.primary,
+                        primaryActionColor: CustomerAppColors.primary,
                         onPrimaryAction: () async {
                           Navigator.pop(dialogCtx);
                           final Uri launchUri = Uri(
@@ -193,19 +196,13 @@ class ShopDetailsHeader extends StatelessWidget {
                       ),
                     );
                   },
-                  icon: const Icon(
-                    Icons.call,
-                    size: 16,
-                    color: Colors.white,
-                  ),
+                  icon: const Icon(Icons.call, size: 16, color: Colors.white),
                   label: Text('Call Store (+91 ${shop.phone})'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: CustomerAppColors.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 12.h,
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
@@ -215,18 +212,6 @@ class ShopDetailsHeader extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildFallbackIcon() {
-    return Container(
-      color: Colors.grey.shade100,
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.storefront_outlined,
-        color: Colors.grey.shade400,
-        size: 40.sp,
       ),
     );
   }

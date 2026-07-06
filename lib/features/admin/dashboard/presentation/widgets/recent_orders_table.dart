@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../data/models/recent_order_model.dart';
+import 'package:street_cart/features/admin/dashboard/data/models/recent_order_model.dart';
 
 class RecentOrdersTable extends StatelessWidget {
   final List<RecentOrderModel> orders;

@@ -47,7 +47,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
       child: Center(
         child: SingleChildScrollView(
           child: Container(
-            width: MediaQuery.of(context).size.width > 600 ? 450.w : double.infinity,
+            width: MediaQuery.of(context).size.width > 600
+                ? 450.w
+                : double.infinity,
             margin: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -84,7 +86,7 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                   ),
                 ),
                 const Divider(color: Color(0xFFECEFF1), height: 1),
-                
+
                 // Form Content
                 Padding(
                   padding: EdgeInsets.all(24.w),
@@ -101,7 +103,7 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                           ),
                         ),
                         SizedBox(height: 24.h),
-  
+
                         // Name Field
                         Text(
                           'FULL NAME',
@@ -120,18 +122,27 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                           ),
                           decoration: InputDecoration(
                             hintText: 'Enter full name',
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 14.h,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(color: Color(0xFFECEFF1)),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFECEFF1),
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(color: Color(0xFFECEFF1)),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFECEFF1),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(color: AdminAppColors.primaryColor),
+                              borderSide: const BorderSide(
+                                color: AdminAppColors.primaryColor,
+                              ),
                             ),
                           ),
                           validator: (value) {
@@ -142,8 +153,8 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                           },
                         ),
                         SizedBox(height: 20.h),
-  
-                        // Email Field (Read-only / Disabled)
+
+                        // Email Field Read-only / Disabled
                         Row(
                           children: [
                             Text(
@@ -177,15 +188,20 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                           decoration: InputDecoration(
                             fillColor: const Color(0xFFF5F7F8),
                             filled: true,
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 14.h,
+                            ),
                             disabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(color: Color(0xFFECEFF1)),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFECEFF1),
+                              ),
                             ),
                           ),
                         ),
                         SizedBox(height: 32.h),
-  
+
                         // Actions
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -193,7 +209,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                             OutlinedButton(
                               onPressed: widget.onClose,
                               style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Color(0xFFECEFF1)),
+                                side: const BorderSide(
+                                  color: Color(0xFFECEFF1),
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
@@ -219,15 +237,19 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                                     context: context,
                                     builder: (dialogContext) => ConfirmationModal(
                                       title: 'Save Changes',
-                                      content: 'Are you sure you want to save these changes?',
+                                      content:
+                                          'Are you sure you want to save these changes?',
                                       confirmText: 'Save',
                                       confirmColor: AdminAppColors.primaryColor,
                                       surfaceColor: Colors.white,
                                       onConfirm: () {
                                         Navigator.pop(dialogContext);
-                                        widget.onSave(_nameController.text.trim());
+                                        widget.onSave(
+                                          _nameController.text.trim(),
+                                        );
                                       },
-                                      onCancel: () => Navigator.pop(dialogContext),
+                                      onCancel: () =>
+                                          Navigator.pop(dialogContext),
                                     ),
                                   );
                                 }

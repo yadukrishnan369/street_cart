@@ -9,6 +9,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc({required this.getHomeData}) : super(HomeInitial()) {
     on<FetchHomeData>(_onFetchHomeData);
+    on<ResetHome>(_onResetHome);
   }
 
   Future<void> _onFetchHomeData(FetchHomeData event, Emitter<HomeState> emit) async {
@@ -24,5 +25,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(HomeError(message: 'Failed to load home data'));
       }
     }
+  }
+
+  void _onResetHome(ResetHome event, Emitter<HomeState> emit) {
+    emit(HomeInitial());
   }
 }

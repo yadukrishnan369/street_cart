@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
-import 'package:street_cart/shared/widgets/primary_button.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/account_review_page.dart';
+import 'package:street_cart/features/shop/location/presentation/widgets/map_illustration.dart';
+import 'package:street_cart/features/shop/location/presentation/widgets/why_we_need_this_card.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_bloc.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_event.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_state.dart';
@@ -34,7 +36,9 @@ class _ShopLocationPermissionPageState
               } else {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountReviewPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const AccountReviewPage(),
+                  ),
                 );
               }
             }
@@ -44,7 +48,9 @@ class _ShopLocationPermissionPageState
             } else {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const AccountReviewPage()),
+                MaterialPageRoute(
+                  builder: (context) => const AccountReviewPage(),
+                ),
               );
             }
           } else if (state is ShopLocationFailure) {
@@ -81,50 +87,7 @@ class _ShopLocationPermissionPageState
                   return Column(
                     children: [
                       SizedBox(height: 20.h),
-                      // Map Illustration
-                      Container(
-                        height: 240.h,
-                        width: 240.h,
-                        decoration: BoxDecoration(
-                          color: ShopAppColors.primary.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                height: 180.h,
-                                width: 180.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.r),
-                                  shape: BoxShape.rectangle,
-                                  image: const DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/shop_location_map.png',
-                                    ), // Using existing asset as map texture placeholder
-                                    fit: BoxFit.cover,
-                                    opacity: 10,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(12.w),
-                                decoration: BoxDecoration(
-                                  color: ShopAppColors.primary,
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: Icon(
-                                  Icons.storefront,
-                                  color: Colors.white,
-                                  size: 24.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      const MapIllustration(),
                       SizedBox(height: 30.h),
                       Text(
                         'Reach Nearby\nCustomers',
@@ -147,58 +110,7 @@ class _ShopLocationPermissionPageState
                         ),
                       ),
                       SizedBox(height: 25.h),
-                      // Info Card
-                      Container(
-                        padding: EdgeInsets.all(20.w),
-                        decoration: BoxDecoration(
-                          color: ShopAppColors.background,
-                          borderRadius: BorderRadius.circular(24.r),
-                          border: Border.all(
-                            color: ShopAppColors.border.withOpacity(0.5),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(8.w),
-                              decoration: BoxDecoration(
-                                color: ShopAppColors.primary.withOpacity(0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.verified_user_outlined,
-                                color: ShopAppColors.primary,
-                                size: 20.sp,
-                              ),
-                            ),
-                            SizedBox(width: 16.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Why we need this',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.sp,
-                                      color: ShopAppColors.textPrimary,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    'We only use your location to calculate distance for delivery and to list your shop in local search results. Your privacy is our top priority.',
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: ShopAppColors.textSecondary,
-                                      height: 1.3,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const WhyWeNeedThisCard(),
                       SizedBox(height: 30.h),
                       PrimaryButton(
                         text: 'Allow Location Access',
@@ -210,7 +122,9 @@ class _ShopLocationPermissionPageState
                           fontSize: 16.sp,
                         ),
                         onPressed: () {
-                          context.read<ShopLocationBloc>().add(RequestShopLocationEvent());
+                          context.read<ShopLocationBloc>().add(
+                            RequestShopLocationEvent(),
+                          );
                         },
                       ),
                       if (!widget.isFromProfile) ...[
@@ -219,7 +133,9 @@ class _ShopLocationPermissionPageState
                           onPressed: isLoading
                               ? null
                               : () {
-                                  context.read<ShopLocationBloc>().add(SkipShopLocationEvent());
+                                  context.read<ShopLocationBloc>().add(
+                                    SkipShopLocationEvent(),
+                                  );
                                 },
                           child: Text(
                             'Skip for Now',

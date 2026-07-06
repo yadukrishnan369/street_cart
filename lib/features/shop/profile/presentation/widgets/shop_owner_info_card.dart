@@ -21,13 +21,17 @@ class ShopOwnerInfoCard extends StatelessWidget {
               Expanded(
                 child: ShopProfileGridItem(
                   label: 'Shop Owner',
-                  value: profile.ownerName.isNotEmpty ? profile.ownerName : 'Not provided',
+                  value: profile.ownerName.isNotEmpty
+                      ? profile.ownerName
+                      : 'Not provided',
                 ),
               ),
               Expanded(
                 child: ShopProfileGridItem(
                   label: 'Business Phone',
-                  value: profile.phone.isNotEmpty ? profile.phone : 'Not provided',
+                  value: profile.phone.isNotEmpty
+                      ? profile.phone
+                      : 'Not provided',
                 ),
               ),
             ],

@@ -15,7 +15,8 @@ class ContactSupportPage extends StatelessWidget {
       context: context,
       builder: (dialogContext) => ConfirmationModal(
         title: 'Call Support',
-        content: 'Are you sure you want to call our support team at ${ShopConstants.supportPhoneNumber}?',
+        content:
+            'Are you sure you want to call our support team at ${ShopConstants.supportPhoneNumber}?',
         confirmText: 'Call',
         confirmColor: ShopAppColors.primary,
         onConfirm: () {
@@ -32,7 +33,8 @@ class ContactSupportPage extends StatelessWidget {
       context: context,
       builder: (dialogContext) => ConfirmationModal(
         title: 'Email Support',
-        content: 'Do you want to send an email to ${ShopConstants.supportEmail}?',
+        content:
+            'Do you want to send an email to ${ShopConstants.supportEmail}?',
         confirmText: 'Send',
         confirmColor: ShopAppColors.primary,
         onConfirm: () {
@@ -46,9 +48,6 @@ class ContactSupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Resolve communication service cleanly without directly calling DI inside build methods, 
-    // or constructor injection. Since it's a stateless routing page, resolving it via context 
-    // or constructor is ideal. We can also resolve it from sl here as a parameter setup.
     final comms = sl<CommunicationService>();
 
     return Scaffold(

@@ -14,10 +14,7 @@ class CategoriesTopbar extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(
-            color: Color(0xFFF0EFF5),
-            width: 1.5,
-          ),
+          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.5),
         ),
       ),
       child: Row(
@@ -50,10 +47,7 @@ class CategoriesTopbar extends StatelessWidget {
             ),
             child: InkWell(
               onTap: () {
-                CustomSnackBar.show(
-                  context,
-                  message: 'No new notifications',
-                );
+                CustomSnackBar.show(context, message: 'No new notifications');
               },
               child: Icon(
                 Icons.notifications_none,

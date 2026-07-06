@@ -7,6 +7,8 @@ import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dar
 import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_bloc.dart';
 import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_event.dart';
 import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_state.dart';
+import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_ui_cubit.dart';
+import 'package:street_cart/features/shop/onboarding/data/models/onboarding_content.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
 class ShopOnboardingPage extends StatefulWidget {
@@ -18,28 +20,7 @@ class ShopOnboardingPage extends StatefulWidget {
 
 class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  final List<OnboardingContent> _contents = [
-    OnboardingContent(
-      title: 'Grow Your Local Business',
-      description:
-          'Bring your shop online and reach customers around you with our seamless digital platform.',
-      image: 'assets/images/shop_onboarding_1.png',
-    ),
-    OnboardingContent(
-      title: 'Manage Orders Easily',
-      description:
-          'Accept orders, update products, and manage sales effortlessly. Everything you need to grow your business in one place.',
-      image: 'assets/images/shop_onboarding_2.png',
-    ),
-    OnboardingContent(
-      title: 'Sell Locally with Confidence',
-      description:
-          'Connect with nearby buyers based on your delivery area and grow your community business.',
-      image: 'assets/images/shop_onboarding_3.png',
-    ),
-  ];
+  final List<OnboardingContent> _contents = OnboardingContent.defaultContents;
 
   @override
   void dispose() {
@@ -49,8 +30,15 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<ShopOnboardingBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ShopOnboardingBloc>(
+          create: (_) => sl<ShopOnboardingBloc>(),
+        ),
+        BlocProvider<ShopOnboardingUiCubit>(
+          create: (_) => ShopOnboardingUiCubit(),
+        ),
+      ],
       child: BlocListener<ShopOnboardingBloc, ShopOnboardingState>(
         listener: (context, state) {
           if (state is ShopOnboardingCompleted) {
@@ -60,8 +48,8 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
             );
           }
         },
-        child: Builder(
-          builder: (context) {
+        child: BlocBuilder<ShopOnboardingUiCubit, ShopOnboardingUiState>(
+          builder: (context, uiState) {
             return Scaffold(
               backgroundColor: ShopAppColors.background,
               body: SafeArea(
@@ -72,9 +60,9 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
                       child: Align(
                         child: TextButton(
                           onPressed: () {
-                            context
-                                .read<ShopOnboardingBloc>()
-                                .add(CompleteShopOnboardingEvent());
+                            context.read<ShopOnboardingBloc>().add(
+                              CompleteShopOnboardingEvent(),
+                            );
                           },
                           child: Text(
                             'Skip',
@@ -92,9 +80,7 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
                         controller: _pageController,
                         itemCount: _contents.length,
                         onPageChanged: (index) {
-                          setState(() {
-                            _currentPage = index;
-                          });
+                          context.read<ShopOnboardingUiCubit>().setPage(index);
                         },
                         itemBuilder: (context, index) {
                           return Padding(
@@ -147,11 +133,13 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
                               (index) => Container(
                                 margin: EdgeInsets.only(right: 8.w),
                                 height: 8.h,
-                                width: _currentPage == index ? 24.w : 8.w,
+                                width: uiState.currentPage == index
+                                    ? 24.w
+                                    : 8.w,
                                 decoration: BoxDecoration(
-                                  color: _currentPage == index
+                                  color: uiState.currentPage == index
                                       ? ShopAppColors.primary
-                                      : ShopAppColors.primary.withOpacity(0.2),
+                                      : ShopAppColors.primary.withAlpha(51),
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                               ),
@@ -161,7 +149,8 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
                           BlocBuilder<ShopOnboardingBloc, ShopOnboardingState>(
                             builder: (context, state) {
                               return PrimaryButton(
-                                text: _currentPage == _contents.length - 1
+                                text:
+                                    uiState.currentPage == _contents.length - 1
                                     ? 'Get Started'
                                     : 'Next',
                                 isLoading: state is ShopOnboardingLoading,
@@ -172,13 +161,16 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
                                   fontSize: 16.sp,
                                 ),
                                 onPressed: () {
-                                  if (_currentPage == _contents.length - 1) {
-                                    context
-                                        .read<ShopOnboardingBloc>()
-                                        .add(CompleteShopOnboardingEvent());
+                                  if (uiState.currentPage ==
+                                      _contents.length - 1) {
+                                    context.read<ShopOnboardingBloc>().add(
+                                      CompleteShopOnboardingEvent(),
+                                    );
                                   } else {
                                     _pageController.nextPage(
-                                      duration: const Duration(milliseconds: 300),
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
                                       curve: Curves.easeInOut,
                                     );
                                   }
@@ -193,21 +185,9 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
                 ),
               ),
             );
-          }
+          },
         ),
       ),
     );
   }
-}
-
-class OnboardingContent {
-  final String title;
-  final String description;
-  final String image;
-
-  OnboardingContent({
-    required this.title,
-    required this.description,
-    required this.image,
-  });
 }

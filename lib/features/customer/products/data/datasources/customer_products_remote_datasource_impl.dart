@@ -104,7 +104,12 @@ class CustomerProductsRemoteDataSourceImpl
   }
 
   @override
-  Future<void> addToWishlist(ProductModel product, ShopProfileModel shop) async {
+  Future<void> addToWishlist(
+    ProductModel product,
+    ShopProfileModel shop, {
+    String? selectedColor,
+    String? selectedSize,
+  }) async {
     try {
       final user = _auth.currentUser;
       if (user == null) return;
@@ -117,6 +122,8 @@ class CustomerProductsRemoteDataSourceImpl
 
       await docRef.set({
         'product_id': product.id,
+        'selected_color': selectedColor,
+        'selected_size': selectedSize,
         'added_at': FieldValue.serverTimestamp(),
       });
     } catch (e) {
@@ -158,6 +165,8 @@ class CustomerProductsRemoteDataSourceImpl
 
       final productIds = <String>[];
       final addedAtMap = <String, DateTime?>{};
+      final selectedColorMap = <String, String?>{};
+      final selectedSizeMap = <String, String?>{};
       for (final doc in snap.docs) {
         try {
           final data = doc.data();
@@ -166,6 +175,8 @@ class CustomerProductsRemoteDataSourceImpl
             productIds.add(pId);
             final Timestamp? addedAtStamp = data['added_at'] as Timestamp?;
             addedAtMap[pId] = addedAtStamp?.toDate();
+            selectedColorMap[pId] = data['selected_color'] as String?;
+            selectedSizeMap[pId] = data['selected_size'] as String?;
           }
         } catch (e) {
           print('Error parsing wishlist item ID: $e');
@@ -211,36 +222,43 @@ class CustomerProductsRemoteDataSourceImpl
       }
 
       final itemsWithTime = <MapEntry<WishlistItem, DateTime?>>[];
+      final List<String> deadProductIds = [];
+
+      final fetchedProductIds = fetchedProducts.map((p) => p.id).toSet();
+      for (final pId in productIds) {
+        if (!fetchedProductIds.contains(pId)) {
+          deadProductIds.add(pId);
+        }
+      }
+
       for (final product in fetchedProducts) {
-        final shop = fetchedShopsMap[product.shopId] ?? ShopProfileModel(
-          uid: product.shopId,
-          ownerName: '',
-          shopName: 'Unknown Shop',
-          email: '',
-          category: '',
-          description: '',
-          gstNumber: '',
-          businessLicenseUrl: '',
-          ownerIdUrl: '',
-          isApproved: true,
-          role: 'shop',
-          isProfileCompleted: true,
-          profileImageUrl: '',
-          phone: '',
-          deliveryRadius: 5.0,
-          fullAddress: '',
-          landmark: '',
-          city: '',
-          pincode: '',
-          district: '',
-          state: '',
-          paymentMethods: [],
-        );
+        final shop = fetchedShopsMap[product.shopId];
+        if (shop == null) {
+          deadProductIds.add(product.id);
+          continue;
+        }
         final addedAt = addedAtMap[product.id];
         itemsWithTime.add(MapEntry(
-          WishlistItem(product: product, shop: shop),
+          WishlistItem(
+            product: product,
+            shop: shop,
+            selectedColor: selectedColorMap[product.id],
+            selectedSize: selectedSizeMap[product.id],
+          ),
           addedAt,
         ));
+      }
+
+      if (deadProductIds.isNotEmpty) {
+        for (final pId in deadProductIds) {
+          _firestore
+              .collection('customers')
+              .doc(user.uid)
+              .collection('wishlist')
+              .doc(pId)
+              .delete()
+              .catchError((e) => print('Error cleaning up wishlist item: $e'));
+        }
       }
 
       itemsWithTime.sort((a, b) {

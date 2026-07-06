@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/core/network/network_info.dart';
 import 'package:street_cart/features/shop/products/data/datasources/shop_products_remote_datasource.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/features/shop/products/data/models/variant_image_draft.dart';
 import 'package:street_cart/features/shop/products/domain/repositories/i_shop_products_repository.dart';
 
 class ShopProductsRepositoryImpl implements IShopProductsRepository {
@@ -21,19 +21,25 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
   }
 
   @override
-  Future<void> addProduct(ProductModel product, List<File> imageFiles) async {
+  Future<void> addProduct(
+    ProductModel product,
+    List<VariantImageDraft> variantDrafts,
+  ) async {
     if (!await _networkInfo.isConnected) {
       throw NetworkException('No internet connection. Please check your network.');
     }
-    await _remoteDataSource.addProduct(product, imageFiles);
+    await _remoteDataSource.addProduct(product, variantDrafts);
   }
 
   @override
-  Future<void> updateProduct(ProductModel product, List<dynamic> imagesOrFiles) async {
+  Future<void> updateProduct(
+    ProductModel product,
+    List<VariantImageDraft> variantDrafts,
+  ) async {
     if (!await _networkInfo.isConnected) {
       throw NetworkException('No internet connection. Please check your network.');
     }
-    await _remoteDataSource.updateProduct(product, imagesOrFiles);
+    await _remoteDataSource.updateProduct(product, variantDrafts);
   }
 
   @override
@@ -53,7 +59,8 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
   }
 
   @override
-  Future<void> saveShopProductConfig(String shopId, Map<String, dynamic> config) async {
+  Future<void> saveShopProductConfig(
+      String shopId, Map<String, dynamic> config) async {
     if (!await _networkInfo.isConnected) {
       throw NetworkException('No internet connection. Please check your network.');
     }

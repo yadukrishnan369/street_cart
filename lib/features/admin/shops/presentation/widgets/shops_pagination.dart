@@ -26,7 +26,9 @@ class ShopsPagination extends StatelessWidget {
         color: currentPage > 1
             ? AdminAppColors.primaryColor
             : const Color(0xFF8A8A9E).withValues(alpha: 0.5),
-        onPressed: currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
+        onPressed: currentPage > 1
+            ? () => onPageChanged(currentPage - 1)
+            : null,
       ),
     );
 
@@ -41,7 +43,9 @@ class ShopsPagination extends StatelessWidget {
             height: 36.h,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isSelected ? AdminAppColors.primaryColor : Colors.transparent,
+              color: isSelected
+                  ? AdminAppColors.primaryColor
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(8.r),
               border: isSelected
                   ? null
@@ -69,7 +73,9 @@ class ShopsPagination extends StatelessWidget {
         color: currentPage < totalPages
             ? AdminAppColors.primaryColor
             : const Color(0xFF8A8A9E).withValues(alpha: 0.5),
-        onPressed: currentPage < totalPages ? () => onPageChanged(currentPage + 1) : null,
+        onPressed: currentPage < totalPages
+            ? () => onPageChanged(currentPage + 1)
+            : null,
       ),
     );
 

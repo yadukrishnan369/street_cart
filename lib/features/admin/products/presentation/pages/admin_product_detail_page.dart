@@ -14,24 +14,20 @@ import 'package:street_cart/features/admin/products/presentation/widgets/product
 import 'package:street_cart/features/admin/products/presentation/widgets/product_shop_info_card.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/product_detail_header.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
+import 'package:street_cart/features/admin/products/presentation/widgets/shimmer/admin_product_detail_shimmer.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
-class AdminProductDetailPage extends StatefulWidget {
+class AdminProductDetailPage extends StatelessWidget {
   final String productId;
 
   const AdminProductDetailPage({super.key, required this.productId});
 
   @override
-  State<AdminProductDetailPage> createState() => _AdminProductDetailPageState();
-}
-
-class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
-  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
           sl<AdminProductDetailBloc>()
-            ..add(LoadProductDetailRequested(widget.productId)),
+            ..add(LoadProductDetailRequested(productId)),
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFC),
         body: SafeArea(
@@ -53,11 +49,7 @@ class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
             builder: (context, state) {
               if (state is AdminProductDetailLoading ||
                   state is AdminProductDetailActionInProgress) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AdminAppColors.primaryColor,
-                  ),
-                );
+                return const AdminProductDetailShimmer();
               } else if (state is AdminProductDetailLoaded) {
                 final item = state.item;
                 final p = item.product;
@@ -194,6 +186,7 @@ class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
   }
 
   void _confirmDisable(BuildContext context, String productId, bool disable) {
+    final bloc = context.read<AdminProductDetailBloc>();
     showDialog(
       context: context,
       builder: (dialogCtx) => ConfirmationModal(
@@ -222,7 +215,7 @@ class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
               onCancel: () => Navigator.pop(secondCtx),
               onConfirm: () {
                 Navigator.pop(secondCtx);
-                context.read<AdminProductDetailBloc>().add(
+                bloc.add(
                   ToggleDisableProductRequested(
                     productId: productId,
                     disable: disable,
@@ -237,6 +230,7 @@ class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
   }
 
   void _confirmDelete(BuildContext context, String productId) {
+    final bloc = context.read<AdminProductDetailBloc>();
     showDialog(
       context: context,
       builder: (dialogCtx) => ConfirmationModal(
@@ -259,9 +253,7 @@ class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
               onCancel: () => Navigator.pop(secondCtx),
               onConfirm: () {
                 Navigator.pop(secondCtx);
-                context.read<AdminProductDetailBloc>().add(
-                  DeleteProductRequested(productId),
-                );
+                bloc.add(DeleteProductRequested(productId));
               },
             ),
           );

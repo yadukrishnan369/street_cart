@@ -17,6 +17,7 @@ import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.d
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
 import 'package:street_cart/features/customer/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/features/customer/settings/presentation/pages/delete_account_page.dart';
+import 'package:street_cart/features/customer/settings/presentation/widgets/shimmer/settings_shimmer.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -68,7 +69,7 @@ class SettingsPage extends StatelessWidget {
           body: BlocBuilder<SettingsBloc, SettingsState>(
             builder: (context, state) {
               if (state is SettingsLoading || state is SettingsInitial) {
-                return const Center(child: CircularProgressIndicator());
+                return const SettingsShimmer();
               } else if (state is SettingsError) {
                 return Center(child: Text(state.message));
               } else if (state is SettingsLoaded) {

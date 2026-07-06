@@ -132,9 +132,7 @@ import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.
 import 'package:street_cart/features/shop/auth/domain/usecases/get_business_categories.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_product_categories.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_product_categories_cubit.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_shop_payment_settings.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_payment_settings_cubit.dart';
 import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource_impl.dart';
 
 // SHOP - SETTINGS
@@ -243,7 +241,11 @@ import 'package:street_cart/features/admin/settings/domain/usecases/save_platfor
 import 'package:street_cart/features/admin/settings/domain/usecases/save_payment_controls.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/change_admin_password.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/save_categories.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/get_product_config.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_colors.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_size_groups.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_bloc.dart';
+import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_bloc.dart';
 
 // ADMIN - PROFILE
 import 'package:street_cart/features/admin/profile/data/datasources/admin_profile_remote_datasource.dart';
@@ -254,8 +256,8 @@ import 'package:street_cart/features/admin/profile/domain/usecases/get_admin_pro
 import 'package:street_cart/features/admin/profile/domain/usecases/update_admin_profile_name.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_bloc.dart';
 
-// ADMIN - SHOP
-import 'package:street_cart/features/admin/shops/data/datasources/admin_shop_remote_datasource.dart';
+import 'package:street_cart/features/admin/shops/data/datasources/i_admin_shop_remote_datasource.dart';
+import 'package:street_cart/features/admin/shops/data/datasources/admin_shop_remote_datasource_impl.dart';
 import 'package:street_cart/features/admin/shops/domain/repositories/admin_shop_repository.dart';
 import 'package:street_cart/features/admin/shops/data/repositories/admin_shop_repository_impl.dart';
 import 'package:street_cart/features/admin/shops/domain/usecases/get_admin_shop.dart';
@@ -440,12 +442,6 @@ Future<void> _initShopAuth() async {
     ),
   );
   sl.registerFactory(() => ShopCategoriesCubit(getBusinessCategories: sl()));
-  sl.registerFactory(
-    () => ShopProductCategoriesCubit(getProductCategories: sl()),
-  );
-  sl.registerFactory(
-    () => ShopPaymentSettingsCubit(getShopPaymentSettings: sl()),
-  );
 }
 
 // ================= CORE =================
@@ -743,6 +739,7 @@ Future<void> _initShopProfile() async {
       updateProfileData: sl(),
       uploadProfileImage: sl(),
       removeProfileImage: sl(),
+      getShopPaymentSettings: sl(),
     ),
   );
 }
@@ -790,6 +787,7 @@ Future<void> _initShopProducts() async {
       deleteProduct: sl(),
       getShopProductConfig: sl(),
       saveShopProductConfig: sl(),
+      getProductCategories: sl(),
     ),
   );
 }
@@ -896,6 +894,9 @@ void _initAdminSettings() {
   sl.registerLazySingleton(() => SavePaymentControls(sl()));
   sl.registerLazySingleton(() => ChangeAdminPassword(sl()));
   sl.registerLazySingleton(() => SaveCategories(sl()));
+  sl.registerLazySingleton(() => GetProductConfig(sl()));
+  sl.registerLazySingleton(() => SaveColors(sl()));
+  sl.registerLazySingleton(() => SaveSizeGroups(sl()));
 
   // Bloc
   sl.registerFactory(
@@ -905,6 +906,13 @@ void _initAdminSettings() {
       savePaymentControls: sl(),
       changeAdminPassword: sl(),
       saveCategories: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => AdminProductConfigBloc(
+      getProductConfig: sl(),
+      saveColors: sl(),
+      saveSizeGroups: sl(),
     ),
   );
 }

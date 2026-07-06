@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
+import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 
 class ShopCard extends StatelessWidget {
   final ShopProfileModel shop;
@@ -58,13 +60,13 @@ class ShopCard extends StatelessWidget {
                       width: double.infinity,
                       height: 180.h,
                       child: shop.profileImageUrl.isNotEmpty
-                          ? Image.network(
-                              shop.profileImageUrl,
+                          ? CachedNetworkImage(
+                              imageUrl: shop.profileImageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
-                                  _buildImageFallback(),
+                              placeholder: (context, url) => const ShopImagePlaceholder(),
+                              errorWidget: (context, url, error) => const ShopImagePlaceholder(),
                             )
-                          : _buildImageFallback(),
+                          : const ShopImagePlaceholder(),
                     ),
                     // Rating badge
                     Positioned(
@@ -238,16 +240,4 @@ class ShopCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImageFallback() {
-    return Container(
-      color: CustomerAppColors.primaryLight,
-      child: Center(
-        child: Icon(
-          Icons.storefront_rounded,
-          size: 56.sp,
-          color: CustomerAppColors.primary.withValues(alpha: 0.4),
-        ),
-      ),
-    );
-  }
 }

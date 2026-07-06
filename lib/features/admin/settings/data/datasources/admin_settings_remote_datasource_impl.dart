@@ -1,22 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/core/firebase/firebase_auth_service.dart';
-import '../models/admin_settings_model.dart';
+import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
 import 'admin_settings_remote_datasource.dart';
 
-class AdminSettingsRemoteDataSourceImpl implements IAdminSettingsRemoteDataSource {
+class AdminSettingsRemoteDataSourceImpl
+    implements IAdminSettingsRemoteDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseAuthService _authService;
 
   AdminSettingsRemoteDataSourceImpl({
     required FirebaseFirestore firestore,
     required FirebaseAuthService authService,
-  })  : _firestore = firestore,
-        _authService = authService;
+  }) : _firestore = firestore,
+       _authService = authService;
 
   @override
   Future<AdminSettingsModel> getSettings() async {
     final Map<String, dynamic> data = {};
-    
+
     try {
       final doc = await _firestore.collection('config').doc('settings').get();
       if (doc.exists && doc.data() != null) {
@@ -27,19 +28,22 @@ class AdminSettingsRemoteDataSourceImpl implements IAdminSettingsRemoteDataSourc
     }
 
     try {
-      final catDoc = await _firestore.collection('config').doc('categories').get();
+      final catDoc = await _firestore
+          .collection('config')
+          .doc('categories')
+          .get();
       if (catDoc.exists && catDoc.data() != null) {
         data.addAll(catDoc.data()!);
       }
     } catch (e) {
-      // Gracefully log or ignore categories doc read failure to avoid breaking settings page
+      // Gracefully log or ignore categories doc
     }
 
     try {
       if (data.isNotEmpty) {
         return AdminSettingsModel.fromMap(data);
       }
-      
+
       // Return defaults if document doesn't exist
       return const AdminSettingsModel(
         commissionPercentage: 2.0,
@@ -91,7 +95,9 @@ class AdminSettingsRemoteDataSourceImpl implements IAdminSettingsRemoteDataSourc
       );
     } catch (e) {
       final errorMsg = e.toString().replaceAll('Exception: ', '');
-      if (errorMsg.contains('Incorrect email or password') || errorMsg.contains('invalid-credential') || errorMsg.contains('wrong-password')) {
+      if (errorMsg.contains('Incorrect email or password') ||
+          errorMsg.contains('invalid-credential') ||
+          errorMsg.contains('wrong-password')) {
         throw Exception('Incorrect current password.');
       }
       throw Exception(errorMsg);
@@ -106,10 +112,50 @@ class AdminSettingsRemoteDataSourceImpl implements IAdminSettingsRemoteDataSourc
     try {
       await _firestore.collection('config').doc('categories').set({
         'product_categories': productCategories.map((e) => e.toMap()).toList(),
-        'business_categories': businessCategories.map((e) => e.toMap()).toList(),
+        'business_categories': businessCategories
+            .map((e) => e.toMap())
+            .toList(),
       }, SetOptions(merge: true));
     } catch (e) {
       throw Exception('Failed to save categories: $e');
+    }
+  }
+
+  @override
+  Future<ProductConfigModel> getProductConfig() async {
+    try {
+      final doc = await _firestore
+          .collection('config')
+          .doc('product_config')
+          .get();
+      if (doc.exists && doc.data() != null) {
+        return ProductConfigModel.fromMap(doc.data()!);
+      }
+      return const ProductConfigModel();
+    } catch (e) {
+      throw Exception('Failed to load product config: $e');
+    }
+  }
+
+  @override
+  Future<void> saveColors(List<ColorModel> colors) async {
+    try {
+      await _firestore.collection('config').doc('product_config').set({
+        'colors': colors.map((e) => e.toMap()).toList(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      throw Exception('Failed to save colors: $e');
+    }
+  }
+
+  @override
+  Future<void> saveSizeGroups(List<SizeGroupModel> sizeGroups) async {
+    try {
+      await _firestore.collection('config').doc('product_config').set({
+        'size_groups': sizeGroups.map((e) => e.toMap()).toList(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      throw Exception('Failed to save size groups: $e');
     }
   }
 }

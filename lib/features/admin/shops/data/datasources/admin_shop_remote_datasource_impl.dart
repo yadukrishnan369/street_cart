@@ -1,21 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
-
-abstract class IAdminShopRemoteDataSource {
-  Future<List<ShopProfileModel>> getAllApprovedShops();
-  Future<void> updateShopSuspensionStatus(String shopId, bool isSuspended);
-  Future<List<String>> getBusinessCategoryNames();
-  Future<ShopProfileModel> getShopById(String shopId);
-  Future<void> deleteShop(String shopId);
-  Future<List<ProductModel>> getProductsByShopId(String shopId);
-}
+import 'package:street_cart/features/admin/shops/data/datasources/i_admin_shop_remote_datasource.dart';
 
 class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   AdminShopRemoteDataSourceImpl({required FirebaseFirestore firestore})
-      : _firestore = firestore;
+    : _firestore = firestore;
 
   @override
   Future<void> deleteShop(String shopId) async {
@@ -57,7 +49,10 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
   }
 
   @override
-  Future<void> updateShopSuspensionStatus(String shopId, bool isSuspended) async {
+  Future<void> updateShopSuspensionStatus(
+    String shopId,
+    bool isSuspended,
+  ) async {
     try {
       await _firestore.collection('shops').doc(shopId).update({
         'is_suspended': isSuspended,
@@ -70,10 +65,14 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
   @override
   Future<List<String>> getBusinessCategoryNames() async {
     try {
-      final catDoc = await _firestore.collection('config').doc('categories').get();
+      final catDoc = await _firestore
+          .collection('config')
+          .doc('categories')
+          .get();
       final List<String> categories = [];
       if (catDoc.exists && catDoc.data() != null) {
-        final rawBusinessCats = catDoc.data()!['business_categories'] as List<dynamic>?;
+        final rawBusinessCats =
+            catDoc.data()!['business_categories'] as List<dynamic>?;
         if (rawBusinessCats != null) {
           for (final e in rawBusinessCats) {
             final name = e['name'] as String?;

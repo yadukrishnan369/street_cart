@@ -7,7 +7,17 @@ class AddToWishlist {
 
   AddToWishlist({required this.repository});
 
-  Future<void> call(ProductModel product, ShopProfileModel shop) async {
-    return await repository.addToWishlist(product, shop);
+  Future<void> call(
+    ProductModel product,
+    ShopProfileModel shop, {
+    String? selectedColor,
+    String? selectedSize,
+  }) async {
+    return await repository.addToWishlist(
+      product,
+      shop,
+      selectedColor: selectedColor,
+      selectedSize: selectedSize,
+    );
   }
 }

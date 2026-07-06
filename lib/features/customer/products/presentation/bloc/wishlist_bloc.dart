@@ -75,12 +75,25 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
       if (!itemExists) {
         final optimisticallyAddedItems = List<WishlistItem>.from(
           currentState.items,
-        )..insert(0, WishlistItem(product: event.product, shop: event.shop));
+        )..insert(
+            0,
+            WishlistItem(
+              product: event.product,
+              shop: event.shop,
+              selectedColor: event.selectedColor,
+              selectedSize: event.selectedSize,
+            ),
+          );
         emit(WishlistLoaded(items: optimisticallyAddedItems));
       }
 
       try {
-        await addToWishlist(event.product, event.shop);
+        await addToWishlist(
+          event.product,
+          event.shop,
+          selectedColor: event.selectedColor,
+          selectedSize: event.selectedSize,
+        );
         final syncedItems = await getWishlist();
         emit(WishlistLoaded(items: syncedItems));
       } catch (e, stack) {
@@ -90,7 +103,12 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
       }
     } else {
       try {
-        await addToWishlist(event.product, event.shop);
+        await addToWishlist(
+          event.product,
+          event.shop,
+          selectedColor: event.selectedColor,
+          selectedSize: event.selectedSize,
+        );
         add(LoadWishlist());
       } catch (e, stack) {
         AppLogger.error('Failed to add product to wishlist', e, stack);

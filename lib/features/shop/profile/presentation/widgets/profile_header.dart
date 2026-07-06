@@ -50,7 +50,11 @@ class ShopProfileHeader extends StatelessWidget {
                   ? CachedNetworkImageProvider(profile.profileImageUrl)
                   : null,
               child: !hasImage
-                  ? Icon(Icons.storefront_outlined, size: 40.sp, color: ShopAppColors.textTertiary)
+                  ? Icon(
+                      Icons.storefront_outlined,
+                      size: 40.sp,
+                      color: ShopAppColors.textTertiary,
+                    )
                   : null,
             ),
           ),
@@ -85,7 +89,9 @@ class ShopProfileHeader extends StatelessWidget {
             Icons.verified_user_outlined,
             'Status',
             profile.isApproved ? 'Approved Merchant' : 'Verification Pending',
-            valueColor: profile.isApproved ? ShopAppColors.success : ShopAppColors.warning,
+            valueColor: profile.isApproved
+                ? ShopAppColors.success
+                : ShopAppColors.warning,
           ),
           SizedBox(height: 24.h),
           SizedBox(
@@ -100,10 +106,7 @@ class ShopProfileHeader extends StatelessWidget {
                 ),
                 elevation: 0,
               ),
-              child: Text(
-                'Edit Profile',
-                style: ShopAppTextStyles.buttonText,
-              ),
+              child: Text('Edit Profile', style: ShopAppTextStyles.buttonText),
             ),
           ),
         ],
@@ -111,7 +114,12 @@ class ShopProfileHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, {Color? valueColor}) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String label,
+    String value, {
+    Color? valueColor,
+  }) {
     return Row(
       children: [
         Icon(icon, size: 18.sp, color: ShopAppColors.textSecondary),
@@ -129,7 +137,9 @@ class ShopProfileHeader extends StatelessWidget {
             value,
             style: ShopAppTextStyles.bodySmall.copyWith(
               color: valueColor ?? ShopAppColors.textPrimary,
-              fontWeight: valueColor != null ? FontWeight.bold : FontWeight.normal,
+              fontWeight: valueColor != null
+                  ? FontWeight.bold
+                  : FontWeight.normal,
             ),
             textAlign: TextAlign.end,
           ),

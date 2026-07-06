@@ -9,6 +9,9 @@ import 'package:street_cart/features/admin/customers/presentation/bloc/admin_cus
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_event.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_state.dart';
 import 'package:street_cart/features/admin/customers/presentation/widgets/customers_table_container.dart';
+import 'package:street_cart/features/admin/customers/presentation/widgets/shimmer/admin_customers_page_shimmer.dart';
+import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_ui_cubit.dart';
+import 'package:street_cart/features/admin/customers/presentation/widgets/customer_filter_buttons.dart';
 
 class AdminCustomersPage extends StatefulWidget {
   const AdminCustomersPage({super.key});
@@ -18,7 +21,6 @@ class AdminCustomersPage extends StatefulWidget {
 }
 
 class _AdminCustomersPageState extends State<AdminCustomersPage> {
-  int _currentPage = 1;
   static const int _perPage = 7;
   final TextEditingController _searchController = TextEditingController();
   final Debouncer _debouncer = Debouncer(milliseconds: 500);
@@ -33,10 +35,15 @@ class _AdminCustomersPageState extends State<AdminCustomersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          sl<AdminCustomersBloc>()
-            ..add(LoadAdminCustomers(page: _currentPage, limit: _perPage)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<AdminCustomersBloc>()
+                ..add(LoadAdminCustomers(page: 1, limit: _perPage)),
+        ),
+        BlocProvider(create: (_) => AdminCustomersUiCubit()),
+      ],
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFC),
         body: SafeArea(
@@ -52,92 +59,99 @@ class _AdminCustomersPageState extends State<AdminCustomersPage> {
                 );
               }
             },
-            child: BlocBuilder<AdminCustomersBloc, AdminCustomersState>(
-              builder: (context, state) {
-                if (state is AdminCustomersLoaded) {
-                  _lastLoadedState = state;
-                }
-
-                if (_lastLoadedState == null) {
-                  if (state is AdminCustomersError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Failed to load customers:\n${state.message}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AdminAppColors.errorColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<AdminCustomersBloc>().add(
-                                LoadAdminCustomers(
-                                  page: _currentPage,
-                                  limit: _perPage,
+            child: BlocBuilder<AdminCustomersUiCubit, AdminCustomersUiState>(
+              builder: (context, uiState) {
+                return BlocBuilder<AdminCustomersBloc, AdminCustomersState>(
+                  builder: (context, state) {
+                    if (state is AdminCustomersLoaded) {
+                      _lastLoadedState = state;
+                    }
+                    if (state is AdminCustomersLoading &&
+                        _lastLoadedState == null) {
+                      return const AdminCustomersPageShimmer();
+                    }
+                    if (state is AdminCustomersInitial) {
+                      return const AdminCustomersPageShimmer();
+                    }
+                    if (_lastLoadedState == null) {
+                      if (state is AdminCustomersError) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Failed to load customers:\n${state.message}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: AdminAppColors.errorColor,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AdminAppColors.primaryColor,
-                            ),
-                            child: const Text('Retry'),
+                              ),
+                              SizedBox(height: 16.h),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<AdminCustomersBloc>().add(
+                                    LoadAdminCustomers(
+                                      page: uiState.currentPage,
+                                      limit: _perPage,
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AdminAppColors.primaryColor,
+                                ),
+                                child: const Text('Retry'),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AdminAppColors.primaryColor,
-                    ),
-                  );
-                }
+                        );
+                      }
+                      return const AdminCustomersPageShimmer();
+                    }
 
-                final loadedState = _lastLoadedState!;
-                final isLoading = state is AdminCustomersLoading;
+                    final loadedState = _lastLoadedState!;
+                    final isLoading = state is AdminCustomersLoading;
 
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isWide = constraints.maxWidth > 900;
-                    return SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isWide ? 40.w : 20.w,
-                        vertical: 32.h,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Filters for All Customers, Active, Blocked
-                          _buildFilterButtons(
-                            context,
-                            loadedState.statusFilter,
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWide = constraints.maxWidth > 900;
+                        return SingleChildScrollView(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isWide ? 40.w : 20.w,
+                            vertical: 32.h,
                           ),
-                          SizedBox(height: 24.h),
-
-                          // Table Container Component
-                          CustomersTableContainer(
-                            state: loadedState,
-                            isWide: isWide,
-                            isLoading: isLoading,
-                            searchController: _searchController,
-                            debouncer: _debouncer,
-                            currentPage: _currentPage,
-                            perPage: _perPage,
-                            onPageChanged: (page) {
-                              setState(() => _currentPage = page);
-                              context.read<AdminCustomersBloc>().add(
-                                LoadAdminCustomers(page: page, limit: _perPage),
-                              );
-                            },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomerFilterButtons(
+                                currentFilter: loadedState.statusFilter,
+                              ),
+                              SizedBox(height: 24.h),
+                              CustomersTableContainer(
+                                state: loadedState,
+                                isWide: isWide,
+                                isLoading: isLoading,
+                                searchController: _searchController,
+                                debouncer: _debouncer,
+                                currentPage: uiState.currentPage,
+                                perPage: _perPage,
+                                onPageChanged: (page) {
+                                  context
+                                      .read<AdminCustomersUiCubit>()
+                                      .changePage(page);
+                                  context.read<AdminCustomersBloc>().add(
+                                    LoadAdminCustomers(
+                                      page: page,
+                                      limit: _perPage,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
                 );
@@ -146,55 +160,6 @@ class _AdminCustomersPageState extends State<AdminCustomersPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildFilterButtons(BuildContext context, String currentFilter) {
-    final filters = ['All', 'Active', 'Blocked'];
-    final labels = {
-      'All': 'All Customers',
-      'Active': 'Active',
-      'Blocked': 'Blocked',
-    };
-
-    return Row(
-      children: filters.map((filter) {
-        final isSelected = currentFilter == filter;
-        return Padding(
-          padding: EdgeInsets.only(right: 12.w),
-          child: ChoiceChip(
-            label: Text(
-              labels[filter]!,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : const Color(0xFF6C6C80),
-              ),
-            ),
-            selected: isSelected,
-            selectedColor: AdminAppColors.primaryColor,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100.r),
-              side: BorderSide(
-                color: isSelected
-                    ? Colors.transparent
-                    : const Color(0xFFE8E7ED),
-                width: 1.2,
-              ),
-            ),
-            onSelected: (val) {
-              if (val) {
-                setState(() => _currentPage = 1);
-                context.read<AdminCustomersBloc>().add(
-                  FilterCustomersStatusChanged(filter),
-                );
-              }
-            },
-            showCheckmark: false,
-          ),
-        );
-      }).toList(),
     );
   }
 }

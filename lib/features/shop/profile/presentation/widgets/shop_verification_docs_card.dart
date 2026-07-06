@@ -66,13 +66,17 @@ class ShopVerificationDocsCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: isUploaded ? const Color(0xFFE8F5E9) : const Color(0xFFECEFF1),
+              color: isUploaded
+                  ? const Color(0xFFE8F5E9)
+                  : const Color(0xFFECEFF1),
               borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
               isUploaded ? 'VERIFIED' : 'NOT PROVIDED',
               style: ShopAppTextStyles.bodySmallBold.copyWith(
-                color: isUploaded ? ShopAppColors.primary : const Color(0xFF546E7A),
+                color: isUploaded
+                    ? ShopAppColors.primary
+                    : const Color(0xFF546E7A),
                 fontSize: 10.sp,
               ),
             ),

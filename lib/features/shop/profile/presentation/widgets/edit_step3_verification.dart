@@ -11,13 +11,13 @@ class EditStep3Verification extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController phoneController;
   final TextEditingController gstController;
-  
+
   final String? businessLicenseUrl;
   final String? ownerIdUrl;
-  
+
   final bool isUploadingLicense;
   final bool isUploadingOwnerId;
-  
+
   final VoidCallback onPickLicense;
   final VoidCallback onPickOwnerId;
   final VoidCallback onClearLicense;
@@ -48,15 +48,13 @@ class EditStep3Verification extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 4.w,
-                height: 18.h,
-                color: ShopAppColors.primary,
-              ),
+              Container(width: 4.w, height: 18.h, color: ShopAppColors.primary),
               SizedBox(width: 8.w),
               Text(
                 'CONTACT INFO',
-                style: ShopAppTextStyles.bodyMediumBold.copyWith(color: ShopAppColors.primary),
+                style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: ShopAppColors.primary,
+                ),
               ),
             ],
           ),
@@ -66,10 +64,15 @@ class EditStep3Verification extends StatelessWidget {
             controller: emailController,
             hintText: 'Enter business email',
             validator: Validators.validateEmail,
-            prefixIcon: const Icon(Icons.email_outlined, color: ShopAppColors.textSecondary),
+            prefixIcon: const Icon(
+              Icons.email_outlined,
+              color: ShopAppColors.textSecondary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -80,14 +83,20 @@ class EditStep3Verification extends StatelessWidget {
             controller: phoneController,
             hintText: 'Enter phone number',
             validator: (val) {
-              if (val == null || val.trim().isEmpty) return 'Phone number is required';
+              if (val == null || val.trim().isEmpty)
+                return 'Phone number is required';
               if (val.trim().length < 10) return 'Enter a valid phone number';
               return null;
             },
-            prefixIcon: const Icon(Icons.phone_outlined, color: ShopAppColors.textSecondary),
+            prefixIcon: const Icon(
+              Icons.phone_outlined,
+              color: ShopAppColors.textSecondary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -95,15 +104,13 @@ class EditStep3Verification extends StatelessWidget {
           SizedBox(height: 32.h),
           Row(
             children: [
-              Container(
-                width: 4.w,
-                height: 18.h,
-                color: ShopAppColors.primary,
-              ),
+              Container(width: 4.w, height: 18.h, color: ShopAppColors.primary),
               SizedBox(width: 8.w),
               Text(
                 'VERIFICATION DETAILS',
-                style: ShopAppTextStyles.bodyMediumBold.copyWith(color: ShopAppColors.primary),
+                style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: ShopAppColors.primary,
+                ),
               ),
             ],
           ),
@@ -113,10 +120,15 @@ class EditStep3Verification extends StatelessWidget {
             controller: gstController,
             hintText: 'Enter GST details',
             validator: Validators.validateGST,
-            prefixIcon: const Icon(Icons.description_outlined, color: ShopAppColors.textSecondary),
+            prefixIcon: const Icon(
+              Icons.description_outlined,
+              color: ShopAppColors.textSecondary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -126,7 +138,8 @@ class EditStep3Verification extends StatelessWidget {
             title: "Business License",
             subtitle: "PDF, JPG or PNG (Max 5MB)",
             icon: Icons.description_outlined,
-            isPicked: businessLicenseUrl != null && businessLicenseUrl!.isNotEmpty,
+            isPicked:
+                businessLicenseUrl != null && businessLicenseUrl!.isNotEmpty,
             existingUrl: businessLicenseUrl,
             onTap: isUploadingLicense ? () {} : onPickLicense,
             onClear: onClearLicense,

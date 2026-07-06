@@ -149,9 +149,15 @@ class PrivacyPolicyPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  _buildBulletItem('Business registration details and legal name.'),
-                  _buildBulletItem('Contact information (email, phone, business address).'),
-                  _buildBulletItem('Payment processing information via secure providers.'),
+                  _buildBulletItem(
+                    'Business registration details and legal name.',
+                  ),
+                  _buildBulletItem(
+                    'Contact information (email, phone, business address).',
+                  ),
+                  _buildBulletItem(
+                    'Payment processing information via secure providers.',
+                  ),
                   _buildBulletItem('Inventory and sales transaction data.'),
                 ],
               ),

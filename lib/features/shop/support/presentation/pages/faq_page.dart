@@ -19,7 +19,10 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: ShopConstants.faqCategories.length, vsync: this);
+    _tabController = TabController(
+      length: ShopConstants.faqCategories.length,
+      vsync: this,
+    );
   }
 
   @override
@@ -53,8 +56,12 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
           unselectedLabelColor: ShopAppColors.textSecondary,
           indicatorColor: ShopAppColors.primary,
           indicatorSize: TabBarIndicatorSize.tab,
-          labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(fontSize: 13.sp),
-          unselectedLabelStyle: ShopAppTextStyles.bodyMedium.copyWith(fontSize: 13.sp),
+          labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+            fontSize: 13.sp,
+          ),
+          unselectedLabelStyle: ShopAppTextStyles.bodyMedium.copyWith(
+            fontSize: 13.sp,
+          ),
           tabs: ShopConstants.faqCategories.map((cat) {
             return Tab(text: cat['title']);
           }).toList(),
@@ -65,8 +72,9 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
         children: ShopConstants.faqCategories.map((cat) {
           final String title = cat['title'];
           final List faqs = cat['faqs'];
-          
-          String categoryDesc = 'Manage your digital storefront and preferences';
+
+          String categoryDesc =
+              'Manage your digital storefront and preferences';
           if (title.toLowerCase().contains('order')) {
             categoryDesc = 'Tracking and managing your customer deliveries';
           } else if (title.toLowerCase().contains('payment')) {
@@ -110,7 +118,10 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
                 decoration: BoxDecoration(
                   color: const Color(0xFFE8F5E9),
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: const Color(0xFFC8E6C9), width: 0.8),
+                  border: Border.all(
+                    color: const Color(0xFFC8E6C9),
+                    width: 0.8,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -153,7 +164,9 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const ContactSupportPage()),
+                          MaterialPageRoute(
+                            builder: (_) => const ContactSupportPage(),
+                          ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -161,7 +174,10 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.r),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 8.h,
+                        ),
                         elevation: 0,
                       ),
                       child: Text(

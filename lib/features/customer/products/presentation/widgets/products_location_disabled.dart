@@ -13,59 +13,64 @@ class ProductsLocationDisabled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.location_off_outlined,
-              size: 80.sp,
-              color: CustomerAppColors.primary.withValues(alpha: 0.25),
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              'Location Services Off',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: CustomerAppColors.textPrimary,
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Container(
+          height: constraints.maxHeight > 0 ? constraints.maxHeight : 400.h,
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.location_off_outlined,
+                size: 80.sp,
+                color: CustomerAppColors.primary.withValues(alpha: 0.25),
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Enable location services to find local products near you.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: CustomerAppColors.textSecondary,
-              ),
-            ),
-            SizedBox(height: 24.h),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const LocationPermissionPage(
-                      isProfileCompleted: true,
-                    ),
-                  ),
-                ).then((_) => onRefreshLocation());
-              },
-              icon: const Icon(Icons.my_location),
-              label: const Text('Enable Location'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomerAppColors.primary,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+              SizedBox(height: 20.h),
+              Text(
+                'Location Services Off',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: CustomerAppColors.textPrimary,
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 8.h),
+              Text(
+                'Enable location services to find local products near you.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: CustomerAppColors.textSecondary,
+                ),
+              ),
+              SizedBox(height: 24.h),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LocationPermissionPage(
+                        isProfileCompleted: true,
+                      ),
+                    ),
+                  ).then((_) => onRefreshLocation());
+                },
+                icon: const Icon(Icons.my_location),
+                label: const Text('Enable Location'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CustomerAppColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

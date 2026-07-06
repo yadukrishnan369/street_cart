@@ -142,7 +142,9 @@ class TrendingProductsSection extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const CustomerProductsPage(),
+                      builder: (_) => CustomerProductsPage(
+                        initialSelectedCategories: {selectedCategory},
+                      ),
                     ),
                   );
                 },
@@ -241,31 +243,39 @@ class TrendingProductsSection extends StatelessWidget {
                               ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
                               : null,
                           discountPercentage: product.offerPrice != null
-                              ? (((product.originalPrice - product.offerPrice!) /
-                                          product.originalPrice) *
-                                      100)
-                                  .round()
+                              ? (((product.originalPrice -
+                                                product.offerPrice!) /
+                                            product.originalPrice) *
+                                        100)
+                                    .round()
                               : null,
                           isFavorite: isWishlisted,
                           onFavoriteTap: () {
                             if (isWishlisted) {
                               context.read<WishlistBloc>().add(
-                                    RemoveProductFromWishlist(
-                                      productId: product.id,
-                                    ),
-                                  );
-                              CustomSnackBar.show(context, message: 'Removed from wishlist');
+                                RemoveProductFromWishlist(
+                                  productId: product.id,
+                                ),
+                              );
+                              CustomSnackBar.show(
+                                context,
+                                message: 'Removed from wishlist',
+                              );
                             } else {
                               context.read<WishlistBloc>().add(
-                                    AddProductToWishlist(
-                                      product: product,
-                                      shop: shop,
-                                    ),
-                                  );
-                              CustomSnackBar.show(context, message: 'Added to wishlist');
+                                AddProductToWishlist(
+                                  product: product,
+                                  shop: shop,
+                                ),
+                              );
+                              CustomSnackBar.show(
+                                context,
+                                message: 'Added to wishlist',
+                              );
                             }
                           },
-                          isNew: product.createdAt != null &&
+                          isNew:
+                              product.createdAt != null &&
                               DateTime.now()
                                       .difference(product.createdAt!)
                                       .inDays <
@@ -289,7 +299,9 @@ class TrendingProductsSection extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const CustomerProductsPage(),
+                    builder: (_) => CustomerProductsPage(
+                      initialSelectedCategories: {selectedCategory},
+                    ),
                   ),
                 );
               },

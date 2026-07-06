@@ -28,7 +28,7 @@ class ShopSplashRepositoryImpl implements IShopSplashRepository {
 
       return ShopAppStatus.approved;
     } catch (e) {
-      // Return notLoggedIn on any exception (e.g. network timeout or permission denied due to role mismatch)
+      // Return notLoggedIn on any exception, network timeout or permission denied due to role mismatch)
       return ShopAppStatus.notLoggedIn;
     }
   }

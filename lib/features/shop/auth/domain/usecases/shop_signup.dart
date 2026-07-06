@@ -5,13 +5,7 @@ class ShopSignup {
 
   ShopSignup(this.repository);
 
-  Future<void> call({
-    required String email,
-    required String password,
-  }) async {
-    return await repository.initiateSignUp(
-      email: email,
-      password: password,
-    );
+  Future<void> call({required String email, required String password}) async {
+    return await repository.initiateSignUp(email: email, password: password);
   }
 }

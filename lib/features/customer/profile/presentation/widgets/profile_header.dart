@@ -7,6 +7,8 @@ import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/features/customer/profile/data/models/profile_model.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/edit_profile_page.dart';
+import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
+import 'package:street_cart/shared/widgets/image_preview_page.dart';
 
 class ProfileHeader extends StatelessWidget {
   final ProfileModel profile;
@@ -39,15 +41,36 @@ class ProfileHeader extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.grey.shade200, width: 2),
             ),
-            child: CircleAvatar(
-              radius: 40.r,
-              backgroundColor: Colors.grey.shade300,
-              backgroundImage: (profile.profileImageUrl.isNotEmpty)
-                  ? CachedNetworkImageProvider(profile.profileImageUrl)
+            child: GestureDetector(
+              onTap: profile.profileImageUrl.isNotEmpty
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ImagePreviewPage(
+                            images: [profile.profileImageUrl],
+                            initialIndex: 0,
+                          ),
+                        ),
+                      );
+                    }
                   : null,
-              child: (profile.profileImageUrl.isEmpty)
-                  ? Icon(Icons.person, size: 40.sp, color: Colors.grey.shade500)
-                  : null,
+              child: ClipOval(
+                child: SizedBox(
+                  width: 100.w,
+                  height: 100.w,
+                  child: profile.profileImageUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: profile.profileImageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              CustomerImagePlaceholder(size: 100.w),
+                          errorWidget: (context, url, error) =>
+                              CustomerImagePlaceholder(size: 100.w),
+                        )
+                      : CustomerImagePlaceholder(size: 100.w),
+                ),
+              ),
             ),
           ),
           SizedBox(height: 16.h),

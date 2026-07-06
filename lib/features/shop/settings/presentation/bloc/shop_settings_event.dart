@@ -15,7 +15,5 @@ class ChangePasswordRequested extends ShopSettingsEvent {
 class DeleteAccountRequested extends ShopSettingsEvent {
   final String password;
 
-  const DeleteAccountRequested({
-    required this.password,
-  });
+  const DeleteAccountRequested({required this.password});
 }

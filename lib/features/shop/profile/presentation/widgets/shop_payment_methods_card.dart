@@ -20,7 +20,7 @@ class ShopPaymentMethodsCard extends StatelessWidget {
                 Text(
                   'No payment methods selected',
                   style: ShopAppTextStyles.bodyMedium,
-                )
+                ),
               ]
             : profile.paymentMethods.map((method) {
                 IconData icon = Icons.account_balance_wallet_outlined;
@@ -29,11 +29,17 @@ class ShopPaymentMethodsCard extends StatelessWidget {
                 }
                 return Container(
                   margin: EdgeInsets.only(right: 12.w),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF4F7F6),
                     borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: const Color(0xFFE2EBE9), width: 1),
+                    border: Border.all(
+                      color: const Color(0xFFE2EBE9),
+                      width: 1,
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

@@ -57,7 +57,9 @@ class EditStep2Address extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             'Please provide the physical location of your business for customers to find you.',
-            style: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textSecondary),
+            style: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 24.h),
           CustomTextField(
@@ -73,7 +75,9 @@ class EditStep2Address extends StatelessWidget {
             },
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -91,7 +95,9 @@ class EditStep2Address extends StatelessWidget {
             },
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -113,7 +119,9 @@ class EditStep2Address extends StatelessWidget {
                   },
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,
-                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: ShopAppColors.textTertiary,
+                  ),
                   fillColor: ShopAppColors.surface,
                   borderColor: ShopAppColors.border,
                   focusedBorderColor: ShopAppColors.primary,
@@ -133,7 +141,9 @@ class EditStep2Address extends StatelessWidget {
                   },
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,
-                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: ShopAppColors.textTertiary,
+                  ),
                   fillColor: ShopAppColors.surface,
                   borderColor: ShopAppColors.border,
                   focusedBorderColor: ShopAppColors.primary,
@@ -163,7 +173,10 @@ class EditStep2Address extends StatelessWidget {
                       items: districts.map((String district) {
                         return DropdownMenuItem<String>(
                           value: district,
-                          child: Text(district, style: ShopAppTextStyles.bodyMedium),
+                          child: Text(
+                            district,
+                            style: ShopAppTextStyles.bodyMedium,
+                          ),
                         );
                       }).toList(),
                       onChanged: onDistrictChanged,
@@ -190,7 +203,10 @@ class EditStep2Address extends StatelessWidget {
                       items: states.map((String state) {
                         return DropdownMenuItem<String>(
                           value: state,
-                          child: Text(state, style: ShopAppTextStyles.bodyMedium),
+                          child: Text(
+                            state,
+                            style: ShopAppTextStyles.bodyMedium,
+                          ),
                         );
                       }).toList(),
                       onChanged: onStateChanged,
@@ -272,13 +288,20 @@ class EditStep2Address extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? ShopAppColors.primary : ShopAppColors.textSecondary),
+            Icon(
+              icon,
+              color: isSelected
+                  ? ShopAppColors.primary
+                  : ShopAppColors.textSecondary,
+            ),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(
                 title,
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                  color: isSelected ? ShopAppColors.primary : ShopAppColors.textPrimary,
+                  color: isSelected
+                      ? ShopAppColors.primary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
             ),
@@ -287,18 +310,16 @@ class EditStep2Address extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: isSelected ? ShopAppColors.primary : Colors.transparent,
                 border: Border.all(
-                  color: isSelected ? ShopAppColors.primary : ShopAppColors.border,
+                  color: isSelected
+                      ? ShopAppColors.primary
+                      : ShopAppColors.border,
                   width: 2,
                 ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: isSelected
-                    ? const Icon(
-                        Icons.check,
-                        size: 16,
-                        color: Colors.white,
-                      )
+                    ? const Icon(Icons.check, size: 16, color: Colors.white)
                     : const SizedBox(width: 16, height: 16),
               ),
             ),

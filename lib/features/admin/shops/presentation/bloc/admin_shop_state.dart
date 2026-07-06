@@ -20,7 +20,9 @@ class AdminShopLoaded extends AdminShopState {
   final String statusFilter;
   final String? categoryFilter;
 
-  int get totalPages => (totalMatchingCount / limit).ceil() == 0 ? 1 : (totalMatchingCount / limit).ceil();
+  int get totalPages => (totalMatchingCount / limit).ceil() == 0
+      ? 1
+      : (totalMatchingCount / limit).ceil();
 
   AdminShopLoaded({
     required this.shops,

@@ -56,3 +56,23 @@ class ShopProfileImageRemoved extends ShopProfileState {
   @override
   List<Object?> get props => [];
 }
+
+class ShopPaymentSettingsLoading extends ShopProfileState {}
+
+class ShopPaymentSettingsLoaded extends ShopProfileState {
+  final Map<String, bool> settings;
+
+  const ShopPaymentSettingsLoaded(this.settings);
+
+  @override
+  List<Object?> get props => [settings];
+}
+
+class ShopPaymentSettingsError extends ShopProfileState {
+  final String message;
+
+  const ShopPaymentSettingsError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

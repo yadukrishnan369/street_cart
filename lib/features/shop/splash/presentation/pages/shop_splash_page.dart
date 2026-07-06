@@ -56,25 +56,33 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
               case ShopAppStatus.firstTime:
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const ShopOnboardingPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ShopOnboardingPage(),
+                  ),
                 );
                 break;
               case ShopAppStatus.notLoggedIn:
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const ShopLoginPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ShopLoginPage(),
+                  ),
                 );
                 break;
               case ShopAppStatus.profilePending:
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const ShopProfileSetupPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ShopProfileSetupPage(),
+                  ),
                 );
                 break;
               case ShopAppStatus.reviewPending:
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountReviewPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const AccountReviewPage(),
+                  ),
                 );
                 break;
               case ShopAppStatus.approved:
@@ -136,7 +144,9 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                         borderRadius: BorderRadius.circular(8.r),
                         child: LinearProgressIndicator(
                           minHeight: 6.h,
-                          backgroundColor: ShopAppColors.primary.withOpacity(0.1),
+                          backgroundColor: ShopAppColors.primary.withOpacity(
+                            0.1,
+                          ),
                           valueColor: const AlwaysStoppedAnimation<Color>(
                             ShopAppColors.primary,
                           ),

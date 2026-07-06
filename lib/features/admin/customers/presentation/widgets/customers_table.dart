@@ -169,7 +169,7 @@ class CustomersTable extends StatelessWidget {
           ),
         ),
 
-        // Action View button (navigates to details)
+        // Action View button navigates to details
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Align(

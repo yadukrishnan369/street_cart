@@ -1,4 +1,4 @@
-import '../repositories/admin_shop_repository.dart';
+import 'package:street_cart/features/admin/shops/domain/repositories/admin_shop_repository.dart';
 
 class GetAdminShopParams {
   final int page;
@@ -36,10 +36,7 @@ class ToggleShopSuspensionParams {
   final String shopId;
   final bool isSuspended;
 
-  ToggleShopSuspensionParams({
-    required this.shopId,
-    required this.isSuspended,
-  });
+  ToggleShopSuspensionParams({required this.shopId, required this.isSuspended});
 }
 
 class ToggleShopSuspension {

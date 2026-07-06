@@ -1,4 +1,4 @@
-import 'package:street_cart/core/constants/shop_constants.dart';
+import 'package:street_cart/core/constants/admin_constants.dart';
 import 'package:street_cart/features/admin/products/domain/repositories/admin_product_repository.dart';
 import 'package:street_cart/features/admin/products/data/datasources/admin_product_remote_datasource.dart';
 
@@ -17,8 +17,11 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     String? statusFilter,
     String? categoryFilter,
   }) async {
-    final allProducts = await _remoteDataSource.getAllProducts();
+    final allProductsRaw = await _remoteDataSource.getAllProducts();
     final allShops = await _remoteDataSource.getAllShops();
+
+    final existingShopIds = allShops.map((s) => s.uid).toSet();
+    final allProducts = allProductsRaw.where((p) => existingShopIds.contains(p.shopId)).toList();
 
     final shopNameMap = {for (var shop in allShops) shop.uid: shop.shopName};
     final shopLocationMap = {
@@ -46,7 +49,7 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     if (configuredProductCategories.isNotEmpty) {
       uniqueCategoriesSet.addAll(configuredProductCategories);
     } else {
-      uniqueCategoriesSet.addAll(ShopConstants.defaultProductCategories);
+      uniqueCategoriesSet.addAll(AdminConstants.defaultProductCategories);
     }
     for (final p in allProducts) {
       if (p.category.isNotEmpty) {

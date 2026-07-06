@@ -5,6 +5,8 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 
 class HomeBanner extends StatefulWidget {
   final List<ShopProfileModel> shops;
@@ -148,15 +150,22 @@ class _HomeBannerState extends State<HomeBanner> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.r),
-                    image: DecorationImage(
-                      image: banner['isAsset'] == true
-                          ? AssetImage(banner['image']!)
-                          : NetworkImage(banner['image']!) as ImageProvider,
-                      fit: BoxFit.cover,
-                    ),
                   ),
+                  clipBehavior: Clip.antiAlias,
                   child: Stack(
+                    fit: StackFit.expand,
                     children: [
+                      banner['isAsset'] == true
+                          ? Image.asset(
+                              banner['image']!,
+                              fit: BoxFit.cover,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: banner['image']!,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const ShopImagePlaceholder(),
+                              errorWidget: (context, url, error) => const ShopImagePlaceholder(),
+                            ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.r),

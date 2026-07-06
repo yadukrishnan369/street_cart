@@ -49,21 +49,15 @@ class ProductSizeSelection extends StatelessWidget {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Colors.grey[300]!,
-              ),
+              borderSide: BorderSide(color: Colors.grey[300]!),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Colors.grey[300]!,
-              ),
+              borderSide: BorderSide(color: Colors.grey[300]!),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: ShopAppColors.primary,
-              ),
+              borderSide: BorderSide(color: ShopAppColors.primary),
             ),
             prefixIcon: Icon(
               Icons.straighten_outlined,
@@ -76,10 +70,7 @@ class ProductSizeSelection extends StatelessWidget {
               value: std,
               child: Text(
                 std,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 14.sp, color: Colors.black),
               ),
             );
           }).toList(),
@@ -102,9 +93,12 @@ class ProductSizeSelection extends StatelessWidget {
                     selectedColor: ShopAppColors.primary.withOpacity(0.2),
                     labelStyle: TextStyle(
                       color: isSelected ? ShopAppColors.primary : Colors.black,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
-                    onSelected: (selected) => onSizeChipSelected(size, selected),
+                    onSelected: (selected) =>
+                        onSizeChipSelected(size, selected),
                   ),
                 );
               }),

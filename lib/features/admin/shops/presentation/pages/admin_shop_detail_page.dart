@@ -12,24 +12,19 @@ import 'package:street_cart/features/admin/shops/presentation/widgets/admin_shop
 import 'package:street_cart/features/admin/shops/presentation/widgets/admin_shop_delivery_radius_card.dart';
 import 'package:street_cart/features/admin/shops/presentation/widgets/admin_shop_verification_card.dart';
 import 'package:street_cart/features/admin/shops/presentation/widgets/admin_shop_products_card.dart';
+import 'package:street_cart/features/admin/shops/presentation/widgets/shimmer/admin_shop_detail_shimmer.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
-class AdminShopDetailPage extends StatefulWidget {
+class AdminShopDetailPage extends StatelessWidget {
   final String shopId;
 
   const AdminShopDetailPage({super.key, required this.shopId});
 
   @override
-  State<AdminShopDetailPage> createState() => _AdminShopDetailPageState();
-}
-
-class _AdminShopDetailPageState extends State<AdminShopDetailPage> {
-  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          sl<AdminShopDetailBloc>()
-            ..add(LoadShopDetailRequested(widget.shopId)),
+          sl<AdminShopDetailBloc>()..add(LoadShopDetailRequested(shopId)),
       child: Scaffold(
         body: SafeArea(
           child: BlocConsumer<AdminShopDetailBloc, AdminShopDetailState>(
@@ -50,11 +45,7 @@ class _AdminShopDetailPageState extends State<AdminShopDetailPage> {
             builder: (context, state) {
               if (state is AdminShopDetailLoading ||
                   state is AdminShopDetailActionInProgress) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AdminAppColors.primaryColor,
-                  ),
-                );
+                return const AdminShopDetailShimmer();
               } else if (state is AdminShopDetailLoaded) {
                 final shop = state.shop;
                 return SingleChildScrollView(
@@ -134,7 +125,7 @@ class _AdminShopDetailPageState extends State<AdminShopDetailPage> {
                       ElevatedButton(
                         onPressed: () {
                           context.read<AdminShopDetailBloc>().add(
-                            LoadShopDetailRequested(widget.shopId),
+                            LoadShopDetailRequested(shopId),
                           );
                         },
                         style: ElevatedButton.styleFrom(

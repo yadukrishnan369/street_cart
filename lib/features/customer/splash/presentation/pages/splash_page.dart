@@ -33,9 +33,6 @@ class _SplashPageState extends State<SplashPage>
 
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2))
-          ..addListener(() {
-            setState(() {});
-          })
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed && mounted) {
               _splashBloc.add(CheckAppStatusEvent());
@@ -83,61 +80,70 @@ class _SplashPageState extends State<SplashPage>
         },
         child: Scaffold(
           backgroundColor: CustomerAppColors.background,
-          body: Stack(
-            children: [
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppLogo(isDark: true, size: 85.w),
-                    32.verticalSpace,
-                    Text("Street Cart", style: CustomerAppTextStyles.heading1),
-                    8.verticalSpace,
-                    Text(
-                      "Discover shops around you",
-                      style: CustomerAppTextStyles.subtitle,
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 120.h,
-                left: 24.w,
-                right: 24.w,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Stack(
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        AppLogo(isDark: true, size: 85.w),
+                        32.verticalSpace,
                         Text(
-                          "Initializing...",
-                          style: CustomerAppTextStyles.body.copyWith(
-                            color: CustomerAppColors.textSecondary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          "Street Cart",
+                          style: CustomerAppTextStyles.heading1,
                         ),
+                        8.verticalSpace,
                         Text(
-                          "${(_controller.value * 100).toInt()}%",
-                          style: CustomerAppTextStyles.body.copyWith(
-                            color: CustomerAppColors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          "Discover shops around you",
+                          style: CustomerAppTextStyles.subtitle,
                         ),
                       ],
                     ),
-                    12.verticalSpace,
-                    LinearProgressIndicator(
-                      value: _controller.value,
-                      backgroundColor: CustomerAppColors.primary.withOpacity(0.15),
-                      color: CustomerAppColors.primary,
-                      minHeight: 6.h,
-                      borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  Positioned(
+                    bottom: 120.h,
+                    left: 24.w,
+                    right: 24.w,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Initializing...",
+                              style: CustomerAppTextStyles.body.copyWith(
+                                color: CustomerAppColors.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${(_controller.value * 100).toInt()}%",
+                              style: CustomerAppTextStyles.body.copyWith(
+                                color: CustomerAppColors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        12.verticalSpace,
+                        LinearProgressIndicator(
+                          value: _controller.value,
+                          backgroundColor: CustomerAppColors.primary
+                              .withOpacity(0.15),
+                          color: CustomerAppColors.primary,
+                          minHeight: 6.h,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

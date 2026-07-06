@@ -166,36 +166,5 @@ Street Cart shall not be liable for any indirect, incidental, special, or conseq
     },
   ];
 
-  static const List<String> defaultProductCategories = [
-    'Shirt',
-    'T-Shirt',
-    'Jeans',
-    'Jacket',
-    'Dress',
-    'Footwear',
-    'Accessories',
-    'Other',
-  ];
-
-  static const List<String> defaultSizeStandards = [
-    'Shirt',
-    'Footwear',
-    'Pants',
-    'Custom',
-  ];
-
-  static const Map<String, List<String>> defaultProductSizes = {
-    'Shirt': ['S', 'M', 'L', 'XL', 'XXL'],
-    'Shoes': ['7', '8', '9', '10', '11'],
-    'Pants': ['28', '30', '32', '34', '36'],
-    'Custom': ['Free Size'],
-  };
-
-  static const List<String> defaultProductColors = [
-    'Black',
-    'Blue',
-    'Red',
-    'White',
-    'Green',
-  ];
 }
+

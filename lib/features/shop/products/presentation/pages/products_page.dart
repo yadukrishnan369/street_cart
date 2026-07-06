@@ -4,16 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_state.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/products_ui_cubit.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
-import 'package:street_cart/features/shop/products/presentation/widgets/category_filter_bottom_sheet.dart';
-import 'package:street_cart/features/shop/products/presentation/widgets/product_list_item.dart';
+import 'package:street_cart/features/shop/products/presentation/widgets/product_search_text_field.dart';
+import 'package:street_cart/features/shop/products/presentation/widgets/products_tab_bar.dart';
+import 'package:street_cart/features/shop/products/presentation/widgets/products_tab_bar_view.dart';
+import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
-import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/shop/products/presentation/widgets/shimmer/shop_products_shimmer.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -26,7 +28,6 @@ class _ProductsPageState extends State<ProductsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late ShopProductsBloc _productsBloc;
-  bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _shopId = '';
 
@@ -40,8 +41,6 @@ class _ProductsPageState extends State<ProductsPage>
     if (authState is ShopStatusLoaded) {
       _shopId = authState.shop?.uid ?? '';
       _productsBloc.add(LoadShopProductsEvent(_shopId));
-    } else {
-      print("Auth state is not ShopStatusLoaded: $authState");
     }
   }
 
@@ -52,61 +51,13 @@ class _ProductsPageState extends State<ProductsPage>
     super.dispose();
   }
 
-  void _showCategoryFilter(BuildContext context, List<String> categories) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (modalContext) {
-        return BlocProvider.value(
-          value: _productsBloc,
-          child: CategoryFilterBottomSheet(
-            productsBloc: _productsBloc,
-            categories: categories,
-          ),
-        );
-      },
-    );
-  }
-
-  void _confirmDelete(ProductModel product) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => ConfirmationModal(
-        title: 'Delete Product',
-        content:
-            'Are you sure you want to delete this product? This action cannot be undone.',
-        confirmText: 'Delete',
-        confirmColor: ShopAppColors.error,
-        onConfirm: () {
-          Navigator.pop(dialogContext);
-          // Double confirmation as requested
-          showDialog(
-            context: context,
-            builder: (doubleConfirmContext) => ConfirmationModal(
-              title: 'Confirm Deletion',
-              content:
-                  'Please confirm once more. Delete "${product.name}" permanently?',
-              confirmText: 'Permanently Delete',
-              confirmColor: ShopAppColors.error,
-              onConfirm: () {
-                Navigator.pop(doubleConfirmContext);
-                _productsBloc.add(DeleteProductEvent(_shopId, product.id));
-              },
-              onCancel: () => Navigator.pop(doubleConfirmContext),
-            ),
-          );
-        },
-        onCancel: () => Navigator.pop(dialogContext),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ShopProductsBloc>(
-      create: (context) => _productsBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ShopProductsBloc>(create: (context) => _productsBloc),
+        BlocProvider<ProductsUiCubit>(create: (context) => ProductsUiCubit()),
+      ],
       child: BlocListener<ShopProductsBloc, ShopProductsState>(
         listener: (context, state) {
           if (state is ShopProductsOperationSuccess) {
@@ -125,197 +76,110 @@ class _ProductsPageState extends State<ProductsPage>
             );
           }
         },
-        child: Scaffold(
-          backgroundColor: ShopAppColors.background,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            title: _isSearching
-                ? TextField(
-                    controller: _searchController,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      hintText: 'Search product...',
-                      border: InputBorder.none,
+        child: BlocBuilder<ProductsUiCubit, ProductsUiState>(
+          builder: (context, uiState) {
+            return Scaffold(
+              backgroundColor: ShopAppColors.background,
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                title: uiState.isSearching
+                    ? ProductSearchTextField(
+                        controller: _searchController,
+                        productsBloc: _productsBloc,
+                      )
+                    : Text('Products', style: ShopAppTextStyles.heading3),
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      uiState.isSearching ? Icons.close : Icons.search,
+                      color: ShopAppColors.textPrimary,
                     ),
-                    style: TextStyle(fontSize: 16.sp),
-                    onChanged: (val) {
-                      _productsBloc.add(SearchProductsEvent(val));
+                    onPressed: () {
+                      if (uiState.isSearching) {
+                        context.read<ProductsUiCubit>().toggleSearch(false);
+                        _searchController.clear();
+                        _productsBloc.add(const SearchProductsEvent(''));
+                      } else {
+                        context.read<ProductsUiCubit>().toggleSearch(true);
+                      }
                     },
-                  )
-                : Text('Products', style: ShopAppTextStyles.heading3),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  _isSearching ? Icons.close : Icons.search,
-                  color: ShopAppColors.textPrimary,
-                ),
-                onPressed: () {
-                  setState(() {
-                    if (_isSearching) {
-                      _isSearching = false;
-                      _searchController.clear();
-                      _productsBloc.add(const SearchProductsEvent(''));
-                    } else {
-                      _isSearching = true;
-                    }
-                  });
+                  ),
+                  BlocBuilder<ShopProductsBloc, ShopProductsState>(
+                    builder: (context, state) {
+                      final isFiltered =
+                          state is ShopProductsLoaded &&
+                          state.selectedCategories.isNotEmpty &&
+                          !state.selectedCategories.contains('All');
+                      List<String> categories = ['All'];
+                      if (state is ShopProductsLoaded) {
+                        categories = ProductsPageHelper.extractCategories(
+                          state.allProducts,
+                        );
+                      }
+                      return IconButton(
+                        icon: Icon(
+                          Icons.filter_list,
+                          color: isFiltered
+                              ? ShopAppColors.primary
+                              : ShopAppColors.textPrimary,
+                        ),
+                        onPressed: () => ProductsPageHelper.showCategoryFilter(
+                          context,
+                          _productsBloc,
+                          categories,
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 8.w),
+                ],
+                bottom: ProductsTabBar(controller: _tabController),
+              ),
+              body: BlocBuilder<ShopProductsBloc, ShopProductsState>(
+                buildWhen: (previous, current) =>
+                    current is ShopProductsLoaded ||
+                    current is ShopProductsLoading ||
+                    current is ShopProductsInitial,
+                builder: (context, state) {
+                  if (state is ShopProductsLoading ||
+                      state is ShopProductsInitial) {
+                    return const ShopProductsShimmer(itemCount: 5);
+                  }
+
+                  if (state is ShopProductsLoaded) {
+                    return ProductsTabBarView(
+                      tabController: _tabController,
+                      allProducts: state.filteredProducts,
+                      shopId: _shopId,
+                      productsBloc: _productsBloc,
+                    );
+                  }
+
+                  return const Center(child: Text('No products found.'));
                 },
               ),
-              BlocBuilder<ShopProductsBloc, ShopProductsState>(
-                builder: (context, state) {
-                  final isFiltered =
-                      state is ShopProductsLoaded &&
-                      state.selectedCategories.isNotEmpty &&
-                      !state.selectedCategories.contains('All');
-                  List<String> categories = ['All'];
-                  if (state is ShopProductsLoaded) {
-                    final productCats = state.allProducts
-                        .map((p) => p.category)
-                        .where((cat) => cat.isNotEmpty)
-                        .toSet()
-                        .toList();
-                    categories.addAll(productCats);
-                  }
-                  return IconButton(
-                    icon: Icon(
-                      Icons.filter_list,
-                      color: isFiltered
-                          ? ShopAppColors.primary
-                          : ShopAppColors.textPrimary,
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: ShopAppColors.primary,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddEditProductPage(
+                        shopId: _shopId,
+                        productsBloc: _productsBloc,
+                      ),
                     ),
-                    onPressed: () => _showCategoryFilter(context, categories),
                   );
                 },
+                child: const Icon(Icons.add, color: Colors.white),
               ),
-              SizedBox(width: 8.w),
-            ],
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(48.h),
-              child: Container(
-                color: Colors.white,
-                child: TabBar(
-                  controller: _tabController,
-                  indicatorColor: ShopAppColors.primary,
-                  indicatorWeight: 3.h,
-                  labelColor: ShopAppColors.primary,
-                  unselectedLabelColor: ShopAppColors.textTertiary,
-                  labelStyle: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  unselectedLabelStyle: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  tabs: const [
-                    Tab(text: 'All Products'),
-                    Tab(text: 'Active'),
-                    Tab(text: 'Out of Stock'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          body: BlocBuilder<ShopProductsBloc, ShopProductsState>(
-            buildWhen: (previous, current) =>
-                current is ShopProductsLoaded ||
-                current is ShopProductsLoading ||
-                current is ShopProductsInitial,
-            builder: (context, state) {
-              if (state is ShopProductsLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: ShopAppColors.primary,
-                  ),
-                );
-              }
-
-              if (state is ShopProductsLoaded) {
-                final all = state.filteredProducts;
-                final active = all.where((p) => p.stockQuantity > 0).toList();
-                final outOfStock = all
-                    .where((p) => p.stockQuantity <= 0)
-                    .toList();
-
-                return TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildProductList(all),
-                    _buildProductList(active),
-                    _buildProductList(outOfStock),
-                  ],
-                );
-              }
-
-              return const Center(child: Text('No products found.'));
-            },
-          ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: ShopAppColors.primary,
-            shape: const CircleBorder(),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddEditProductPage(
-                    shopId: _shopId,
-                    productsBloc: _productsBloc,
-                  ),
-                ),
-              );
-            },
-            child: const Icon(Icons.add, color: Colors.white),
-          ),
-          bottomNavigationBar: const ShopBottomNavigation(currentIndex: 1),
+              bottomNavigationBar: const ShopBottomNavigation(currentIndex: 1),
+            );
+          },
         ),
-      ),
-    );
-  }
-
-  Widget _buildProductList(List<ProductModel> products) {
-    if (products.isEmpty) {
-      return RefreshIndicator(
-        onRefresh: () async {
-          _productsBloc.add(LoadShopProductsEvent(_shopId));
-        },
-        color: ShopAppColors.primary,
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            SizedBox(
-              height: 400.h,
-              child: Center(
-                child: Text(
-                  'No products available in this tab.',
-                  style: ShopAppTextStyles.bodyMedium,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        _productsBloc.add(LoadShopProductsEvent(_shopId));
-      },
-      color: ShopAppColors.primary,
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(16.w),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return ProductListItem(
-            product: product,
-            shopId: _shopId,
-            productsBloc: _productsBloc,
-            onDeleteTap: () => _confirmDelete(product),
-          );
-        },
       ),
     );
   }

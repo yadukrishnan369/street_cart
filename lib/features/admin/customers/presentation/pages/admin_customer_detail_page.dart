@@ -12,24 +12,19 @@ import 'package:street_cart/features/admin/customers/presentation/widgets/admin_
 import 'package:street_cart/features/admin/customers/presentation/widgets/admin_customer_contact_info_card.dart';
 import 'package:street_cart/features/admin/customers/presentation/widgets/admin_customer_stats_card.dart';
 import 'package:street_cart/features/admin/customers/presentation/widgets/admin_customer_past_orders_card.dart';
+import 'package:street_cart/features/admin/customers/presentation/widgets/shimmer/admin_customer_detail_shimmer.dart';
 
-class AdminCustomerDetailPage extends StatefulWidget {
+class AdminCustomerDetailPage extends StatelessWidget {
   final String customerId;
 
   const AdminCustomerDetailPage({super.key, required this.customerId});
 
   @override
-  State<AdminCustomerDetailPage> createState() =>
-      _AdminCustomerDetailPageState();
-}
-
-class _AdminCustomerDetailPageState extends State<AdminCustomerDetailPage> {
-  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
           sl<AdminCustomerDetailBloc>()
-            ..add(LoadCustomerDetailRequested(widget.customerId)),
+            ..add(LoadCustomerDetailRequested(customerId)),
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFC),
         body: SafeArea(
@@ -52,11 +47,7 @@ class _AdminCustomerDetailPageState extends State<AdminCustomerDetailPage> {
                 builder: (context, state) {
                   if (state is AdminCustomerDetailLoading ||
                       state is AdminCustomerDetailActionInProgress) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: AdminAppColors.primaryColor,
-                      ),
-                    );
+                    return const AdminCustomerDetailShimmer();
                   } else if (state is AdminCustomerDetailLoaded) {
                     final customer = state.customer;
                     final addresses = state.addresses;
@@ -129,7 +120,7 @@ class _AdminCustomerDetailPageState extends State<AdminCustomerDetailPage> {
                           ElevatedButton(
                             onPressed: () {
                               context.read<AdminCustomerDetailBloc>().add(
-                                LoadCustomerDetailRequested(widget.customerId),
+                                LoadCustomerDetailRequested(customerId),
                               );
                             },
                             style: ElevatedButton.styleFrom(

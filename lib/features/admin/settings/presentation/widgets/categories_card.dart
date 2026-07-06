@@ -45,7 +45,7 @@ class CategoriesCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Organize your categories for easier discovery.',
+                  'Organize your product categories.',
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: const Color(0xFF8A8A9E),
@@ -80,4 +80,3 @@ class CategoriesCard extends StatelessWidget {
     );
   }
 }
-

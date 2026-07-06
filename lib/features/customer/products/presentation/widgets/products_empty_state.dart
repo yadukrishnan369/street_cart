@@ -7,36 +7,41 @@ class ProductsEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.search_off,
-              size: 50.sp,
-              color: CustomerAppColors.primary,
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              "No products found",
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Container(
+          height: constraints.maxHeight > 0 ? constraints.maxHeight : 400.h,
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.search_off,
+                size: 50.sp,
                 color: CustomerAppColors.primary,
               ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              "No products match your search or filter options.",
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: CustomerAppColors.primary,
+              SizedBox(height: 12.h),
+              Text(
+                "No products found",
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: CustomerAppColors.primary,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              SizedBox(height: 4.h),
+              Text(
+                "No products match your search or filter options.",
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: CustomerAppColors.primary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -17,7 +17,8 @@ class CategoryFilterBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<CategoryFilterBottomSheet> createState() => _CategoryFilterBottomSheetState();
+  State<CategoryFilterBottomSheet> createState() =>
+      _CategoryFilterBottomSheetState();
 }
 
 class _CategoryFilterBottomSheetState extends State<CategoryFilterBottomSheet> {
@@ -36,7 +37,8 @@ class _CategoryFilterBottomSheetState extends State<CategoryFilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isFiltered = selectedCategories.isNotEmpty && !selectedCategories.contains('All');
+    final isFiltered =
+        selectedCategories.isNotEmpty && !selectedCategories.contains('All');
 
     return Container(
       padding: EdgeInsets.all(20.w),

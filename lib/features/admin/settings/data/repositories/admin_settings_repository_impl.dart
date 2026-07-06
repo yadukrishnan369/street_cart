@@ -1,6 +1,6 @@
-import '../../domain/repositories/i_admin_settings_repository.dart';
-import '../datasources/admin_settings_remote_datasource.dart';
-import '../models/admin_settings_model.dart';
+import 'package:street_cart/features/admin/settings/domain/repositories/i_admin_settings_repository.dart';
+import 'package:street_cart/features/admin/settings/data/datasources/admin_settings_remote_datasource.dart';
+import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
 
 class AdminSettingsRepositoryImpl implements IAdminSettingsRepository {
   final IAdminSettingsRemoteDataSource _remoteDataSource;
@@ -50,5 +50,20 @@ class AdminSettingsRepositoryImpl implements IAdminSettingsRepository {
       productCategories: productCategories,
       businessCategories: businessCategories,
     );
+  }
+
+  @override
+  Future<ProductConfigModel> getProductConfig() async {
+    return _remoteDataSource.getProductConfig();
+  }
+
+  @override
+  Future<void> saveColors(List<ColorModel> colors) async {
+    return _remoteDataSource.saveColors(colors);
+  }
+
+  @override
+  Future<void> saveSizeGroups(List<SizeGroupModel> sizeGroups) async {
+    return _remoteDataSource.saveSizeGroups(sizeGroups);
   }
 }

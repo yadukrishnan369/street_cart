@@ -43,7 +43,8 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 _obscureCurrent ? Icons.visibility_off : Icons.visibility,
                 color: Colors.grey,
               ),
-              onPressed: () => setState(() => _obscureCurrent = !_obscureCurrent),
+              onPressed: () =>
+                  setState(() => _obscureCurrent = !_obscureCurrent),
             ),
           ),
           20.verticalSpace,
@@ -85,7 +86,8 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 _obscureConfirm ? Icons.visibility_off : Icons.visibility,
                 color: Colors.grey,
               ),
-              onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+              onPressed: () =>
+                  setState(() => _obscureConfirm = !_obscureConfirm),
             ),
           ),
         ],

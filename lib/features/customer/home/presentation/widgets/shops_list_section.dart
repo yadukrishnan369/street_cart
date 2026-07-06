@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/shops/presentation/pages/customer_
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 
 class ShopsListSection extends StatelessWidget {
   final List<ShopProfileModel> shops;
@@ -55,17 +56,6 @@ class ShopsListSection extends StatelessWidget {
       );
     }
 
-    final row1Shops = <ShopProfileModel>[];
-    final row2Shops = <ShopProfileModel>[];
-
-    for (int i = 0; i < shops.length; i++) {
-      if (i % 2 == 0) {
-        row1Shops.add(shops[i]);
-      } else {
-        row2Shops.add(shops[i]);
-      }
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -101,32 +91,17 @@ class ShopsListSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        if (row1Shops.isNotEmpty)
-          SizedBox(
-            height: 90.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              itemCount: row1Shops.length,
-              itemBuilder: (context, index) {
-                return _buildShopCard(context, row1Shops[index]);
-              },
-            ),
+        SizedBox(
+          height: 90.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            itemCount: shops.length,
+            itemBuilder: (context, index) {
+              return _buildShopCard(context, shops[index]);
+            },
           ),
-        if (row2Shops.isNotEmpty) ...[
-          SizedBox(height: 12.h),
-          SizedBox(
-            height: 90.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              itemCount: row2Shops.length,
-              itemBuilder: (context, index) {
-                return _buildShopCard(context, row2Shops[index]);
-              },
-            ),
-          ),
-        ],
+        ),
       ],
     );
   }
@@ -163,17 +138,14 @@ class ShopsListSection extends StatelessWidget {
                   child: Container(
                     width: 74.w,
                     height: 74.h,
-                    color: Colors.grey[200],
                     child: shop.profileImageUrl.isNotEmpty
                         ? CachedNetworkImage(
                             imageUrl: shop.profileImageUrl,
                             fit: BoxFit.cover,
-                            errorWidget: (_, __, ___) => const Icon(
-                              Icons.storefront,
-                              color: Colors.grey,
-                            ),
+                            placeholder: (context, url) => const ShopImagePlaceholder(iconSize: 32),
+                            errorWidget: (context, url, error) => const ShopImagePlaceholder(iconSize: 32),
                           )
-                        : const Icon(Icons.storefront, color: Colors.grey),
+                        : const ShopImagePlaceholder(iconSize: 32),
                   ),
                 ),
                 SizedBox(width: 12.w),

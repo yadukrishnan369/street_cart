@@ -89,8 +89,12 @@ class ShopProfileModel {
       district: map['district'] ?? '',
       state: map['state'] ?? '',
       paymentMethods: List<String>.from(map['payment_methods'] ?? []),
-      latitude: map['location'] != null ? (map['location']['latitude'] as num?)?.toDouble() : null,
-      longitude: map['location'] != null ? (map['location']['longitude'] as num?)?.toDouble() : null,
+      latitude: map['location'] != null
+          ? (map['location']['latitude'] as num?)?.toDouble()
+          : null,
+      longitude: map['location'] != null
+          ? (map['location']['longitude'] as num?)?.toDouble()
+          : null,
       isRejected: map['is_rejected'] ?? false,
       rejectionReason: map['rejection_reason'] ?? '',
       isReRegistered: map['is_reregistered'] ?? false,
@@ -110,7 +114,9 @@ class ShopProfileModel {
       'is_approved': isApproved,
       'is_suspended': isSuspended,
       'role': role,
-      'created_at': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'created_at': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
       'is_profile_completed': isProfileCompleted,
       'profile_image_url': profileImageUrl,
       'phone': phone,
@@ -123,10 +129,7 @@ class ShopProfileModel {
       'state': state,
       'payment_methods': paymentMethods,
       if (latitude != null && longitude != null)
-        'location': {
-          'latitude': latitude,
-          'longitude': longitude,
-        },
+        'location': {'latitude': latitude, 'longitude': longitude},
       'is_rejected': isRejected,
       'rejection_reason': rejectionReason,
       'is_reregistered': isReRegistered,

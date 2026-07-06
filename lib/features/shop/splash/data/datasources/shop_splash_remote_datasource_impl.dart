@@ -10,8 +10,8 @@ class ShopSplashRemoteDataSourceImpl implements IShopSplashRemoteDataSource {
   ShopSplashRemoteDataSourceImpl({
     required FirebaseAuth firebaseAuth,
     required FirebaseFirestore firestore,
-  })  : _firebaseAuth = firebaseAuth,
-        _firestore = firestore;
+  }) : _firebaseAuth = firebaseAuth,
+       _firestore = firestore;
 
   @override
   Future<bool> isUserLoggedIn() async {

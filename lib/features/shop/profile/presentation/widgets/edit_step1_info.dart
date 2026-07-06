@@ -55,7 +55,9 @@ class EditStep1Info extends StatelessWidget {
             validator: Validators.validateName,
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -68,7 +70,9 @@ class EditStep1Info extends StatelessWidget {
             validator: Validators.validateShopName,
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
@@ -108,10 +112,7 @@ class EditStep1Info extends StatelessWidget {
             items: categories.map((String category) {
               return DropdownMenuItem<String>(
                 value: category,
-                child: Text(
-                  category,
-                  style: ShopAppTextStyles.bodyMedium,
-                ),
+                child: Text(category, style: ShopAppTextStyles.bodyMedium),
               );
             }).toList(),
             onChanged: onCategoryChanged,
@@ -125,7 +126,9 @@ class EditStep1Info extends StatelessWidget {
             validator: Validators.validateDescription,
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(color: ShopAppColors.textTertiary),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: ShopAppColors.textTertiary,
+            ),
             fillColor: ShopAppColors.surface,
             borderColor: ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,

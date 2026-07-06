@@ -20,9 +20,19 @@ class CustomerProductsRepositoryImpl implements ICustomerProductsRepository {
   }
 
   @override
-  Future<void> addToWishlist(ProductModel product, ShopProfileModel shop) async {
+  Future<void> addToWishlist(
+    ProductModel product,
+    ShopProfileModel shop, {
+    String? selectedColor,
+    String? selectedSize,
+  }) async {
     try {
-      await remoteDataSource.addToWishlist(product, shop);
+      await remoteDataSource.addToWishlist(
+        product,
+        shop,
+        selectedColor: selectedColor,
+        selectedSize: selectedSize,
+      );
     } catch (e) {
       rethrow;
     }

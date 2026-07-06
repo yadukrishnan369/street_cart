@@ -4,10 +4,8 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/core/constants/customer_constants.dart';
 import 'faq_page.dart';
-
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/services/communication_service.dart';
-
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
 class ContactSupportPage extends StatelessWidget {

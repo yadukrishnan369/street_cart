@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/features/shop/products/data/models/variant_image_draft.dart';
 
 abstract class ShopProductsEvent extends Equatable {
   const ShopProductsEvent();
@@ -27,20 +27,24 @@ class ShopProductsUpdatedEvent extends ShopProductsEvent {
 
 class AddProductEvent extends ShopProductsEvent {
   final ProductModel product;
-  final List<File> imageFiles;
-  const AddProductEvent(this.product, this.imageFiles);
+
+  // One draft per color variant
+  final List<VariantImageDraft> variantDrafts;
+
+  const AddProductEvent(this.product, this.variantDrafts);
 
   @override
-  List<Object?> get props => [product, imageFiles];
+  List<Object?> get props => [product, variantDrafts];
 }
 
 class UpdateProductEvent extends ShopProductsEvent {
   final ProductModel product;
-  final List<dynamic> imagesOrFiles;
-  const UpdateProductEvent(this.product, this.imagesOrFiles);
+  final List<VariantImageDraft> variantDrafts;
+
+  const UpdateProductEvent(this.product, this.variantDrafts);
 
   @override
-  List<Object?> get props => [product, imagesOrFiles];
+  List<Object?> get props => [product, variantDrafts];
 }
 
 class DeleteProductEvent extends ShopProductsEvent {
@@ -85,10 +89,7 @@ class AddCustomSizeEvent extends ShopProductsEvent {
 class AddCustomColorEvent extends ShopProductsEvent {
   final String shopId;
   final String newColorHex;
-  const AddCustomColorEvent({
-    required this.shopId,
-    required this.newColorHex,
-  });
+  const AddCustomColorEvent({required this.shopId, required this.newColorHex});
 
   @override
   List<Object?> get props => [shopId, newColorHex];
@@ -101,3 +102,5 @@ class LoadProductConfigEvent extends ShopProductsEvent {
   @override
   List<Object?> get props => [shopId];
 }
+
+class LoadProductCategoriesEvent extends ShopProductsEvent {}

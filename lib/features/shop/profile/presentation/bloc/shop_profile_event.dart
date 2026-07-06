@@ -30,3 +30,5 @@ class UploadShopProfileImageEvent extends ShopProfileEvent {
 }
 
 class RemoveShopProfileImageEvent extends ShopProfileEvent {}
+
+class FetchShopPaymentSettings extends ShopProfileEvent {}

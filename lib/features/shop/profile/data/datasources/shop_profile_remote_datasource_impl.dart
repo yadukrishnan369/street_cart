@@ -12,8 +12,8 @@ class ShopProfileRemoteDataSourceImpl implements IShopProfileRemoteDataSource {
   ShopProfileRemoteDataSourceImpl({
     required FirebaseFirestore firestore,
     required CloudinaryService cloudinaryService,
-  })  : _firestore = firestore,
-        _cloudinaryService = cloudinaryService;
+  }) : _firestore = firestore,
+       _cloudinaryService = cloudinaryService;
 
   @override
   Future<ShopProfileModel?> getShopProfile(String userId) async {

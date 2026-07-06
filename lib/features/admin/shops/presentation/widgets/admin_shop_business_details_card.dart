@@ -8,10 +8,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 class AdminShopBusinessDetailsCard extends StatelessWidget {
   final ShopProfileModel shop;
 
-  const AdminShopBusinessDetailsCard({
-    super.key,
-    required this.shop,
-  });
+  const AdminShopBusinessDetailsCard({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +202,10 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
               if (parts.isEmpty && shop.pincode.trim().isEmpty) {
                 return 'Not provided';
               }
-              return parts.join(', ') + (shop.pincode.trim().isNotEmpty ? ' - ${shop.pincode.trim()}' : '');
+              return parts.join(', ') +
+                  (shop.pincode.trim().isNotEmpty
+                      ? ' - ${shop.pincode.trim()}'
+                      : '');
             }(),
             style: TextStyle(
               fontSize: 13.sp,

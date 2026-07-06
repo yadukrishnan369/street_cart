@@ -9,9 +9,12 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_sett
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_state.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/platform_business_settings.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/categories_card.dart';
+import 'package:street_cart/features/admin/settings/presentation/widgets/product_config_card.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/security_access_card.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/appearance_card.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/notification_preferences_card.dart';
+import 'package:street_cart/features/admin/settings/presentation/widgets/shimmer/admin_settings_shimmer.dart';
+import 'package:street_cart/features/admin/settings/presentation/utils/settings_helper.dart';
 
 class AdminSettingsPage extends StatelessWidget {
   const AdminSettingsPage({super.key});
@@ -39,11 +42,7 @@ class AdminSettingsPage extends StatelessWidget {
           child: BlocBuilder<AdminSettingsBloc, AdminSettingsState>(
             builder: (context, state) {
               if (state is AdminSettingsLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AdminAppColors.primaryColor,
-                  ),
-                );
+                return const AdminSettingsShimmer();
               }
 
               if (state is AdminSettingsLoadFailure) {
@@ -75,15 +74,7 @@ class AdminSettingsPage extends StatelessWidget {
                 );
               }
 
-              // Extract settings if available
-              final currentSettings = (state is AdminSettingsLoadSuccess)
-                  ? state.settings
-                  : (state is AdminSettingsActionSuccess)
-                  ? state.settings
-                  : (state is AdminSettingsActionFailure)
-                  ? state.settings
-                  : null;
-
+              final currentSettings = SettingsHelper.getSettings(state);
               final isInProgress = state is AdminSettingsActionInProgress;
 
               return SingleChildScrollView(
@@ -95,28 +86,27 @@ class AdminSettingsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Platform Business Settings
                       PlatformBusinessSettings(
                         settings: currentSettings,
                         isInProgress: isInProgress,
                       ),
                       SizedBox(height: 24.h),
-
-                      // Categories Card
-                      const CategoriesCard(),
-                      SizedBox(height: 24.h),
-
-                      // Security & Access Settings
-                      SecurityAccessCard(
-                        isInProgress: isInProgress,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 900.w),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Expanded(child: CategoriesCard()),
+                            SizedBox(width: 20.w),
+                            const Expanded(child: ProductConfigCard()),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 24.h),
-
-                      // Appearance Settings
+                      SecurityAccessCard(isInProgress: isInProgress),
+                      SizedBox(height: 24.h),
                       const AppearanceCard(),
                       SizedBox(height: 24.h),
-
-                      // Notification Preferences Card
                       const NotificationPreferencesCard(),
                     ],
                   ),
@@ -129,4 +119,3 @@ class AdminSettingsPage extends StatelessWidget {
     );
   }
 }
-

@@ -129,6 +129,8 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return 'New Registrations';
     } else if (route.contains(RoutePaths.categories)) {
       return 'Categories';
+    } else if (route.contains(RoutePaths.productConfig)) {
+      return 'Product Configurations';
     } else if (route.contains(RoutePaths.settings)) {
       return 'Settings';
     } else if (route.contains(RoutePaths.profile)) {
@@ -158,6 +160,8 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return Icons.assignment_outlined;
     } else if (route.contains(RoutePaths.categories)) {
       return Icons.category_outlined;
+    } else if (route.contains(RoutePaths.productConfig)) {
+      return Icons.tune_outlined;
     } else if (route.contains(RoutePaths.settings)) {
       return Icons.settings_outlined;
     } else if (route.contains(RoutePaths.profile)) {

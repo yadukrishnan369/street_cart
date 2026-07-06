@@ -7,6 +7,7 @@ import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_de
 import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_detail_event.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/shared/widgets/image_preview_page.dart';
 
 class AdminShopDetailHeaderCard extends StatelessWidget {
   final ShopProfileModel shop;
@@ -36,27 +37,42 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Logo or Fallback icon
-        Container(
-          width: 80.w,
-          height: 80.h,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3F2F7),
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: const Color(0xFFE8E7ED), width: 1),
-            image: shop.profileImageUrl.isNotEmpty
-                ? DecorationImage(
-                    image: NetworkImage(shop.profileImageUrl),
-                    fit: BoxFit.cover,
+        GestureDetector(
+          onTap: shop.profileImageUrl.isNotEmpty
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ImagePreviewPage(
+                        images: [shop.profileImageUrl],
+                        initialIndex: 0,
+                      ),
+                    ),
+                  );
+                }
+              : null,
+          child: Container(
+            width: 80.w,
+            height: 80.h,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3F2F7),
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: const Color(0xFFE8E7ED), width: 1),
+              image: shop.profileImageUrl.isNotEmpty
+                  ? DecorationImage(
+                      image: NetworkImage(shop.profileImageUrl),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: shop.profileImageUrl.isEmpty
+                ? Icon(
+                    Icons.storefront_outlined,
+                    size: 32.sp,
+                    color: const Color(0xFF8A8A9E),
                   )
                 : null,
           ),
-          child: shop.profileImageUrl.isEmpty
-              ? Icon(
-                  Icons.storefront_outlined,
-                  size: 32.sp,
-                  color: const Color(0xFF8A8A9E),
-                )
-              : null,
         ),
         SizedBox(width: 24.w),
 

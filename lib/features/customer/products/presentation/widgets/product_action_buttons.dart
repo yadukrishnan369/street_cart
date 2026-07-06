@@ -6,13 +6,18 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 class ProductActionButtons extends StatelessWidget {
   final ProductModel product;
 
+  final int availableQty;
+
   const ProductActionButtons({
     super.key,
     required this.product,
+    this.availableQty = 0,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool canAdd = availableQty > 0;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
@@ -30,19 +35,37 @@ class ProductActionButtons extends StatelessWidget {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${product.name} added to cart!'),
-                      backgroundColor: CustomerAppColors.primary,
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.shopping_cart_outlined),
-                label: const Text('Add to Cart'),
+                onPressed: canAdd
+                    ? () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product.name} added to cart!'),
+                            backgroundColor: CustomerAppColors.primary,
+                          ),
+                        );
+                      }
+                    : null,
+                icon: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: canAdd ? CustomerAppColors.primary : Colors.grey[400],
+                ),
+                label: Text(
+                  canAdd ? 'Add to Cart' : 'Out of Stock',
+                  style: TextStyle(
+                    color: canAdd
+                        ? CustomerAppColors.primary
+                        : Colors.grey[400],
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: CustomerAppColors.primary,
-                  side: const BorderSide(color: CustomerAppColors.primary),
+                  foregroundColor: canAdd
+                      ? CustomerAppColors.primary
+                      : Colors.grey[400],
+                  side: BorderSide(
+                    color: canAdd
+                        ? CustomerAppColors.primary
+                        : Colors.grey[300]!,
+                  ),
                   padding: EdgeInsets.symmetric(vertical: 14.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
@@ -53,18 +76,21 @@ class ProductActionButtons extends StatelessWidget {
             SizedBox(width: 16.w),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Proceeding to checkout with ${product.name}!',
-                      ),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                },
+                onPressed: canAdd
+                    ? () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Proceeding to checkout with ${product.name}!',
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CustomerAppColors.primary,
+                  disabledBackgroundColor: Colors.grey[300],
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 14.h),
                   elevation: 0,

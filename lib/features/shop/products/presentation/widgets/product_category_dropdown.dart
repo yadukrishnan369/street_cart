@@ -41,21 +41,15 @@ class ProductCategoryDropdown extends StatelessWidget {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Colors.grey[300]!,
-              ),
+              borderSide: BorderSide(color: Colors.grey[300]!),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Colors.grey[300]!,
-              ),
+              borderSide: BorderSide(color: Colors.grey[300]!),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: ShopAppColors.primary,
-              ),
+              borderSide: BorderSide(color: ShopAppColors.primary),
             ),
             prefixIcon: Icon(
               Icons.category_outlined,
@@ -68,10 +62,7 @@ class ProductCategoryDropdown extends StatelessWidget {
               value: cat,
               child: Text(
                 cat,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 14.sp, color: Colors.black),
               ),
             );
           }).toList(),

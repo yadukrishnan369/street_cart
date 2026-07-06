@@ -8,8 +8,15 @@ class LoadWishlist extends WishlistEvent {}
 class AddProductToWishlist extends WishlistEvent {
   final ProductModel product;
   final ShopProfileModel shop;
+  final String? selectedColor;
+  final String? selectedSize;
 
-  AddProductToWishlist({required this.product, required this.shop});
+  AddProductToWishlist({
+    required this.product,
+    required this.shop,
+    this.selectedColor,
+    this.selectedSize,
+  });
 }
 
 class RemoveProductFromWishlist extends WishlistEvent {

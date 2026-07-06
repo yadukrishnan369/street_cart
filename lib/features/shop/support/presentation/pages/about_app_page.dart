@@ -50,7 +50,7 @@ class AboutAppPage extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 32.h),
-              
+
               // App Logo Card
               Center(
                 child: AppLogo(
@@ -60,7 +60,7 @@ class AboutAppPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
-              
+
               // Title & Version
               Text(
                 'Street Cart',
@@ -87,7 +87,7 @@ class AboutAppPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
-              
+
               // Our Mission Card
               Container(
                 width: double.infinity,
@@ -95,7 +95,10 @@ class AboutAppPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+                  border: Border.all(
+                    color: const Color(0xFFECEFF1),
+                    width: 0.8,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +133,7 @@ class AboutAppPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
-              
+
               // Privacy Policy Action Row
               _buildActionCard(
                 context,
@@ -142,7 +145,7 @@ class AboutAppPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12.h),
-              
+
               // Terms & Conditions Action Row
               _buildActionCard(
                 context,
@@ -150,11 +153,13 @@ class AboutAppPage extends StatelessWidget {
                 title: 'Terms & Conditions',
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const TermsConditionsPage()),
+                  MaterialPageRoute(
+                    builder: (_) => const TermsConditionsPage(),
+                  ),
                 ),
               ),
               SizedBox(height: 48.h),
-              
+
               // Footer text
               Text(
                 '© 2026 Street Cart Technologies Private Limited',

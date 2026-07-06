@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/products/domain/usecases/update_produc
 import 'package:street_cart/features/shop/products/domain/usecases/delete_product.dart';
 import 'package:street_cart/features/shop/products/domain/usecases/get_shop_product_config.dart';
 import 'package:street_cart/features/shop/products/domain/usecases/save_shop_product_config.dart';
+import 'package:street_cart/features/shop/auth/domain/usecases/get_product_categories.dart';
 import 'shop_products_event.dart';
 import 'shop_products_state.dart';
 
@@ -17,6 +18,7 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
   final DeleteProduct _deleteProduct;
   final GetShopProductConfig _getShopProductConfig;
   final SaveShopProductConfig _saveShopProductConfig;
+  final GetProductCategories _getProductCategories;
 
   StreamSubscription<List<ProductModel>>? _productsSubscription;
   Map<String, dynamic> _customConfig = const {};
@@ -28,13 +30,15 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     required DeleteProduct deleteProduct,
     required GetShopProductConfig getShopProductConfig,
     required SaveShopProductConfig saveShopProductConfig,
-  })  : _getShopProducts = getShopProducts,
-        _addProduct = addProduct,
-        _updateProduct = updateProduct,
-        _deleteProduct = deleteProduct,
-        _getShopProductConfig = getShopProductConfig,
-        _saveShopProductConfig = saveShopProductConfig,
-        super(ShopProductsInitial()) {
+    required GetProductCategories getProductCategories,
+  }) : _getShopProducts = getShopProducts,
+       _addProduct = addProduct,
+       _updateProduct = updateProduct,
+       _deleteProduct = deleteProduct,
+       _getShopProductConfig = getShopProductConfig,
+       _saveShopProductConfig = saveShopProductConfig,
+       _getProductCategories = getProductCategories,
+       super(ShopProductsInitial()) {
     on<LoadShopProductsEvent>(_onLoadShopProducts);
     on<ShopProductsUpdatedEvent>(_onShopProductsUpdated);
     on<AddProductEvent>(_onAddProduct);
@@ -45,10 +49,13 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     on<AddCustomSizeEvent>(_onAddCustomSize);
     on<AddCustomColorEvent>(_onAddCustomColor);
     on<LoadProductConfigEvent>(_onLoadProductConfig);
+    on<LoadProductCategoriesEvent>(_onLoadProductCategories);
   }
 
   Future<void> _onLoadShopProducts(
-      LoadShopProductsEvent event, Emitter<ShopProductsState> emit) async {
+    LoadShopProductsEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     emit(ShopProductsLoading());
     await _productsSubscription?.cancel();
 
@@ -57,18 +64,15 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     } catch (_) {}
 
     _productsSubscription = _getShopProducts(event.shopId).listen(
-      (products) {
-        add(ShopProductsUpdatedEvent(products));
-      },
-      onError: (error) {
-        print("ERROR FETCHING PRODUCTS: $error");
-        add(const ShopProductsUpdatedEvent([]));
-      },
+      (products) => add(ShopProductsUpdatedEvent(products)),
+      onError: (error) => add(const ShopProductsUpdatedEvent([])),
     );
   }
 
   void _onShopProductsUpdated(
-      ShopProductsUpdatedEvent event, Emitter<ShopProductsState> emit) {
+    ShopProductsUpdatedEvent event,
+    Emitter<ShopProductsState> emit,
+  ) {
     final currentSearch = (state is ShopProductsLoaded)
         ? (state as ShopProductsLoaded).searchQuery
         : '';
@@ -82,108 +86,116 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
       currentCategories,
     );
 
-    emit(ShopProductsLoaded(
-      allProducts: event.products,
-      filteredProducts: filtered,
-      searchQuery: currentSearch,
-      selectedCategories: currentCategories,
-      customConfig: _customConfig,
-    ));
+    emit(
+      ShopProductsLoaded(
+        allProducts: event.products,
+        filteredProducts: filtered,
+        searchQuery: currentSearch,
+        selectedCategories: currentCategories,
+        customConfig: _customConfig,
+      ),
+    );
   }
 
   Future<void> _onAddProduct(
-      AddProductEvent event, Emitter<ShopProductsState> emit) async {
+    AddProductEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     try {
-      await _addProduct(event.product, event.imageFiles);
+      await _addProduct(event.product, event.variantDrafts);
       final latestState = state;
-      emit(const ShopProductsOperationSuccess('Product published successfully!'));
-      if (latestState is ShopProductsLoaded) {
-        emit(latestState);
-      }
+      emit(
+        const ShopProductsOperationSuccess('Product published successfully!'),
+      );
+      if (latestState is ShopProductsLoaded) emit(latestState);
     } catch (e) {
       final latestState = state;
       emit(ShopProductsError(e.toString()));
-      if (latestState is ShopProductsLoaded) {
-        emit(latestState);
-      }
+      if (latestState is ShopProductsLoaded) emit(latestState);
     }
   }
 
   Future<void> _onUpdateProduct(
-      UpdateProductEvent event, Emitter<ShopProductsState> emit) async {
+    UpdateProductEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     try {
-      await _updateProduct(event.product, event.imagesOrFiles);
+      await _updateProduct(event.product, event.variantDrafts);
       final latestState = state;
       emit(const ShopProductsOperationSuccess('Product updated successfully!'));
-      if (latestState is ShopProductsLoaded) {
-        emit(latestState);
-      }
+      if (latestState is ShopProductsLoaded) emit(latestState);
     } catch (e) {
       final latestState = state;
       emit(ShopProductsError(e.toString()));
-      if (latestState is ShopProductsLoaded) {
-        emit(latestState);
-      }
+      if (latestState is ShopProductsLoaded) emit(latestState);
     }
   }
 
   Future<void> _onDeleteProduct(
-      DeleteProductEvent event, Emitter<ShopProductsState> emit) async {
+    DeleteProductEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     try {
       await _deleteProduct(event.shopId, event.productId);
       final latestState = state;
       emit(const ShopProductsOperationSuccess('Product deleted successfully!'));
-      if (latestState is ShopProductsLoaded) {
-        emit(latestState);
-      }
+      if (latestState is ShopProductsLoaded) emit(latestState);
     } catch (e) {
       final latestState = state;
       emit(ShopProductsError(e.toString()));
-      if (latestState is ShopProductsLoaded) {
-        emit(latestState);
-      }
+      if (latestState is ShopProductsLoaded) emit(latestState);
     }
   }
 
   void _onSearchProducts(
-      SearchProductsEvent event, Emitter<ShopProductsState> emit) {
+    SearchProductsEvent event,
+    Emitter<ShopProductsState> emit,
+  ) {
     if (state is ShopProductsLoaded) {
       final s = state as ShopProductsLoaded;
-      final filtered = _filterAndSearchList(
-        s.allProducts,
-        event.query,
-        s.selectedCategories,
+      emit(
+        s.copyWith(
+          searchQuery: event.query,
+          filteredProducts: _filterAndSearchList(
+            s.allProducts,
+            event.query,
+            s.selectedCategories,
+          ),
+        ),
       );
-      emit(s.copyWith(
-        searchQuery: event.query,
-        filteredProducts: filtered,
-      ));
     }
   }
 
   void _onFilterProductsByCategory(
-      FilterProductsByCategoryEvent event, Emitter<ShopProductsState> emit) {
+    FilterProductsByCategoryEvent event,
+    Emitter<ShopProductsState> emit,
+  ) {
     if (state is ShopProductsLoaded) {
       final s = state as ShopProductsLoaded;
-      final filtered = _filterAndSearchList(
-        s.allProducts,
-        s.searchQuery,
-        event.categories,
+      emit(
+        s.copyWith(
+          selectedCategories: event.categories,
+          filteredProducts: _filterAndSearchList(
+            s.allProducts,
+            s.searchQuery,
+            event.categories,
+          ),
+        ),
       );
-      emit(s.copyWith(
-        selectedCategories: event.categories,
-        filteredProducts: filtered,
-      ));
     }
   }
 
   Future<void> _onAddCustomSize(
-      AddCustomSizeEvent event, Emitter<ShopProductsState> emit) async {
+    AddCustomSizeEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     if (state is ShopProductsLoaded) {
       final s = state as ShopProductsLoaded;
       final Map<String, dynamic> config = Map.from(_customConfig);
       final Map<String, dynamic> sizes = Map.from(config['sizes'] ?? {});
-      final List<String> currentSizes = List<String>.from(sizes[event.sizeStandard] ?? []);
+      final List<String> currentSizes = List<String>.from(
+        sizes[event.sizeStandard] ?? [],
+      );
 
       if (!currentSizes.contains(event.newSize)) {
         currentSizes.add(event.newSize);
@@ -203,11 +215,15 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
   }
 
   Future<void> _onAddCustomColor(
-      AddCustomColorEvent event, Emitter<ShopProductsState> emit) async {
+    AddCustomColorEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     if (state is ShopProductsLoaded) {
       final s = state as ShopProductsLoaded;
       final Map<String, dynamic> config = Map.from(_customConfig);
-      final List<String> currentColors = List<String>.from(config['colors'] ?? []);
+      final List<String> currentColors = List<String>.from(
+        config['colors'] ?? [],
+      );
 
       if (!currentColors.contains(event.newColorHex)) {
         currentColors.add(event.newColorHex);
@@ -226,7 +242,9 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
   }
 
   Future<void> _onLoadProductConfig(
-      LoadProductConfigEvent event, Emitter<ShopProductsState> emit) async {
+    LoadProductConfigEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
     if (state is ShopProductsLoaded) {
       final s = state as ShopProductsLoaded;
       try {
@@ -236,11 +254,30 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     }
   }
 
+  Future<void> _onLoadProductCategories(
+    LoadProductCategoriesEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
+    emit(ShopProductCategoriesLoading());
+    try {
+      final categories = await _getProductCategories();
+      emit(ShopProductCategoriesLoaded(categories));
+    } catch (e) {
+      emit(
+        ShopProductCategoriesError(e.toString().replaceAll('Exception: ', '')),
+      );
+    }
+  }
+
   List<ProductModel> _filterAndSearchList(
-      List<ProductModel> list, String query, List<String> categories) {
+    List<ProductModel> list,
+    String query,
+    List<String> categories,
+  ) {
     return list.where((product) {
-      final matchesQuery =
-          product.name.toLowerCase().contains(query.toLowerCase());
+      final matchesQuery = product.name.toLowerCase().contains(
+        query.toLowerCase(),
+      );
       final matchesCategory =
           categories.isEmpty ||
           categories.contains('All') ||

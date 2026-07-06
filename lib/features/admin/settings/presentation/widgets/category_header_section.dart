@@ -31,10 +31,7 @@ class CategoryHeaderSection extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               'Manage your ${isProductTab ? "product" : "business"} Categories and visibility.',
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: const Color(0xFF8A8A9E),
-              ),
+              style: TextStyle(fontSize: 13.sp, color: const Color(0xFF8A8A9E)),
             ),
           ],
         ),
@@ -43,10 +40,7 @@ class CategoryHeaderSection extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AdminAppColors.primaryColor,
             foregroundColor: Colors.white,
-            padding: EdgeInsets.symmetric(
-              horizontal: 20.w,
-              vertical: 14.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.r),
             ),

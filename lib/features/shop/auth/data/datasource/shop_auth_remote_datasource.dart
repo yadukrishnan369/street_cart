@@ -2,15 +2,9 @@ import 'dart:io';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
 abstract class IShopAuthRemoteDataSource {
-  Future<void> signUp({
-    required String email,
-    required String password,
-  });
+  Future<void> signUp({required String email, required String password});
 
-  Future<void> login({
-    required String email,
-    required String password,
-  });
+  Future<void> login({required String email, required String password});
 
   Future<void> finalizeSignUp({
     required String ownerName,

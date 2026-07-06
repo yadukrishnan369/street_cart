@@ -8,10 +8,12 @@ class NotificationPreferencesCard extends StatefulWidget {
   const NotificationPreferencesCard({super.key});
 
   @override
-  State<NotificationPreferencesCard> createState() => _NotificationPreferencesCardState();
+  State<NotificationPreferencesCard> createState() =>
+      _NotificationPreferencesCardState();
 }
 
-class _NotificationPreferencesCardState extends State<NotificationPreferencesCard> {
+class _NotificationPreferencesCardState
+    extends State<NotificationPreferencesCard> {
   bool _newShopAlert = true;
   bool _newOrderAlert = false;
 

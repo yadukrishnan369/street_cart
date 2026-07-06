@@ -23,4 +23,18 @@ class ImagePickerHelper {
       throw ImagePickerException('An unexpected error occurred: $e');
     }
   }
+
+  static Future<List<File>> pickMultiImage({int limit = 10}) async {
+    try {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage(
+        imageQuality: 70,
+        limit: limit,
+      );
+      return pickedFiles.map((x) => File(x.path)).toList();
+    } on PlatformException catch (e) {
+      throw ImagePickerException('Gallery access denied: ${e.message}');
+    } catch (e) {
+      throw ImagePickerException('An unexpected error occurred: $e');
+    }
+  }
 }

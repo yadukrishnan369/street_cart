@@ -251,7 +251,9 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                                   _errorTimer?.cancel();
                                 },
                                 style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: Color(0xFFE8E7ED)),
+                                  side: const BorderSide(
+                                    color: Color(0xFFE8E7ED),
+                                  ),
                                   foregroundColor: const Color(0xFF8A8A9E),
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 24.w,
@@ -299,7 +301,8 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                                                         _currentPasswordController
                                                             .text,
                                                     newPassword:
-                                                        _newPasswordController.text,
+                                                        _newPasswordController
+                                                            .text,
                                                   ),
                                                 );
                                               },
@@ -307,18 +310,30 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                                           );
                                         } else {
                                           _errorTimer?.cancel();
-                                          _errorTimer = Timer(const Duration(seconds: 3), () {
-                                            if (!mounted) return;
-                                            final currentText = _currentPasswordController.text;
-                                            final newText = _newPasswordController.text;
-                                            final confirmText = _confirmPasswordController.text;
+                                          _errorTimer = Timer(
+                                            const Duration(seconds: 3),
+                                            () {
+                                              if (!mounted) return;
+                                              final currentText =
+                                                  _currentPasswordController
+                                                      .text;
+                                              final newText =
+                                                  _newPasswordController.text;
+                                              final confirmText =
+                                                  _confirmPasswordController
+                                                      .text;
 
-                                            _passwordFormKey.currentState?.reset();
+                                              _passwordFormKey.currentState
+                                                  ?.reset();
 
-                                            _currentPasswordController.text = currentText;
-                                            _newPasswordController.text = newText;
-                                            _confirmPasswordController.text = confirmText;
-                                          });
+                                              _currentPasswordController.text =
+                                                  currentText;
+                                              _newPasswordController.text =
+                                                  newText;
+                                              _confirmPasswordController.text =
+                                                  confirmText;
+                                            },
+                                          );
                                         }
                                       },
                                 style: ElevatedButton.styleFrom(

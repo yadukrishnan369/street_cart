@@ -13,6 +13,9 @@ import 'package:street_cart/features/customer/auth/domain/usecases/send_email_ve
 import 'package:street_cart/features/customer/auth/domain/usecases/check_email_verification.dart';
 import 'package:street_cart/features/customer/auth/domain/usecases/finalize_sign_up.dart';
 import 'package:street_cart/core/error/exceptions.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/customer/home/presentation/bloc/home_bloc.dart';
+import 'package:street_cart/features/customer/home/presentation/bloc/home_event.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -181,6 +184,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final isCompleted = await _getCustomerProfile(user.uid);
 
+      sl<HomeBloc>().add(ResetHome());
       emit(AuthSuccess(isNewUser: false, isProfileCompleted: isCompleted));
     } on ServerException catch (e) {
       emit(AuthError(e.message));
@@ -209,6 +213,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final isCompleted = await _getCustomerProfile(user.uid);
 
+      sl<HomeBloc>().add(ResetHome());
       emit(AuthSuccess(isNewUser: isNewUser, isProfileCompleted: isCompleted));
     } on ServerException catch (e) {
       emit(AuthError(e.message));
@@ -225,6 +230,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     try {
       await _logout();
+      sl<HomeBloc>().add(ResetHome());
       emit(AuthInitial());
     } on ServerException catch (e) {
       emit(AuthError(e.message));
@@ -306,6 +312,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       await _deleteAccount(event.password);
+      sl<HomeBloc>().add(ResetHome());
       emit(AuthAccountDeleted());
     } on ServerException catch (e) {
       emit(AuthError(e.message));

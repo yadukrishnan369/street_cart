@@ -45,12 +45,12 @@ class ShopProductsLoaded extends ShopProductsState {
 
   @override
   List<Object?> get props => [
-        allProducts,
-        filteredProducts,
-        searchQuery,
-        selectedCategories,
-        customConfig,
-      ];
+    allProducts,
+    filteredProducts,
+    searchQuery,
+    selectedCategories,
+    customConfig,
+  ];
 }
 
 class ShopProductsOperationSuccess extends ShopProductsState {
@@ -67,4 +67,24 @@ class ShopProductsError extends ShopProductsState {
 
   @override
   List<Object?> get props => [error];
+}
+
+class ShopProductCategoriesLoading extends ShopProductsState {}
+
+class ShopProductCategoriesLoaded extends ShopProductsState {
+  final List<String> categories;
+
+  const ShopProductCategoriesLoaded(this.categories);
+
+  @override
+  List<Object?> get props => [categories];
+}
+
+class ShopProductCategoriesError extends ShopProductsState {
+  final String message;
+
+  const ShopProductCategoriesError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

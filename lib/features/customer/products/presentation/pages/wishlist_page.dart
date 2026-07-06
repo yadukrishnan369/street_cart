@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/features/customer/products/presentation/widgets/shimmer/product_card_shimmer.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_event.dart';
@@ -97,11 +98,7 @@ class _WishlistPageState extends State<WishlistPage> {
       body: BlocBuilder<WishlistBloc, WishlistState>(
         builder: (context, state) {
           if (state is WishlistLoading) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: CustomerAppColors.primary,
-              ),
-            );
+            return const ProductCardShimmer(itemCount: 4);
           }
 
           if (state is WishlistError) {

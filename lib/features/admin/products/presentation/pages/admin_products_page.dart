@@ -8,8 +8,10 @@ import 'package:street_cart/features/admin/products/presentation/bloc/admin_prod
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_state.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/product_metric_cards.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/products_table_container.dart';
+import 'package:street_cart/features/admin/products/presentation/widgets/shimmer/admin_products_page_shimmer.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/admin/products/presentation/bloc/admin_products_ui_cubit.dart';
 
 class AdminProductsPage extends StatefulWidget {
   const AdminProductsPage({super.key});
@@ -19,7 +21,6 @@ class AdminProductsPage extends StatefulWidget {
 }
 
 class _AdminProductsPageState extends State<AdminProductsPage> {
-  int _currentPage = 1;
   static const int _perPage = 6;
   final TextEditingController _searchController = TextEditingController();
   final Debouncer _debouncer = Debouncer(milliseconds: 500);
@@ -34,14 +35,15 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AdminProductBloc>()
-        ..add(
-          LoadAdminProducts(
-            page: _currentPage,
-            limit: _perPage,
-          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              sl<AdminProductBloc>()
+                ..add(LoadAdminProducts(page: 1, limit: _perPage)),
         ),
+        BlocProvider(create: (_) => AdminProductsUiCubit()),
+      ],
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFC),
         body: SafeArea(
@@ -55,97 +57,99 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                 );
               }
             },
-            child: BlocBuilder<AdminProductBloc, AdminProductState>(
-              builder: (context, state) {
-                if (state is AdminProductLoaded) {
-                  _lastLoadedState = state;
-                }
+            child: BlocBuilder<AdminProductsUiCubit, AdminProductsUiState>(
+              builder: (context, uiState) {
+                return BlocBuilder<AdminProductBloc, AdminProductState>(
+                  builder: (context, state) {
+                    if (state is AdminProductLoaded) {
+                      _lastLoadedState = state;
+                    }
 
-                if (_lastLoadedState == null) {
-                  if (state is AdminProductError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Failed to load products:\n${state.message}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AdminAppColors.errorColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<AdminProductBloc>().add(
+                    if (_lastLoadedState == null) {
+                      if (state is AdminProductError) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Failed to load products:\n${state.message}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: AdminAppColors.errorColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 16.h),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<AdminProductBloc>().add(
                                     LoadAdminProducts(
-                                      page: _currentPage,
+                                      page: uiState.currentPage,
                                       limit: _perPage,
                                     ),
                                   );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AdminAppColors.primaryColor,
-                            ),
-                            child: const Text('Retry'),
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AdminAppColors.primaryColor,
+                                ),
+                                child: const Text('Retry'),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AdminAppColors.primaryColor,
-                    ),
-                  );
-                }
+                        );
+                      }
+                      return const AdminProductsPageShimmer();
+                    }
 
-                final loadedState = _lastLoadedState!;
-                final isLoading = state is AdminProductLoading;
+                    final loadedState = _lastLoadedState!;
+                    final isLoading = state is AdminProductLoading;
 
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isWide = constraints.maxWidth > 900;
-                    return SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isWide ? 40.w : 20.w,
-                        vertical: 32.h,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ProductMetricCards(
-                            totalProducts: loadedState.totalProducts,
-                            activeItems: loadedState.activeItems,
-                            outOfStock: loadedState.outOfStock,
-                            disabledItems: loadedState.disabledItems,
-                            isWide: isWide,
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWide = constraints.maxWidth > 900;
+                        return SingleChildScrollView(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isWide ? 40.w : 20.w,
+                            vertical: 32.h,
                           ),
-                          SizedBox(height: 32.h),
-                          ProductsTableContainer(
-                            state: loadedState,
-                            isWide: isWide,
-                            isLoading: isLoading,
-                            searchController: _searchController,
-                            debouncer: _debouncer,
-                            currentPage: _currentPage,
-                            perPage: _perPage,
-                            statusFilter: loadedState.statusFilter,
-                            categoryFilter: loadedState.categoryFilter,
-                            onPageChanged: (page) {
-                              setState(() => _currentPage = page);
-                              context.read<AdminProductBloc>().add(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ProductMetricCards(
+                                totalProducts: loadedState.totalProducts,
+                                activeItems: loadedState.activeItems,
+                                outOfStock: loadedState.outOfStock,
+                                disabledItems: loadedState.disabledItems,
+                                isWide: isWide,
+                              ),
+                              SizedBox(height: 32.h),
+                              ProductsTableContainer(
+                                state: loadedState,
+                                isWide: isWide,
+                                isLoading: isLoading,
+                                searchController: _searchController,
+                                debouncer: _debouncer,
+                                currentPage: uiState.currentPage,
+                                perPage: _perPage,
+                                statusFilter: loadedState.statusFilter,
+                                categoryFilter: loadedState.categoryFilter,
+                                onPageChanged: (page) {
+                                  context
+                                      .read<AdminProductsUiCubit>()
+                                      .changePage(page);
+                                  context.read<AdminProductBloc>().add(
                                     LoadAdminProducts(
                                       page: page,
                                       limit: _perPage,
                                     ),
                                   );
-                            },
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
                 );

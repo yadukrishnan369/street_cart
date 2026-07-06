@@ -19,6 +19,8 @@ class CustomerProductsLoaded extends CustomerProductsState {
   final String selectedSort;
   final RangeValues priceRange;
   final String? selectedRating;
+  final Set<String> selectedColors;
+  final Set<String> selectedSizes;
 
   CustomerProductsLoaded({
     required this.allProducts,
@@ -29,6 +31,8 @@ class CustomerProductsLoaded extends CustomerProductsState {
     required this.selectedSort,
     required this.priceRange,
     this.selectedRating,
+    this.selectedColors = const {},
+    this.selectedSizes = const {},
   });
 }
 

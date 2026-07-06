@@ -17,6 +17,7 @@ import 'package:street_cart/features/customer/profile/presentation/widgets/suppo
 import 'package:street_cart/features/customer/profile/presentation/widgets/about_section.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/logout_button.dart';
 import 'package:street_cart/features/customer/settings/presentation/pages/settings_page.dart';
+import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/profile_shimmer.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -85,7 +86,7 @@ class UserProfilePage extends StatelessWidget {
               body: BlocBuilder<ProfileBloc, ProfileState>(
                 builder: (context, state) {
                   if (state is ProfileLoading || state is ProfileInitial) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const ProfileShimmer();
                   } else if (state is ProfileError) {
                     return Center(child: Text(state.message));
                   } else if (state is ProfileLoaded ||

@@ -18,7 +18,7 @@ class ShopLoginHeader extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(20), // Replaced withOpacity(0.08) to avoid deprecation warning
+            color: Colors.black.withAlpha(20),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -28,10 +28,7 @@ class ShopLoginHeader extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.r),
           gradient: LinearGradient(
-            colors: [
-              Colors.black.withAlpha(102), // Replaced withOpacity(0.4) to avoid deprecation warning
-              Colors.transparent,
-            ],
+            colors: [Colors.black.withAlpha(102), Colors.transparent],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
           ),

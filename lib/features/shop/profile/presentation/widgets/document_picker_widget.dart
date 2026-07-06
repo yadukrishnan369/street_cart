@@ -25,7 +25,8 @@ class DocumentPickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasDocument = isPicked || (existingUrl != null && existingUrl!.isNotEmpty);
+    final hasDocument =
+        isPicked || (existingUrl != null && existingUrl!.isNotEmpty);
 
     return InkWell(
       onTap: onTap,
@@ -52,7 +53,9 @@ class DocumentPickerWidget extends StatelessWidget {
               ),
               child: Icon(
                 hasDocument ? Icons.check_circle : icon,
-                color: hasDocument ? ShopAppColors.primary : Colors.grey.shade600,
+                color: hasDocument
+                    ? ShopAppColors.primary
+                    : Colors.grey.shade600,
                 size: 24.sp,
               ),
             ),
@@ -62,10 +65,7 @@ class DocumentPickerWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    title,
-                    style: ShopAppTextStyles.bodyMediumBold,
-                  ),
+                  Text(title, style: ShopAppTextStyles.bodyMediumBold),
                   SizedBox(height: 2.h),
                   Text(
                     subtitle,
@@ -85,14 +85,16 @@ class DocumentPickerWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ]
+                  ],
                 ],
               ),
             ),
             Icon(
               hasDocument ? Icons.check_circle : Icons.add_circle_outline,
               size: 20.sp,
-              color: hasDocument ? ShopAppColors.primary : ShopAppColors.textTertiary,
+              color: hasDocument
+                  ? ShopAppColors.primary
+                  : ShopAppColors.textTertiary,
             ),
           ],
         ),

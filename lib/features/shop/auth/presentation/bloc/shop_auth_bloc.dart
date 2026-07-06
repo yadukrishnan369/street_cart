@@ -40,17 +40,17 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
     required CheckShopEmailVerification checkShopEmailVerification,
     required FinalizeShopSignUp finalizeShopSignUp,
     required DeleteShopAuthAccount deleteShopAuthAccount,
-  })  : _login = login,
-        _signUp = signUp,
-        _setupProfile = setupProfile,
-        _getStatus = getStatus,
-        _logout = logout,
-        _sendPasswordResetEmail = sendShopPasswordResetEmail,
-        _sendEmailVerification = sendShopEmailVerification,
-        _checkEmailVerification = checkShopEmailVerification,
-        _finalizeSignUp = finalizeShopSignUp,
-        _deleteAccount = deleteShopAuthAccount,
-        super(ShopAuthInitial()) {
+  }) : _login = login,
+       _signUp = signUp,
+       _setupProfile = setupProfile,
+       _getStatus = getStatus,
+       _logout = logout,
+       _sendPasswordResetEmail = sendShopPasswordResetEmail,
+       _sendEmailVerification = sendShopEmailVerification,
+       _checkEmailVerification = checkShopEmailVerification,
+       _finalizeSignUp = finalizeShopSignUp,
+       _deleteAccount = deleteShopAuthAccount,
+       super(ShopAuthInitial()) {
     on<ShopLoginStarted>(_onLogin);
     on<ShopSignupStarted>(_onSignup);
     on<ShopSetupProfileStarted>(_onSetupProfile);
@@ -62,7 +62,10 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
     on<ShopPasswordResetRequested>(_onPasswordResetRequested);
   }
 
-  Future<void> _onLogin(ShopLoginStarted event, Emitter<ShopAuthState> emit) async {
+  Future<void> _onLogin(
+    ShopLoginStarted event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     emit(ShopAuthLoading());
     try {
       await _login(email: event.email, password: event.password);
@@ -76,20 +79,22 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
     }
   }
 
-  Future<void> _onSignup(ShopSignupStarted event, Emitter<ShopAuthState> emit) async {
+  Future<void> _onSignup(
+    ShopSignupStarted event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     emit(ShopAuthLoading());
     try {
-      await _signUp(
-        email: event.email,
-        password: event.password,
-      );
+      await _signUp(email: event.email, password: event.password);
       // Trigger verification email immediately
       add(ShopSendEmailVerificationEvent());
-      emit(ShopAuthVerificationWaiting(
-        ownerName: event.ownerName,
-        shopName: event.shopName,
-        email: event.email,
-      ));
+      emit(
+        ShopAuthVerificationWaiting(
+          ownerName: event.ownerName,
+          shopName: event.shopName,
+          email: event.email,
+        ),
+      );
     } on ServerException catch (e) {
       emit(ShopAuthFailure(e.message));
     } on NetworkException catch (e) {
@@ -100,17 +105,21 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
   }
 
   Future<void> _onSendEmailVerification(
-      ShopSendEmailVerificationEvent event, Emitter<ShopAuthState> emit) async {
+    ShopSendEmailVerificationEvent event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     try {
       await _sendEmailVerification();
       if (state is ShopAuthVerificationWaiting) {
         final currentState = state as ShopAuthVerificationWaiting;
-        emit(ShopAuthVerificationWaiting(
-          ownerName: currentState.ownerName,
-          shopName: currentState.shopName,
-          email: currentState.email,
-          isResend: true,
-        ));
+        emit(
+          ShopAuthVerificationWaiting(
+            ownerName: currentState.ownerName,
+            shopName: currentState.shopName,
+            email: currentState.email,
+            isResend: true,
+          ),
+        );
       }
     } catch (e) {
       // Silent error for resend
@@ -118,7 +127,9 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
   }
 
   Future<void> _onCheckEmailVerificationStatus(
-      ShopCheckEmailVerificationStatusEvent event, Emitter<ShopAuthState> emit) async {
+    ShopCheckEmailVerificationStatusEvent event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     try {
       final isVerified = await _checkEmailVerification();
       if (isVerified) {
@@ -133,30 +144,38 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
       }
     } on ServerException catch (e) {
       emit(ShopAuthFailure(e.message));
-      emit(ShopAuthVerificationWaiting(
-        ownerName: event.ownerName,
-        shopName: event.shopName,
-        email: event.email,
-      ));
+      emit(
+        ShopAuthVerificationWaiting(
+          ownerName: event.ownerName,
+          shopName: event.shopName,
+          email: event.email,
+        ),
+      );
     } on NetworkException catch (e) {
       emit(ShopAuthFailure(e.message));
-      emit(ShopAuthVerificationWaiting(
-        ownerName: event.ownerName,
-        shopName: event.shopName,
-        email: event.email,
-      ));
+      emit(
+        ShopAuthVerificationWaiting(
+          ownerName: event.ownerName,
+          shopName: event.shopName,
+          email: event.email,
+        ),
+      );
     } catch (e) {
       emit(ShopAuthFailure("Verification check failed. Please try again."));
-      emit(ShopAuthVerificationWaiting(
-        ownerName: event.ownerName,
-        shopName: event.shopName,
-        email: event.email,
-      ));
+      emit(
+        ShopAuthVerificationWaiting(
+          ownerName: event.ownerName,
+          shopName: event.shopName,
+          email: event.email,
+        ),
+      );
     }
   }
 
   Future<void> _onVerificationCancelled(
-      ShopVerificationCancelledEvent event, Emitter<ShopAuthState> emit) async {
+    ShopVerificationCancelledEvent event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     try {
       await _deleteAccount(null);
       emit(ShopAuthInitial());
@@ -166,7 +185,9 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
   }
 
   Future<void> _onPasswordResetRequested(
-      ShopPasswordResetRequested event, Emitter<ShopAuthState> emit) async {
+    ShopPasswordResetRequested event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     emit(ShopAuthLoading());
     try {
       await _sendPasswordResetEmail(event.email);
@@ -176,11 +197,18 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
     } on NetworkException catch (e) {
       emit(ShopAuthFailure(e.message));
     } catch (e) {
-      emit(ShopAuthFailure("Failed to send password reset email. Please try again."));
+      emit(
+        ShopAuthFailure(
+          "Failed to send password reset email. Please try again.",
+        ),
+      );
     }
   }
 
-  Future<void> _onSetupProfile(ShopSetupProfileStarted event, Emitter<ShopAuthState> emit) async {
+  Future<void> _onSetupProfile(
+    ShopSetupProfileStarted event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     emit(ShopAuthLoading());
     try {
       await _setupProfile(
@@ -201,7 +229,9 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
   }
 
   Future<void> _onStatusSubscription(
-      ShopStatusSubscriptionRequested event, Emitter<ShopAuthState> emit) async {
+    ShopStatusSubscriptionRequested event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     await emit.forEach<ShopProfileModel?>(
       _getStatus(),
       onData: (shop) {
@@ -212,7 +242,8 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
         return ShopStatusLoaded(shop);
       },
       onError: (e, _) {
-        if (e.toString().contains('PERMISSION_DENIED') || e.toString().contains('permission-denied')) {
+        if (e.toString().contains('PERMISSION_DENIED') ||
+            e.toString().contains('permission-denied')) {
           add(ShopLogoutRequested());
           return ShopAuthInitial();
         }
@@ -221,9 +252,11 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
     );
   }
 
-  Future<void> _onLogout(ShopLogoutRequested event, Emitter<ShopAuthState> emit) async {
+  Future<void> _onLogout(
+    ShopLogoutRequested event,
+    Emitter<ShopAuthState> emit,
+  ) async {
     await _logout();
     emit(ShopAuthInitial());
   }
 }
-

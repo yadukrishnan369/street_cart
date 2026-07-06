@@ -5,22 +5,28 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
 class ProductDetailStats extends StatelessWidget {
   final int stockQuantity;
+  final int totalQuantity;
   final int salesCount;
 
   const ProductDetailStats({
     super.key,
     required this.stockQuantity,
+    required this.totalQuantity,
     required this.salesCount,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String stockText = stockQuantity != totalQuantity
+        ? '$stockQuantity / $totalQuantity units'
+        : '$stockQuantity units';
+
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
             'STOCK',
-            '$stockQuantity units',
+            stockText,
             stockQuantity > 0 ? ShopAppColors.success : ShopAppColors.error,
           ),
         ),

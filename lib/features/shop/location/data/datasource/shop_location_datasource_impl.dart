@@ -26,22 +26,30 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
     // Check if location services are enabled
     final isEnabled = await locationService.isServiceEnabled();
     if (!isEnabled) {
-      throw LocationException("Location services are disabled. Please enable GPS in your device settings.");
+      throw LocationException(
+        "Location services are disabled. Please enable GPS in your device settings.",
+      );
     }
 
     // Standardize permission request flow for maximum reliability
     LocationPermission permission = await locationService.checkPermission();
-    
+
     // If permission is permanently denied, we can't show the modal anymore
     if (permission == LocationPermission.deniedForever) {
-      throw LocationException("Location permissions are permanently denied. Please enable them in App Settings to proceed.");
+      throw LocationException(
+        "Location permissions are permanently denied. Please enable them in App Settings to proceed.",
+      );
     }
 
     // If permission is denied or not determined, request it
-    if (permission == LocationPermission.denied || permission == LocationPermission.unableToDetermine) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.unableToDetermine) {
       permission = await locationService.requestPermission();
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        throw LocationException("Location permission was denied. We need this to verify your shop's location.");
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw LocationException(
+          "Location permission was denied. We need this to verify your shop's location.",
+        );
       }
     }
 
@@ -57,7 +65,9 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
       success = true;
     } on LocationException catch (e, stack) {
       AppLogger.error(e.message, e, stack);
-      throw LocationException("We couldn't get a precise location. Please check your signal and try again.");
+      throw LocationException(
+        "We couldn't get a precise location. Please check your signal and try again.",
+      );
     }
 
     // Save to Firestore under shops collection
@@ -73,7 +83,10 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
 
         if (success) {
           try {
-            final placemarks = await placemarkFromCoordinates(latitude, longitude);
+            final placemarks = await placemarkFromCoordinates(
+              latitude,
+              longitude,
+            );
             if (placemarks.isNotEmpty) {
               final place = placemarks.first;
               city = place.locality ?? place.subLocality;
@@ -83,12 +96,24 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
 
               final addressParts = [
                 if (place.name != null && place.name!.isNotEmpty) place.name,
-                if (place.street != null && place.street!.isNotEmpty && place.street != place.name) place.street,
-                if (place.subLocality != null && place.subLocality!.isNotEmpty) place.subLocality,
-                if (place.locality != null && place.locality!.isNotEmpty && place.locality != place.subLocality) place.locality,
-                if (place.subAdministrativeArea != null && place.subAdministrativeArea!.isNotEmpty) place.subAdministrativeArea,
-                if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) place.administrativeArea,
-                if (place.postalCode != null && place.postalCode!.isNotEmpty) place.postalCode,
+                if (place.street != null &&
+                    place.street!.isNotEmpty &&
+                    place.street != place.name)
+                  place.street,
+                if (place.subLocality != null && place.subLocality!.isNotEmpty)
+                  place.subLocality,
+                if (place.locality != null &&
+                    place.locality!.isNotEmpty &&
+                    place.locality != place.subLocality)
+                  place.locality,
+                if (place.subAdministrativeArea != null &&
+                    place.subAdministrativeArea!.isNotEmpty)
+                  place.subAdministrativeArea,
+                if (place.administrativeArea != null &&
+                    place.administrativeArea!.isNotEmpty)
+                  place.administrativeArea,
+                if (place.postalCode != null && place.postalCode!.isNotEmpty)
+                  place.postalCode,
               ];
               fullAddress = addressParts.join(', ');
             }
@@ -99,10 +124,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
 
         final updateData = <String, dynamic>{
           'location_permission': true,
-          'location': {
-            'latitude': latitude,
-            'longitude': longitude,
-          },
+          'location': {'latitude': latitude, 'longitude': longitude},
           'location_updated_at': FieldValue.serverTimestamp(),
         };
 
@@ -122,16 +144,20 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
           updateData['full_address'] = fullAddress;
         }
 
-        await firebaseFirestore.collection('shops').doc(user.uid).update(updateData);
-        
+        await firebaseFirestore
+            .collection('shops')
+            .doc(user.uid)
+            .update(updateData);
+
         // SYNC PREFERENCE
         await sharedPreferences.setBool('shopLocationServices', true);
-        
       } catch (e) {
-        throw Exception('An error occurred while saving your location to your shop profile.');
+        throw Exception(
+          'An error occurred while saving your location to your shop profile.',
+        );
       }
     }
-    
+
     return success;
   }
 
@@ -145,10 +171,9 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
           'location_permission': false,
           'location_updated_at': FieldValue.serverTimestamp(),
         });
-        
+
         // SYNC PREFERENCE
         await sharedPreferences.setBool('shopLocationServices', false);
-        
       } catch (e) {
         throw Exception('An error occurred while updating shop location: $e');
       }

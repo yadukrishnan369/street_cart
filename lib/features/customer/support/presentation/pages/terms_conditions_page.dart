@@ -39,7 +39,7 @@ class TermsConditionsPage extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Last updated: October 24, 2023',
+              'Last updated: October 24, 2026',
               style: CustomerAppTextStyles.body.copyWith(
                 color: Colors.grey.shade500,
                 fontSize: 12.sp,

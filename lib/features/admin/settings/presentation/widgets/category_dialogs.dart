@@ -6,32 +6,28 @@ import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_bloc.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_event.dart';
-import 'package:street_cart/features/admin/settings/presentation/widgets/add_edit_category_dialog.dart';
+import 'package:street_cart/features/admin/settings/presentation/widgets/category_config_dialog.dart';
 
 class CategoryDialogs {
-  static List<String> _getExistingNames(AdminSettingsModel settings, bool isProductTab) {
-    final list = isProductTab ? settings.productCategories : settings.businessCategories;
-    return list.map((e) => e.name).toList();
-  }
-
   static void showAdd({
     required BuildContext context,
     required AdminSettingsModel settings,
-    required bool isProductTab,
+    required List<SizeGroupModel> allSizeGroups,
   }) {
     showDialog(
       context: context,
-      builder: (dialogCtx) => AddEditCategoryDialog(
-        title: 'Add New ${isProductTab ? "Product" : "Business"} Category',
+      builder: (dialogCtx) => CategoryConfigDialog(
+        title: 'Add Business Configuration',
         description:
-            'Create a new category for your streetcart catalog. Ensure the category name is unique, clear, and easy for shops/customers to browse.',
-        existingNames: _getExistingNames(settings, isProductTab),
-        onConfirm: (name) {
+            'Configure a business category name, link product categories, and select matching size standards.',
+        allSizeGroups: allSizeGroups,
+        onConfirm: (dialogCtx, name, productCats, sizeGrps) {
           showDialog(
             context: context,
             builder: (confirmCtx) => CustomAlertDialog(
-              title: 'Confirm Add Category',
-              content: 'Are you sure you want to add the category "$name"?',
+              title: 'Confirm Configuration',
+              content:
+                  'Are you sure you want to add this category configuration for "$name"?',
               secondaryActionLabel: 'Cancel',
               primaryActionLabel: 'Confirm',
               icon: Icons.add,
@@ -39,28 +35,22 @@ class CategoryDialogs {
               primaryActionColor: AdminAppColors.primaryColor,
               onPrimaryAction: () {
                 Navigator.pop(confirmCtx);
+                Navigator.pop(dialogCtx);
                 final newCategory = CategoryModel(
                   id: const Uuid().v4(),
                   name: name,
                   isVisible: true,
+                  productCategories: productCats,
+                  sizeGroups: sizeGrps,
                 );
 
-                final updatedProducts = List<CategoryModel>.from(
-                  settings.productCategories,
-                );
                 final updatedBusiness = List<CategoryModel>.from(
                   settings.businessCategories,
-                );
-
-                if (isProductTab) {
-                  updatedProducts.add(newCategory);
-                } else {
-                  updatedBusiness.add(newCategory);
-                }
+                )..add(newCategory);
 
                 context.read<AdminSettingsBloc>().add(
                   UpdateCategories(
-                    productCategories: updatedProducts,
+                    productCategories: settings.productCategories,
                     businessCategories: updatedBusiness,
                   ),
                 );
@@ -76,24 +66,23 @@ class CategoryDialogs {
     required BuildContext context,
     required AdminSettingsModel settings,
     required CategoryModel category,
+    required List<SizeGroupModel> allSizeGroups,
   }) {
-    // Edit can occur in either Product or Business tabs. Check which list it belongs to.
-    final isProductTab = settings.productCategories.any((e) => e.id == category.id);
     showDialog(
       context: context,
-      builder: (dialogCtx) => AddEditCategoryDialog(
-        title: 'Edit Category',
+      builder: (dialogCtx) => CategoryConfigDialog(
+        title: 'Edit Business Configuration',
         description:
-            'Update the category name. This change will immediately apply globally across all matching catalog listings.',
-        initialName: category.name,
-        existingNames: _getExistingNames(settings, isProductTab),
-        onConfirm: (name) {
+            'Update configuration details, add/remove sub product categories, and modify selected size groups.',
+        initialCategory: category,
+        allSizeGroups: allSizeGroups,
+        onConfirm: (dialogCtx, name, productCats, sizeGrps) {
           showDialog(
             context: context,
             builder: (confirmCtx) => CustomAlertDialog(
               title: 'Confirm Edit',
               content:
-                  'Are you sure you want to update the category name to "$name"?',
+                  'Are you sure you want to update configuration details for "$name"?',
               secondaryActionLabel: 'Cancel',
               primaryActionLabel: 'Confirm',
               icon: Icons.edit_outlined,
@@ -101,24 +90,22 @@ class CategoryDialogs {
               primaryActionColor: AdminAppColors.primaryColor,
               onPrimaryAction: () {
                 Navigator.pop(confirmCtx);
-
-                final updatedProducts = settings.productCategories.map((e) {
-                  if (e.id == category.id) {
-                    return e.copyWith(name: name);
-                  }
-                  return e;
-                }).toList();
+                Navigator.pop(dialogCtx);
 
                 final updatedBusiness = settings.businessCategories.map((e) {
                   if (e.id == category.id) {
-                    return e.copyWith(name: name);
+                    return e.copyWith(
+                      name: name,
+                      productCategories: productCats,
+                      sizeGroups: sizeGrps,
+                    );
                   }
                   return e;
                 }).toList();
 
                 context.read<AdminSettingsBloc>().add(
                   UpdateCategories(
-                    productCategories: updatedProducts,
+                    productCategories: settings.productCategories,
                     businessCategories: updatedBusiness,
                   ),
                 );
