@@ -94,6 +94,14 @@ import 'package:street_cart/features/customer/profile/domain/usecases/delete_add
 import 'package:street_cart/features/customer/profile/domain/usecases/set_default_address.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_bloc.dart';
+// CUSTOMER - PAYMENT
+import 'package:street_cart/core/services/razorpay_service.dart';
+import 'package:street_cart/features/customer/payment/data/datasources/payment_remote_datasource.dart';
+import 'package:street_cart/features/customer/payment/data/datasources/payment_remote_datasource_impl.dart';
+import 'package:street_cart/features/customer/payment/data/repositories/payment_repository_impl.dart';
+import 'package:street_cart/features/customer/payment/domain/repositories/i_payment_repository.dart';
+import 'package:street_cart/features/customer/payment/domain/usecases/place_customer_order.dart';
+import 'package:street_cart/features/customer/payment/presentation/bloc/payment_bloc.dart';
 
 // CUSTOMER - SETTINGS
 import 'package:street_cart/features/customer/settings/data/datasources/settings_local_datasource.dart';
@@ -312,6 +320,7 @@ Future<void> initDependencies() async {
   _initCustomerHome();
   _initCustomerProducts();
   _initCustomerCart();
+  _initCustomerPayment();
   _initCustomerShops();
   _initCustomerProfile();
   _initCustomerLocation();
@@ -733,6 +742,33 @@ void _initCustomerCart() {
   sl.registerFactory(
     () => CheckoutBloc(
       getShopById: sl(),
+    ),
+  );
+}
+
+// ================= CUSTOMER PAYMENT =================
+void _initCustomerPayment() {
+  // Service
+  sl.registerLazySingleton(() => RazorpayService());
+
+  // Datasource
+  sl.registerLazySingleton<IPaymentRemoteDataSource>(
+    () => PaymentRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<IPaymentRepository>(
+    () => PaymentRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use Case
+  sl.registerLazySingleton(() => PlaceCustomerOrder(repository: sl()));
+
+  // Bloc
+  sl.registerFactory(
+    () => PaymentBloc(
+      placeCustomerOrder: sl(),
+      razorpayService: sl(),
     ),
   );
 }
