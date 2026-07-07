@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/profile_page.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/customer_shops_page.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/cart_state.dart';
+import 'package:street_cart/features/customer/cart/presentation/pages/cart_page.dart';
+import 'package:street_cart/features/customer/cart/presentation/utils/cart_helper.dart';
 
 class CustomerBottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -32,26 +37,38 @@ class CustomerBottomNavigation extends StatelessWidget {
           icon: Stack(
             children: [
               const Icon(Icons.shopping_cart_outlined),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  padding: EdgeInsets.all(2.w),
-                  decoration: const BoxDecoration(
-                    color: CustomerAppColors.error,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: BoxConstraints(minWidth: 14.w, minHeight: 14.h),
-                  child: Text(
-                    '2',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 8.sp,
-                      fontWeight: FontWeight.bold,
+              BlocBuilder<CartBloc, CartState>(
+                builder: (context, state) {
+                  int count = 0;
+                  if (state is CartLoaded) {
+                    count = CartHelper.calculateTotalItems(state.items);
+                  }
+                  if (count == 0) return const SizedBox.shrink();
+                  return Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(2.w),
+                      decoration: const BoxDecoration(
+                        color: CustomerAppColors.error,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14.w,
+                        minHeight: 14.h,
+                      ),
+                      child: Text(
+                        '$count',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -91,6 +108,15 @@ class CustomerBottomNavigation extends StatelessWidget {
               ),
             );
             break;
+          case 2:
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => const CartPage(),
+                transitionDuration: Duration.zero,
+              ),
+            );
+            break;
           case 4:
             Navigator.pushReplacement(
               context,
@@ -101,7 +127,7 @@ class CustomerBottomNavigation extends StatelessWidget {
             );
             break;
           default:
-            // Placeholder for Cart, Orders
+            // Placeholder for Orders
             break;
         }
       },

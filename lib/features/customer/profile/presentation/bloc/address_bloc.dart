@@ -20,12 +20,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     required UpdateAddress updateAddress,
     required DeleteAddress deleteAddress,
     required SetDefaultAddress setDefaultAddress,
-  })  : _getAddresses = getAddresses,
-        _addAddress = addAddress,
-        _updateAddress = updateAddress,
-        _deleteAddress = deleteAddress,
-        _setDefaultAddress = setDefaultAddress,
-        super(AddressInitial()) {
+  }) : _getAddresses = getAddresses,
+       _addAddress = addAddress,
+       _updateAddress = updateAddress,
+       _deleteAddress = deleteAddress,
+       _setDefaultAddress = setDefaultAddress,
+       super(AddressInitial()) {
     on<FetchAddresses>(_onFetchAddresses);
     on<AddAddressEvent>(_onAddAddress);
     on<UpdateAddressEvent>(_onUpdateAddress);
@@ -34,8 +34,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   }
 
   Future<void> _onFetchAddresses(
-      FetchAddresses event, Emitter<AddressState> emit) async {
-    emit(AddressLoading());
+    FetchAddresses event,
+    Emitter<AddressState> emit,
+  ) async {
+    if (state is! AddressesLoaded) {
+      emit(AddressLoading());
+    }
     try {
       final addresses = await _getAddresses();
       emit(AddressesLoaded(addresses));
@@ -45,7 +49,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   }
 
   Future<void> _onAddAddress(
-      AddAddressEvent event, Emitter<AddressState> emit) async {
+    AddAddressEvent event,
+    Emitter<AddressState> emit,
+  ) async {
     emit(AddressActionLoading());
     try {
       await _addAddress(event.address);
@@ -57,7 +63,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   }
 
   Future<void> _onUpdateAddress(
-      UpdateAddressEvent event, Emitter<AddressState> emit) async {
+    UpdateAddressEvent event,
+    Emitter<AddressState> emit,
+  ) async {
     emit(AddressActionLoading());
     try {
       await _updateAddress(event.address.id, event.address);
@@ -69,7 +77,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   }
 
   Future<void> _onDeleteAddress(
-      DeleteAddressEvent event, Emitter<AddressState> emit) async {
+    DeleteAddressEvent event,
+    Emitter<AddressState> emit,
+  ) async {
     emit(AddressActionLoading());
     try {
       await _deleteAddress(event.id);
@@ -81,7 +91,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   }
 
   Future<void> _onToggleDefaultAddress(
-      ToggleDefaultAddressEvent event, Emitter<AddressState> emit) async {
+    ToggleDefaultAddressEvent event,
+    Emitter<AddressState> emit,
+  ) async {
     try {
       await _setDefaultAddress(event.id);
       add(FetchAddresses());

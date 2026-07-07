@@ -40,6 +40,21 @@ import 'package:street_cart/features/customer/home/domain/repositories/i_home_re
 import 'package:street_cart/features/customer/home/domain/usecases/get_home_data.dart';
 import 'package:street_cart/features/customer/home/presentation/bloc/home_bloc.dart';
 
+// CUSTOMER - CART
+import 'package:street_cart/features/customer/cart/data/datasources/cart_remote_datasource.dart';
+import 'package:street_cart/features/customer/cart/data/datasources/cart_remote_datasource_impl.dart';
+import 'package:street_cart/features/customer/cart/data/repositories/cart_repository_impl.dart';
+import 'package:street_cart/features/customer/cart/domain/repositories/i_cart_repository.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_cart.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/add_to_cart.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/remove_from_cart.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/update_cart_quantity.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/clear_cart.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_product_by_id.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_shop_by_id.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_bloc.dart';
+
 // CUSTOMER - PRODUCTS
 import 'package:street_cart/features/customer/products/data/datasources/customer_products_remote_datasource.dart';
 import 'package:street_cart/features/customer/products/data/datasources/customer_products_remote_datasource_impl.dart';
@@ -296,6 +311,7 @@ Future<void> initDependencies() async {
   _initCustomerAuth();
   _initCustomerHome();
   _initCustomerProducts();
+  _initCustomerCart();
   _initCustomerShops();
   _initCustomerProfile();
   _initCustomerLocation();
@@ -681,6 +697,42 @@ void _initCustomerProducts() {
       getWishlist: sl(),
       clearWishlist: sl(),
       auth: sl(),
+    ),
+  );
+}
+
+// ================= CUSTOMER CART =================
+void _initCustomerCart() {
+  sl.registerLazySingleton<ICartRemoteDataSource>(
+    () => CartRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+  );
+
+  sl.registerLazySingleton<ICartRepository>(
+    () => CartRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerLazySingleton(() => GetCart(repository: sl()));
+  sl.registerLazySingleton(() => AddToCart(repository: sl()));
+  sl.registerLazySingleton(() => RemoveFromCart(repository: sl()));
+  sl.registerLazySingleton(() => UpdateCartQuantity(repository: sl()));
+  sl.registerLazySingleton(() => ClearCart(repository: sl()));
+  sl.registerLazySingleton(() => GetProductById(repository: sl()));
+  sl.registerLazySingleton(() => GetShopById(repository: sl()));
+
+  sl.registerFactory(
+    () => CartBloc(
+      getCart: sl(),
+      addToCartUsecase: sl(),
+      removeFromCartUsecase: sl(),
+      updateCartQuantity: sl(),
+      clearCart: sl(),
+      auth: sl(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => CheckoutBloc(
+      getShopById: sl(),
     ),
   );
 }

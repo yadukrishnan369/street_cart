@@ -49,15 +49,12 @@ class PrimaryButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (prefixIcon != null) ...[
-                    prefixIcon!,
-                    8.horizontalSpace,
-                  ],
-                  Text(text, style: textStyle ?? CustomerAppTextStyles.buttonText),
-                  if (suffixIcon != null) ...[
-                    8.horizontalSpace,
-                    suffixIcon!,
-                  ],
+                  if (prefixIcon != null) ...[prefixIcon!, 8.horizontalSpace],
+                  Text(
+                    text,
+                    style: textStyle ?? CustomerAppTextStyles.buttonText,
+                  ),
+                  if (suffixIcon != null) ...[8.horizontalSpace, suffixIcon!],
                 ],
               ),
       ),
