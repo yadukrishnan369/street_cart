@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
@@ -79,7 +80,19 @@ class _CustomerProductsPageState extends State<CustomerProductsPage> {
               Icons.arrow_back,
               color: CustomerAppColors.textPrimary,
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const HomePage(),
+                    transitionDuration: Duration.zero,
+                  ),
+                );
+              }
+            },
           ),
           centerTitle: true,
           title: Text(

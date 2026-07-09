@@ -9,6 +9,7 @@ import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.d
 import 'package:street_cart/features/customer/cart/presentation/bloc/cart_state.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/cart_page.dart';
 import 'package:street_cart/features/customer/cart/presentation/utils/cart_helper.dart';
+import 'package:street_cart/features/customer/orders/presentation/pages/my_orders_page.dart';
 
 class CustomerBottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -117,6 +118,15 @@ class CustomerBottomNavigation extends StatelessWidget {
               ),
             );
             break;
+          case 3:
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => const MyOrdersPage(),
+                transitionDuration: Duration.zero,
+              ),
+            );
+            break;
           case 4:
             Navigator.pushReplacement(
               context,
@@ -127,7 +137,6 @@ class CustomerBottomNavigation extends StatelessWidget {
             );
             break;
           default:
-            // Placeholder for Orders
             break;
         }
       },

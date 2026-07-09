@@ -14,6 +14,7 @@ import 'package:street_cart/features/customer/shops/presentation/widgets/shops_e
 import 'package:street_cart/features/customer/shops/presentation/widgets/shimmer/shop_card_shimmer.dart';
 import 'package:street_cart/features/customer/shops/presentation/bloc/customer_shops_ui_cubit.dart';
 import 'package:street_cart/features/customer/shops/presentation/utils/shops_helper.dart';
+import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 
 class CustomerShopsPage extends StatefulWidget {
   const CustomerShopsPage({super.key});
@@ -47,7 +48,25 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
             appBar: AppBar(
               backgroundColor: CustomerAppColors.surface,
               elevation: 0,
-              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: CustomerAppColors.textPrimary,
+                ),
+                onPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pushReplacement(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const HomePage(),
+                        transitionDuration: Duration.zero,
+                      ),
+                    );
+                  }
+                },
+              ),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,

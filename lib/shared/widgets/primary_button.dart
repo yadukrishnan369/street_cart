@@ -11,6 +11,8 @@ class PrimaryButton extends StatelessWidget {
   final Widget? suffixIcon;
   final Color? backgroundColor;
   final TextStyle? textStyle;
+  final double? height;
+  final double? borderRadius;
 
   const PrimaryButton({
     super.key,
@@ -21,18 +23,20 @@ class PrimaryButton extends StatelessWidget {
     this.suffixIcon,
     this.backgroundColor,
     this.textStyle,
+    this.height,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56.h,
+      height: height ?? 56.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? CustomerAppColors.primary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: BorderRadius.circular(borderRadius ?? 16.r),
           ),
           elevation: 0,
         ),

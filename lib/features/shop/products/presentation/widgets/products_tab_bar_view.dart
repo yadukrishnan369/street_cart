@@ -30,16 +30,19 @@ class ProductsTabBarView extends StatelessWidget {
           products: allProducts,
           shopId: shopId,
           productsBloc: productsBloc,
+          tabIndex: 0,
         ),
         ShopProductListView(
           products: active,
           shopId: shopId,
           productsBloc: productsBloc,
+          tabIndex: 1,
         ),
         ShopProductListView(
           products: outOfStock,
           shopId: shopId,
           productsBloc: productsBloc,
+          tabIndex: 2,
         ),
       ],
     );

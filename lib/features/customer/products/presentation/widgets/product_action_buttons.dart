@@ -101,9 +101,10 @@ class ProductActionButtons extends StatelessWidget {
                               id: itemId,
                               productId: product.id,
                               productName: product.name,
-                              productImage: product.images.isNotEmpty
-                                  ? product.images.first
-                                  : '',
+                              productImage: (selectedColor != null)
+                                  ? product.imagesForColor(selectedColor).firstOrNull ??
+                                        (product.displayImages.firstOrNull ?? '')
+                                  : (product.displayImages.firstOrNull ?? ''),
                               price:
                                   (product.offerPrice ?? product.originalPrice)
                                       .toDouble(),

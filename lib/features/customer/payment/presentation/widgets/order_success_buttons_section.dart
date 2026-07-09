@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
+import 'package:street_cart/features/customer/orders/presentation/pages/my_orders_page.dart';
 
 class OrderSuccessButtonsSection extends StatelessWidget {
   const OrderSuccessButtonsSection({super.key});
@@ -20,6 +21,9 @@ class OrderSuccessButtonsSection extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => const HomePage()),
                 (route) => false,
               );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const MyOrdersPage()));
             },
             icon: Icon(
               Icons.local_shipping_outlined,

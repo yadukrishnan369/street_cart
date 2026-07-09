@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_image_carousel.dart';
@@ -12,10 +13,7 @@ import 'package:street_cart/features/customer/products/presentation/widgets/prod
 import 'package:street_cart/features/customer/products/presentation/widgets/product_color_selection.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_description_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_action_buttons.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_bloc.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_event.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/customer/products/presentation/widgets/product_wishlist_button.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/product_detail_ui_cubit.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/stock_status_badge.dart';
 
@@ -36,7 +34,8 @@ class CustomerProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProductDetailUiCubit()..init(product, initialColor, initialSize),
+      create: (context) =>
+          ProductDetailUiCubit()..init(product, initialColor, initialSize),
       child: BlocBuilder<ProductDetailUiCubit, ProductDetailUiState>(
         builder: (context, uiState) {
           final selectedColor = uiState.selectedColor;
@@ -55,8 +54,23 @@ class CustomerProductDetailPage extends StatelessWidget {
               backgroundColor: CustomerAppColors.surface,
               elevation: 0.5,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: CustomerAppColors.textPrimary),
-                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: CustomerAppColors.textPrimary,
+                ),
+                onPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pushReplacement(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const HomePage(),
+                        transitionDuration: Duration.zero,
+                      ),
+                    );
+                  }
+                },
               ),
               centerTitle: true,
               title: Text(
@@ -68,32 +82,11 @@ class CustomerProductDetailPage extends StatelessWidget {
                 ),
               ),
               actions: [
-                BlocBuilder<WishlistBloc, WishlistState>(
-                  builder: (context, wishlistState) {
-                    final isWishlisted = wishlistState is WishlistLoaded && wishlistState.isWishlisted(product.id);
-                    return IconButton(
-                      icon: Icon(
-                        isWishlisted ? Icons.favorite : Icons.favorite_border,
-                        color: isWishlisted ? Colors.red : CustomerAppColors.textPrimary,
-                      ),
-                      onPressed: () {
-                        if (isWishlisted) {
-                          context.read<WishlistBloc>().add(RemoveProductFromWishlist(productId: product.id));
-                          CustomSnackBar.show(context, message: 'Removed from wishlist');
-                        } else {
-                          context.read<WishlistBloc>().add(
-                                AddProductToWishlist(
-                                  product: product,
-                                  shop: shop,
-                                  selectedColor: selectedColor,
-                                  selectedSize: selectedSize,
-                                ),
-                              );
-                          CustomSnackBar.show(context, message: 'Added to wishlist');
-                        }
-                      },
-                    );
-                  },
+                ProductWishlistButton(
+                  product: product,
+                  shop: shop,
+                  selectedColor: selectedColor,
+                  selectedSize: selectedSize,
                 ),
               ],
             ),
@@ -107,14 +100,23 @@ class CustomerProductDetailPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ProductInfoSection(productName: product.name, shopName: shop.shopName),
+                        ProductInfoSection(
+                          productName: product.name,
+                          shopName: shop.shopName,
+                        ),
                         SizedBox(height: 12.h),
-                        ProductPricingSection(originalPrice: product.originalPrice, offerPrice: product.offerPrice),
+                        ProductPricingSection(
+                          originalPrice: product.originalPrice,
+                          offerPrice: product.offerPrice,
+                        ),
                         SizedBox(height: 20.h),
                         if (uiState.variantWarningMessage != null) ...[
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 12.h,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.red[50]!,
                               borderRadius: BorderRadius.circular(10.r),
@@ -122,7 +124,11 @@ class CustomerProductDetailPage extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.warning_amber_rounded, color: Colors.red[700]!, size: 20.sp),
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: Colors.red[700]!,
+                                  size: 20.sp,
+                                ),
                                 SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
@@ -146,7 +152,10 @@ class CustomerProductDetailPage extends StatelessWidget {
                             colors: product.allColors,
                             selectedColor: selectedColor,
                             onColorSelected: (color) {
-                              context.read<ProductDetailUiCubit>().selectColor(color, product);
+                              context.read<ProductDetailUiCubit>().selectColor(
+                                color,
+                                product,
+                              );
                             },
                           ),
                         if (product.allSizes.isNotEmpty)
@@ -156,16 +165,24 @@ class CustomerProductDetailPage extends StatelessWidget {
                             sizeStock: selectedColor != null
                                 ? {
                                     for (final size in product.allSizes)
-                                      size: product.stockForVariant(selectedColor, size),
+                                      size: product.stockForVariant(
+                                        selectedColor,
+                                        size,
+                                      ),
                                   }
                                 : {},
                             onSizeSelected: (size) {
-                              context.read<ProductDetailUiCubit>().selectSize(size);
+                              context.read<ProductDetailUiCubit>().selectSize(
+                                size,
+                              );
                             },
                           ),
-                        if (selectedColor != null && selectedSize != null) StockStatusBadge(qty: currentQty),
+                        if (selectedColor != null && selectedSize != null)
+                          StockStatusBadge(qty: currentQty),
                         SizedBox(height: 8.h),
-                        ProductDescriptionSection(description: product.description),
+                        ProductDescriptionSection(
+                          description: product.description,
+                        ),
                         SizedBox(height: 16.h),
                       ],
                     ),
@@ -173,7 +190,10 @@ class CustomerProductDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: ProductActionButtons(product: product, availableQty: currentQty),
+            bottomNavigationBar: ProductActionButtons(
+              product: product,
+              availableQty: currentQty,
+            ),
           );
         },
       ),

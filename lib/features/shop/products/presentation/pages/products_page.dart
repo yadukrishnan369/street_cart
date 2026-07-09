@@ -16,6 +16,7 @@ import 'package:street_cart/features/shop/products/presentation/utils/products_p
 import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/shimmer/shop_products_shimmer.dart';
+import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -83,7 +84,25 @@ class _ProductsPageState extends State<ProductsPage>
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 elevation: 0,
-                automaticallyImplyLeading: false,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: ShopAppColors.textPrimary,
+                  ),
+                  onPressed: () {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const ShopHomePage(),
+                          transitionDuration: Duration.zero,
+                        ),
+                      );
+                    }
+                  },
+                ),
                 title: uiState.isSearching
                     ? ProductSearchTextField(
                         controller: _searchController,

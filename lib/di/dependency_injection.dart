@@ -221,6 +221,24 @@ import 'package:street_cart/features/shop/products/domain/usecases/get_shop_prod
 import 'package:street_cart/features/shop/products/domain/usecases/save_shop_product_config.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 
+// SHOP - ORDERS
+import 'package:street_cart/features/shop/orders/data/datasources/i_shop_orders_remote_datasource.dart';
+import 'package:street_cart/features/shop/orders/data/datasources/shop_orders_remote_datasource.dart';
+import 'package:street_cart/features/shop/orders/data/repositories/shop_orders_repository_impl.dart';
+import 'package:street_cart/features/shop/orders/domain/repositories/i_shop_orders_repository.dart';
+import 'package:street_cart/features/shop/orders/domain/usecases/get_shop_orders.dart';
+import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_status.dart';
+import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
+
+// CUSTOMER - ORDERS
+import 'package:street_cart/features/customer/orders/data/datasources/i_orders_remote_datasource.dart';
+import 'package:street_cart/features/customer/orders/data/datasources/orders_remote_datasource.dart';
+import 'package:street_cart/features/customer/orders/data/repositories/orders_repository_impl.dart';
+import 'package:street_cart/features/customer/orders/domain/repositories/i_orders_repository.dart';
+import 'package:street_cart/features/customer/orders/domain/usecases/get_customer_orders.dart';
+import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
+
 // ADMIN
 import 'package:street_cart/features/admin/auth/data/datasource/admin_auth_remote_datasource.dart';
 import 'package:street_cart/features/admin/auth/data/datasource/admin_auth_remote_datasource_impl.dart';
@@ -321,6 +339,7 @@ Future<void> initDependencies() async {
   _initCustomerProducts();
   _initCustomerCart();
   _initCustomerPayment();
+  _initCustomerOrders();
   _initCustomerShops();
   _initCustomerProfile();
   _initCustomerLocation();
@@ -337,6 +356,7 @@ Future<void> initDependencies() async {
   await _initShopProfile();
   await _initShopSettings();
   await _initShopProducts();
+  _initShopOrders();
 
   // ADMIN
   _initAdminAuth();
@@ -739,11 +759,7 @@ void _initCustomerCart() {
     ),
   );
 
-  sl.registerFactory(
-    () => CheckoutBloc(
-      getShopById: sl(),
-    ),
-  );
+  sl.registerFactory(() => CheckoutBloc(getShopById: sl()));
 }
 
 // ================= CUSTOMER PAYMENT =================
@@ -766,10 +782,7 @@ void _initCustomerPayment() {
 
   // Bloc
   sl.registerFactory(
-    () => PaymentBloc(
-      placeCustomerOrder: sl(),
-      razorpayService: sl(),
-    ),
+    () => PaymentBloc(placeCustomerOrder: sl(), razorpayService: sl()),
   );
 }
 
@@ -787,10 +800,7 @@ void _initCustomerShops() {
   sl.registerLazySingleton(() => GetCustomerShopProducts(repository: sl()));
 
   sl.registerFactory(
-    () => CustomerShopsBloc(
-      getNearbyShops: sl(),
-      sharedPreferences: sl(),
-    ),
+    () => CustomerShopsBloc(getNearbyShops: sl(), sharedPreferences: sl()),
   );
   sl.registerFactory(() => ShopDetailsBloc(getShopProducts: sl()));
 }
@@ -1116,5 +1126,35 @@ void _initAdminProducts() {
       disableProduct: sl(),
       deleteProduct: sl(),
     ),
+  );
+}
+
+// ================= CUSTOMER ORDERS =================
+void _initCustomerOrders() {
+  sl.registerLazySingleton<IOrdersRemoteDataSource>(
+    () => OrdersRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+  );
+  sl.registerLazySingleton<IOrdersRepository>(
+    () => OrdersRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetCustomerOrders(sl()));
+  sl.registerLazySingleton(() => CancelOrder(sl()));
+  sl.registerFactory(
+    () => OrdersBloc(getCustomerOrders: sl(), cancelOrder: sl()),
+  );
+}
+
+// ================= SHOP ORDERS =================
+void _initShopOrders() {
+  sl.registerLazySingleton<IShopOrdersRemoteDataSource>(
+    () => ShopOrdersRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<IShopOrdersRepository>(
+    () => ShopOrdersRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetShopOrders(sl()));
+  sl.registerLazySingleton(() => UpdateShopOrderStatus(sl()));
+  sl.registerFactory(
+    () => ShopOrdersBloc(getShopOrders: sl(), updateShopOrderStatus: sl()),
   );
 }

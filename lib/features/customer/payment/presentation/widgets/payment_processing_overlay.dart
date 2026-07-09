@@ -63,7 +63,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
 
   void _startSuccessFlow(PaymentSuccess successState) {
     _flowStarted = true;
-    final bool isOnline = widget.paymentMethod.toLowerCase() != 'cod';
+    final bool isOnline =
+        widget.paymentMethod.toLowerCase() != 'cod' &&
+        widget.paymentMethod.toLowerCase() != 'cash on delivery';
 
     setState(() {
       _isLoading = false;
@@ -124,7 +126,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final bool isOnline = widget.paymentMethod.toLowerCase() != 'cod';
+    final bool isOnline =
+        widget.paymentMethod.toLowerCase() != 'cod' &&
+        widget.paymentMethod.toLowerCase() != 'cash on delivery';
 
     final String loadingTitle = isOnline
         ? 'Verifying payment...'

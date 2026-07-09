@@ -1,0 +1,257 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/core/utils/date_formatter.dart';
+import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
+import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
+
+class OrderDetailsItemsSection extends StatelessWidget {
+  final OrderModel order;
+
+  const OrderDetailsItemsSection({super.key, required this.order});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDelivered = order.status.toLowerCase() == 'delivered';
+
+    return Column(
+      children: order.items.map((item) {
+        return Container(
+          margin: EdgeInsets.only(bottom: 12.h),
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.02),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.r),
+                    child: CachedNetworkImage(
+                      imageUrl: item.productImage,
+                      width: 64.w,
+                      height: 64.w,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => ProductImagePlaceholder(
+                        width: 64.w,
+                        height: 64.w,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          ProductImagePlaceholder(
+                            width: 64.w,
+                            height: 64.w,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.productName,
+                          style: TextStyle(
+                            color: CustomerAppColors.textPrimary,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Size: ${item.selectedSize ?? "M"}  |  Color: ${item.selectedColor ?? "Default"}',
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Row(
+                          children: [
+                            Text(
+                              '₹${item.price.toStringAsFixed(0)}',
+                              style: TextStyle(
+                                color: CustomerAppColors.textPrimary,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              '₹${(item.price * 1.15).toStringAsFixed(0)}',
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 12.sp,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (isDelivered) ...[
+                SizedBox(height: 16.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Review for ${item.productName} clicked!',
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.star_border,
+                          size: 16.sp,
+                          color: CustomerAppColors.textPrimary,
+                        ),
+                        label: Text(
+                          'Write a Review',
+                          style: TextStyle(
+                            color: CustomerAppColors.textPrimary,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.grey[200]!),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                        ),
+                      ),
+                    ),
+                    if (OrdersHelper.isReturnEligible(order)) ...[
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Return requested for ${item.productName}',
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.reply,
+                            size: 16.sp,
+                            color: CustomerAppColors.textPrimary,
+                          ),
+                          label: Text(
+                            'Return Item',
+                            style: TextStyle(
+                              color: CustomerAppColors.textPrimary,
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.grey[200]!),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                if (OrdersHelper.isReturnEligible(order) &&
+                    order.deliveredAt != null) ...[
+                  SizedBox(height: 8.h),
+                  Center(
+                    child: Text(
+                      'Eligible for return until ${DateFormatter.formatToReadableDate(order.deliveredAt!.add(const Duration(days: 4)))}',
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 11.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+              if (OrdersHelper.isCancellable(
+                CustomerOrderStatus.fromString(order.status),
+              )) ...[
+                SizedBox(height: 16.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 38.h,
+                  child: OutlinedButton(
+                    onPressed: () => _showCancelDialog(context, order),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.grey[300]!),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Cancel Order',
+                      style: TextStyle(
+                        color: CustomerAppColors.textPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  void _showCancelDialog(BuildContext context, OrderModel currentOrder) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: const Text('Cancel Order'),
+        content: const Text('Are you sure you want to cancel this order?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogCtx),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogCtx);
+              context.read<OrdersBloc>().add(CancelOrderEvent(currentOrder.id));
+            },
+            child: const Text('Yes, Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+}
