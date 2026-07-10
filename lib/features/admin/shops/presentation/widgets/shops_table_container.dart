@@ -7,7 +7,7 @@ import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_bl
 import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_event.dart';
 import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_state.dart';
 import 'package:street_cart/features/admin/shops/presentation/widgets/shops_table.dart';
-import 'package:street_cart/features/admin/shops/presentation/widgets/shops_pagination.dart';
+import 'package:street_cart/shared/widgets/admin_pagination.dart';
 import 'package:street_cart/shared/widgets/custom_admin_search_bar.dart';
 
 class ShopsTableContainer extends StatelessWidget {
@@ -189,7 +189,7 @@ class ShopsTableContainer extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.storefront_outlined,
-                      color: const Color(0xFF8A8A9E),
+                      color: AdminAppColors.primaryColor,
                       size: 64.sp,
                     ),
                     SizedBox(height: 16.h),
@@ -198,7 +198,7 @@ class ShopsTableContainer extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF8A8A9E),
+                        color: AdminAppColors.primaryColor,
                       ),
                     ),
                   ],
@@ -213,11 +213,9 @@ class ShopsTableContainer extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // Pagination
-            ShopsPagination(
+            AdminPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,
-              perPage: perPage,
               onPageChanged: onPageChanged,
             ),
             SizedBox(height: 24.h),

@@ -8,7 +8,7 @@ import 'package:street_cart/features/admin/customers/presentation/bloc/admin_cus
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_event.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_state.dart';
 import 'customers_table.dart';
-import 'customers_pagination.dart';
+import 'package:street_cart/shared/widgets/admin_pagination.dart';
 
 class CustomersTableContainer extends StatelessWidget {
   final AdminCustomersLoaded state;
@@ -90,7 +90,7 @@ class CustomersTableContainer extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.people_outline,
-                      color: const Color(0xFF8A8A9E),
+                      color: AdminAppColors.primaryColor,
                       size: 64.sp,
                     ),
                     SizedBox(height: 16.h),
@@ -99,7 +99,7 @@ class CustomersTableContainer extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF8A8A9E),
+                        color: AdminAppColors.primaryColor,
                       ),
                     ),
                   ],
@@ -110,11 +110,9 @@ class CustomersTableContainer extends StatelessWidget {
             CustomersTable(customers: state.customers),
             SizedBox(height: 24.h),
 
-            // Pagination
-            CustomersPagination(
+            AdminPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,
-              perPage: perPage,
               onPageChanged: onPageChanged,
             ),
             SizedBox(height: 24.h),

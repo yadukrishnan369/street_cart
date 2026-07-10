@@ -78,9 +78,11 @@ class AdminCustomerDetailPage extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(width: 24.w),
-                                    const Expanded(
+                                    Expanded(
                                       flex: 5,
-                                      child: AdminCustomerStatsCard(),
+                                      child: AdminCustomerStatsCard(
+                                        orders: state.orders,
+                                      ),
                                     ),
                                   ],
                                 )
@@ -92,11 +94,13 @@ class AdminCustomerDetailPage extends StatelessWidget {
                                       addresses: addresses,
                                     ),
                                     SizedBox(height: 24.h),
-                                    const AdminCustomerStatsCard(),
+                                    AdminCustomerStatsCard(
+                                      orders: state.orders,
+                                    ),
                                   ],
                                 ),
                               SizedBox(height: 32.h),
-                              const AdminCustomerPastOrdersCard(),
+                              AdminCustomerPastOrdersCard(orders: state.orders),
                             ],
                           );
                         },

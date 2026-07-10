@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/features/admin/products/domain/repositories/admin_product_repository.dart';
 
 class ProductStatsRow extends StatelessWidget {
-  final ProductModel product;
+  final AdminProductItem productItem;
 
-  const ProductStatsRow({super.key, required this.product});
+  const ProductStatsRow({super.key, required this.productItem});
 
   @override
   Widget build(BuildContext context) {
-    final p = product;
+    final p = productItem.product;
     return Row(
       children: [
         Expanded(
@@ -51,7 +51,7 @@ class ProductStatsRow extends StatelessWidget {
         Expanded(
           child: _buildStatItemCard(
             label: 'ORDERS',
-            value: '122',
+            value: '${productItem.orderCount}',
             bg: Colors.white,
             labelColor: const Color(0xFF667085),
             valueColor: const Color(0xFF1D2939),

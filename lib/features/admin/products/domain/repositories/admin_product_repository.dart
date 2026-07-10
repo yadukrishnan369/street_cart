@@ -6,6 +6,7 @@ class AdminProductItem {
   final String shopLocation;
   final double commissionRate;
   final bool isShopSuspended;
+  final int orderCount;
 
   AdminProductItem({
     required this.product,
@@ -13,6 +14,7 @@ class AdminProductItem {
     required this.shopLocation,
     required this.commissionRate,
     this.isShopSuspended = false,
+    this.orderCount = 0,
   });
 }
 

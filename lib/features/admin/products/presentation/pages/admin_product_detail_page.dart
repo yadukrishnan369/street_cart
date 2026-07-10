@@ -13,9 +13,9 @@ import 'package:street_cart/features/admin/products/presentation/widgets/product
 import 'package:street_cart/features/admin/products/presentation/widgets/product_listing_details_card.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/product_shop_info_card.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/product_detail_header.dart';
-import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/shimmer/admin_product_detail_shimmer.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/admin/products/presentation/utils/admin_product_detail_helper.dart';
 
 class AdminProductDetailPage extends StatelessWidget {
   final String productId;
@@ -70,12 +70,17 @@ class AdminProductDetailPage extends StatelessWidget {
                           SizedBox(height: 24.h),
                           ProductDetailHeader(
                             product: p,
-                            onToggleDisable: () => _confirmDisable(
-                              context,
-                              p.id,
-                              !p.disabledByAdmin,
-                            ),
-                            onDelete: () => _confirmDelete(context, p.id),
+                            onToggleDisable: () =>
+                                AdminProductDetailHelper.confirmDisable(
+                                  context,
+                                  p.id,
+                                  !p.disabledByAdmin,
+                                ),
+                            onDelete: () =>
+                                AdminProductDetailHelper.confirmDelete(
+                                  context,
+                                  p.id,
+                                ),
                           ),
                           SizedBox(height: 32.h),
                           if (isWide) ...[
@@ -111,7 +116,7 @@ class AdminProductDetailPage extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: 750.w),
-                                child: ProductStatsRow(product: p),
+                                child: ProductStatsRow(productItem: item),
                               ),
                             ),
                             SizedBox(height: 32.h),
@@ -136,7 +141,7 @@ class AdminProductDetailPage extends StatelessWidget {
                               commissionRate: item.commissionRate,
                             ),
                             SizedBox(height: 32.h),
-                            ProductStatsRow(product: p),
+                            ProductStatsRow(productItem: item),
                             SizedBox(height: 32.h),
                             ProductDescriptionSection(product: p),
                           ],
@@ -181,83 +186,6 @@ class AdminProductDetailPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _confirmDisable(BuildContext context, String productId, bool disable) {
-    final bloc = context.read<AdminProductDetailBloc>();
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => ConfirmationModal(
-        title: disable ? 'Disable Product?' : 'Enable Product?',
-        content: disable
-            ? 'Are you sure you want to disable this product? This will product as disabled and prevent customers from purchasing it.'
-            : 'Are you sure you want to enable this product? Customers will be able to see and purchase it.',
-        confirmText: 'Continue',
-        confirmColor: disable
-            ? AdminAppColors.errorColor
-            : AdminAppColors.successColor,
-        onCancel: () => Navigator.pop(dialogCtx),
-        onConfirm: () {
-          Navigator.pop(dialogCtx);
-          showDialog(
-            context: context,
-            builder: (secondCtx) => ConfirmationModal(
-              title: 'Confirm to Disable',
-              content: disable
-                  ? 'Confirming again: Disable this item on all platforms?'
-                  : 'Confirming again: Make this item active on all platforms?',
-              confirmText: 'Yes, Confirm',
-              confirmColor: disable
-                  ? AdminAppColors.errorColor
-                  : AdminAppColors.successColor,
-              onCancel: () => Navigator.pop(secondCtx),
-              onConfirm: () {
-                Navigator.pop(secondCtx);
-                bloc.add(
-                  ToggleDisableProductRequested(
-                    productId: productId,
-                    disable: disable,
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context, String productId) {
-    final bloc = context.read<AdminProductDetailBloc>();
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => ConfirmationModal(
-        title: 'Delete Product?',
-        content:
-            'Are you sure you want to delete this product? This action is permanent and cannot be undone.',
-        confirmText: 'Continue',
-        confirmColor: AdminAppColors.errorColor,
-        onCancel: () => Navigator.pop(dialogCtx),
-        onConfirm: () {
-          Navigator.pop(dialogCtx);
-          showDialog(
-            context: context,
-            builder: (secondCtx) => ConfirmationModal(
-              title: 'Confirm to Delete',
-              content:
-                  'Confirming again: Delete this product permanently from Shop account?',
-              confirmText: 'Yes, Delete',
-              confirmColor: AdminAppColors.errorColor,
-              onCancel: () => Navigator.pop(secondCtx),
-              onConfirm: () {
-                Navigator.pop(secondCtx);
-                bloc.add(DeleteProductRequested(productId));
-              },
-            ),
-          );
-        },
       ),
     );
   }

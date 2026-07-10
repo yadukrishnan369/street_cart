@@ -7,7 +7,7 @@ import 'package:street_cart/features/admin/products/presentation/bloc/admin_prod
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_event.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_state.dart';
 import 'package:street_cart/features/admin/products/presentation/widgets/products_table.dart';
-import 'package:street_cart/features/admin/shops/presentation/widgets/shops_pagination.dart';
+import 'package:street_cart/shared/widgets/admin_pagination.dart';
 import 'package:street_cart/shared/widgets/custom_admin_search_bar.dart';
 
 class ProductsTableContainer extends StatelessWidget {
@@ -216,11 +216,9 @@ class ProductsTableContainer extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // Pagination reuse from ShopsPagination in shop table
-            ShopsPagination(
+            AdminPagination(
               currentPage: currentPage,
               totalPages: (state.totalMatchingCount / perPage).ceil(),
-              perPage: perPage,
               onPageChanged: onPageChanged,
             ),
             SizedBox(height: 24.h),

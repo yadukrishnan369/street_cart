@@ -69,6 +69,7 @@ class AdminProfilePage extends StatelessWidget {
                             SizedBox(height: 24.h),
                             AdminProfileMetrics(
                               approvedShopsCount: profile.approvedShopsCount,
+                              ordersTrackedCount: profile.ordersTrackedCount,
                             ),
                           ];
 

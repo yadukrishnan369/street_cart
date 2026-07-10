@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
-import 'package:street_cart/features/admin/shops/presentation/widgets/shops_pagination.dart';
+import 'package:street_cart/shared/widgets/admin_pagination.dart';
 
 class AdminShopProductsCard extends StatefulWidget {
   final List<ProductModel> products;
@@ -240,10 +240,9 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
             ),
             if (totalPages >= 1) ...[
               SizedBox(height: 24.h),
-              ShopsPagination(
+              AdminPagination(
                 currentPage: _currentPage,
                 totalPages: totalPages,
-                perPage: _itemsPerPage,
                 onPageChanged: (page) {
                   setState(() {
                     _currentPage = page;
@@ -300,7 +299,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
         ),
       ),
       children: [
-        // Product name + thumbnail
+        // Product name + Image
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
           child: Row(

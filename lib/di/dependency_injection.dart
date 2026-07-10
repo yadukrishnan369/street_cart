@@ -328,6 +328,14 @@ import 'package:street_cart/features/admin/products/domain/usecases/admin_delete
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_bloc.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_detail_bloc.dart';
 
+// ADMIN - ORDERS
+import 'package:street_cart/features/admin/orders/data/datasources/i_admin_orders_remote_datasource.dart';
+import 'package:street_cart/features/admin/orders/data/datasources/admin_orders_remote_datasource_impl.dart';
+import 'package:street_cart/features/admin/orders/domain/repositories/i_admin_orders_repository.dart';
+import 'package:street_cart/features/admin/orders/data/repositories/admin_orders_repository_impl.dart';
+import 'package:street_cart/features/admin/orders/domain/usecases/get_admin_orders.dart';
+import 'package:street_cart/features/admin/orders/presentation/bloc/admin_orders_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -367,6 +375,7 @@ Future<void> initDependencies() async {
   _initAdminShop();
   _initAdminCustomers();
   _initAdminProducts();
+  _initAdminOrders();
 }
 
 // ================= SHOP SPLASH =================
@@ -1157,4 +1166,16 @@ void _initShopOrders() {
   sl.registerFactory(
     () => ShopOrdersBloc(getShopOrders: sl(), updateShopOrderStatus: sl()),
   );
+}
+
+// ================= ADMIN ORDERS =================
+void _initAdminOrders() {
+  sl.registerLazySingleton<IAdminOrdersRemoteDataSource>(
+    () => AdminOrdersRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<IAdminOrdersRepository>(
+    () => AdminOrdersRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetAdminOrders(sl()));
+  sl.registerFactory(() => AdminOrdersBloc(getAdminOrders: sl()));
 }

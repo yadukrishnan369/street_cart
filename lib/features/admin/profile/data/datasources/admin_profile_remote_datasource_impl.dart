@@ -3,15 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/features/admin/profile/data/models/admin_profile_model.dart';
 import 'admin_profile_remote_datasource.dart';
 
-class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource {
+class AdminProfileRemoteDataSourceImpl
+    implements IAdminProfileRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
 
   AdminProfileRemoteDataSourceImpl({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  })  : _auth = auth,
-        _firestore = firestore;
+  }) : _auth = auth,
+       _firestore = firestore;
 
   @override
   Future<AdminProfileModel> getProfileData() async {
@@ -33,7 +34,7 @@ class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource 
       final data = userDoc.data()!;
       fullName = data['full_name'] ?? data['fullName'] ?? data['name'] ?? '';
       role = data['role'] ?? 'Super Admin';
-      
+
       final prevLoginTimestamp = data['last_login_previous'] as Timestamp?;
       if (prevLoginTimestamp != null) {
         lastLogin = prevLoginTimestamp.toDate();
@@ -89,7 +90,7 @@ class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource 
       role = role.substring(0, 1).toUpperCase() + role.substring(1);
     }
 
-    // Fallback to FirebaseAuth metadata for lastLogin if still null
+    // Fallback to lastLogin if still null
     lastLogin ??= user.metadata.lastSignInTime;
 
     // Count approved shops
@@ -99,6 +100,10 @@ class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource 
         .get();
     final approvedCount = approvedShopsSnap.docs.length;
 
+    // Count tracked orders
+    final ordersSnap = await _firestore.collection('orders').get();
+    final ordersCount = ordersSnap.docs.length;
+
     return AdminProfileModel(
       uid: uid,
       fullName: fullName,
@@ -107,6 +112,7 @@ class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource 
       lastLogin: lastLogin,
       lastLogout: lastLogout,
       approvedShopsCount: approvedCount,
+      ordersTrackedCount: ordersCount,
     );
   }
 
@@ -123,9 +129,7 @@ class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource 
     final userDocRef = _firestore.collection('users').doc(uid);
     final userDoc = await userDocRef.get();
     if (userDoc.exists) {
-      await userDocRef.update({
-        'full_name': fullName,
-      });
+      await userDocRef.update({'full_name': fullName});
       return;
     }
 
@@ -133,9 +137,7 @@ class AdminProfileRemoteDataSourceImpl implements IAdminProfileRemoteDataSource 
     final adminDocRef = _firestore.collection('admins').doc(uid);
     final adminDoc = await adminDocRef.get();
     if (adminDoc.exists) {
-      await adminDocRef.update({
-        'full_name': fullName,
-      });
+      await adminDocRef.update({'full_name': fullName});
       return;
     }
 

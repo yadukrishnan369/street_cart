@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
-import '../models/customer_model.dart';
+import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
 
 abstract class IAdminCustomerRemoteDataSource {
   Future<List<CustomerModel>> getAllCustomers();
@@ -10,18 +10,35 @@ abstract class IAdminCustomerRemoteDataSource {
   Future<void> deleteCustomer(String uid);
 }
 
-class AdminCustomerRemoteDataSourceImpl implements IAdminCustomerRemoteDataSource {
+class AdminCustomerRemoteDataSourceImpl
+    implements IAdminCustomerRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   AdminCustomerRemoteDataSourceImpl({required FirebaseFirestore firestore})
-      : _firestore = firestore;
+    : _firestore = firestore;
 
   @override
   Future<List<CustomerModel>> getAllCustomers() async {
     try {
-      final snap = await _firestore.collection('customers').get();
-      return snap.docs.map((doc) {
-        return CustomerModel.fromMap(doc.data(), doc.id);
+      final customersSnap = await _firestore.collection('customers').get();
+      final ordersSnap = await _firestore.collection('orders').get();
+
+      // Count orders per customer_id
+      final Map<String, int> orderCounts = {};
+      for (final orderDoc in ordersSnap.docs) {
+        final customerId = orderDoc.data()['customer_id'] as String?;
+        if (customerId != null) {
+          orderCounts[customerId] = (orderCounts[customerId] ?? 0) + 1;
+        }
+      }
+
+      return customersSnap.docs.map((doc) {
+        final data = doc.data();
+        final totalOrders = orderCounts[doc.id] ?? 0;
+        return CustomerModel.fromMap({
+          ...data,
+          'total_orders': totalOrders,
+        }, doc.id);
       }).toList();
     } catch (e) {
       throw Exception('Failed to fetch customers: $e');
@@ -46,7 +63,18 @@ class AdminCustomerRemoteDataSourceImpl implements IAdminCustomerRemoteDataSourc
       if (!doc.exists || doc.data() == null) {
         throw Exception('Customer not found');
       }
-      return CustomerModel.fromMap(doc.data()!, doc.id);
+
+      // order count matching this customer_id
+      final ordersSnap = await _firestore
+          .collection('orders')
+          .where('customer_id', isEqualTo: uid)
+          .get();
+
+      final data = doc.data()!;
+      return CustomerModel.fromMap({
+        ...data,
+        'total_orders': ordersSnap.docs.length,
+      }, doc.id);
     } catch (e) {
       throw Exception('Failed to fetch customer by ID: $e');
     }
@@ -71,7 +99,7 @@ class AdminCustomerRemoteDataSourceImpl implements IAdminCustomerRemoteDataSourc
   @override
   Future<void> deleteCustomer(String uid) async {
     try {
-      // Fetch all address documents under the customer's addresses subcollection
+      // Fetch all address documents under the customers addresses
       final addressesSnap = await _firestore
           .collection('customers')
           .doc(uid)

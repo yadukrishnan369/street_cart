@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class AdminCustomerStatsCard extends StatelessWidget {
-  const AdminCustomerStatsCard({super.key});
+  final List<OrderModel> orders;
+
+  const AdminCustomerStatsCard({super.key, required this.orders});
 
   @override
   Widget build(BuildContext context) {
+    // Total spent amount
+    double totalSpent = 0.0;
+    for (final order in orders) {
+      if (order.status.toLowerCase() != 'cancelled') {
+        totalSpent += order.totalAmount;
+      }
+    }
+
+    // Returns count
+    final returnsCount = orders
+        .where((o) => o.status.toLowerCase() == 'cancelled')
+        .length;
+
+    // Total orders count
+    final totalOrders = orders.length;
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -37,7 +56,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
           ),
           Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
 
-          // Total Spent Box
+          // Total Spent
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(12.w),
@@ -58,7 +77,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  '₹1,452.80',
+                  '₹${PriceUtils.formatPrice(totalSpent)}',
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
@@ -93,7 +112,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        '2',
+                        '$returnsCount',
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w800,
@@ -106,7 +125,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
               ),
               SizedBox(width: 16.w),
 
-              // Total Orders Box
+              // Total Orders
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(16.w),
@@ -127,7 +146,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        '24',
+                        '$totalOrders',
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w800,

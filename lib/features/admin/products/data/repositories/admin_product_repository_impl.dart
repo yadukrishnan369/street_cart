@@ -21,7 +21,9 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     final allShops = await _remoteDataSource.getAllShops();
 
     final existingShopIds = allShops.map((s) => s.uid).toSet();
-    final allProducts = allProductsRaw.where((p) => existingShopIds.contains(p.shopId)).toList();
+    final allProducts = allProductsRaw
+        .where((p) => existingShopIds.contains(p.shopId))
+        .toList();
 
     final shopNameMap = {for (var shop in allShops) shop.uid: shop.shopName};
     final shopLocationMap = {
@@ -151,12 +153,14 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     final shopLoc = shopLocationMap[product.shopId] ?? 'Unknown Location';
     final isShopSuspended = shopSuspendedMap[product.shopId] ?? false;
     final commissionRate = await _remoteDataSource.getPlatformCommission();
+    final orderCount = await _remoteDataSource.getProductOrderCount(productId);
     return AdminProductItem(
       product: product,
       shopName: shopName,
       shopLocation: shopLoc,
       commissionRate: commissionRate,
       isShopSuspended: isShopSuspended,
+      orderCount: orderCount,
     );
   }
 

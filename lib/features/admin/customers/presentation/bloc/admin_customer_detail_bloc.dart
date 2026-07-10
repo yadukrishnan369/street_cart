@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/get_admin_customer_details.dart';
-import '../../domain/usecases/toggle_customer_status.dart';
-import '../../domain/usecases/delete_customer.dart';
+import 'package:street_cart/features/admin/customers/domain/usecases/get_admin_customer_details.dart';
+import 'package:street_cart/features/admin/customers/domain/usecases/toggle_customer_status.dart';
+import 'package:street_cart/features/admin/customers/domain/usecases/delete_customer.dart';
 import 'admin_customer_detail_event.dart';
 import 'admin_customer_detail_state.dart';
 
@@ -15,10 +15,10 @@ class AdminCustomerDetailBloc
     required GetAdminCustomerDetails getCustomerDetails,
     required ToggleCustomerBlockStatus toggleBlockStatus,
     required DeleteCustomer deleteCustomer,
-  })  : _getCustomerDetails = getCustomerDetails,
-        _toggleBlockStatus = toggleBlockStatus,
-        _deleteCustomer = deleteCustomer,
-        super(AdminCustomerDetailInitial()) {
+  }) : _getCustomerDetails = getCustomerDetails,
+       _toggleBlockStatus = toggleBlockStatus,
+       _deleteCustomer = deleteCustomer,
+       super(AdminCustomerDetailInitial()) {
     on<LoadCustomerDetailRequested>(_onLoadCustomerDetail);
     on<ToggleBlockStatusRequested>(_onToggleBlockStatus);
     on<DeleteCustomerRequested>(_onDeleteCustomer);
@@ -31,10 +31,13 @@ class AdminCustomerDetailBloc
     emit(AdminCustomerDetailLoading());
     try {
       final response = await _getCustomerDetails(event.uid);
-      emit(AdminCustomerDetailLoaded(
-        customer: response.customer,
-        addresses: response.addresses,
-      ));
+      emit(
+        AdminCustomerDetailLoaded(
+          customer: response.customer,
+          addresses: response.addresses,
+          orders: response.orders,
+        ),
+      );
     } catch (e) {
       emit(AdminCustomerDetailError(e.toString()));
     }
@@ -52,17 +55,22 @@ class AdminCustomerDetailBloc
           isBlocked: event.isBlocked,
         ),
       );
-      emit(AdminCustomerDetailActionSuccess(
-        event.isBlocked
-            ? 'Customer blocked successfully'
-            : 'Customer unblocked successfully',
-      ));
+      emit(
+        AdminCustomerDetailActionSuccess(
+          event.isBlocked
+              ? 'Customer blocked successfully'
+              : 'Customer unblocked successfully',
+        ),
+      );
       // Reload
       final response = await _getCustomerDetails(event.uid);
-      emit(AdminCustomerDetailLoaded(
-        customer: response.customer,
-        addresses: response.addresses,
-      ));
+      emit(
+        AdminCustomerDetailLoaded(
+          customer: response.customer,
+          addresses: response.addresses,
+          orders: response.orders,
+        ),
+      );
     } catch (e) {
       emit(AdminCustomerDetailError(e.toString()));
     }

@@ -27,19 +27,26 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
       throw Exception('User is not logged in');
     }
 
-    final orderRef = _firestore.collection('orders').doc();
+    // Group items - Each shop gets its own separate order
+    final Map<String, List<CartItem>> itemsByShop = {};
+    for (final item in items) {
+      itemsByShop.putIfAbsent(item.shopId, () => []).add(item);
+    }
+
+    // create a DocumentReference per shop
+    final Map<String, DocumentReference> orderRefs = {
+      for (final shopId in itemsByShop.keys)
+        shopId: _firestore.collection('orders').doc(),
+    };
 
     await _firestore.runTransaction((transaction) async {
-      // Fetch product document
+      // Fetch all product snapshots
       final Map<String, DocumentSnapshot<Map<String, dynamic>>>
       productSnapshots = {};
       for (final item in items) {
         if (!productSnapshots.containsKey(item.productId)) {
-          final productDocRef = _firestore
-              .collection('products')
-              .doc(item.productId);
-          final productDoc = await transaction.get(productDocRef);
-          productSnapshots[item.productId] = productDoc;
+          final ref = _firestore.collection('products').doc(item.productId);
+          productSnapshots[item.productId] = await transaction.get(ref);
         }
       }
 
@@ -51,26 +58,24 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
             .doc(user.uid)
             .collection('cart')
             .doc(item.id);
-        final cartDocSnapshot = await transaction.get(cartDocRef);
-        cartDocExists[item.id] = cartDocSnapshot.exists;
+        final snap = await transaction.get(cartDocRef);
+        cartDocExists[item.id] = snap.exists;
       }
 
       // Fetch admin commission percentage
-      final configSettingsRef = _firestore.collection('config').doc('settings');
-      final configSettingsDoc = await transaction.get(configSettingsRef);
+      final configRef = _firestore.collection('config').doc('settings');
+      final configDoc = await transaction.get(configRef);
       double commissionPercentage = 2.0; // Default fallback
-      if (configSettingsDoc.exists) {
-        final configData = configSettingsDoc.data();
-        if (configData != null &&
-            configData.containsKey('commission_percentage')) {
-          commissionPercentage = (configData['commission_percentage'] as num)
+      if (configDoc.exists) {
+        final data = configDoc.data();
+        if (data != null && data.containsKey('commission_percentage')) {
+          commissionPercentage = (data['commission_percentage'] as num)
               .toDouble();
         }
       }
       final double commissionRate = commissionPercentage / 100.0;
 
-      // VALIDATIONS
-      // Process and update stock
+      // Validate stock & deduct for ALL items
       for (final item in items) {
         final productDoc = productSnapshots[item.productId]!;
         if (!productDoc.exists) {
@@ -86,12 +91,10 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
           if (currentStock < item.quantity) {
             throw Exception('Insufficient stock for ${item.productName}.');
           }
-          // Deduct stock
           transaction.update(productDoc.reference, {
             'stockQuantity': currentStock - item.quantity,
           });
         } else {
-          // Find matching variant
           final List<Map<String, dynamic>> variants = variantsRaw
               .map((v) => Map<String, dynamic>.from(v as Map))
               .toList();
@@ -108,10 +111,10 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
                   (sizes[item.selectedSize] as num?)?.toInt() ?? 0;
               if (currentStock < item.quantity) {
                 throw Exception(
-                  'Insufficient stock for ${item.productName} (${item.selectedColor}/${item.selectedSize}).',
+                  'Insufficient stock for ${item.productName}'
+                  ' (${item.selectedColor}/${item.selectedSize}).',
                 );
               }
-              // Deduct stock
               sizes[item.selectedSize!] = currentStock - item.quantity;
               variant['sizes'] = sizes;
               variant['total_stock'] = sizes.values.fold(
@@ -119,6 +122,7 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
                 (acc, qty) => acc + (qty as num).toInt(),
               );
               transaction.update(productDoc.reference, {'variants': variants});
+              break;
             }
           }
           if (!foundVariant) {
@@ -129,7 +133,7 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
         }
       }
 
-      // Clear items from customer cart
+      // Delete cart items for ALL items
       for (final item in items) {
         if (cartDocExists[item.id] == true) {
           final cartDocRef = _firestore
@@ -141,51 +145,59 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
         }
       }
 
-      // Create Order Document
-      double totalAdminCommission = 0.0;
-      final Map<String, double> calculatedShopEarnings = {};
+      // Create ONE order document PER SHOP
+      for (final entry in itemsByShop.entries) {
+        final shopId = entry.key;
+        final shopItems = entry.value;
+        final orderRef = orderRefs[shopId]!;
 
-      final itemsData = items.map((item) {
-        final itemTotal = item.price * item.quantity;
-        final itemCommission = itemTotal * commissionRate;
-        final itemEarnings = itemTotal - itemCommission;
+        double shopSubtotal = 0.0;
+        double shopCommission = 0.0;
+        double shopVendorEarnings = 0.0;
 
-        totalAdminCommission += itemCommission;
-        calculatedShopEarnings[item.shopId] =
-            (calculatedShopEarnings[item.shopId] ?? 0.0) + itemEarnings;
+        final itemsData = shopItems.map((item) {
+          final itemTotal = item.price * item.quantity;
+          final itemCommission = itemTotal * commissionRate;
+          final itemEarnings = itemTotal - itemCommission;
 
-        return {
-          'id': item.id,
-          'product_id': item.productId,
-          'product_name': item.productName,
-          'product_image': item.productImage,
-          'selected_size': item.selectedSize,
-          'selected_color': item.selectedColor,
-          'price': item.price,
-          'quantity': item.quantity,
-          'shop_id': item.shopId,
-          'admin_commission': itemCommission,
-          'vendor_earnings': itemEarnings,
+          shopSubtotal += itemTotal;
+          shopCommission += itemCommission;
+          shopVendorEarnings += itemEarnings;
+
+          return {
+            'id': item.id,
+            'product_id': item.productId,
+            'product_name': item.productName,
+            'product_image': item.productImage,
+            'selected_size': item.selectedSize,
+            'selected_color': item.selectedColor,
+            'price': item.price,
+            'quantity': item.quantity,
+            'shop_id': shopId,
+            'admin_commission': itemCommission,
+            'vendor_earnings': itemEarnings,
+          };
+        }).toList();
+
+        final orderData = {
+          'id': orderRef.id,
+          'customer_id': user.uid,
+          'items': itemsData,
+          'delivery_address': address.toMap(),
+          'payment_method': paymentMethod,
+          'payment_status': paymentStatus,
+          'total_amount': shopSubtotal,
+          'admin_commission': shopCommission,
+          'shop_earnings': {shopId: shopVendorEarnings},
+          'status': 'pending',
+          'created_at': FieldValue.serverTimestamp(),
         };
-      }).toList();
 
-      final orderData = {
-        'id': orderRef.id,
-        'customer_id': user.uid,
-        'items': itemsData,
-        'delivery_address': address.toMap(),
-        'payment_method': paymentMethod,
-        'payment_status': paymentStatus,
-        'total_amount': totalAmount,
-        'admin_commission': totalAdminCommission,
-        'shop_earnings': calculatedShopEarnings,
-        'status': 'pending',
-        'created_at': FieldValue.serverTimestamp(),
-      };
-
-      transaction.set(orderRef, orderData);
+        transaction.set(orderRef, orderData);
+      }
     });
 
-    return orderRef.id;
+    // Return the first order ID for showing success navigation
+    return orderRefs.values.first.id;
   }
 }

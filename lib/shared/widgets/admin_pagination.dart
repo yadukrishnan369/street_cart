@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
-class ShopsPagination extends StatelessWidget {
+class AdminPagination extends StatelessWidget {
   final int currentPage;
   final int totalPages;
-  final int perPage;
   final ValueChanged<int> onPageChanged;
 
-  const ShopsPagination({
+  const AdminPagination({
     super.key,
     required this.currentPage,
     required this.totalPages,
-    required this.perPage,
     required this.onPageChanged,
   });
 
@@ -32,7 +30,9 @@ class ShopsPagination extends StatelessWidget {
       ),
     );
 
-    for (int i = 1; i <= totalPages; i++) {
+    final normalizedTotalPages = totalPages.clamp(1, double.infinity).toInt();
+
+    for (int i = 1; i <= normalizedTotalPages; i++) {
       final isSelected = currentPage == i;
       list.add(
         InkWell(
@@ -62,7 +62,7 @@ class ShopsPagination extends StatelessWidget {
           ),
         ),
       );
-      if (i != totalPages) {
+      if (i != normalizedTotalPages) {
         list.add(SizedBox(width: 8.w));
       }
     }

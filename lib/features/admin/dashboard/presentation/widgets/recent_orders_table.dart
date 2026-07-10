@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/dashboard/data/models/recent_order_model.dart';
+import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
 class RecentOrdersTable extends StatelessWidget {
   final List<RecentOrderModel> orders;
@@ -46,16 +49,15 @@ class RecentOrdersTable extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
             child: SizedBox(
               width: 950.w,
               child: Table(
                 columnWidths: const {
-                  0: FlexColumnWidth(2.0), // Order ID
-                  1: FlexColumnWidth(2.0), // Customer
-                  2: FlexColumnWidth(2.0), // Amount
-                  3: FlexColumnWidth(2.0), // Status
-                  4: FlexColumnWidth(2.0), // Date
+                  0: FlexColumnWidth(1.8), // Order ID
+                  1: FlexColumnWidth(2.2), // Customer
+                  2: FlexColumnWidth(1.5), // Amount
+                  3: FlexColumnWidth(1.5), // Status
+                  4: FlexColumnWidth(1.2), // Actions
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
@@ -74,11 +76,17 @@ class RecentOrdersTable extends StatelessWidget {
                       _buildHeaderCell('CUSTOMER'),
                       _buildHeaderCell('AMOUNT'),
                       _buildHeaderCell('STATUS'),
-                      _buildHeaderCell('DATE'),
+                      _buildHeaderCell('ACTIONS'),
                     ],
                   ),
                   // Table Data Rows
                   ...orders.map((order) {
+                    // order ID
+                    final displayId = order.id.length >= 4
+                        ? '#ORD-${order.id.substring(order.id.length - 4)}'
+                              .toUpperCase()
+                        : order.id.toUpperCase();
+
                     return TableRow(
                       decoration: const BoxDecoration(
                         border: Border(
@@ -89,7 +97,7 @@ class RecentOrdersTable extends StatelessWidget {
                         ),
                       ),
                       children: [
-                        _buildDataCell(order.id, isBold: true),
+                        _buildDataCell(displayId, isBold: true),
                         _buildDataCell(order.customerName),
                         _buildDataCell(
                           '₹${order.amount.toStringAsFixed(2)}',
@@ -102,7 +110,25 @@ class RecentOrdersTable extends StatelessWidget {
                             child: _buildStatusBadge(order.status),
                           ),
                         ),
-                        _buildDataCell(order.timeAgo),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                context.push('/orders/${order.id}');
+                              },
+                              child: Text(
+                                'View',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AdminAppColors.primaryColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     );
                   }),
@@ -145,26 +171,9 @@ class RecentOrdersTable extends StatelessWidget {
   }
 
   Widget _buildStatusBadge(String status) {
-    Color bgColor;
-    Color textColor;
-
-    switch (status.toLowerCase()) {
-      case 'delivered':
-        bgColor = const Color(0xFFE6F4EA);
-        textColor = const Color(0xFF137333);
-        break;
-      case 'processing':
-        bgColor = const Color(0xFFE8F0FE);
-        textColor = const Color(0xFF1A73E8);
-        break;
-      case 'shipped':
-        bgColor = const Color(0xFFF3E8FF);
-        textColor = const Color(0xFF7B2CBF);
-        break;
-      default:
-        bgColor = const Color(0xFFF9FAFC);
-        textColor = const Color(0xFF6C6C80);
-    }
+    final bgColor = AdminOrdersHelper.getStatusBgColor(status);
+    final textColor = AdminOrdersHelper.getStatusTextColor(status);
+    final label = AdminOrdersHelper.getStatusLabel(status);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
@@ -173,7 +182,7 @@ class RecentOrdersTable extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Text(
-        status,
+        label,
         style: TextStyle(
           fontSize: 11.sp,
           fontWeight: FontWeight.bold,

@@ -17,7 +17,6 @@ class AdminDashboardRemoteDataSourceImpl
     try {
       int shopsCount = 0;
       int customersCount = 0;
-      const int ordersCount = 12405;
       const double revenue = 582000.0;
 
       final shopsSnap = await _firestore
@@ -58,7 +57,7 @@ class AdminDashboardRemoteDataSourceImpl
             })
             .toList();
 
-        // Sort - latest registrations first (descending by createdAt)
+        // Sort - latest registrations first
         newRegistrations.sort((a, b) {
           if (a.createdAt == null && b.createdAt == null) return 0;
           if (a.createdAt == null) return 1;
@@ -72,41 +71,77 @@ class AdminDashboardRemoteDataSourceImpl
         }
       }
 
-      final recentOrders = [
-        const RecentOrderModel(
-          id: '#ORD-7721',
-          customerName: 'Alex Rivera',
-          amount: 124.50,
-          status: 'Delivered',
-          timeAgo: '2 mins ago',
-        ),
-        const RecentOrderModel(
-          id: '#ORD-7720',
-          customerName: 'Sarah Chen',
-          amount: 45.00,
-          status: 'Processing',
-          timeAgo: '15 mins ago',
-        ),
-        const RecentOrderModel(
-          id: '#ORD-7719',
-          customerName: 'James Wilson',
-          amount: 210.00,
-          status: 'Shipped',
-          timeAgo: '1 hour ago',
-        ),
-        const RecentOrderModel(
-          id: '#ORD-7718',
-          customerName: 'Maria Garcia',
-          amount: 89.20,
-          status: 'Delivered',
-          timeAgo: '3 hours ago',
-        ),
-      ];
+      // Fetch total orders count and recent orders
+      final ordersSnap = await _firestore.collection('orders').get();
+      final totalOrdersCount = ordersSnap.docs.length;
+
+      // raw order details sorted by created_at descending
+      final allOrders = ordersSnap.docs.map((doc) {
+        final data = doc.data();
+        DateTime parsedDate = DateTime.now();
+        if (data['created_at'] != null) {
+          if (data['created_at'] is Timestamp) {
+            parsedDate = (data['created_at'] as Timestamp).toDate();
+          } else if (data['created_at'] is String) {
+            parsedDate =
+                DateTime.tryParse(data['created_at']) ?? DateTime.now();
+          }
+        }
+        return {
+          'id': doc.id,
+          'customer_id': data['customer_id'] ?? '',
+          'amount': (data['total_amount'] as num?)?.toDouble() ?? 0.0,
+          'status': data['status'] ?? 'pending',
+          'createdAt': parsedDate,
+          'deliveryAddress': data['delivery_address'] ?? {},
+        };
+      }).toList();
+
+      // Sort by newest first
+      allOrders.sort(
+        (a, b) =>
+            (b['createdAt'] as DateTime).compareTo(a['createdAt'] as DateTime),
+      );
+
+      // Limit to first 4 orders
+      final recentOrdersRaw = allOrders.take(4).toList();
+      final List<RecentOrderModel> recentOrders = [];
+
+      for (final rawOrder in recentOrdersRaw) {
+        final customerId = rawOrder['customer_id'] as String;
+        String customerAccountName = 'Unknown Customer';
+
+        if (customerId.isNotEmpty) {
+          final custDoc = await _firestore
+              .collection('customers')
+              .doc(customerId)
+              .get();
+          if (custDoc.exists && custDoc.data() != null) {
+            customerAccountName =
+                custDoc.data()?['full_name'] ??
+                custDoc.data()?['name'] ??
+                'Unknown Customer';
+          }
+        }
+
+        final createdDate = rawOrder['createdAt'] as DateTime;
+        final timeAgoStr = _calculateTimeAgo(createdDate);
+
+        recentOrders.add(
+          RecentOrderModel(
+            id: rawOrder['id'] as String,
+            customerName: customerAccountName,
+            amount: rawOrder['amount'] as double,
+            status: rawOrder['status'] as String,
+            timeAgo: timeAgoStr,
+          ),
+        );
+      }
 
       return DashboardStatsModel(
         totalShops: shopsCount,
         totalCustomers: customersCount,
-        totalOrders: ordersCount,
+        totalOrders: totalOrdersCount,
         totalRevenue: revenue,
         newRegistrations: newRegistrations,
         recentOrders: recentOrders,

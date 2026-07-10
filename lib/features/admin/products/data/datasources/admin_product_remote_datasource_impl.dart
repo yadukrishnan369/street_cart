@@ -3,17 +3,20 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'admin_product_remote_datasource.dart';
 
-class AdminProductRemoteDataSourceImpl implements IAdminProductRemoteDataSource {
+class AdminProductRemoteDataSourceImpl
+    implements IAdminProductRemoteDataSource {
   final FirebaseFirestore _firestore;
 
   AdminProductRemoteDataSourceImpl({required FirebaseFirestore firestore})
-      : _firestore = firestore;
+    : _firestore = firestore;
 
   @override
   Future<List<ProductModel>> getAllProducts() async {
     try {
       final snap = await _firestore.collection('products').get();
-      return snap.docs.map((doc) => ProductModel.fromMap(doc.data(), doc.id)).toList();
+      return snap.docs
+          .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       throw Exception('Failed to get products from Firestore: $e');
     }
@@ -23,7 +26,9 @@ class AdminProductRemoteDataSourceImpl implements IAdminProductRemoteDataSource 
   Future<List<ShopProfileModel>> getAllShops() async {
     try {
       final snap = await _firestore.collection('shops').get();
-      return snap.docs.map((doc) => ShopProfileModel.fromMap(doc.data(), doc.id)).toList();
+      return snap.docs
+          .map((doc) => ShopProfileModel.fromMap(doc.data(), doc.id))
+          .toList();
     } catch (e) {
       throw Exception('Failed to get shops from Firestore: $e');
     }
@@ -32,10 +37,14 @@ class AdminProductRemoteDataSourceImpl implements IAdminProductRemoteDataSource 
   @override
   Future<List<String>> getBusinessCategoryNames() async {
     try {
-      final catDoc = await _firestore.collection('config').doc('categories').get();
+      final catDoc = await _firestore
+          .collection('config')
+          .doc('categories')
+          .get();
       final List<String> categories = [];
       if (catDoc.exists && catDoc.data() != null) {
-        final rawBusinessCats = catDoc.data()!['business_categories'] as List<dynamic>?;
+        final rawBusinessCats =
+            catDoc.data()!['business_categories'] as List<dynamic>?;
         if (rawBusinessCats != null) {
           for (final e in rawBusinessCats) {
             final name = e['name'] as String?;
@@ -54,10 +63,14 @@ class AdminProductRemoteDataSourceImpl implements IAdminProductRemoteDataSource 
   @override
   Future<List<String>> getProductCategoryNames() async {
     try {
-      final catDoc = await _firestore.collection('config').doc('categories').get();
+      final catDoc = await _firestore
+          .collection('config')
+          .doc('categories')
+          .get();
       final List<String> categories = [];
       if (catDoc.exists && catDoc.data() != null) {
-        final rawProductCats = catDoc.data()!['product_categories'] as List<dynamic>?;
+        final rawProductCats =
+            catDoc.data()!['product_categories'] as List<dynamic>?;
         if (rawProductCats != null) {
           for (final e in rawProductCats) {
             final name = e['name'] as String?;
@@ -75,7 +88,10 @@ class AdminProductRemoteDataSourceImpl implements IAdminProductRemoteDataSource 
   }
 
   @override
-  Future<void> updateProductDisabledStatus(String productId, bool disabled) async {
+  Future<void> updateProductDisabledStatus(
+    String productId,
+    bool disabled,
+  ) async {
     try {
       await _firestore.collection('products').doc(productId).update({
         'disabled_by_admin': disabled,
@@ -112,11 +128,32 @@ class AdminProductRemoteDataSourceImpl implements IAdminProductRemoteDataSource 
     try {
       final doc = await _firestore.collection('config').doc('settings').get();
       if (doc.exists && doc.data() != null) {
-        return (doc.data()!['commission_percentage'] as num?)?.toDouble() ?? 2.0;
+        return (doc.data()!['commission_percentage'] as num?)?.toDouble() ??
+            2.0;
       }
       return 2.0;
     } catch (e) {
       return 2.0;
+    }
+  }
+
+  @override
+  Future<int> getProductOrderCount(String productId) async {
+    try {
+      // orders collection to count documents containing this productId in their items list
+      final snap = await _firestore.collection('orders').get();
+      int count = 0;
+      for (final doc in snap.docs) {
+        final data = doc.data();
+        final items = data['items'] as List<dynamic>? ?? [];
+        final hasProduct = items.any((item) => item['product_id'] == productId);
+        if (hasProduct) {
+          count++;
+        }
+      }
+      return count;
+    } catch (e) {
+      return 0;
     }
   }
 }

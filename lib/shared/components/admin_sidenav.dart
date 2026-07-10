@@ -122,7 +122,7 @@ class AdminSidenav extends StatelessWidget {
                   _buildMenuItem(
                     icon: Icons.shopping_cart_outlined,
                     label: 'Orders',
-                    route: '',
+                    route: '/orders',
                   ),
                   _buildMenuItem(
                     icon: Icons.rate_review_outlined,

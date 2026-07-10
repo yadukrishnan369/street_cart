@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_bloc.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_event.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_state.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_ui_cubit.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/registrations_table.dart';
-import 'package:street_cart/features/admin/dashboard/presentation/widgets/registrations_pagination.dart';
+import 'package:street_cart/shared/widgets/admin_pagination.dart';
 
 class RegistrationsQueueCard extends StatelessWidget {
   final AdminRegistrationsLoadSuccess state;
@@ -72,7 +73,7 @@ class RegistrationsQueueCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.storefront_outlined,
-                      color: const Color(0xFF8A8A9E),
+                      color: AdminAppColors.primaryColor,
                       size: 64.sp,
                     ),
                     SizedBox(height: 16.h),
@@ -81,7 +82,7 @@ class RegistrationsQueueCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF8A8A9E),
+                        color: AdminAppColors.primaryColor,
                       ),
                     ),
                   ],
@@ -98,23 +99,26 @@ class RegistrationsQueueCard extends StatelessWidget {
                 if (refresh == true && context.mounted) {
                   context.read<AdminRegistrationsUiCubit>().markChanges();
                   context.read<AdminRegistrationsBloc>().add(
-                        LoadPendingRegistrationsRequested(
-                          page: currentPage,
-                          limit: limit,
-                        ),
-                      );
+                    LoadPendingRegistrationsRequested(
+                      page: currentPage,
+                      limit: limit,
+                    ),
+                  );
                 }
               },
             ),
             SizedBox(height: 24.h),
-            RegistrationsPagination(
+            AdminPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,
               onPageChanged: (newPage) {
                 context.read<AdminRegistrationsUiCubit>().changePage(newPage);
                 context.read<AdminRegistrationsBloc>().add(
-                      LoadPendingRegistrationsRequested(page: newPage, limit: limit),
-                    );
+                  LoadPendingRegistrationsRequested(
+                    page: newPage,
+                    limit: limit,
+                  ),
+                );
               },
             ),
             SizedBox(height: 24.h),

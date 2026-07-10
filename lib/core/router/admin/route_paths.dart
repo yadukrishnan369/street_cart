@@ -15,4 +15,6 @@ class RoutePaths {
   static const profile = '/profile';
   static const products = '/products';
   static const productDetails = '/products/:id';
+  static const orders = '/orders';
+  static const orderDetails = '/orders/:id';
 }

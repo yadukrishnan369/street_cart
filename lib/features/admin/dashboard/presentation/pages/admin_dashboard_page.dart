@@ -123,10 +123,7 @@ class AdminDashboardPage extends StatelessWidget {
                     RecentOrdersTable(
                       orders: stats.recentOrders,
                       onViewAll: () {
-                        CustomSnackBar.show(
-                          context,
-                          message: 'Opening all orders...',
-                        );
+                        context.push(RoutePaths.orders);
                       },
                     ),
                   ],

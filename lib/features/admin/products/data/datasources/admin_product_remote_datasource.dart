@@ -10,4 +10,5 @@ abstract class IAdminProductRemoteDataSource {
   Future<void> deleteProduct(String productId);
   Future<ProductModel> getProductById(String productId);
   Future<double> getPlatformCommission();
+  Future<int> getProductOrderCount(String productId);
 }

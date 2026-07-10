@@ -5,8 +5,13 @@ import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 
 class AdminProfileMetrics extends StatelessWidget {
   final int approvedShopsCount;
+  final int ordersTrackedCount;
 
-  const AdminProfileMetrics({super.key, required this.approvedShopsCount});
+  const AdminProfileMetrics({
+    super.key,
+    required this.approvedShopsCount,
+    required this.ordersTrackedCount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +69,7 @@ class AdminProfileMetrics extends StatelessWidget {
               Expanded(
                 child: _buildMetricTile(
                   icon: Icons.inventory_2_outlined,
-                  value: '899',
+                  value: ordersTrackedCount.toString(),
                   label: 'Order Tracked',
                   iconBgColor: const Color.fromARGB(255, 190, 219, 218),
                   iconColor: Colors.teal,
