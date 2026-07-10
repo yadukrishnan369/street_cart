@@ -51,6 +51,19 @@ class AdminOrdersHelper {
     return commission;
   }
 
+  static double calculateCommissionPercentage(OrderModel order) {
+    double totalProductPriceAmount = 0.0;
+    double totalCommissionAmount = 0.0;
+    for (final item in order.items) {
+      totalProductPriceAmount += item.price * item.quantity;
+      totalCommissionAmount += item.adminCommission;
+    }
+    if (totalProductPriceAmount > 0) {
+      return (totalCommissionAmount / totalProductPriceAmount) * 100;
+    }
+    return 0.0;
+  }
+
   static double calculateVendorEarnings(OrderModel order) {
     double earnings = 0.0;
     for (final item in order.items) {

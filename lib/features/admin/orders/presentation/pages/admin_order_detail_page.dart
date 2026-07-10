@@ -16,6 +16,7 @@ import 'package:street_cart/features/admin/orders/presentation/widgets/customer_
 import 'package:street_cart/features/admin/orders/presentation/widgets/shop_info_card.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/profit_info_card.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/admin_order_detail_header.dart';
+import 'package:street_cart/features/admin/orders/presentation/widgets/shimmer/admin_order_detail_shimmer.dart';
 
 class AdminOrderDetailPage extends StatelessWidget {
   final String orderId;
@@ -32,11 +33,7 @@ class AdminOrderDetailPage extends StatelessWidget {
           child: BlocBuilder<AdminOrdersBloc, AdminOrdersState>(
             builder: (context, state) {
               if (state is AdminOrdersLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AdminAppColors.primaryColor,
-                  ),
-                );
+                return const AdminOrderDetailShimmer();
               }
               if (state is AdminOrdersLoaded) {
                 final order = state.orders.firstWhere(

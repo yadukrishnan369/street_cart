@@ -12,6 +12,7 @@ import 'package:street_cart/features/admin/orders/presentation/widgets/orders_ta
 import 'package:street_cart/features/admin/orders/presentation/widgets/orders_tab_bar.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/admin/orders/presentation/widgets/shimmer/admin_orders_page_shimmer.dart';
 
 class AdminOrdersPage extends StatefulWidget {
   const AdminOrdersPage({super.key});
@@ -94,11 +95,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
                           ),
                         );
                       }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AdminAppColors.primaryColor,
-                        ),
-                      );
+                      return const AdminOrdersPageShimmer();
                     }
 
                     final loadedState = _lastLoadedState!;

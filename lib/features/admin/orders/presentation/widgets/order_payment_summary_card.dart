@@ -26,6 +26,13 @@ class OrderPaymentSummaryCard extends StatelessWidget {
     final deductionStr = '₹${PriceUtils.formatPrice(deduction)}';
     final grandTotalStr = '₹${PriceUtils.formatPrice(order.totalAmount)}';
 
+    // Calculate commission percentage
+    final double commissionPercentage =
+        AdminOrdersHelper.calculateCommissionPercentage(order);
+    final commissionPercentStr = commissionPercentage > 0
+        ? ' (${commissionPercentage.toStringAsFixed(1)}%)'
+        : '';
+
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFF9FAFC),
@@ -53,7 +60,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                 _buildSummaryRow('Subtotal', subtotalStr),
                 SizedBox(height: 12.h),
                 _buildSummaryRow(
-                  'Commission',
+                  'Commission$commissionPercentStr',
                   commStr,
                   valueColor: const Color(0xFF137333),
                 ),
