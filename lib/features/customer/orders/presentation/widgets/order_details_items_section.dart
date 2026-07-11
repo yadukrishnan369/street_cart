@@ -5,7 +5,6 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
-import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
@@ -207,7 +206,13 @@ class OrderDetailsItemsSection extends StatelessWidget {
                   width: double.infinity,
                   height: 38.h,
                   child: OutlinedButton(
-                    onPressed: () => _showCancelDialog(context, order),
+                    onPressed: () {
+                      OrdersHelper.showCancelOrderDialog(
+                        context: context,
+                        orderId: order.id,
+                        ordersBloc: context.read<OrdersBloc>(),
+                      );
+                    },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: Colors.grey[300]!),
                       shape: RoundedRectangleBorder(
@@ -217,7 +222,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     child: Text(
                       'Cancel Order',
                       style: TextStyle(
-                        color: CustomerAppColors.textPrimary,
+                        color: const Color.fromARGB(255, 238, 160, 160),
                         fontWeight: FontWeight.w600,
                         fontSize: 13.sp,
                       ),
@@ -229,29 +234,6 @@ class OrderDetailsItemsSection extends StatelessWidget {
           ),
         );
       }).toList(),
-    );
-  }
-
-  void _showCancelDialog(BuildContext context, OrderModel currentOrder) {
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => AlertDialog(
-        title: const Text('Cancel Order'),
-        content: const Text('Are you sure you want to cancel this order?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogCtx);
-              context.read<OrdersBloc>().add(CancelOrderEvent(currentOrder.id));
-            },
-            child: const Text('Yes, Cancel'),
-          ),
-        ],
-      ),
     );
   }
 }

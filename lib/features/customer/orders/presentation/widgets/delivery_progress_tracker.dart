@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
@@ -21,7 +22,7 @@ class DeliveryProgressTracker extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.cancel, color: Colors.red),
+            const Icon(Icons.cancel, color: CustomerAppColors.error),
             SizedBox(width: 12.w),
             Expanded(
               child: Column(
@@ -49,7 +50,7 @@ class DeliveryProgressTracker extends StatelessWidget {
     }
 
     final steps = OrdersHelper.getProgressSteps(order);
-    final activeColor = const Color(0xFF5E5CE6);
+    final activeColor = CustomerAppColors.primary;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),

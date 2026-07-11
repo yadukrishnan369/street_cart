@@ -33,3 +33,7 @@ class OrdersFailure extends OrdersState {
 class OrderCancelling extends OrdersState {}
 
 class OrderCancelledSuccess extends OrdersState {}
+
+class OrderAddressUpdating extends OrdersState {}
+
+class OrderAddressUpdateSuccess extends OrdersState {}

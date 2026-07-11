@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_state.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
@@ -13,6 +14,7 @@ import 'package:street_cart/features/customer/orders/presentation/widgets/order_
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_shipping_section.dart';
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_payment_section.dart';
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_reorder_button.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class OrderDetailsPage extends StatelessWidget {
   final OrderModel order;
@@ -22,7 +24,7 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final orderIdText = OrdersHelper.getOrderIdSuffix(order.id);
-    final activeColor = const Color(0xFF5E5CE6);
+    final activeColor = CustomerAppColors.primary;
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       builder: (context, state) {
@@ -66,16 +68,23 @@ class OrderDetailsPage extends StatelessWidget {
           body: BlocConsumer<OrdersBloc, OrdersState>(
             listener: (context, state) {
               if (state is OrderCancelledSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Order cancelled successfully.'),
-                  ),
+                CustomSnackBar.show(
+                  context,
+                  message: 'Order cancelled successfully.',
                 );
                 Navigator.pop(context); // Go back after cancellation
-              } else if (state is OrdersFailure) {
-                ScaffoldMessenger.of(
+              } else if (state is OrderAddressUpdateSuccess) {
+                CustomSnackBar.show(
                   context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                  message: 'Delivery address updated successfully.',
+                );
+                context.read<OrdersBloc>().add(FetchOrders());
+              } else if (state is OrdersFailure) {
+                CustomSnackBar.show(
+                  context,
+                  message: state.message,
+                  isError: true,
+                );
               }
             },
             builder: (context, state) {

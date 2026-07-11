@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/customer/orders/data/datasources/i_orders_remote_datasource.dart';
 
 class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
@@ -115,6 +116,16 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
           transaction.update(productDoc.reference, {'variants': variants});
         }
       }
+    });
+  }
+
+  @override
+  Future<void> updateOrderAddress(String orderId, AddressModel address) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('User is not logged in');
+
+    await _firestore.collection('orders').doc(orderId).update({
+      'delivery_address': address.toMap(),
     });
   }
 }

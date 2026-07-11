@@ -10,9 +10,8 @@ import 'package:street_cart/features/customer/profile/presentation/pages/add_add
 import 'package:street_cart/features/customer/profile/presentation/widgets/address_card.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/address_empty_state.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
-import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
-import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/address_card_shimmer.dart';
+import 'package:street_cart/features/customer/profile/presentation/utils/saved_addresses_helper.dart';
 
 class SavedAddressesPage extends StatelessWidget {
   const SavedAddressesPage({super.key});
@@ -37,7 +36,17 @@ class SavedAddressesPage extends StatelessWidget {
           centerTitle: true,
           actions: [
             TextButton.icon(
-              onPressed: () => _navigateToAddAddress(context),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<AddressBloc>(),
+                      child: const AddAddressPage(),
+                    ),
+                  ),
+                );
+              },
               icon: Icon(Icons.add_location_alt_outlined, size: 18.sp),
               label: Text(
                 'Add New',
@@ -65,16 +74,27 @@ class SavedAddressesPage extends StatelessWidget {
 
               if (addresses.isEmpty) {
                 return AddressEmptyState(
-                  onAddAddress: () => _navigateToAddAddress(context),
+                  onAddAddress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<AddressBloc>(),
+                          child: const AddAddressPage(),
+                        ),
+                      ),
+                    );
+                  },
                 );
               }
-
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 16.h,
+                    ),
                     child: Text(
                       'SAVED ADDRESSES',
                       style: CustomerAppTextStyles.body.copyWith(
@@ -95,19 +115,64 @@ class SavedAddressesPage extends StatelessWidget {
                           address: address,
                           isSelected: address.isDefault,
                           onSelect: () => _toggleDefault(context, address.id),
-                          onEdit: () =>
-                              _navigateToEditAddress(context, address),
-                          onDelete: () =>
-                              _showDeleteConfirmation(context, address.id),
+                          onEdit: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: context.read<AddressBloc>(),
+                                  child: AddAddressPage(address: address),
+                                ),
+                              ),
+                            );
+                          },
+                          onDelete: () {
+                            SavedAddressesHelper.showDeleteConfirmation(
+                              context: context,
+                              addressId: address.id,
+                              addressBloc: context.read<AddressBloc>(),
+                            );
+                          },
                         );
                       },
                     ),
                   ),
-                  _buildBottomButton(context),
+                  BlocBuilder<AddressBloc, AddressState>(
+                    builder: (context, state) {
+                      if (state is AddressesLoaded &&
+                          state.addresses.isNotEmpty) {
+                        final hasDefault =
+                            SavedAddressesHelper.hasDefaultAddress(
+                              state.addresses,
+                            );
+                        final selectedAddress =
+                            SavedAddressesHelper.getSelectedAddress(
+                              state.addresses,
+                            );
+                        return Padding(
+                          padding: EdgeInsets.all(24.w),
+                          child: PrimaryButton(
+                            text: 'Deliver to this Address',
+                            suffixIcon: Icon(
+                              Icons.chevron_right,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                            onPressed: hasDefault
+                                ? () => Navigator.pop(context, selectedAddress)
+                                : () =>
+                                      SavedAddressesHelper.showNoAddressSelectedDialog(
+                                        context,
+                                      ),
+                          ),
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
                 ],
               );
             }
-
             return const SizedBox();
           },
         ),
@@ -115,87 +180,7 @@ class SavedAddressesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomButton(BuildContext context) {
-    return BlocBuilder<AddressBloc, AddressState>(
-      builder: (context, state) {
-        if (state is AddressesLoaded && state.addresses.isNotEmpty) {
-          final hasDefault = state.addresses.any((a) => a.isDefault);
-          return Padding(
-            padding: EdgeInsets.all(24.w),
-            child: PrimaryButton(
-              text: 'Deliver to this Address',
-              suffixIcon: Icon(
-                Icons.chevron_right,
-                color: Colors.white,
-                size: 20.sp,
-              ),
-              onPressed: hasDefault
-                  ? () => Navigator.pop(context)
-                  : () => _showNoAddressSelectedDialog(context),
-            ),
-          );
-        }
-        return const SizedBox();
-      },
-    );
-  }
-
   void _toggleDefault(BuildContext context, String id) {
     context.read<AddressBloc>().add(ToggleDefaultAddressEvent(id));
-  }
-
-  void _showNoAddressSelectedDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => CustomAlertDialog(
-        title: 'No Address Selected',
-        content:
-            'Please select a delivery address by clicking the radio button on your preferred address card.',
-        primaryActionLabel: 'Got it',
-        onPrimaryAction: () => Navigator.pop(context),
-        icon: Icons.location_on_outlined,
-        iconColor: CustomerAppColors.primary,
-      ),
-    );
-  }
-
-  void _navigateToAddAddress(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: context.read<AddressBloc>(),
-          child: const AddAddressPage(),
-        ),
-      ),
-    );
-  }
-
-  void _navigateToEditAddress(BuildContext context, dynamic address) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: context.read<AddressBloc>(),
-          child: AddAddressPage(address: address),
-        ),
-      ),
-    );
-  }
-
-  void _showDeleteConfirmation(BuildContext context, String id) {
-    showDialog(
-      context: context,
-      builder: (_) => ConfirmationModal(
-        title: 'Delete Address',
-        content: 'Are you sure you want to remove this address?',
-        confirmText: 'Delete',
-        onConfirm: () {
-          context.read<AddressBloc>().add(DeleteAddressEvent(id));
-          Navigator.pop(context);
-        },
-        onCancel: () => Navigator.pop(context),
-      ),
-    );
   }
 }

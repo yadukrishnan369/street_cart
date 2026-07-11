@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_state.dart';
+import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
+import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 
 class OrdersHelper {
   static OrderModel getCurrentOrder(OrdersState state, OrderModel order) {
@@ -19,7 +24,7 @@ class OrdersHelper {
 
   static String getOrderIdSuffix(String id) {
     if (id.length <= 4) return 'SC-$id'.toUpperCase();
-    return 'OR-${id.substring(id.length - 4)}'.toUpperCase();
+    return 'ORD-${id.substring(id.length - 4)}'.toUpperCase();
   }
 
   static String formatDateShort(DateTime dateTime) {
@@ -158,5 +163,51 @@ class OrdersHelper {
         addedAt: DateTime.now(),
       );
     }).toList();
+  }
+
+  static void showChangeAddressConfirmation({
+    required BuildContext context,
+    required VoidCallback onConfirm,
+  }) {
+    showDialog(
+      context: context,
+      builder: (ctx) => ConfirmationModal(
+        title: 'Change Delivery Address?',
+        content:
+            'Are you sure you want to change the delivery address for this order?',
+        confirmText: 'Yes, Change',
+        cancelText: 'Cancel',
+        confirmColor: CustomerAppColors.primary,
+        onConfirm: () {
+          Navigator.pop(ctx);
+          onConfirm();
+        },
+        onCancel: () => Navigator.pop(ctx),
+      ),
+    );
+  }
+
+  static void showCancelOrderDialog({
+    required BuildContext context,
+    required String orderId,
+    required OrdersBloc ordersBloc,
+  }) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => CustomAlertDialog(
+        title: 'Cancel Order',
+        content: 'Are you sure you want to cancel this order?',
+        secondaryActionLabel: 'No, Keep it',
+        onSecondaryAction: () => Navigator.pop(dialogCtx),
+        primaryActionLabel: 'Yes, Cancel',
+        onPrimaryAction: () {
+          Navigator.pop(dialogCtx);
+          ordersBloc.add(CancelOrderEvent(orderId));
+        },
+        icon: Icons.cancel_outlined,
+        iconColor: CustomerAppColors.error,
+        primaryActionColor: CustomerAppColors.error,
+      ),
+    );
   }
 }

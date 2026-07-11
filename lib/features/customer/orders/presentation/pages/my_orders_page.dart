@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/orders/presentation/widgets/recent
 import 'package:street_cart/features/customer/orders/presentation/widgets/shimmer/customer_orders_shimmer.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class MyOrdersPage extends StatelessWidget {
   const MyOrdersPage({super.key});
@@ -47,9 +48,11 @@ class MyOrdersPage extends StatelessWidget {
         body: BlocConsumer<OrdersBloc, OrdersState>(
           listener: (context, state) {
             if (state is OrdersFailure) {
-              ScaffoldMessenger.of(
+              CustomSnackBar.show(
                 context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+                message: state.message,
+                isError: true,
+              );
             }
           },
           builder: (context, state) {
@@ -67,7 +70,7 @@ class MyOrdersPage extends StatelessWidget {
               }
 
               return RefreshIndicator(
-                color: const Color(0xFF5E5CE6),
+                color: CustomerAppColors.primary,
                 onRefresh: () async =>
                     context.read<OrdersBloc>().add(FetchOrders()),
                 child: SingleChildScrollView(

@@ -4,11 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
-import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 import 'package:street_cart/features/customer/orders/presentation/pages/order_details_page.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
-import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
@@ -258,7 +256,13 @@ class _ActiveOrderCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => _showCancelDialog(context, order),
+                      onPressed: () {
+                        OrdersHelper.showCancelOrderDialog(
+                          context: context,
+                          orderId: order.id,
+                          ordersBloc: context.read<OrdersBloc>(),
+                        );
+                      },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: const Color.fromARGB(255, 219, 214, 214),
@@ -289,27 +293,6 @@ class _ActiveOrderCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _showCancelDialog(BuildContext context, OrderModel order) {
-    final bloc = context.read<OrdersBloc>();
-    showDialog(
-      context: context,
-      builder: (_) => CustomAlertDialog(
-        icon: Icons.cancel_outlined,
-        iconColor: Colors.red.shade400,
-        title: 'Cancel Order?',
-        content: 'Are you sure you want to cancel this order?',
-        secondaryActionLabel: 'No, Keep it',
-        onSecondaryAction: () => Navigator.pop(context),
-        primaryActionLabel: 'Yes, Cancel',
-        primaryActionColor: Colors.red.shade400,
-        onPrimaryAction: () {
-          Navigator.pop(context);
-          bloc.add(CancelOrderEvent(order.id));
-        },
       ),
     );
   }
@@ -408,7 +391,12 @@ class _HistoryOrderCard extends StatelessWidget {
                   SizedBox(height: 4.h),
                   Text(
                     statusDisplay,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12.sp),
+                    style: TextStyle(
+                      color: order.status.toLowerCase() == 'cancelled'
+                          ? CustomerAppColors.error
+                          : Colors.grey[500],
+                      fontSize: 12.sp,
+                    ),
                   ),
                 ],
               ),

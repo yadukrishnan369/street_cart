@@ -16,7 +16,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
     final isDelivered = OrdersHelper.isDelivered(status);
     final isCancelled = OrdersHelper.isCancelled(status);
     final dateStr = OrdersHelper.formatDateShort(order.createdAt);
-    final activeColor = const Color(0xFF5E5CE6);
+    final activeColor = CustomerAppColors.primary;
 
     if (isDelivered) {
       return Container(
@@ -75,7 +75,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: const BoxDecoration(
-                color: Colors.red,
+                color: CustomerAppColors.error,
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.close, color: Colors.white, size: 20.sp),
@@ -88,7 +88,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                   Text(
                     'Cancelled on $dateStr',
                     style: TextStyle(
-                      color: Colors.red[900],
+                      color: CustomerAppColors.error,
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
                     ),
