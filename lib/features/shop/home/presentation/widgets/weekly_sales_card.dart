@@ -24,7 +24,7 @@ class WeeklySalesCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Weekly Sales',
+                'WEEKLY SALES',
                 style: ShopAppTextStyles.bodySmallBold.copyWith(
                   color: ShopAppColors.textSecondary,
                   letterSpacing: 0.5.sp,

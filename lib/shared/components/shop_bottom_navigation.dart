@@ -7,6 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/products_page.dart';
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_orders_page.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
+import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
 
 class ShopBottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -30,25 +34,83 @@ class ShopBottomNavigation extends StatelessWidget {
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5.sp,
       ),
-      items: const [
-        BottomNavigationBarItem(
+      items: [
+        const BottomNavigationBarItem(
           icon: Icon(Icons.grid_view_outlined),
           activeIcon: Icon(Icons.grid_view),
           label: 'DASHBOARD',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.inventory_2_outlined),
           activeIcon: Icon(Icons.inventory_2),
           label: 'PRODUCTS',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart_outlined),
-          activeIcon: Icon(Icons.shopping_cart),
+          icon: BlocBuilder<ShopHomeBloc, ShopHomeState>(
+            bloc: sl<ShopHomeBloc>(),
+            builder: (context, state) {
+              int newOrdersCount = 0;
+              if (state is ShopHomeDataLoaded) {
+                final authState = context.read<ShopAuthBloc>().state;
+                if (authState is ShopStatusLoaded) {
+                  final shopId = authState.shop?.uid ?? '';
+                  newOrdersCount = state.orders.where((o) {
+                    final hasShopItem = o.items.any((i) => i.shopId == shopId);
+                    final isNew =
+                        ShopOrderStatus.fromString(o.status) ==
+                        ShopOrderStatus.placed;
+                    return hasShopItem && isNew;
+                  }).length;
+                }
+              }
+              if (newOrdersCount > 0) {
+                return Badge(
+                  label: Text(
+                    newOrdersCount.toString(),
+                    style: TextStyle(fontSize: 10.sp, color: Colors.white),
+                  ),
+                  backgroundColor: ShopAppColors.error,
+                  child: const Icon(Icons.shopping_cart_outlined),
+                );
+              }
+              return const Icon(Icons.shopping_cart_outlined);
+            },
+          ),
+          activeIcon: BlocBuilder<ShopHomeBloc, ShopHomeState>(
+            bloc: sl<ShopHomeBloc>(),
+            builder: (context, state) {
+              int newOrdersCount = 0;
+              if (state is ShopHomeDataLoaded) {
+                final authState = context.read<ShopAuthBloc>().state;
+                if (authState is ShopStatusLoaded) {
+                  final shopId = authState.shop?.uid ?? '';
+                  newOrdersCount = state.orders.where((o) {
+                    final hasShopItem = o.items.any((i) => i.shopId == shopId);
+                    final isNew =
+                        ShopOrderStatus.fromString(o.status) ==
+                        ShopOrderStatus.placed;
+                    return hasShopItem && isNew;
+                  }).length;
+                }
+              }
+              if (newOrdersCount > 0) {
+                return Badge(
+                  label: Text(
+                    newOrdersCount.toString(),
+                    style: TextStyle(fontSize: 10.sp, color: Colors.white),
+                  ),
+                  backgroundColor: ShopAppColors.error,
+                  child: const Icon(Icons.shopping_cart),
+                );
+              }
+              return const Icon(Icons.shopping_cart);
+            },
+          ),
           label: 'ORDERS',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          activeIcon: Icon(Icons.person),
+          icon: const Icon(Icons.person_outline),
+          activeIcon: const Icon(Icons.person),
           label: 'PROFILE',
         ),
       ],

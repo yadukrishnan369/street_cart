@@ -74,12 +74,12 @@ class PerformanceStats extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildStatCard(
-                    'ORDERS',
+                    'TODAY ORDERS',
                     todayOrdersCount.toString().padLeft(2, '0'),
                   ),
                 ),
                 SizedBox(width: 16.w),
-                Expanded(child: _buildStatCard('REVENUE', '₹12,450.0')),
+                Expanded(child: _buildStatCard('TODAY SALES', '₹12,450.0')),
               ],
             ),
             SizedBox(height: 20.h),
