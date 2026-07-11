@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ProductDetailHeader extends StatelessWidget {
   final String category;
@@ -50,7 +51,7 @@ class ProductDetailHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '₹${offerPrice ?? originalPrice}',
+                    '₹${PriceUtils.formatPrice(offerPrice ?? originalPrice)}',
                     style: TextStyle(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
@@ -61,7 +62,7 @@ class ProductDetailHeader extends StatelessWidget {
                   ),
                   if (offerPrice != null)
                     Text(
-                      '₹$originalPrice',
+                      '₹${PriceUtils.formatPrice(originalPrice)}',
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: ShopAppColors.textTertiary,

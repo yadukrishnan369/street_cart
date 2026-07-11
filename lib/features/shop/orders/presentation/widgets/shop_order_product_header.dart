@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/shared/widgets/image_preview_page.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ShopOrderProductHeader extends StatelessWidget {
   final OrderItemModel item;
@@ -13,26 +15,49 @@ class ShopOrderProductHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(26.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16.r),
-            child: CachedNetworkImage(
-              imageUrl: item.productImage,
-              width: 160.w,
-              height: 160.w,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => ProductImagePlaceholder(
-                width: 160.w,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ImagePreviewPage(
+                    images: [item.productImage],
+                    initialIndex: 0,
+                  ),
+                ),
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.r),
+              child: CachedNetworkImage(
+                imageUrl: item.productImage,
+                width: 260.w,
                 height: 160.w,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              errorWidget: (context, url, error) => ProductImagePlaceholder(
-                width: 160.w,
-                height: 160.w,
-                borderRadius: BorderRadius.circular(16.r),
+                fit: BoxFit.cover,
+                placeholder: (context, url) => ProductImagePlaceholder(
+                  width: 260.w,
+                  height: 160.w,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                errorWidget: (context, url, error) => ProductImagePlaceholder(
+                  width: 260.w,
+                  height: 160.w,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
               ),
             ),
           ),
@@ -48,7 +73,7 @@ class ShopOrderProductHeader extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            '₹${item.price.toStringAsFixed(0)}',
+            '₹${PriceUtils.formatPrice(item.price)}',
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.w800,

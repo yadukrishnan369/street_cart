@@ -6,6 +6,7 @@ import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ShopOrderCard extends StatelessWidget {
   final OrderModel order;
@@ -35,7 +36,7 @@ class ShopOrderCard extends StatelessWidget {
       (sum, item) => sum + (item.price * item.quantity),
     );
 
-    final orderIdPrefix = order.id.substring(0, order.id.length.clamp(0, 5));
+    final orderIdPrefix = ShopOrdersHelper.getOrderIdPrefix(order.id);
     final timeAgo = ShopOrdersHelper.getRelativeTimeAgo(order.createdAt);
     final paymentMethodLabel = ShopOrdersHelper.getDisplayPaymentMethod(
       order.paymentMethod,
@@ -141,7 +142,7 @@ class ShopOrderCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '₹${totalAmount.toStringAsFixed(0)}',
+                      '₹${PriceUtils.formatPrice(totalAmount)}',
                       style: TextStyle(
                         color: ShopAppColors.textPrimary,
                         fontSize: 17.sp,

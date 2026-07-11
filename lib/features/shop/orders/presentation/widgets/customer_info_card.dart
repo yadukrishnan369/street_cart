@@ -43,7 +43,11 @@ class CustomerInfoCard extends StatelessWidget {
               CircleAvatar(
                 radius: 28.r,
                 backgroundColor: const Color(0xFFE2E8F0),
-                child: Icon(Icons.person, color: Colors.grey[600], size: 28.sp),
+                child: Icon(
+                  Icons.person,
+                  color: ShopAppColors.primary,
+                  size: 28.sp,
+                ),
               ),
               SizedBox(width: 16.w),
               Expanded(

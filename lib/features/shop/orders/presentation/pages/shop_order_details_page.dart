@@ -22,7 +22,7 @@ class ShopOrderDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orderIdPrefix = order.id.substring(0, order.id.length.clamp(0, 5));
+    final orderIdPrefix = ShopOrdersHelper.getOrderIdPrefix(order.id);
     final nextStatusLabel = ShopOrdersHelper.getNextStatusActionLabel(
       ShopOrderStatus.fromString(order.status),
     );
@@ -37,7 +37,7 @@ class ShopOrderDetailsPage extends StatelessWidget {
         elevation: 0.5,
         centerTitle: true,
         title: Text(
-          'Order #SC-$orderIdPrefix',
+          'Order #ORD-$orderIdPrefix',
           style: TextStyle(
             color: ShopAppColors.textPrimary,
             fontSize: 18.sp,

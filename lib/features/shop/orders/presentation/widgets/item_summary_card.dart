@@ -6,6 +6,7 @@ import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ItemSummaryCard extends StatelessWidget {
   final OrderModel order;
@@ -150,7 +151,7 @@ class ItemSummaryCard extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '₹${item.price.toStringAsFixed(0)}',
+                                    '₹${PriceUtils.formatPrice(item.price)}',
                                     style: TextStyle(
                                       fontSize: 15.sp,
                                       fontWeight: FontWeight.w800,
@@ -193,7 +194,7 @@ class ItemSummaryCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '₹${totalAmount.toStringAsFixed(2)}',
+                      '₹${PriceUtils.formatPrice(totalAmount)}',
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: const Color(0xFF1E293B),
@@ -221,7 +222,7 @@ class ItemSummaryCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '₹-${commission.toStringAsFixed(2)}',
+                      '₹-${PriceUtils.formatPrice(commission)}',
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: const Color(0xFF1E293B),
@@ -255,7 +256,7 @@ class ItemSummaryCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '₹${finalEarnings.toStringAsFixed(2)}',
+                      '₹${PriceUtils.formatPrice(finalEarnings)}',
                       style: TextStyle(
                         fontSize: 18.sp,
                         color: ShopAppColors.primary,

@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
+import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
 class ShopOrdersHelper {
   static List<OrderModel> filterOrders(List<OrderModel> orders, int tabIndex) {
@@ -99,5 +102,33 @@ class ShopOrdersHelper {
       default:
         return null;
     }
+  }
+
+  static String getOrderIdPrefix(String orderId) {
+    final length = orderId.length;
+    final prefix = orderId.substring(0, length.clamp(0, 5));
+    return prefix.toUpperCase();
+  }
+
+  static void showStatusChangeConfirmation({
+    required BuildContext context,
+    required String statusLabel,
+    required VoidCallback onConfirm,
+  }) {
+    showDialog(
+      context: context,
+      builder: (ctx) => ConfirmationModal(
+        title: 'Confirm Action',
+        content: 'Are you sure you want to proceed with "$statusLabel"?',
+        confirmText: 'Yes, Proceed',
+        cancelText: 'Cancel',
+        confirmColor: ShopAppColors.primary,
+        onConfirm: () {
+          Navigator.pop(ctx);
+          onConfirm();
+        },
+        onCancel: () => Navigator.pop(ctx),
+      ),
+    );
   }
 }

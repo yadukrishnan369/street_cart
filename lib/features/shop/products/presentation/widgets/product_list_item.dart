@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/products/presentation/bloc/shop_produc
 import 'package:street_cart/features/shop/products/presentation/pages/product_detail_page.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ProductListItem extends StatelessWidget {
   final ProductModel product;
@@ -90,7 +91,7 @@ class ProductListItem extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      '₹${product.offerPrice ?? product.originalPrice}',
+                      '₹${PriceUtils.formatPrice(product.offerPrice ?? product.originalPrice)}',
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,

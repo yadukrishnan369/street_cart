@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_e
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ShopOrderDetailsActionButton extends StatefulWidget {
   final OrderModel order;
@@ -73,7 +74,7 @@ class _ShopOrderDetailsActionButtonState
                 ),
                 Expanded(
                   child: Text(
-                    'Confirm Cash Payment of ₹${widget.order.totalAmount.toStringAsFixed(0)} Received',
+                    'Confirm Cash Payment of ₹${PriceUtils.formatPrice(widget.order.totalAmount)} Received',
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -89,14 +90,20 @@ class _ShopOrderDetailsActionButtonState
             onPressed: (requiresPaymentConfirmation && !_paymentReceived)
                 ? null
                 : () {
-                    context.read<ShopOrdersBloc>().add(
-                      UpdateOrderStatusEvent(
-                        shopId: widget.shopId,
-                        orderId: widget.order.id,
-                        newStatus: nextStatus.value,
-                      ),
+                    ShopOrdersHelper.showStatusChangeConfirmation(
+                      context: context,
+                      statusLabel: nextStatusLabel,
+                      onConfirm: () {
+                        context.read<ShopOrdersBloc>().add(
+                          UpdateOrderStatusEvent(
+                            shopId: widget.shopId,
+                            orderId: widget.order.id,
+                            newStatus: nextStatus.value,
+                          ),
+                        );
+                        Navigator.pop(context);
+                      },
                     );
-                    Navigator.pop(context);
                   },
             backgroundColor: ShopAppColors.primary,
             height: 56.h,

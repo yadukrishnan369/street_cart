@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 class ShopOrderProductDetailsInfo extends StatelessWidget {
   final OrderItemModel item;
@@ -40,8 +41,12 @@ class ShopOrderProductDetailsInfo extends StatelessWidget {
           _buildRow('Selected Size', item.selectedSize ?? 'Default Size'),
           _buildRow('Selected Color', item.selectedColor ?? 'Default Color'),
           _buildRow('Quantity', 'x${item.quantity}'),
-          _buildRow('Unit Price', '₹${item.price.toStringAsFixed(0)}'),
-          _buildRow('Subtotal', '₹${total.toStringAsFixed(0)}', isBold: true),
+          _buildRow('Unit Price', '₹${PriceUtils.formatPrice(item.price)}'),
+          _buildRow(
+            'Subtotal',
+            '₹${PriceUtils.formatPrice(total)}',
+            isBold: true,
+          ),
           SizedBox(height: 16.h),
           Text(
             'Earnings Breakdown',
@@ -54,12 +59,12 @@ class ShopOrderProductDetailsInfo extends StatelessWidget {
           const Divider(),
           _buildRow(
             'Admin Commission',
-            '-₹${item.adminCommission.toStringAsFixed(0)}',
+            '-₹${PriceUtils.formatPrice(item.adminCommission)}',
             valueColor: Colors.red[700],
           ),
           _buildRow(
             'Your Earnings',
-            '₹${item.vendorEarnings.toStringAsFixed(0)}',
+            '₹${PriceUtils.formatPrice(item.vendorEarnings)}',
             valueColor: const Color(0xFF10B981),
             isBold: true,
           ),

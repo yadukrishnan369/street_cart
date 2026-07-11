@@ -19,7 +19,7 @@ class ShopOrderProductDetailsPage extends StatelessWidget {
         elevation: 0.5,
         centerTitle: true,
         title: Text(
-          'Product Details',
+          'Product Info',
           style: TextStyle(
             color: ShopAppColors.textPrimary,
             fontSize: 18.sp,
