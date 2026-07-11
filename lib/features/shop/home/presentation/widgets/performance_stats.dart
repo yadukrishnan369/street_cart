@@ -1,48 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
+import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
 
 class PerformanceStats extends StatelessWidget {
-  const PerformanceStats({super.key});
+  final String shopId;
+
+  const PerformanceStats({super.key, required this.shopId});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<ShopHomeBloc, ShopHomeState>(
+      builder: (context, state) {
+        int todayOrdersCount = 0;
+        int pendingDeliveriesCount = 0;
+
+        if (state is ShopHomeDataLoaded) {
+          final now = DateTime.now();
+          final todayStart = DateTime(now.year, now.month, now.day);
+          final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+          for (final order in state.orders) {
+            final orderDate = order.createdAt;
+
+            // Calculate pending deliveries
+            if (order.status.toLowerCase() != 'delivered' &&
+                order.status.toLowerCase() != 'cancelled') {
+              pendingDeliveriesCount++;
+            }
+
+            // Check if order was placed today
+            if (orderDate.isAfter(todayStart) && orderDate.isBefore(todayEnd)) {
+              todayOrdersCount++;
+            }
+          }
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Performance Today', style: ShopAppTextStyles.bodyLargeBold),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: ShopAppColors.successBg,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                'Live Updates',
-                style: ShopAppTextStyles.caption.copyWith(
-                  color: ShopAppColors.primary,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 10.sp,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Performance Today',
+                  style: ShopAppTextStyles.bodyLargeBold,
                 ),
-              ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ShopAppColors.successBg,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    'Live Updates',
+                    style: ShopAppTextStyles.caption.copyWith(
+                      color: ShopAppColors.primary,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 10.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'ORDERS',
+                    todayOrdersCount.toString().padLeft(2, '0'),
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(child: _buildStatCard('REVENUE', '₹12,450.0')),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            _buildPendingCard(
+              'PENDING DELIVERIES',
+              pendingDeliveriesCount.toString().padLeft(2, '0'),
             ),
           ],
-        ),
-        SizedBox(height: 20.h),
-        Row(
-          children: [
-            Expanded(child: _buildStatCard('ORDERS', '24')),
-            SizedBox(width: 16.w),
-            Expanded(child: _buildStatCard('REVENUE', '₹12,450')),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        _buildPendingCard('PENDING DELIVERIES', '08'),
-      ],
+        );
+      },
     );
   }
 

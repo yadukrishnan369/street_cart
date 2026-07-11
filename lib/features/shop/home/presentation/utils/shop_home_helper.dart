@@ -11,9 +11,13 @@ import 'package:street_cart/features/shop/products/presentation/bloc/shop_produc
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
+import 'package:street_cart/features/shop/orders/presentation/pages/shop_orders_page.dart';
 
 class ShopHomeHelper {
-  static void showProfileCompletionDialog(BuildContext context, ShopProfileModel? profile) {
+  static void showProfileCompletionDialog(
+    BuildContext context,
+    ShopProfileModel? profile,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -69,10 +73,8 @@ class ShopHomeHelper {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddEditProductPage(
-          shopId: shopId,
-          productsBloc: productsBloc,
-        ),
+        builder: (context) =>
+            AddEditProductPage(shopId: shopId, productsBloc: productsBloc),
       ),
     );
   }
@@ -86,6 +88,13 @@ class ShopHomeHelper {
           child: EditShopProfilePage(profile: profile),
         ),
       ),
+    );
+  }
+
+  static void onViewOrdersTap(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ShopOrdersPage()),
     );
   }
 }

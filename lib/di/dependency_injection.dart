@@ -177,6 +177,7 @@ import 'package:street_cart/features/shop/home/domain/repositories/i_shop_home_r
 import 'package:street_cart/features/shop/home/data/repositories/shop_home_repository_impl.dart';
 import 'package:street_cart/features/shop/home/domain/usecases/check_first_home_visit.dart';
 import 'package:street_cart/features/shop/home/domain/usecases/complete_first_home_visit.dart';
+import 'package:street_cart/features/shop/home/domain/usecases/get_shop_dashboard_orders.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
 
 // SHOP - SPLASH
@@ -444,10 +445,15 @@ Future<void> _initShopHome() async {
   // Usecases
   sl.registerLazySingleton(() => CheckFirstHomeVisit(sl()));
   sl.registerLazySingleton(() => CompleteFirstHomeVisit(sl()));
+  sl.registerLazySingleton(() => GetShopDashboardOrders(sl()));
 
   // Bloc
-  sl.registerFactory(
-    () => ShopHomeBloc(checkFirstHomeVisit: sl(), completeFirstHomeVisit: sl()),
+  sl.registerLazySingleton(
+    () => ShopHomeBloc(
+      checkFirstHomeVisit: sl(),
+      completeFirstHomeVisit: sl(),
+      getShopDashboardOrders: sl(),
+    ),
   );
 }
 

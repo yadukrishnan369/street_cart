@@ -40,40 +40,40 @@ class ShopHomePageShimmer extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 16.h),
 
-            // Performance Cards Row
+            // Performance Cards
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: 84.h,
+                    height: 104.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24.r),
+                      borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
                   child: Container(
-                    height: 84.h,
+                    height: 104.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24.r),
+                      borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 16.h),
 
-            // Pending Deliveries block
+            // Performance Cards
             Container(
-              height: 72.h,
+              height: 84.h,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(24.r),
+                borderRadius: BorderRadius.circular(28.r),
               ),
             ),
             SizedBox(height: 20.h),
@@ -87,7 +87,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 12.h),
 
             // Weekly Sales Chart box
             Container(
@@ -97,7 +97,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24.r),
               ),
             ),
-            SizedBox(height: 24.h),
+            SizedBox(height: 20.h),
 
             // Quick Actions header
             Container(
@@ -108,59 +108,82 @@ class ShopHomePageShimmer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 12.h),
 
-            // Quick Actions cards row
+            // Quick Actions cards
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: 88.h,
+                    height: 90.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24.r),
+                      borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
                   child: Container(
-                    height: 88.h,
+                    height: 90.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24.r),
+                      borderRadius: BorderRadius.circular(28.r),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Container(
+                    height: 90.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            SizedBox(height: 20.h),
 
             // Recent Orders Header
-            Container(
-              width: 120.w,
-              height: 18.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4.r),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 120.w,
+                  height: 18.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+                Container(
+                  width: 60.w,
+                  height: 18.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 16.h),
 
             // Recent Orders list items
             Column(
-              children: List.generate(2, (index) {
+              children: List.generate(3, (index) {
                 return Container(
-                  margin: EdgeInsets.only(bottom: 16.h),
-                  height: 72.h,
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  height: 78.h,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
+                    borderRadius: BorderRadius.circular(24.r),
                   ),
                 );
               }),
             ),
-            SizedBox(height: 100.h),
+            SizedBox(height: 8.h),
           ],
         ),
       ),

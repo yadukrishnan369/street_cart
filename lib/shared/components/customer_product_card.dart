@@ -57,15 +57,19 @@ class ProductCard extends StatelessWidget {
             child: Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16.r),
+                  ),
                   child: Container(
                     width: double.infinity,
                     color: Colors.grey[200],
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => const ProductImagePlaceholder(),
-                      errorWidget: (context, url, error) => const ProductImagePlaceholder(),
+                      placeholder: (context, url) =>
+                          const ProductImagePlaceholder(),
+                      errorWidget: (context, url, error) =>
+                          const ProductImagePlaceholder(),
                     ),
                   ),
                 ),
@@ -112,6 +116,29 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                if (discountPercentage != null && discountPercentage! > 0)
+                  Positioned(
+                    top: 8.h,
+                    left: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF10B981).withOpacity(0.50),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        '$discountPercentage% OFF',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -144,9 +171,9 @@ class ProductCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
-                    Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6.w,
                     children: [
                       Text(
                         price,
@@ -155,8 +182,7 @@ class ProductCard extends StatelessWidget {
                           fontWeight: FontWeight.w900,
                         ),
                       ),
-                      if (originalPrice != null) ...[
-                        SizedBox(width: 6.w),
+                      if (originalPrice != null)
                         Text(
                           originalPrice!,
                           style: TextStyle(
@@ -165,18 +191,6 @@ class ProductCard extends StatelessWidget {
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                      ],
-                      if (discountPercentage != null && discountPercentage! > 0) ...[
-                        SizedBox(width: 6.w),
-                        Text(
-                          '$discountPercentage% OFF',
-                          style: TextStyle(
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF10B981),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ],

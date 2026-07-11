@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 
 abstract class ShopHomeState extends Equatable {
   const ShopHomeState();
@@ -21,6 +22,15 @@ class ShopHomeFirstVisitCheckCompleted extends ShopHomeState {
 }
 
 class ShopHomeActionSuccess extends ShopHomeState {}
+
+class ShopHomeDataLoaded extends ShopHomeState {
+  final List<OrderModel> orders;
+
+  const ShopHomeDataLoaded(this.orders);
+
+  @override
+  List<Object?> get props => [orders];
+}
 
 class ShopHomeError extends ShopHomeState {
   final String message;

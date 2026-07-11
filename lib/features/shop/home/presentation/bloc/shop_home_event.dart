@@ -10,3 +10,12 @@ abstract class ShopHomeEvent extends Equatable {
 class CheckFirstHomeVisitEvent extends ShopHomeEvent {}
 
 class CompleteFirstHomeVisitEvent extends ShopHomeEvent {}
+
+class FetchShopHomeDataEvent extends ShopHomeEvent {
+  final String shopId;
+
+  const FetchShopHomeDataEvent(this.shopId);
+
+  @override
+  List<Object?> get props => [shopId];
+}

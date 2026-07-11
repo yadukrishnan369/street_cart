@@ -6,11 +6,13 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 class QuickActions extends StatelessWidget {
   final VoidCallback? onAddProductTap;
   final VoidCallback? onEditProfileTap;
+  final VoidCallback? onViewOrdersTap;
 
   const QuickActions({
     super.key,
     this.onAddProductTap,
     this.onEditProfileTap,
+    this.onViewOrdersTap,
   });
 
   @override
@@ -33,6 +35,7 @@ class QuickActions extends StatelessWidget {
               'View Orders',
               Icons.widgets_outlined,
               false,
+              onTap: onViewOrdersTap,
             ),
             _buildActionCard(
               'Edit Profile',
