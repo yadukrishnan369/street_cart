@@ -33,7 +33,7 @@ class ProductDetailStats extends StatelessWidget {
         SizedBox(width: 16.w),
         Expanded(
           child: _buildStatCard(
-            'SALES',
+            'TOTAL PRODUCT SALES',
             '$salesCount units',
             Colors.blue[700]!,
           ),

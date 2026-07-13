@@ -45,6 +45,25 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
     }
     if (status == 'delivered') {
       updates['payment_status'] = 'paid';
+      try {
+        final orderDoc = await _firestore
+            .collection('orders')
+            .doc(orderId)
+            .get();
+        if (orderDoc.exists && orderDoc.data() != null) {
+          final data = orderDoc.data()!;
+          final items = data['items'] as List<dynamic>? ?? [];
+          for (final item in items) {
+            final productId = item['product_id']?.toString() ?? '';
+            final quantity = (item['quantity'] as num?)?.toInt() ?? 0;
+            if (productId.isNotEmpty && quantity > 0) {
+              await _firestore.collection('products').doc(productId).update({
+                'sales_count': FieldValue.increment(quantity),
+              });
+            }
+          }
+        }
+      } catch (_) {}
     }
     await _firestore.collection('orders').doc(orderId).update(updates);
   }

@@ -50,8 +50,8 @@ class ProductStatsRow extends StatelessWidget {
         SizedBox(width: 16.w),
         Expanded(
           child: _buildStatItemCard(
-            label: 'ORDERS',
-            value: '${productItem.orderCount}',
+            label: 'SALES',
+            value: '${p.salesCount} Units',
             bg: Colors.white,
             labelColor: const Color(0xFF667085),
             valueColor: const Color(0xFF1D2939),
