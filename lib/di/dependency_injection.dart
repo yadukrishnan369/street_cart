@@ -798,7 +798,11 @@ void _initCustomerPayment() {
 
   // Bloc
   sl.registerFactory(
-    () => PaymentBloc(placeCustomerOrder: sl(), razorpayService: sl()),
+    () => PaymentBloc(
+      placeCustomerOrder: sl(),
+      razorpayService: sl(),
+      getProfileData: sl(),
+    ),
   );
 }
 

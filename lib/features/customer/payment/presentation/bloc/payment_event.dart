@@ -14,18 +14,16 @@ class InitiateRazorpayPayment extends PaymentEvent {
   final AddressModel address;
   final double totalAmount;
   final String contact;
-  final String email;
 
   const InitiateRazorpayPayment({
     required this.items,
     required this.address,
     required this.totalAmount,
     required this.contact,
-    required this.email,
   });
 
   @override
-  List<Object?> get props => [items, address, totalAmount, contact, email];
+  List<Object?> get props => [items, address, totalAmount, contact];
 }
 
 class CompleteOrderWithCOD extends PaymentEvent {

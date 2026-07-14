@@ -18,12 +18,10 @@ class OrderDetailsShippingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusLower = order.status.toLowerCase();
+    final status = order.status.toLowerCase();
     // Address not changable if shipped, delivered, or cancelled
     final isLocked =
-        statusLower == 'shipped' ||
-        statusLower == 'delivered' ||
-        statusLower == 'cancelled';
+        status == 'shipped' || status == 'delivered' || status == 'cancelled';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

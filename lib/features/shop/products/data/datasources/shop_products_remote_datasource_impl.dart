@@ -90,14 +90,21 @@ class ShopProductsRemoteDataSourceImpl
           : '';
 
       // Load configurations
-      final catDoc = await _firestore.collection('config').doc('categories').get();
-      final configDoc = await _firestore.collection('config').doc('product_config').get();
+      final catDoc = await _firestore
+          .collection('config')
+          .doc('categories')
+          .get();
+      final configDoc = await _firestore
+          .collection('config')
+          .doc('product_config')
+          .get();
 
       List<String> allowedProductCats = [];
       List<String> allowedSizeGroups = [];
 
       if (catDoc.exists && catDoc.data() != null) {
-        final rawBusinessCats = catDoc.data()!['business_categories'] as List<dynamic>?;
+        final rawBusinessCats =
+            catDoc.data()!['business_categories'] as List<dynamic>?;
         if (rawBusinessCats != null) {
           for (final raw in rawBusinessCats) {
             final map = Map<String, dynamic>.from(raw as Map);
@@ -167,14 +174,10 @@ class ShopProductsRemoteDataSourceImpl
   ) async {
     final resolved = <ProductVariantModel>[];
     for (final draft in drafts) {
-      final urls = <String>[];
-      for (final item in draft.imagesOrFiles) {
-        if (item is String) {
-          urls.add(item);
-        } else {
-          final url = await _cloudinaryService.uploadImage(item);
-          if (url != null) urls.add(url);
-        }
+      final urls = List<String>.from(draft.existingUrls);
+      for (final file in draft.newFiles) {
+        final url = await _cloudinaryService.uploadImage(file);
+        if (url != null) urls.add(url);
       }
       resolved.add(
         ProductVariantModel(

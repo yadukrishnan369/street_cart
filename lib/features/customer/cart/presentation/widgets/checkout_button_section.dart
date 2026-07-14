@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/payment/presentation/bloc/payment_
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_event.dart';
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_state.dart';
 import 'package:street_cart/features/customer/payment/presentation/utils/payment_helper.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
 class CheckoutButtonSection extends StatelessWidget {
@@ -50,13 +51,11 @@ class CheckoutButtonSection extends StatelessWidget {
                               .state;
                           if (addressState is! AddressesLoaded ||
                               addressState.addresses.isEmpty) {
-                            ScaffoldMessenger.of(buttonContext).showSnackBar(
-                              const SnackBar(
-                                content: Text(
+                            CustomSnackBar.show(
+                              context,
+                              message:
                                   'Please select or add a delivery address first.',
-                                ),
-                                backgroundColor: CustomerAppColors.error,
-                              ),
+                              isError: true,
                             );
                             return;
                           }
@@ -72,13 +71,10 @@ class CheckoutButtonSection extends StatelessWidget {
                           );
 
                           if (checkoutState.selectedPaymentMethod.isEmpty) {
-                            ScaffoldMessenger.of(buttonContext).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Please select a payment method.',
-                                ),
-                                backgroundColor: CustomerAppColors.error,
-                              ),
+                            CustomSnackBar.show(
+                              context,
+                              message: 'Please select a payment method.',
+                              isError: true,
                             );
                             return;
                           }
@@ -103,7 +99,6 @@ class CheckoutButtonSection extends StatelessWidget {
                                     address: selectedAddress,
                                     totalAmount: totalAmount,
                                     contact: selectedAddress.phone,
-                                    email: 'customer@streetcart.com',
                                   ),
                                 );
                               }

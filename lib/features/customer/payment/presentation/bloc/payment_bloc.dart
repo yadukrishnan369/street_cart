@@ -4,19 +4,24 @@ import 'package:street_cart/core/services/razorpay_service.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/customer/payment/domain/usecases/place_customer_order.dart';
+import 'package:street_cart/features/customer/profile/domain/usecases/get_profile_data.dart';
 import 'payment_event.dart';
 import 'payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   final PlaceCustomerOrder placeCustomerOrder;
   final RazorpayService razorpayService;
+  final GetProfileData getProfileData;
 
   List<CartItem>? _currentItems;
   AddressModel? _currentAddress;
   double? _currentTotalAmount;
 
-  PaymentBloc({required this.placeCustomerOrder, required this.razorpayService})
-    : super(PaymentInitial()) {
+  PaymentBloc({
+    required this.placeCustomerOrder,
+    required this.razorpayService,
+    required this.getProfileData,
+  }) : super(PaymentInitial()) {
     on<InitiateRazorpayPayment>(_onInitiateRazorpayPayment);
     on<CompleteOrderWithCOD>(_onCompleteOrderWithCOD);
     on<PaymentCompletedInternal>(_onPaymentCompletedInternal);
@@ -40,13 +45,18 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     _currentTotalAmount = event.totalAmount;
 
     try {
+      final profile = await getProfileData();
+      final email = (profile != null && profile.email.isNotEmpty)
+          ? profile.email
+          : 'customer@streetcart.com';
+
       razorpayService.openCheckout(
         amount: event.totalAmount,
         name: 'Street Cart',
         description:
             'Secure payment for your multi-vendor marketplace purchase.',
         contact: event.contact,
-        email: event.email,
+        email: email,
       );
     } catch (e) {
       emit(PaymentFailure('Failed to open payment gateway: $e'));
