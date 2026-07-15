@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/cart/domain/usecases/add_to_cart.d
 import 'package:street_cart/features/customer/cart/domain/usecases/remove_from_cart.dart';
 import 'package:street_cart/features/customer/cart/domain/usecases/update_cart_quantity.dart';
 import 'package:street_cart/features/customer/cart/domain/usecases/clear_cart.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_product_by_id.dart';
 import 'cart_event.dart';
 import 'cart_state.dart';
 
@@ -16,6 +17,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final RemoveFromCart removeFromCartUsecase;
   final UpdateCartQuantity updateCartQuantity;
   final ClearCart clearCart;
+  final GetProductById getProductById;
   final FirebaseAuth _auth;
   StreamSubscription<User?>? _authSubscription;
 
@@ -25,6 +27,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     required this.removeFromCartUsecase,
     required this.updateCartQuantity,
     required this.clearCart,
+    required this.getProductById,
     required FirebaseAuth auth,
   }) : _auth = auth,
        super(CartInitial()) {
@@ -36,6 +39,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<ClearLocalCart>(
       (event, emit) => emit(const CartLoaded(items: const [])),
     );
+    on<ToggleSummaryVisibility>(_onToggleSummaryVisibility);
 
     _authSubscription = _auth.authStateChanges().listen((user) {
       if (user != null) {
@@ -131,16 +135,46 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     UpdateItemQuantity event,
     Emitter<CartState> emit,
   ) async {
-    if (event.quantity <= 0) {
-      add(RemoveItem(itemId: event.itemId));
-      return;
-    }
-
     final currentState = state;
     if (currentState is CartLoaded) {
       final currentItems = currentState.items;
       final index = currentItems.indexWhere((item) => item.id == event.itemId);
       if (index != -1) {
+        final item = currentItems[index];
+
+        if (event.quantity > item.quantity) {
+          try {
+            final product = await getProductById(item.productId);
+            int availableStock = product.hasVariants
+                ? ((item.selectedColor == null || item.selectedSize == null)
+                      ? 0
+                      : product.stockForVariant(
+                          item.selectedColor!,
+                          item.selectedSize!,
+                        ))
+                : product.stockQuantity;
+
+            if (event.quantity > availableStock) {
+              emit(
+                CartItemUpdateError(
+                  items: currentItems,
+                  errorMessage:
+                      'Only $availableStock items are available in stock',
+                ),
+              );
+              return;
+            }
+          } catch (e) {
+            emit(
+              CartItemUpdateError(
+                items: currentItems,
+                errorMessage: 'Failed to verify stock',
+              ),
+            );
+            return;
+          }
+        }
+
         final List<CartItem> updatedList = List.from(currentItems);
         updatedList[index] = updatedList[index].copyWith(
           quantity: event.quantity,
@@ -190,6 +224,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     } catch (e) {
       emit(CartError(message: e.toString()));
       add(LoadCart());
+    }
+  }
+
+  void _onToggleSummaryVisibility(
+    ToggleSummaryVisibility event,
+    Emitter<CartState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is CartLoaded) {
+      emit(currentState.copyWith(isSummaryVisible: event.isVisible));
     }
   }
 }

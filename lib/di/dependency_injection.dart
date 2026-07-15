@@ -771,6 +771,7 @@ void _initCustomerCart() {
       removeFromCartUsecase: sl(),
       updateCartQuantity: sl(),
       clearCart: sl(),
+      getProductById: sl(),
       auth: sl(),
     ),
   );

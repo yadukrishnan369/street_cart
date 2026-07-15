@@ -14,11 +14,19 @@ class CartLoading extends CartState {}
 
 class CartLoaded extends CartState {
   final List<CartItem> items;
+  final bool isSummaryVisible;
 
-  const CartLoaded({required this.items});
+  const CartLoaded({required this.items, this.isSummaryVisible = true});
+
+  CartLoaded copyWith({List<CartItem>? items, bool? isSummaryVisible}) {
+    return CartLoaded(
+      items: items ?? this.items,
+      isSummaryVisible: isSummaryVisible ?? this.isSummaryVisible,
+    );
+  }
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, isSummaryVisible];
 }
 
 class CartError extends CartState {
@@ -28,4 +36,17 @@ class CartError extends CartState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class CartItemUpdateError extends CartLoaded {
+  final String errorMessage;
+
+  const CartItemUpdateError({
+    required super.items,
+    required this.errorMessage,
+    super.isSummaryVisible = true,
+  });
+
+  @override
+  List<Object?> get props => [items, isSummaryVisible, errorMessage];
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/di/dependency_injection.dart';
@@ -11,8 +12,11 @@ import 'package:street_cart/features/customer/cart/presentation/bloc/cart_event.
 import 'package:street_cart/features/customer/products/presentation/pages/customer_product_detail_page.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
+import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 
 class CartHelper {
+  static Timer? _scrollDebounceTimer;
+
   // Calculates total quantity of items
   static int calculateTotalItems(List<CartItem> items) {
     return items.fold(0, (sum, item) => sum + item.quantity);
@@ -47,27 +51,40 @@ class CartHelper {
   static void showClearCartDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Clear Cart'),
-        content: const Text(
-          'Are you sure you want to remove all items from your cart?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<CartBloc>().add(ClearAllCart());
-              Navigator.pop(dialogContext);
-            },
-            child: const Text(
-              'Clear',
-              style: TextStyle(color: CustomerAppColors.error),
-            ),
-          ),
-        ],
+      builder: (dialogContext) => CustomAlertDialog(
+        title: 'Clear Cart',
+        content: 'Are you sure you want to remove all items from your cart?',
+        primaryActionLabel: 'Clear',
+        primaryActionColor: CustomerAppColors.error,
+        secondaryActionLabel: 'Cancel',
+        icon: Icons.delete_sweep_outlined,
+        iconColor: CustomerAppColors.error,
+        onPrimaryAction: () {
+          context.read<CartBloc>().add(ClearAllCart());
+          Navigator.pop(dialogContext);
+        },
+        onSecondaryAction: () => Navigator.pop(dialogContext),
+      ),
+    );
+  }
+
+  // Shows the Remove Cart Item confirmation dialog
+  static void showDeleteDialog(BuildContext context, VoidCallback onDelete) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => CustomAlertDialog(
+        title: 'Delete Item',
+        content: 'Are you sure you want to remove this item from your cart?',
+        primaryActionLabel: 'Delete',
+        primaryActionColor: CustomerAppColors.error,
+        secondaryActionLabel: 'Cancel',
+        icon: Icons.delete_outline,
+        iconColor: CustomerAppColors.error,
+        onPrimaryAction: () {
+          onDelete();
+          Navigator.pop(dialogContext);
+        },
+        onSecondaryAction: () => Navigator.pop(dialogContext),
       ),
     );
   }
@@ -136,5 +153,44 @@ class CartHelper {
   // Checks if the customer is logged in
   static bool isUserLoggedIn() {
     return sl<FirebaseAuth>().currentUser != null;
+  }
+
+  // Handles scroll events to toggle order summary visibility
+  static void handleScroll(
+    BuildContext context,
+    ScrollController scrollController,
+    CartLoaded currentState,
+  ) {
+    if (!scrollController.hasClients) return;
+
+    if (scrollController.offset <= 0 ||
+        scrollController.position.maxScrollExtent <= 0) {
+      _scrollDebounceTimer?.cancel();
+      if (!currentState.isSummaryVisible) {
+        context.read<CartBloc>().add(
+          const ToggleSummaryVisibility(isVisible: true),
+        );
+      }
+      return;
+    }
+
+    if (currentState.isSummaryVisible) {
+      context.read<CartBloc>().add(
+        const ToggleSummaryVisibility(isVisible: false),
+      );
+    }
+
+    // shows the summary card back after 2 seconds
+    _scrollDebounceTimer?.cancel();
+    _scrollDebounceTimer = Timer(const Duration(seconds: 3), () {
+      if (context.mounted) {
+        final state = context.read<CartBloc>().state;
+        if (state is CartLoaded && !state.isSummaryVisible) {
+          context.read<CartBloc>().add(
+            const ToggleSummaryVisibility(isVisible: true),
+          );
+        }
+      }
+    });
   }
 }

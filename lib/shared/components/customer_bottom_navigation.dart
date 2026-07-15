@@ -8,7 +8,6 @@ import 'package:street_cart/features/customer/shops/presentation/pages/customer_
 import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/cart_state.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/cart_page.dart';
-import 'package:street_cart/features/customer/cart/presentation/utils/cart_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/pages/my_orders_page.dart';
 
 class CustomerBottomNavigation extends StatelessWidget {
@@ -42,7 +41,7 @@ class CustomerBottomNavigation extends StatelessWidget {
                 builder: (context, state) {
                   int count = 0;
                   if (state is CartLoaded) {
-                    count = CartHelper.calculateTotalItems(state.items);
+                    count = state.items.length;
                   }
                   if (count == 0) return const SizedBox.shrink();
                   return Positioned(

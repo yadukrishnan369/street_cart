@@ -7,6 +7,7 @@ class OrderSummary extends StatelessWidget {
   final int productTypes;
   final double subtotal;
   final double totalAmount;
+  final bool isVisible;
 
   const OrderSummary({
     super.key,
@@ -14,65 +15,87 @@ class OrderSummary extends StatelessWidget {
     required this.productTypes,
     required this.subtotal,
     required this.totalAmount,
+    this.isVisible = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            offset: const Offset(0, 4),
-            blurRadius: 10,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Order Summary',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: CustomerAppColors.textPrimary,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          _summaryRow('Product Types', '$productTypes'),
-          SizedBox(height: 8.h),
-          _summaryRow('Total Quantity', '$totalItems'),
-          SizedBox(height: 8.h),
-          _summaryRow('Subtotal', '₹${subtotal.toStringAsFixed(0)}'),
-          SizedBox(height: 12.h),
-          const Divider(color: CustomerAppColors.border),
-          SizedBox(height: 12.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+      height: isVisible ? 220.h : 0,
+      clipBehavior: Clip.hardEdge,
+      decoration: const BoxDecoration(),
+      child: AnimatedSlide(
+        offset: isVisible ? Offset.zero : const Offset(0, 1.2),
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Total Amount',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: CustomerAppColors.surface,
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.02),
+                      offset: const Offset(0, 4),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Order Summary',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: CustomerAppColors.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    _summaryRow('Product Types', '$productTypes'),
+                    SizedBox(height: 8.h),
+                    _summaryRow('Total Quantity', '$totalItems'),
+                    SizedBox(height: 8.h),
+                    _summaryRow('Subtotal', '₹${subtotal.toStringAsFixed(0)}'),
+                    SizedBox(height: 12.h),
+                    const Divider(color: CustomerAppColors.border),
+                    SizedBox(height: 12.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Total Amount',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: CustomerAppColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          '₹${totalAmount.toStringAsFixed(0)}',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: CustomerAppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                '₹${totalAmount.toStringAsFixed(0)}',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.primary,
-                ),
-              ),
+              SizedBox(height: 28.h),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

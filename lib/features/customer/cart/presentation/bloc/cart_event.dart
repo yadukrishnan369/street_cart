@@ -47,3 +47,12 @@ class RemoveItem extends CartEvent {
 class ClearAllCart extends CartEvent {}
 
 class ClearLocalCart extends CartEvent {}
+
+class ToggleSummaryVisibility extends CartEvent {
+  final bool isVisible;
+
+  const ToggleSummaryVisibility({required this.isVisible});
+
+  @override
+  List<Object?> get props => [isVisible];
+}
