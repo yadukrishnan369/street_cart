@@ -238,6 +238,7 @@ import 'package:street_cart/features/customer/orders/data/repositories/orders_re
 import 'package:street_cart/features/customer/orders/domain/repositories/i_orders_repository.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/get_customer_orders.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order.dart';
+import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order_item.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/update_order_address.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 
@@ -1160,11 +1161,13 @@ void _initCustomerOrders() {
   );
   sl.registerLazySingleton(() => GetCustomerOrders(sl()));
   sl.registerLazySingleton(() => CancelOrder(sl()));
+  sl.registerLazySingleton(() => CancelOrderItem(sl()));
   sl.registerLazySingleton(() => UpdateOrderAddress(sl()));
   sl.registerFactory(
     () => OrdersBloc(
       getCustomerOrders: sl(),
       cancelOrder: sl(),
+      cancelOrderItem: sl(),
       updateOrderAddress: sl(),
     ),
   );

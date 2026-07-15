@@ -203,9 +203,10 @@ class OrderDetailsItemsSection extends StatelessWidget {
                   height: 38.h,
                   child: OutlinedButton(
                     onPressed: () {
-                      OrdersHelper.showCancelOrderDialog(
+                      OrdersHelper.showCancelOrderItemDialog(
                         context: context,
                         orderId: order.id,
+                        orderItemId: item.id,
                         ordersBloc: context.read<OrdersBloc>(),
                       );
                     },
@@ -216,7 +217,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Cancel Order',
+                      'Cancel Item',
                       style: TextStyle(
                         color: const Color.fromARGB(255, 238, 160, 160),
                         fontWeight: FontWeight.w600,

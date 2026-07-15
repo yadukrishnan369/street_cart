@@ -19,6 +19,16 @@ class CancelOrderEvent extends OrdersEvent {
   List<Object?> get props => [orderId];
 }
 
+class CancelOrderItemEvent extends OrdersEvent {
+  final String orderId;
+  final String orderItemId;
+
+  const CancelOrderItemEvent(this.orderId, this.orderItemId);
+
+  @override
+  List<Object?> get props => [orderId, orderItemId];
+}
+
 class UpdateOrderAddressEvent extends OrdersEvent {
   final String orderId;
   final AddressModel address;

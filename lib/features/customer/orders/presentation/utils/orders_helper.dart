@@ -210,4 +210,29 @@ class OrdersHelper {
       ),
     );
   }
+
+  static void showCancelOrderItemDialog({
+    required BuildContext context,
+    required String orderId,
+    required String orderItemId,
+    required OrdersBloc ordersBloc,
+  }) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => CustomAlertDialog(
+        title: 'Cancel Item',
+        content: 'Are you sure you want to cancel this item?',
+        secondaryActionLabel: 'No, Keep it',
+        onSecondaryAction: () => Navigator.pop(dialogCtx),
+        primaryActionLabel: 'Yes, Cancel',
+        onPrimaryAction: () {
+          Navigator.pop(dialogCtx);
+          ordersBloc.add(CancelOrderItemEvent(orderId, orderItemId));
+        },
+        icon: Icons.cancel_outlined,
+        iconColor: CustomerAppColors.error,
+        primaryActionColor: CustomerAppColors.error,
+      ),
+    );
+  }
 }

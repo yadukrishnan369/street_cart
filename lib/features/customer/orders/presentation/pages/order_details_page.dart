@@ -73,6 +73,11 @@ class OrderDetailsPage extends StatelessWidget {
                   message: 'Order cancelled successfully.',
                 );
                 Navigator.pop(context); // Go back after cancellation
+              } else if (state is OrderItemCancelledSuccess) {
+                CustomSnackBar.show(
+                  context,
+                  message: 'Item cancelled successfully.',
+                );
               } else if (state is OrderAddressUpdateSuccess) {
                 CustomSnackBar.show(
                   context,

@@ -27,6 +27,15 @@ class OrdersRepositoryImpl implements IOrdersRepository {
   }
 
   @override
+  Future<void> cancelOrderItem(String orderId, String orderItemId) async {
+    try {
+      await remoteDataSource.cancelOrderItem(orderId, orderItemId);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> updateOrderAddress(String orderId, AddressModel address) async {
     try {
       await remoteDataSource.updateOrderAddress(orderId, address);

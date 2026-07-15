@@ -56,7 +56,14 @@ class MyOrdersPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state is OrdersLoading || state is OrdersInitial) {
+            if (state is OrdersLoading ||
+                state is OrdersInitial ||
+                state is OrderCancelling ||
+                state is OrderCancelledSuccess ||
+                state is OrderItemCancelling ||
+                state is OrderItemCancelledSuccess ||
+                state is OrderAddressUpdating ||
+                state is OrderAddressUpdateSuccess) {
               return const CustomerOrdersShimmer();
             }
 

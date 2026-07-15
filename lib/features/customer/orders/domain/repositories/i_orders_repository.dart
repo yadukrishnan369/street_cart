@@ -4,5 +4,6 @@ import 'package:street_cart/features/customer/profile/data/models/address_model.
 abstract class IOrdersRepository {
   Stream<List<OrderModel>> getCustomerOrders();
   Future<void> cancelOrder(String orderId);
+  Future<void> cancelOrderItem(String orderId, String orderItemId);
   Future<void> updateOrderAddress(String orderId, AddressModel address);
 }

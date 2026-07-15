@@ -34,6 +34,10 @@ class OrderCancelling extends OrdersState {}
 
 class OrderCancelledSuccess extends OrdersState {}
 
+class OrderItemCancelling extends OrdersState {}
+
+class OrderItemCancelledSuccess extends OrdersState {}
+
 class OrderAddressUpdating extends OrdersState {}
 
 class OrderAddressUpdateSuccess extends OrdersState {}
