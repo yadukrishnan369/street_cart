@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/admin_settings_model.dart';
-import '../../domain/usecases/get_admin_settings.dart';
-import '../../domain/usecases/save_platform_commission.dart';
-import '../../domain/usecases/save_payment_controls.dart';
-import '../../domain/usecases/change_admin_password.dart';
-import '../../domain/usecases/save_categories.dart';
+import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/get_admin_settings.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_platform_commission.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_payment_controls.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/change_admin_password.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_categories.dart';
 import 'admin_settings_event.dart';
 import 'admin_settings_state.dart';
 
@@ -29,12 +29,12 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
     required SavePaymentControls savePaymentControls,
     required ChangeAdminPassword changeAdminPassword,
     required SaveCategories saveCategories,
-  })  : _getAdminSettings = getAdminSettings,
-        _savePlatformCommission = savePlatformCommission,
-        _savePaymentControls = savePaymentControls,
-        _changeAdminPassword = changeAdminPassword,
-        _saveCategories = saveCategories,
-        super(AdminSettingsInitial()) {
+  }) : _getAdminSettings = getAdminSettings,
+       _savePlatformCommission = savePlatformCommission,
+       _savePaymentControls = savePaymentControls,
+       _changeAdminPassword = changeAdminPassword,
+       _saveCategories = saveCategories,
+       super(AdminSettingsInitial()) {
     on<LoadAdminSettings>(_onLoadAdminSettings);
     on<UpdatePlatformCommission>(_onUpdatePlatformCommission);
     on<UpdatePaymentControls>(_onUpdatePaymentControls);
@@ -60,21 +60,25 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
     UpdatePlatformCommission event,
     Emitter<AdminSettingsState> emit,
   ) async {
-    emit(AdminSettingsActionInProgress());
+    emit(AdminSettingsActionInProgress(_currentSettings));
     try {
       await _savePlatformCommission(event.percentage);
       _currentSettings = _currentSettings.copyWith(
         commissionPercentage: event.percentage,
       );
-      emit(AdminSettingsActionSuccess(
-        message: 'Platform commission updated successfully',
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionSuccess(
+          message: 'Platform commission updated successfully',
+          settings: _currentSettings,
+        ),
+      );
     } catch (e) {
-      emit(AdminSettingsActionFailure(
-        message: e.toString(),
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionFailure(
+          message: e.toString(),
+          settings: _currentSettings,
+        ),
+      );
     }
   }
 
@@ -82,7 +86,7 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
     UpdatePaymentControls event,
     Emitter<AdminSettingsState> emit,
   ) async {
-    emit(AdminSettingsActionInProgress());
+    emit(AdminSettingsActionInProgress(_currentSettings));
     try {
       await _savePaymentControls(
         enableCod: event.enableCod,
@@ -92,15 +96,19 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
         enableCod: event.enableCod,
         enableOnline: event.enableOnline,
       );
-      emit(AdminSettingsActionSuccess(
-        message: 'Payment controls updated successfully',
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionSuccess(
+          message: 'Payment controls updated successfully',
+          settings: _currentSettings,
+        ),
+      );
     } catch (e) {
-      emit(AdminSettingsActionFailure(
-        message: e.toString(),
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionFailure(
+          message: e.toString(),
+          settings: _currentSettings,
+        ),
+      );
     }
   }
 
@@ -108,21 +116,25 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
     UpdateAdminPassword event,
     Emitter<AdminSettingsState> emit,
   ) async {
-    emit(AdminSettingsActionInProgress());
+    emit(AdminSettingsActionInProgress(_currentSettings));
     try {
       await _changeAdminPassword(
         currentPassword: event.currentPassword,
         newPassword: event.newPassword,
       );
-      emit(AdminSettingsActionSuccess(
-        message: 'Password changed successfully',
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionSuccess(
+          message: 'Password changed successfully',
+          settings: _currentSettings,
+        ),
+      );
     } catch (e) {
-      emit(AdminSettingsActionFailure(
-        message: e.toString(),
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionFailure(
+          message: e.toString(),
+          settings: _currentSettings,
+        ),
+      );
     }
   }
 
@@ -130,7 +142,7 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
     UpdateCategories event,
     Emitter<AdminSettingsState> emit,
   ) async {
-    emit(AdminSettingsActionInProgress());
+    emit(AdminSettingsActionInProgress(_currentSettings));
     try {
       await _saveCategories(
         productCategories: event.productCategories,
@@ -140,15 +152,19 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
         productCategories: event.productCategories,
         businessCategories: event.businessCategories,
       );
-      emit(AdminSettingsActionSuccess(
-        message: 'Categories updated successfully',
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionSuccess(
+          message: 'Categories updated successfully',
+          settings: _currentSettings,
+        ),
+      );
     } catch (e) {
-      emit(AdminSettingsActionFailure(
-        message: e.toString(),
-        settings: _currentSettings,
-      ));
+      emit(
+        AdminSettingsActionFailure(
+          message: e.toString(),
+          settings: _currentSettings,
+        ),
+      );
     }
   }
 }

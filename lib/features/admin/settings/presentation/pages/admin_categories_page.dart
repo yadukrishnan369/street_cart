@@ -86,6 +86,8 @@ class AdminCategoriesPage extends StatelessWidget {
               final currentSettings =
                   (settingsState is AdminSettingsLoadSuccess)
                   ? settingsState.settings
+                  : (settingsState is AdminSettingsActionInProgress)
+                  ? settingsState.settings
                   : (settingsState is AdminSettingsActionSuccess)
                   ? settingsState.settings
                   : (settingsState is AdminSettingsActionFailure)

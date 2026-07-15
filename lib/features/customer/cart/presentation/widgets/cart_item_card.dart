@@ -172,19 +172,21 @@ class CartItemCard extends StatelessWidget {
                 icon: Icon(
                   Icons.delete_outline,
                   size: 16.sp,
-                  color: CustomerAppColors.error,
+                  color: CustomerAppColors.error.withAlpha(150),
                 ),
                 label: Text(
                   'Remove',
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: CustomerAppColors.error,
+                    color: CustomerAppColors.error.withAlpha(150),
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: CustomerAppColors.error,
-                  side: const BorderSide(color: CustomerAppColors.error),
+                  foregroundColor: CustomerAppColors.error.withAlpha(150),
+                  side: BorderSide(
+                    color: CustomerAppColors.error.withAlpha(150),
+                  ),
                   padding: EdgeInsets.symmetric(
                     horizontal: 12.w,
                     vertical: 6.h,

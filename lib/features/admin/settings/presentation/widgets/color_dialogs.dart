@@ -7,6 +7,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_bloc.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_event.dart';
+import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 class ColorDialogs {
@@ -25,46 +26,19 @@ class ColorDialogs {
     final blocRef = context.read<AdminProductConfigBloc>();
     showDialog(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: Text(
-          'Delete Color',
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF1E1E2F),
-          ),
-        ),
-        content: Text(
-          'Are you sure you want to delete "${color.name}"? This cannot be undone.',
-          style: TextStyle(fontSize: 14.sp, color: const Color(0xFF8A8A9E)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: const Color(0xFF8A8A9E), fontSize: 14.sp),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              blocRef.add(DeleteColor(color.id));
-              Navigator.pop(dialogCtx);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AdminAppColors.errorColor,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              elevation: 0,
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (dialogCtx) => CustomAlertDialog(
+        title: 'Delete Color',
+        content:
+            'Are you sure you want to delete "${color.name}"? This cannot be undone.',
+        secondaryActionLabel: 'Cancel',
+        primaryActionLabel: 'Delete',
+        icon: Icons.delete_outline,
+        iconColor: AdminAppColors.errorColor,
+        primaryActionColor: AdminAppColors.errorColor,
+        onPrimaryAction: () {
+          blocRef.add(DeleteColor(color.id));
+          Navigator.pop(dialogCtx);
+        },
       ),
     );
   }

@@ -1,4 +1,4 @@
-import '../../data/models/admin_settings_model.dart';
+import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
 
 abstract class AdminSettingsState {
   const AdminSettingsState();
@@ -20,18 +20,28 @@ class AdminSettingsLoadFailure extends AdminSettingsState {
   const AdminSettingsLoadFailure(this.message);
 }
 
-class AdminSettingsActionInProgress extends AdminSettingsState {}
+class AdminSettingsActionInProgress extends AdminSettingsState {
+  final AdminSettingsModel settings;
+
+  const AdminSettingsActionInProgress(this.settings);
+}
 
 class AdminSettingsActionSuccess extends AdminSettingsState {
   final String message;
   final AdminSettingsModel settings;
 
-  const AdminSettingsActionSuccess({required this.message, required this.settings});
+  const AdminSettingsActionSuccess({
+    required this.message,
+    required this.settings,
+  });
 }
 
 class AdminSettingsActionFailure extends AdminSettingsState {
   final String message;
   final AdminSettingsModel settings;
 
-  const AdminSettingsActionFailure({required this.message, required this.settings});
+  const AdminSettingsActionFailure({
+    required this.message,
+    required this.settings,
+  });
 }
