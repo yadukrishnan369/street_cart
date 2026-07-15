@@ -17,6 +17,7 @@ import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/shimmer/shop_products_shimmer.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -62,19 +63,9 @@ class _ProductsPageState extends State<ProductsPage>
       child: BlocListener<ShopProductsBloc, ShopProductsState>(
         listener: (context, state) {
           if (state is ShopProductsOperationSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: ShopAppColors.success,
-              ),
-            );
+            CustomSnackBar.show(context, message: state.message);
           } else if (state is ShopProductsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
-                backgroundColor: ShopAppColors.error,
-              ),
-            );
+            CustomSnackBar.show(context, message: state.error, isError: true);
           }
         },
         child: BlocBuilder<ProductsUiCubit, ProductsUiState>(

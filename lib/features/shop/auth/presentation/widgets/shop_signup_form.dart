@@ -92,6 +92,7 @@ class ShopSignupForm extends StatelessWidget {
                 label: "Business Email",
                 controller: emailController,
                 hintText: 'hello@shop.com',
+                keyboardType: TextInputType.emailAddress,
                 labelStyle: ShopAppTextStyles.bodyMediumBold,
                 textStyle: ShopAppTextStyles.bodyMedium,
                 hintStyle: ShopAppTextStyles.bodyMedium.copyWith(

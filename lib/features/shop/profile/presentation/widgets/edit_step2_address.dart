@@ -133,6 +133,7 @@ class EditStep2Address extends StatelessWidget {
                   label: "Pincode",
                   controller: pincodeController,
                   hintText: '673001',
+                  keyboardType: TextInputType.number,
                   validator: (val) {
                     if (val == null || val.trim().isEmpty) {
                       return 'Pincode is required';

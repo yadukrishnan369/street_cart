@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/products/presentation/pages/custom
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class CartHelper {
   static Timer? _scrollDebounceTimer;
@@ -125,11 +126,10 @@ class CartHelper {
     } catch (e) {
       if (context.mounted) {
         Navigator.pop(context); // Dismiss loading dialog
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error fetching product details: $e'),
-            backgroundColor: CustomerAppColors.error,
-          ),
+        CustomSnackBar.show(
+          context,
+          message: 'Error fetching product details: $e',
+          isError: true,
         );
       }
     }

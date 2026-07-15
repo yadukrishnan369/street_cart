@@ -69,6 +69,7 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 label: 'Email Address',
                 controller: emailController,
                 hintText: 'admin@hyperlocal.com',
+                keyboardType: TextInputType.emailAddress,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 13.sp,
@@ -86,9 +87,13 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 builder: (context, state) {
                   final isLoading = state is AdminAuthLoading;
                   return PrimaryButton(
-                    text: uiState.isResetLinkSent ? 'Reset Link Sent' : 'Send Reset Link',
+                    text: uiState.isResetLinkSent
+                        ? 'Reset Link Sent'
+                        : 'Send Reset Link',
                     isLoading: isLoading,
-                    backgroundColor: uiState.isResetLinkSent ? Colors.grey : AdminAppColors.primaryColor,
+                    backgroundColor: uiState.isResetLinkSent
+                        ? Colors.grey
+                        : AdminAppColors.primaryColor,
                     textStyle: AdminAppTextStyles.buttonText,
                     onPressed: uiState.isResetLinkSent ? null : onSendResetLink,
                   );

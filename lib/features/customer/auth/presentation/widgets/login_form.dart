@@ -40,6 +40,7 @@ class _LoginFormState extends State<LoginForm> {
           CustomTextField(
             label: "Email Address",
             hintText: "name@example.com",
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             validator: Validators.validateEmail,
           ),

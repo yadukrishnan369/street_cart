@@ -69,6 +69,7 @@ class AdminLoginForm extends StatelessWidget {
                 label: 'Email Address',
                 controller: emailController,
                 hintText: 'admin@hyperlocal.com',
+                keyboardType: TextInputType.emailAddress,
                 labelStyle: AdminAppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AdminAppColors.textPrimary,

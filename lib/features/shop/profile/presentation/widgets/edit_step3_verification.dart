@@ -63,6 +63,7 @@ class EditStep3Verification extends StatelessWidget {
             label: "Business Email",
             controller: emailController,
             hintText: 'Enter business email',
+            keyboardType: TextInputType.emailAddress,
             validator: Validators.validateEmail,
             prefixIcon: const Icon(
               Icons.email_outlined,
@@ -82,6 +83,7 @@ class EditStep3Verification extends StatelessWidget {
             label: "Business Phone Number",
             controller: phoneController,
             hintText: 'Enter phone number',
+            keyboardType: TextInputType.phone,
             validator: (val) {
               if (val == null || val.trim().isEmpty)
                 return 'Phone number is required';

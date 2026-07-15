@@ -12,6 +12,7 @@ import 'package:street_cart/features/shop/products/presentation/bloc/shop_produc
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_orders_page.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class ShopHomeHelper {
   static void showProfileCompletionDialog(
@@ -35,13 +36,9 @@ class ShopHomeHelper {
               ),
             );
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Loading profile details, please try again in a moment.',
-                ),
-                duration: Duration(seconds: 2),
-              ),
+            CustomSnackBar.show(
+              context,
+              message: 'Loading profile details, please try again in a moment.',
             );
           }
         },

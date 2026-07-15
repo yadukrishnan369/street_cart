@@ -40,6 +40,7 @@ class _ShopForgotPasswordFormState extends State<ShopForgotPasswordForm> {
           CustomTextField(
             label: "Business Email",
             hintText: "example@business.com",
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             validator: Validators.validateEmail,
             labelStyle: ShopAppTextStyles.bodyMediumBold,

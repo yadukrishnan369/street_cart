@@ -45,6 +45,7 @@ class ShopLoginForm extends StatelessWidget {
                   label: "Business Email",
                   controller: emailController,
                   hintText: 'e.g. name@business.com',
+                  keyboardType: TextInputType.emailAddress,
                   validator: Validators.validateEmail,
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,

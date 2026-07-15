@@ -39,6 +39,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           CustomTextField(
             label: "Email Address",
             hintText: "example@email.com",
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             validator: Validators.validateEmail,
             prefixIcon: Icon(

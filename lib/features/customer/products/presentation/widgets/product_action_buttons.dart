@@ -12,6 +12,7 @@ import 'package:street_cart/features/customer/cart/presentation/utils/cart_helpe
 import 'package:street_cart/features/customer/products/presentation/bloc/product_detail_ui_cubit.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class ProductActionButtons extends StatelessWidget {
   final ProductModel product;
@@ -87,11 +88,10 @@ class ProductActionButtons extends StatelessWidget {
                               selectedSize: selectedSize,
                             );
                             if (warning != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(warning),
-                                  backgroundColor: CustomerAppColors.error,
-                                ),
+                              CustomSnackBar.show(
+                                context,
+                                message: warning,
+                                isError: true,
                               );
                               return;
                             }
@@ -102,8 +102,11 @@ class ProductActionButtons extends StatelessWidget {
                               productId: product.id,
                               productName: product.name,
                               productImage: (selectedColor != null)
-                                  ? product.imagesForColor(selectedColor).firstOrNull ??
-                                        (product.displayImages.firstOrNull ?? '')
+                                  ? product
+                                            .imagesForColor(selectedColor)
+                                            .firstOrNull ??
+                                        (product.displayImages.firstOrNull ??
+                                            '')
                                   : (product.displayImages.firstOrNull ?? ''),
                               price:
                                   (product.offerPrice ?? product.originalPrice)
@@ -211,12 +214,7 @@ class ProductActionButtons extends StatelessWidget {
           selectedSize: selectedSize,
         );
         if (warning != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(warning),
-              backgroundColor: CustomerAppColors.error,
-            ),
-          );
+          CustomSnackBar.show(context, message: warning, isError: true);
           return;
         }
 
@@ -230,12 +228,7 @@ class ProductActionButtons extends StatelessWidget {
         );
 
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Product added to cart.'),
-              backgroundColor: CustomerAppColors.success,
-            ),
-          );
+          CustomSnackBar.show(context, message: 'Product added to cart.');
         }
       },
       icon: const Icon(

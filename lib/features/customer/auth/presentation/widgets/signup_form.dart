@@ -64,6 +64,7 @@ class _SignupFormState extends State<SignupForm> {
           CustomTextField(
             label: "Email Address",
             hintText: "name@example.com",
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             validator: Validators.validateEmail,
             prefixIcon: Icon(

@@ -6,6 +6,7 @@ import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
@@ -118,12 +119,9 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Review for ${item.productName} clicked!',
-                              ),
-                            ),
+                          CustomSnackBar.show(
+                            context,
+                            message: 'Review for ${item.productName} clicked!',
                           );
                         },
                         icon: Icon(
@@ -152,12 +150,10 @@ class OrderDetailsItemsSection extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
+                            CustomSnackBar.show(
+                              context,
+                              message:
                                   'Return requested for ${item.productName}',
-                                ),
-                              ),
                             );
                           },
                           icon: Icon(

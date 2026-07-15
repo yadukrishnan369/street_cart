@@ -8,6 +8,7 @@ import 'package:street_cart/features/customer/orders/presentation/pages/order_de
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 class RecentOrdersList extends StatelessWidget {
@@ -404,13 +405,10 @@ class _HistoryOrderCard extends StatelessWidget {
             if (OrdersHelper.isReturnEligible(order)) ...[
               TextButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
+                  CustomSnackBar.show(
+                    context,
+                    message:
                         'Return request initiated for ${firstItem.productName}',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
                   );
                 },
                 style: TextButton.styleFrom(

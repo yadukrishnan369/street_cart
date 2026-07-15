@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/utils/validators.dart';
+import 'package:street_cart/shared/widgets/custom_text_field.dart';
+import 'package:street_cart/shared/widgets/primary_button.dart';
 
 class EditProfileForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -30,124 +32,60 @@ class EditProfileForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInputField(
-            'Full Name',
-            nameController,
-            Validators.validateName,
+          CustomTextField(
+            label: 'Full Name',
+            hintText: 'Enter your full name',
+            controller: nameController,
+            validator: Validators.validateName,
+            fillColor: CustomerAppColors.surface,
+            focusedBorderColor: CustomerAppColors.primary,
+            prefixIcon: const Icon(
+              Icons.person_outline,
+              color: CustomerAppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 20.h),
-          _buildInputField(
-            'Email Address',
-            emailController,
-            Validators.validateEmail,
+          CustomTextField(
+            label: 'Email Address',
+            hintText: 'Enter your email address',
+            controller: emailController,
+            validator: Validators.validateEmail,
+            fillColor: CustomerAppColors.surface,
+            focusedBorderColor: CustomerAppColors.primary,
+            keyboardType: TextInputType.emailAddress,
+            prefixIcon: const Icon(
+              Icons.email_outlined,
+              color: CustomerAppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 20.h),
-          _buildInputField(
-            'Phone Number',
-            phoneController,
-            Validators.validatePhone,
+          CustomTextField(
+            label: 'Phone Number',
+            hintText: 'Enter your phone number',
+            controller: phoneController,
+            validator: Validators.validatePhone,
+            fillColor: CustomerAppColors.surface,
+            focusedBorderColor: CustomerAppColors.primary,
+            keyboardType: TextInputType.phone,
+            prefixIcon: const Icon(
+              Icons.phone_outlined,
+              color: CustomerAppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 40.h),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: (isLoading || isImageUploading) ? null : onSave,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomerAppColors.primary,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                elevation: 0,
-              ),
-              child: isLoading
-                  ? SizedBox(
-                      height: 24.h,
-                      width: 24.h,
-                      child: const CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Save Changes',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: Colors.white,
-                          size: 20.sp,
-                        ),
-                      ],
-                    ),
+          PrimaryButton(
+            text: 'Save Changes',
+            onPressed: onSave,
+            isLoading: isLoading || isImageUploading,
+            suffixIcon: Icon(
+              Icons.check_circle_outline,
+              color: Colors.white,
+              size: 20.sp,
             ),
+            borderRadius: 12,
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildInputField(
-    String label,
-    TextEditingController controller,
-    String? Function(String?) validator,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: CustomerAppColors.surface,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 16.h,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey.shade200),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey.shade200),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: CustomerAppColors.primary,
-                width: 1.5,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: Colors.redAccent, width: 2),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -95,6 +95,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
           CustomTextField(
             label: 'Phone Number',
             hintText: 'e.g., 9876543210',
+            keyboardType: TextInputType.phone,
             controller: _phoneController,
             validator: Validators.validateAddressPhone,
           ),
@@ -129,6 +130,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
                 child: CustomTextField(
                   label: 'Pincode',
                   hintText: '673001',
+                  keyboardType: TextInputType.number,
                   controller: _pincodeController,
                   validator: Validators.validatePincode,
                 ),
