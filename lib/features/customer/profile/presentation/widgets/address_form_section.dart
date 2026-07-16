@@ -25,7 +25,8 @@ class _AddressFormSectionState extends State<AddressFormSection> {
   late TextEditingController _phoneController;
   late TextEditingController _line1Controller;
   late TextEditingController _line2Controller;
-  late TextEditingController _cityController;
+  late TextEditingController _districtController;
+  late TextEditingController _stateController;
   late TextEditingController _pincodeController;
   String _selectedType = 'HOME';
 
@@ -40,7 +41,10 @@ class _AddressFormSectionState extends State<AddressFormSection> {
     _line2Controller = TextEditingController(
       text: widget.address?.addressLine2,
     );
-    _cityController = TextEditingController(text: widget.address?.city);
+    _districtController = TextEditingController(
+      text: widget.address?.district ?? widget.address?.city,
+    );
+    _stateController = TextEditingController(text: widget.address?.state);
     _pincodeController = TextEditingController(text: widget.address?.pincode);
     _selectedType = widget.address?.type ?? 'HOME';
   }
@@ -51,7 +55,8 @@ class _AddressFormSectionState extends State<AddressFormSection> {
     _phoneController.dispose();
     _line1Controller.dispose();
     _line2Controller.dispose();
-    _cityController.dispose();
+    _districtController.dispose();
+    _stateController.dispose();
     _pincodeController.dispose();
     super.dispose();
   }
@@ -64,10 +69,14 @@ class _AddressFormSectionState extends State<AddressFormSection> {
         phone: _phoneController.text.trim(),
         addressLine1: _line1Controller.text.trim(),
         addressLine2: _line2Controller.text.trim(),
-        city: _cityController.text.trim(),
+        city: _districtController.text.trim(),
+        district: _districtController.text.trim(),
+        state: _stateController.text.trim(),
         pincode: _pincodeController.text.trim(),
         type: _selectedType,
         isDefault: widget.address?.isDefault ?? false,
+        latitude: widget.address?.latitude,
+        longitude: widget.address?.longitude,
       );
 
       if (widget.address == null) {
@@ -114,15 +123,22 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             validator: Validators.validateAddress2,
           ),
           SizedBox(height: 20.h),
+          CustomTextField(
+            label: 'District',
+            hintText: 'Kozhikode',
+            controller: _districtController,
+            validator: Validators.validateDistrict,
+          ),
+          SizedBox(height: 20.h),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: CustomTextField(
-                  label: 'City',
-                  hintText: 'Kozhikode',
-                  controller: _cityController,
-                  validator: Validators.validateCity,
+                  label: 'State',
+                  hintText: 'Kerala',
+                  controller: _stateController,
+                  validator: Validators.validateState,
                 ),
               ),
               SizedBox(width: 16.w),

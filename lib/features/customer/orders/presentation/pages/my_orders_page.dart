@@ -48,11 +48,15 @@ class MyOrdersPage extends StatelessWidget {
         body: BlocConsumer<OrdersBloc, OrdersState>(
           listener: (context, state) {
             if (state is OrdersFailure) {
-              CustomSnackBar.show(
-                context,
-                message: state.message,
-                isError: true,
-              );
+              if (!state.message.contains(
+                "does not deliver to the selected address",
+              )) {
+                CustomSnackBar.show(
+                  context,
+                  message: state.message,
+                  isError: true,
+                );
+              }
             }
           },
           builder: (context, state) {

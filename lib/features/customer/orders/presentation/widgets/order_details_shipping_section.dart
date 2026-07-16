@@ -134,7 +134,10 @@ class OrderDetailsShippingSection extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      '${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.addressLine2}\n${order.deliveryAddress.city}, ${order.deliveryAddress.pincode}',
+                      '${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.addressLine2.isNotEmpty ? "${order.deliveryAddress.addressLine2}, " : ""}\n'
+                      '${order.deliveryAddress.district.isNotEmpty ? order.deliveryAddress.district : order.deliveryAddress.city}'
+                      '${order.deliveryAddress.state.isNotEmpty ? ", ${order.deliveryAddress.state}" : ""}'
+                      ' - ${order.deliveryAddress.pincode}',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 13.sp,

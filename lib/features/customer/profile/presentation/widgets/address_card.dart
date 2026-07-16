@@ -105,7 +105,10 @@ class AddressCard extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        '${address.addressLine1}, ${address.addressLine2}, ${address.city}, ${address.pincode}',
+                        '${address.addressLine1}, ${address.addressLine2.isNotEmpty ? "${address.addressLine2}, " : ""}'
+                        '${address.district.isNotEmpty ? address.district : address.city}'
+                        '${address.state.isNotEmpty ? ", ${address.state}" : ""}'
+                        ' - ${address.pincode}',
                         style: CustomerAppTextStyles.body.copyWith(
                           color: Colors.grey.shade700,
                           fontSize: 14.sp,

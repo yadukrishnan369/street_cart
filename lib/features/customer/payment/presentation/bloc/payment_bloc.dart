@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/cart/data/models/cart_item_model.d
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/customer/payment/domain/usecases/place_customer_order.dart';
 import 'package:street_cart/features/customer/profile/domain/usecases/get_profile_data.dart';
+import 'package:street_cart/core/utils/delivery_validator.dart';
 import 'payment_event.dart';
 import 'payment_state.dart';
 
@@ -12,6 +13,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   final PlaceCustomerOrder placeCustomerOrder;
   final RazorpayService razorpayService;
   final GetProfileData getProfileData;
+  final DeliveryValidator deliveryValidator;
 
   List<CartItem>? _currentItems;
   AddressModel? _currentAddress;
@@ -21,6 +23,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     required this.placeCustomerOrder,
     required this.razorpayService,
     required this.getProfileData,
+    required this.deliveryValidator,
   }) : super(PaymentInitial()) {
     on<InitiateRazorpayPayment>(_onInitiateRazorpayPayment);
     on<CompleteOrderWithCOD>(_onCompleteOrderWithCOD);
@@ -45,6 +48,13 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     _currentTotalAmount = event.totalAmount;
 
     try {
+      final shopIds = event.items.map((e) => e.shopId).toSet().toList();
+      final validatedAddress = await deliveryValidator.validateAddress(
+        address: event.address,
+        shopIds: shopIds,
+      );
+      _currentAddress = validatedAddress;
+
       final profile = await getProfileData();
       final email = (profile != null && profile.email.isNotEmpty)
           ? profile.email
@@ -59,7 +69,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         email: email,
       );
     } catch (e) {
-      emit(PaymentFailure('Failed to open payment gateway: $e'));
+      emit(PaymentFailure(e.toString().replaceAll('Exception: ', '')));
     }
   }
 
@@ -67,11 +77,19 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     CompleteOrderWithCOD event,
     Emitter<PaymentState> emit,
   ) async {
-    emit(const PaymentOrderCreating('Cash on Delivery'));
+    emit(PaymentProcessing());
     try {
+      final shopIds = event.items.map((e) => e.shopId).toSet().toList();
+      final validatedAddress = await deliveryValidator.validateAddress(
+        address: event.address,
+        shopIds: shopIds,
+      );
+
+      emit(const PaymentOrderCreating('Cash on Delivery'));
+
       final orderId = await placeCustomerOrder(
         items: event.items,
-        address: event.address,
+        address: validatedAddress,
         paymentMethod: 'Cash on Delivery',
         paymentStatus: 'Pending',
         totalAmount: event.totalAmount,

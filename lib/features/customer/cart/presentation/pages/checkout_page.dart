@@ -17,7 +17,8 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/address_
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_bloc.dart';
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_state.dart';
 import 'package:street_cart/features/customer/payment/presentation/widgets/payment_processing_overlay.dart';
-import 'package:street_cart/features/customer/payment/presentation/widgets/payment_error_dialog.dart';
+import 'package:street_cart/features/customer/payment/presentation/widgets/order_error_dialog.dart';
+import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 
 class CheckoutPage extends StatelessWidget {
   final List<CartItem> cartItems;
@@ -76,11 +77,17 @@ class CheckoutPage extends StatelessWidget {
                 ),
               );
             } else if (paymentState is PaymentFailure) {
-              showDialog(
-                context: context,
-                builder: (_) =>
-                    PaymentErrorDialog(message: paymentState.message),
-              );
+              if (paymentState.message.contains(
+                "does not deliver to the selected address",
+              )) {
+                OrdersHelper.showOutOfRadiusDialog(context);
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (_) =>
+                      OrderErrorDialog(message: paymentState.message),
+                );
+              }
             }
           },
           builder: (context, paymentState) {

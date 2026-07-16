@@ -100,14 +100,15 @@ class CheckoutAddressSection extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            '${defaultAddress.addressLine1}, ${defaultAddress.addressLine2}',
+                            '${defaultAddress.addressLine1}${defaultAddress.addressLine2.isNotEmpty ? ", ${defaultAddress.addressLine2}" : ""}',
                             style: TextStyle(
                               fontSize: 13.sp,
                               color: CustomerAppColors.textSecondary,
                             ),
                           ),
                           Text(
-                            '${defaultAddress.city} - ${defaultAddress.pincode}',
+                            '${defaultAddress.district.isNotEmpty ? defaultAddress.district : defaultAddress.city}'
+                            '${defaultAddress.state.isNotEmpty ? ", ${defaultAddress.state}" : ""} - ${defaultAddress.pincode}',
                             style: TextStyle(
                               fontSize: 13.sp,
                               color: CustomerAppColors.textSecondary,

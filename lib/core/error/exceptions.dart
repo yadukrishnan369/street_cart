@@ -37,3 +37,25 @@ class ImagePickerException implements Exception {
   @override
   String toString() => message;
 }
+
+class OutOfDeliveryRadiusException implements Exception {
+  final String message;
+  OutOfDeliveryRadiusException([
+    this.message =
+        'This shop does not deliver to the selected address. Please choose another delivery address within the delivery area.',
+  ]);
+
+  @override
+  String toString() => message;
+}
+
+class AddressVerificationException implements Exception {
+  final String message;
+  AddressVerificationException([
+    this.message =
+        'Unable to verify this address. Please check the address details and try again.',
+  ]);
+
+  @override
+  String toString() => message;
+}

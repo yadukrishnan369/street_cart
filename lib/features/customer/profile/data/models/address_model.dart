@@ -5,9 +5,13 @@ class AddressModel {
   final String addressLine1;
   final String addressLine2;
   final String city;
+  final String district;
+  final String state;
   final String pincode;
   final String type;
   final bool isDefault;
+  final double? latitude;
+  final double? longitude;
 
   AddressModel({
     required this.id,
@@ -16,9 +20,13 @@ class AddressModel {
     required this.addressLine1,
     required this.addressLine2,
     required this.city,
+    required this.district,
+    required this.state,
     required this.pincode,
     required this.type,
     this.isDefault = false,
+    this.latitude,
+    this.longitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,9 +36,13 @@ class AddressModel {
       'addressLine1': addressLine1,
       'addressLine2': addressLine2,
       'city': city,
+      'district': district,
+      'state': state,
       'pincode': pincode,
       'type': type,
       'isDefault': isDefault,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -42,9 +54,13 @@ class AddressModel {
       addressLine1: map['addressLine1'] ?? '',
       addressLine2: map['addressLine2'] ?? '',
       city: map['city'] ?? '',
+      district: map['district'] ?? '',
+      state: map['state'] ?? '',
       pincode: map['pincode'] ?? '',
       type: map['type'] ?? 'OTHER',
       isDefault: map['isDefault'] ?? false,
+      latitude: (map['latitude'] as num?)?.toDouble(),
+      longitude: (map['longitude'] as num?)?.toDouble(),
     );
   }
 
@@ -55,9 +71,13 @@ class AddressModel {
     String? addressLine1,
     String? addressLine2,
     String? city,
+    String? district,
+    String? state,
     String? pincode,
     String? type,
     bool? isDefault,
+    double? latitude,
+    double? longitude,
   }) {
     return AddressModel(
       id: id ?? this.id,
@@ -66,9 +86,13 @@ class AddressModel {
       addressLine1: addressLine1 ?? this.addressLine1,
       addressLine2: addressLine2 ?? this.addressLine2,
       city: city ?? this.city,
+      district: district ?? this.district,
+      state: state ?? this.state,
       pincode: pincode ?? this.pincode,
       type: type ?? this.type,
       isDefault: isDefault ?? this.isDefault,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }

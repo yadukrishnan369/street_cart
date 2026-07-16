@@ -84,6 +84,20 @@ class Validators {
     return null;
   }
 
+  static String? validateDistrict(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter district';
+    }
+    return null;
+  }
+
+  static String? validateState(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter state';
+    }
+    return null;
+  }
+
   static String? validatePincode(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Enter pincode';

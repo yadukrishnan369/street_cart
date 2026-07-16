@@ -3,16 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/customer/orders/data/datasources/i_orders_remote_datasource.dart';
+import 'package:street_cart/core/utils/delivery_validator.dart';
 
 class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final DeliveryValidator _deliveryValidator;
 
   OrdersRemoteDataSourceImpl({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
+    required DeliveryValidator deliveryValidator,
   }) : _auth = auth,
-       _firestore = firestore;
+       _firestore = firestore,
+       _deliveryValidator = deliveryValidator;
 
   @override
   Stream<List<OrderModel>> getCustomerOrders() {
@@ -213,8 +217,27 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User is not logged in');
 
+    final orderDoc = await _firestore.collection('orders').doc(orderId).get();
+    if (!orderDoc.exists) throw Exception('Order not found');
+
+    final orderData = orderDoc.data();
+    final items = orderData?['items'] as List<dynamic>? ?? [];
+
+    final shopIds = items
+        .map((item) {
+          final map = item as Map<String, dynamic>;
+          return map['shop_id'] as String;
+        })
+        .toSet()
+        .toList();
+
+    final validatedAddress = await _deliveryValidator.validateAddress(
+      address: address,
+      shopIds: shopIds,
+    );
+
     await _firestore.collection('orders').doc(orderId).update({
-      'delivery_address': address.toMap(),
+      'delivery_address': validatedAddress.toMap(),
     });
   }
 }

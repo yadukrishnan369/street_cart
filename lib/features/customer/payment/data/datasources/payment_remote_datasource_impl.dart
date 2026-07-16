@@ -2,17 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
+import 'package:street_cart/core/utils/delivery_validator.dart';
 import 'payment_remote_datasource.dart';
 
 class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final DeliveryValidator _deliveryValidator;
 
   PaymentRemoteDataSourceImpl({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
+    required DeliveryValidator deliveryValidator,
   }) : _auth = auth,
-       _firestore = firestore;
+       _firestore = firestore,
+       _deliveryValidator = deliveryValidator;
 
   @override
   Future<String> placeOrder({
@@ -26,6 +30,13 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
     if (user == null) {
       throw Exception('User is not logged in');
     }
+
+    // validate radius distance for all shops
+    final shopIds = items.map((e) => e.shopId).toSet().toList();
+    final validatedAddress = await _deliveryValidator.validateAddress(
+      address: address,
+      shopIds: shopIds,
+    );
 
     // Group items - Each shop gets its own separate order
     final Map<String, List<CartItem>> itemsByShop = {};
@@ -183,7 +194,7 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
           'id': orderRef.id,
           'customer_id': user.uid,
           'items': itemsData,
-          'delivery_address': address.toMap(),
+          'delivery_address': validatedAddress.toMap(),
           'payment_method': paymentMethod,
           'payment_status': paymentStatus,
           'total_amount': shopSubtotal,

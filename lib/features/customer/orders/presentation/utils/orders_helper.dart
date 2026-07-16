@@ -235,4 +235,24 @@ class OrdersHelper {
       ),
     );
   }
+
+  static void showOutOfRadiusDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => PopScope(
+        canPop: false,
+        child: CustomAlertDialog(
+          title: 'Delivery Not Available',
+          content:
+              'This shop does not deliver to the selected address. Please choose another delivery address within the delivery area.',
+          primaryActionLabel: 'OK',
+          primaryActionColor: CustomerAppColors.primary,
+          icon: Icons.error_outline,
+          iconColor: CustomerAppColors.error,
+          onPrimaryAction: () => Navigator.pop(dialogCtx),
+        ),
+      ),
+    );
+  }
 }

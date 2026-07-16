@@ -85,11 +85,18 @@ class OrderDetailsPage extends StatelessWidget {
                 );
                 context.read<OrdersBloc>().add(FetchOrders());
               } else if (state is OrdersFailure) {
-                CustomSnackBar.show(
-                  context,
-                  message: state.message,
-                  isError: true,
-                );
+                if (state.message.contains(
+                  "does not deliver to the selected address",
+                )) {
+                  OrdersHelper.showOutOfRadiusDialog(context);
+                  context.read<OrdersBloc>().add(FetchOrders());
+                } else {
+                  CustomSnackBar.show(
+                    context,
+                    message: state.message,
+                    isError: true,
+                  );
+                }
               }
             },
             builder: (context, state) {

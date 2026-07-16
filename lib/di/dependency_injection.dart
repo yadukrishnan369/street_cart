@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:street_cart/core/utils/delivery_validator.dart';
 
 // CORE
 import 'package:street_cart/core/network/network_info.dart';
@@ -787,7 +788,11 @@ void _initCustomerPayment() {
 
   // Datasource
   sl.registerLazySingleton<IPaymentRemoteDataSource>(
-    () => PaymentRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+    () => PaymentRemoteDataSourceImpl(
+      auth: sl(),
+      firestore: sl(),
+      deliveryValidator: sl(),
+    ),
   );
 
   // Repository
@@ -804,6 +809,7 @@ void _initCustomerPayment() {
       placeCustomerOrder: sl(),
       razorpayService: sl(),
       getProfileData: sl(),
+      deliveryValidator: sl(),
     ),
   );
 }
@@ -1153,8 +1159,15 @@ void _initAdminProducts() {
 
 // ================= CUSTOMER ORDERS =================
 void _initCustomerOrders() {
+  sl.registerLazySingleton<DeliveryValidator>(
+    () => DeliveryValidator(firestore: sl()),
+  );
   sl.registerLazySingleton<IOrdersRemoteDataSource>(
-    () => OrdersRemoteDataSourceImpl(auth: sl(), firestore: sl()),
+    () => OrdersRemoteDataSourceImpl(
+      auth: sl(),
+      firestore: sl(),
+      deliveryValidator: sl(),
+    ),
   );
   sl.registerLazySingleton<IOrdersRepository>(
     () => OrdersRepositoryImpl(remoteDataSource: sl()),
