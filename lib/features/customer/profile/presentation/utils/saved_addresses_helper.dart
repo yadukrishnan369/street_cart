@@ -7,10 +7,12 @@ import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 
 class SavedAddressesHelper {
+  // Check for Has Any Defualt Address
   static bool hasDefaultAddress(List<AddressModel> addresses) {
     return addresses.any((a) => a.isDefault);
   }
 
+  // Get Selected Address
   static AddressModel getSelectedAddress(List<AddressModel> addresses) {
     return addresses.firstWhere(
       (a) => a.isDefault,
@@ -18,6 +20,7 @@ class SavedAddressesHelper {
     );
   }
 
+  // Alert Dialogue For No Address Selected
   static void showNoAddressSelectedDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -33,6 +36,7 @@ class SavedAddressesHelper {
     );
   }
 
+  // Confirmation for Delete Address
   static void showDeleteConfirmation({
     required BuildContext context,
     required String addressId,

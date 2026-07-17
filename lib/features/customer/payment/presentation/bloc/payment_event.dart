@@ -75,3 +75,16 @@ class ProcessPaymentPlacement extends PaymentEvent {
   @override
   List<Object?> get props => [paymentMethod, paymentStatus];
 }
+
+class UpdatePaymentOverlayPhase extends PaymentEvent {
+  final bool isLoading;
+  final int phase;
+
+  const UpdatePaymentOverlayPhase({
+    required this.isLoading,
+    required this.phase,
+  });
+
+  @override
+  List<Object?> get props => [isLoading, phase];
+}

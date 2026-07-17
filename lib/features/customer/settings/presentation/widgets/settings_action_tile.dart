@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Settings Action Tile
 class SettingsActionTile extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -30,16 +31,17 @@ class SettingsActionTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
         decoration: BoxDecoration(
-           color: Colors.white,
-           border: Border(
-             bottom: BorderSide(
-               color: CustomerAppColors.border.withOpacity(0.5),
-               width: 1,
-             ),
-           ),
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              color: CustomerAppColors.border.withOpacity(0.5),
+              width: 1,
+            ),
+          ),
         ),
         child: Row(
           children: [
+            // Icon
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
@@ -50,6 +52,7 @@ class SettingsActionTile extends StatelessWidget {
             ),
             16.horizontalSpace,
             Expanded(
+              // Title
               child: Text(
                 title,
                 style: CustomerAppTextStyles.body.copyWith(
@@ -58,6 +61,7 @@ class SettingsActionTile extends StatelessWidget {
                 ),
               ),
             ),
+            // Arrow Icon
             if (showArrow)
               Icon(
                 Icons.chevron_right,

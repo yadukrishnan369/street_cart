@@ -8,10 +8,13 @@ abstract class ShopDetailsState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Shop Intital State
 class ShopDetailsInitial extends ShopDetailsState {}
 
+// Shop Loading State
 class ShopDetailsLoading extends ShopDetailsState {}
 
+// Shop Loaded State
 class ShopDetailsLoaded extends ShopDetailsState {
   final List<ProductModel> products;
 
@@ -21,6 +24,7 @@ class ShopDetailsLoaded extends ShopDetailsState {
   List<Object?> get props => [products];
 }
 
+// Shop Error State
 class ShopDetailsError extends ShopDetailsState {
   final String message;
 

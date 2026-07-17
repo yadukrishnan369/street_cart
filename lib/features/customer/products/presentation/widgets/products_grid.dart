@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/products/presentation/pages/custom
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 
+// Product Grid View
 class ProductsGrid extends StatelessWidget {
   final List<ProductModel> products;
   final List<ShopProfileModel> shops;
@@ -26,10 +27,7 @@ class ProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 8.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 0.75,
@@ -45,7 +43,8 @@ class ProductsGrid extends StatelessWidget {
         final price = product.offerPrice != null
             ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
             : '₹${PriceUtils.formatPrice(product.originalPrice)}';
-        final isNew = product.createdAt != null &&
+        final isNew =
+            product.createdAt != null &&
             DateTime.now().difference(product.createdAt!).inDays <= 2;
 
         final shop = shops.firstWhere(
@@ -75,19 +74,18 @@ class ProductsGrid extends StatelessWidget {
             paymentMethods: [],
           ),
         );
-
+        // Navigate to Details Page
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CustomerProductDetailPage(
-                  product: product,
-                  shop: shop,
-                ),
+                builder: (context) =>
+                    CustomerProductDetailPage(product: product, shop: shop),
               ),
             );
           },
+          // Product Card
           child: ProductCard(
             imageUrl: imgUrl,
             brand: shopName,
@@ -98,9 +96,9 @@ class ProductsGrid extends StatelessWidget {
                 : null,
             discountPercentage: product.offerPrice != null
                 ? (((product.originalPrice - product.offerPrice!) /
-                            product.originalPrice) *
-                        100)
-                    .round()
+                              product.originalPrice) *
+                          100)
+                      .round()
                 : null,
             isFavorite: isWishlisted,
             isNew: isNew,

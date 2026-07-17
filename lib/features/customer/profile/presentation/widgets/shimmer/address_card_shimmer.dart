@@ -3,13 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Address Card Shimmer
 class AddressCardShimmer extends StatelessWidget {
   final int itemCount;
 
-  const AddressCardShimmer({
-    super.key,
-    this.itemCount = 3,
-  });
+  const AddressCardShimmer({super.key, this.itemCount = 3});
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +45,7 @@ class AddressCardShimmer extends StatelessWidget {
                         height: 24.w,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
+                          border: Border.all(color: Colors.white, width: 2),
                         ),
                       ),
                       SizedBox(width: 16.w),
@@ -118,13 +113,20 @@ class AddressCardShimmer extends StatelessWidget {
                 ),
                 const Divider(height: 1, color: Colors.white),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 12.h,
+                  ),
                   child: Row(
                     children: [
                       // Edit Button icon & text shape
                       Row(
                         children: [
-                          Icon(Icons.edit_outlined, color: Colors.white, size: 16.sp),
+                          Icon(
+                            Icons.edit_outlined,
+                            color: Colors.white,
+                            size: 16.sp,
+                          ),
                           SizedBox(width: 4.w),
                           Container(
                             width: 35.w,
@@ -140,7 +142,11 @@ class AddressCardShimmer extends StatelessWidget {
                       // Delete Button icon & text shape
                       Row(
                         children: [
-                          Icon(Icons.delete_outline_rounded, color: Colors.white, size: 16.sp),
+                          Icon(
+                            Icons.delete_outline_rounded,
+                            color: Colors.white,
+                            size: 16.sp,
+                          ),
                           SizedBox(width: 4.w),
                           Container(
                             width: 45.w,

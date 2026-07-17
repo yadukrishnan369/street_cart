@@ -9,6 +9,7 @@ import 'package:street_cart/features/customer/cart/presentation/widgets/cart_ite
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Cart Items List
 class CartItemsList extends StatelessWidget {
   final List<CartItem> items;
   final ScrollController scrollController;

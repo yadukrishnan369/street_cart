@@ -10,6 +10,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Change Password Page
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
 
@@ -31,6 +32,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     super.dispose();
   }
 
+  // Update Password
   void _onUpdatePressed() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthBloc>().add(
@@ -52,6 +54,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        // Page Header
         title: Text(
           'Change Password',
           style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
@@ -88,6 +91,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
               ),
               32.verticalSpace,
+              // Change Password Form
               ChangePasswordForm(
                 currentPasswordController: _currentPasswordController,
                 newPasswordController: _newPasswordController,
@@ -97,6 +101,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               40.verticalSpace,
               BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
+                  // Button For Update Password
                   return PrimaryButton(
                     text: 'Update Password',
                     onPressed: _onUpdatePressed,

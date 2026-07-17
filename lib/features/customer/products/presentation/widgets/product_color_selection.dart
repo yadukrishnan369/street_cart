@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Product Color Selection
 class ProductColorSelection extends StatelessWidget {
   final List<String> colors;
   final String? selectedColor;
@@ -44,13 +45,14 @@ class ProductColorSelection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12.h),
+        // List of Available Colors
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: colors.map((colorName) {
               final color = ShopAppColors.getColorFromName(colorName);
               final isSelected = selectedColor == colorName;
-              final isWhite = color.value == 0xFFFFFFFF;
+              final isWhite = color.toARGB32() == 0xFFFFFFFF;
               return GestureDetector(
                 onTap: () => onColorSelected(colorName),
                 child: Container(

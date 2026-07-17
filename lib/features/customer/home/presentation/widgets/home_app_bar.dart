@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
 
+// Home App Bar
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isLoading;
   final bool hasLocation;
@@ -53,10 +54,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       Text(
                         'Delivering to',
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 10.sp, color: Colors.grey),
                       ),
                       Text(
                         hasLocation
@@ -81,10 +79,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       actions: [
         IconButton(
-          icon: const Icon(
-            Icons.notifications_none,
-            color: Colors.black87,
-          ),
+          icon: const Icon(Icons.notifications_none, color: Colors.black87),
           onPressed: () {
             // notification
           },

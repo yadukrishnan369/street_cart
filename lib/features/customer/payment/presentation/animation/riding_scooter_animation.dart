@@ -21,7 +21,7 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
       duration: const Duration(seconds: 2),
     )..repeat();
 
-    // Stop riding animation after 7 seconds
+    // Stop riding animation
     Future.delayed(const Duration(seconds: 7), () {
       if (mounted) {
         _controller.stop();

@@ -16,9 +16,9 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
     required LocationService locationService,
-  })  : _auth = auth,
-        _firestore = firestore,
-        _locationService = locationService;
+  }) : _auth = auth,
+       _firestore = firestore,
+       _locationService = locationService;
 
   @override
   Future<HomeData> getHomeData() async {
@@ -40,18 +40,23 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
 
       if (doc.exists) {
         final data = doc.data();
-        if (data != null && data['location_permission'] == true && data['location'] != null) {
+        if (data != null &&
+            data['location_permission'] == true &&
+            data['location'] != null) {
           final loc = data['location'] as Map<String, dynamic>;
           lat = (loc['latitude'] as num?)?.toDouble();
           lng = (loc['longitude'] as num?)?.toDouble();
 
           if (lat != null && lng != null) {
-            address = await _locationService.getAddressFromCoordinates(lat, lng);
+            address = await _locationService.getAddressFromCoordinates(
+              lat,
+              lng,
+            );
           }
         }
       }
 
-      // Fetch categories
+      // Fetch Categories
       final categories = await _getProductCategories();
 
       List<ShopProfileModel> nearbyShops = [];
@@ -76,12 +81,17 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
     }
   }
 
+  // Fetch Product Category
   Future<List<String>> _getProductCategories() async {
     try {
-      final catDoc = await _firestore.collection('config').doc('categories').get();
+      final catDoc = await _firestore
+          .collection('config')
+          .doc('categories')
+          .get();
       final List<String> categories = [];
       if (catDoc.exists && catDoc.data() != null) {
-        final rawProductCats = catDoc.data()!['product_categories'] as List<dynamic>?;
+        final rawProductCats =
+            catDoc.data()!['product_categories'] as List<dynamic>?;
         if (rawProductCats != null) {
           for (final e in rawProductCats) {
             final name = e['name'] as String?;
@@ -98,14 +108,20 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
     }
   }
 
-  Future<List<ShopProfileModel>> _getNearbyShops(double customerLat, double customerLng) async {
+  // Fetch Nearby Shops
+  Future<List<ShopProfileModel>> _getNearbyShops(
+    double customerLat,
+    double customerLng,
+  ) async {
     try {
       final shopsSnap = await _firestore
           .collection('shops')
           .where('is_approved', isEqualTo: true)
           .get();
 
-      final allShops = shopsSnap.docs.map((doc) => ShopProfileModel.fromMap(doc.data(), doc.id)).toList();
+      final allShops = shopsSnap.docs
+          .map((doc) => ShopProfileModel.fromMap(doc.data(), doc.id))
+          .toList();
       return allShops.where((shop) {
         if (shop.isSuspended) return false;
         if (shop.latitude == null || shop.longitude == null) return false;
@@ -123,17 +139,23 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
     }
   }
 
+  // Fetch Nearby Shops Product
   Future<List<ProductModel>> _getShopsProducts(List<String> shopIds) async {
     try {
       if (shopIds.isEmpty) return [];
 
-      final snap = await _firestore
-          .collection('products')
-          .get();
+      final snap = await _firestore.collection('products').get();
 
-      final allProducts = snap.docs.map((doc) => ProductModel.fromMap(doc.data(), doc.id)).toList();
-      final filtered = allProducts.where((p) => p.isActive && !p.disabledByAdmin && shopIds.contains(p.shopId)).toList();
-      
+      final allProducts = snap.docs
+          .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+          .toList();
+      final filtered = allProducts
+          .where(
+            (p) =>
+                p.isActive && !p.disabledByAdmin && shopIds.contains(p.shopId),
+          )
+          .toList();
+
       // Sort products by newest first
       filtered.sort((a, b) {
         if (a.createdAt == null && b.createdAt == null) return 0;

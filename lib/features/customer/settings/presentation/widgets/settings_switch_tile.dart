@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Settings Switch Tile
 class SettingsSwitchTile extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -36,6 +37,7 @@ class SettingsSwitchTile extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Icon
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
@@ -46,6 +48,7 @@ class SettingsSwitchTile extends StatelessWidget {
           ),
           16.horizontalSpace,
           Expanded(
+            // Title
             child: Text(
               title,
               style: CustomerAppTextStyles.body.copyWith(
@@ -54,6 +57,7 @@ class SettingsSwitchTile extends StatelessWidget {
               ),
             ),
           ),
+          // Toggle Switch
           Transform.scale(
             scale: 0.8,
             child: Switch(

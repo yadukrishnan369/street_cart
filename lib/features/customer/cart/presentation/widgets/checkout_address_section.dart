@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/address_
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_state.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/saved_addresses_page.dart';
 
+// Checkout Address Section
 class CheckoutAddressSection extends StatelessWidget {
   const CheckoutAddressSection({super.key});
 

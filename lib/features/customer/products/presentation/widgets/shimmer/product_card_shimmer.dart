@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Product Card Shimmer
 class ProductCardShimmer extends StatelessWidget {
   final int itemCount;
   final ScrollPhysics? physics;
@@ -56,7 +57,9 @@ class ProductCardShimmer extends StatelessWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
+                      ),
                     ),
                   ),
                 ),

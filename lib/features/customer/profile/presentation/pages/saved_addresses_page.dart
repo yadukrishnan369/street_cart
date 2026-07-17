@@ -13,6 +13,7 @@ import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/address_card_shimmer.dart';
 import 'package:street_cart/features/customer/profile/presentation/utils/saved_addresses_helper.dart';
 
+// Saved Address Page
 class SavedAddressesPage extends StatelessWidget {
   const SavedAddressesPage({super.key});
 
@@ -73,6 +74,7 @@ class SavedAddressesPage extends StatelessWidget {
               final addresses = state.addresses;
 
               if (addresses.isEmpty) {
+                // Empty Address State
                 return AddressEmptyState(
                   onAddAddress: () {
                     Navigator.push(
@@ -95,6 +97,7 @@ class SavedAddressesPage extends StatelessWidget {
                       horizontal: 24.w,
                       vertical: 16.h,
                     ),
+                    // Title
                     child: Text(
                       'SAVED ADDRESSES',
                       style: CustomerAppTextStyles.body.copyWith(
@@ -106,6 +109,7 @@ class SavedAddressesPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
+                    // Address List
                     child: ListView.builder(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       itemCount: addresses.length,
@@ -116,6 +120,7 @@ class SavedAddressesPage extends StatelessWidget {
                           isSelected: address.isDefault,
                           onSelect: () => _toggleDefault(context, address.id),
                           onEdit: () {
+                            // Navigate to Add Address Page
                             Navigator.push(
                               context,
                               MaterialPageRoute(

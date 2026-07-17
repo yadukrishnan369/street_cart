@@ -7,6 +7,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final CheckAppStatus checkAppStatus;
 
   SplashBloc({required this.checkAppStatus}) : super(SplashInitial()) {
+    // Check App Status
     on<CheckAppStatusEvent>((event, emit) async {
       emit(SplashLoading());
       try {

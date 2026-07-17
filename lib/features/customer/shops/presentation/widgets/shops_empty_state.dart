@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Shop Empty State
 class ShopsEmptyState extends StatelessWidget {
   final bool isSearching;
 
-  const ShopsEmptyState({
-    super.key,
-    required this.isSearching,
-  });
+  const ShopsEmptyState({super.key, required this.isSearching});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +20,7 @@ class ShopsEmptyState extends StatelessWidget {
             color: CustomerAppColors.primary.withValues(alpha: 0.25),
           ),
           SizedBox(height: 20.h),
+          // Title
           Text(
             isSearching ? 'No shops found' : 'No shops nearby',
             style: TextStyle(
@@ -31,6 +30,7 @@ class ShopsEmptyState extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
+          // Subtitle
           Text(
             isSearching
                 ? 'Try a different search term'

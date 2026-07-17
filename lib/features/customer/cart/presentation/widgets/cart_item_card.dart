@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 
+// Cart Item Card
 class CartItemCard extends StatelessWidget {
   final CartItem item;
   final VoidCallback onIncrement;

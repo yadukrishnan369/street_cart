@@ -11,6 +11,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     required this.requestLocationAndSave,
     required this.skipLocation,
   }) : super(LocationInitial()) {
+    // Location Access Enable
     on<RequestLocationEvent>((event, emit) async {
       emit(LocationLoading());
       try {
@@ -20,7 +21,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         emit(LocationFailure(e.toString()));
       }
     });
-
+    // Skip Location Access
     on<SkipLocationEvent>((event, emit) async {
       emit(LocationLoading());
       try {

@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_event.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/filter/filter_sort_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/filter/filter_price_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/filter/filter_categories_section.dart';
@@ -11,6 +12,7 @@ import 'package:street_cart/features/customer/products/presentation/widgets/filt
 import 'package:street_cart/features/customer/products/presentation/widgets/filter/filter_sizes_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/filter/filter_rating_section.dart';
 
+// Product Filter Page
 class ProductFilterPage extends StatelessWidget {
   final List<ProductModel> allProducts;
   final List<String> categories;
@@ -35,16 +37,19 @@ class ProductFilterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ProductFilterCubit>(
-      create: (_) => ProductFilterCubit(
-        allProducts: allProducts,
-        selectedSort: selectedSort,
-        initialRange: priceRange,
-        selectedCategories: selectedCategories,
-        selectedRating: selectedRating,
-        selectedColors: selectedColors,
-        selectedSizes: selectedSizes,
-      ),
+    return BlocProvider<ProductFilterBloc>(
+      create: (_) => ProductFilterBloc()
+        ..add(
+          InitProductFilter(
+            allProducts: allProducts,
+            selectedSort: selectedSort,
+            initialRange: priceRange,
+            selectedCategories: selectedCategories,
+            selectedRating: selectedRating,
+            selectedColors: selectedColors,
+            selectedSizes: selectedSizes,
+          ),
+        ),
       child: const _ProductFilterPageBody(),
     );
   }
@@ -64,12 +69,13 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
   @override
   void initState() {
     super.initState();
-    final cubit = context.read<ProductFilterCubit>();
+    // Initialize Price Values
+    final bloc = context.read<ProductFilterBloc>();
     _minPriceController = TextEditingController(
-      text: cubit.state.minPrice.round().toString(),
+      text: bloc.state.minPrice.round().toString(),
     );
     _maxPriceController = TextEditingController(
-      text: cubit.state.maxPrice.round().toString(),
+      text: bloc.state.maxPrice.round().toString(),
     );
   }
 
@@ -82,10 +88,12 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ProductFilterCubit>();
+    final bloc = context.read<ProductFilterBloc>();
 
-    return BlocListener<ProductFilterCubit, ProductFilterState>(
-      listenWhen: (prev, curr) => prev.minPrice != curr.minPrice || prev.maxPrice != curr.maxPrice,
+    return BlocListener<ProductFilterBloc, ProductFilterState>(
+      // Text Fields sync With Slider Moves
+      listenWhen: (prev, curr) =>
+          prev.minPrice != curr.minPrice || prev.maxPrice != curr.maxPrice,
       listener: (context, state) {
         final minStr = state.minPrice.round().toString();
         final maxStr = state.maxPrice.round().toString();
@@ -115,8 +123,9 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
             ),
           ),
           actions: [
+            // Reset Button
             TextButton(
-              onPressed: () => cubit.reset(),
+              onPressed: () => bloc.add(ResetProductFilter()),
               child: Text(
                 'Reset',
                 style: TextStyle(
@@ -128,38 +137,56 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
             ),
           ],
         ),
-        body: BlocBuilder<ProductFilterCubit, ProductFilterState>(
+        body: BlocBuilder<ProductFilterBloc, ProductFilterState>(
           builder: (context, state) {
             return Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FilterSortSection(selectedSort: state.selectedSort, cubit: cubit),
+                        // Sort Option Chips
+                        FilterSortSection(
+                          selectedSort: state.selectedSort,
+                          bloc: bloc,
+                        ),
                         SizedBox(height: 24.h),
+                        // Price Range Slider and Text Inputs
                         FilterPriceSection(
                           state: state,
-                          cubit: cubit,
+                          bloc: bloc,
                           minPriceController: _minPriceController,
                           maxPriceController: _maxPriceController,
                         ),
                         SizedBox(height: 24.h),
-                        FilterCategoriesSection(state: state, cubit: cubit),
+                        // Category Search and List
+                        FilterCategoriesSection(state: state, bloc: bloc),
                         SizedBox(height: 24.h),
-                        FilterColorsSection(state: state, cubit: cubit),
+                        // Color Selector
+                        FilterColorsSection(state: state, bloc: bloc),
                         SizedBox(height: 24.h),
-                        FilterSizesSection(state: state, cubit: cubit),
-                        FilterRatingSection(selectedRating: state.selectedRating, cubit: cubit),
+                        // Size Chips
+                        FilterSizesSection(state: state, bloc: bloc),
+                        // Rating Filter Chips
+                        FilterRatingSection(
+                          selectedRating: state.selectedRating,
+                          bloc: bloc,
+                        ),
                         SizedBox(height: 24.h),
                       ],
                     ),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border(top: BorderSide(color: Colors.grey[100]!)),
@@ -171,13 +198,17 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
                       onPressed: () {
                         Navigator.pop(context, {
                           'selectedSort': state.selectedSort,
-                          'priceRange': RangeValues(state.minPrice, state.maxPrice),
+                          'priceRange': RangeValues(
+                            state.minPrice,
+                            state.maxPrice,
+                          ),
                           'selectedCategories': state.selectedCategories,
                           'selectedRating': state.selectedRating,
                           'selectedColors': state.selectedColors,
                           'selectedSizes': state.selectedSizes,
                         });
                       },
+                      // Show Result Button
                       style: ElevatedButton.styleFrom(
                         backgroundColor: CustomerAppColors.primary,
                         foregroundColor: Colors.white,

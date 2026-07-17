@@ -6,17 +6,15 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 
+// Shop Card
 class ShopCard extends StatelessWidget {
   final ShopProfileModel shop;
 
-  const ShopCard({
-    super.key,
-    required this.shop,
-  });
+  const ShopCard({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy rating for display
+    // Shop rating
     const double dummyRating = 4.8;
 
     return Container(
@@ -36,12 +34,11 @@ class ShopCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
+          // Navigate to Shop details Page
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => ShopDetailsPage(shop: shop),
-              ),
+              MaterialPageRoute(builder: (_) => ShopDetailsPage(shop: shop)),
             );
           },
           child: Column(
@@ -63,8 +60,10 @@ class ShopCard extends StatelessWidget {
                           ? CachedNetworkImage(
                               imageUrl: shop.profileImageUrl,
                               fit: BoxFit.cover,
-                              placeholder: (context, url) => const ShopImagePlaceholder(),
-                              errorWidget: (context, url, error) => const ShopImagePlaceholder(),
+                              placeholder: (context, url) =>
+                                  const ShopImagePlaceholder(),
+                              errorWidget: (context, url, error) =>
+                                  const ShopImagePlaceholder(),
                             )
                           : const ShopImagePlaceholder(),
                     ),
@@ -175,7 +174,7 @@ class ShopCard extends StatelessWidget {
                     ),
                     SizedBox(height: 12.h),
 
-                    // Location + View Shop row
+                    // Location + View Shop
                     Row(
                       children: [
                         Icon(
@@ -239,5 +238,4 @@ class ShopCard extends StatelessWidget {
       ),
     );
   }
-
 }

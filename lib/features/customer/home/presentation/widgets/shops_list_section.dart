@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 
+// Shops List Section
 class ShopsListSection extends StatelessWidget {
   final List<ShopProfileModel> shops;
 
@@ -142,8 +143,10 @@ class ShopsListSection extends StatelessWidget {
                         ? CachedNetworkImage(
                             imageUrl: shop.profileImageUrl,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const ShopImagePlaceholder(iconSize: 32),
-                            errorWidget: (context, url, error) => const ShopImagePlaceholder(iconSize: 32),
+                            placeholder: (context, url) =>
+                                const ShopImagePlaceholder(iconSize: 32),
+                            errorWidget: (context, url, error) =>
+                                const ShopImagePlaceholder(iconSize: 32),
                           )
                         : const ShopImagePlaceholder(iconSize: 32),
                   ),

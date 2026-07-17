@@ -111,11 +111,13 @@ class CheckoutPage extends StatelessWidget {
                       return Column(
                         children: [
                           Expanded(
+                            // Main Content Area
                             child: CheckoutContentSection(
                               cartItems: cartItems,
                               checkoutState: checkoutState,
                             ),
                           ),
+                          // Checkout  Buttons
                           CheckoutButtonSection(
                             cartItems: cartItems,
                             checkoutState: checkoutState,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Order Summary
 class OrderSummary extends StatelessWidget {
   final int totalItems;
   final int productTypes;
@@ -60,14 +61,18 @@ class OrderSummary extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 12.h),
+                    // Products
                     _summaryRow('Product Types', '$productTypes'),
                     SizedBox(height: 8.h),
+                    // Total Quantity
                     _summaryRow('Total Quantity', '$totalItems'),
                     SizedBox(height: 8.h),
+                    // Calculated Subtotals
                     _summaryRow('Subtotal', '₹${subtotal.toStringAsFixed(0)}'),
                     SizedBox(height: 12.h),
                     const Divider(color: CustomerAppColors.border),
                     SizedBox(height: 12.h),
+                    // Total Amount Section
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
+import 'package:street_cart/features/customer/products/presentation/utils/products_helper.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_image_carousel.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_info_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_pricing_section.dart';
@@ -14,9 +19,9 @@ import 'package:street_cart/features/customer/products/presentation/widgets/prod
 import 'package:street_cart/features/customer/products/presentation/widgets/product_description_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_action_buttons.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_wishlist_button.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_detail_ui_cubit.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/stock_status_badge.dart';
 
+// Customer Product Detail Page
 class CustomerProductDetailPage extends StatelessWidget {
   final ProductModel product;
   final ShopProfileModel shop;
@@ -34,19 +39,32 @@ class CustomerProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ProductDetailUiCubit()..init(product, initialColor, initialSize),
-      child: BlocBuilder<ProductDetailUiCubit, ProductDetailUiState>(
-        builder: (context, uiState) {
-          final selectedColor = uiState.selectedColor;
-          final selectedSize = uiState.selectedSize;
-          final currentQty = (selectedColor == null || selectedSize == null)
-              ? 0
-              : product.stockForVariant(selectedColor, selectedSize);
+      create: (context) => sl<CustomerProductsBloc>()
+        ..add(
+          InitProductDetail(
+            product: product,
+            initialColor: initialColor,
+            initialSize: initialSize,
+          ),
+        ),
+      child: BlocBuilder<CustomerProductsBloc, CustomerProductsState>(
+        buildWhen: (prev, curr) => curr is ProductDetailState,
+        builder: (context, state) {
+          if (state is! ProductDetailState) return const SizedBox.shrink();
 
-          final currentImages = selectedColor == null
-              ? product.displayImages
-              : product.imagesForColor(selectedColor);
+          final selectedColor = state.selectedColor;
+          final selectedSize = state.selectedSize;
+
+          // Get Current Stock and Images
+          final currentQty = ProductsHelper.getVariantStock(
+            product,
+            selectedColor,
+            selectedSize,
+          );
+          final currentImages = ProductsHelper.getImagesForColor(
+            product,
+            selectedColor,
+          );
 
           return Scaffold(
             backgroundColor: CustomerAppColors.background,
@@ -82,6 +100,7 @@ class CustomerProductDetailPage extends StatelessWidget {
                 ),
               ),
               actions: [
+                // Wishlist Toggle
                 ProductWishlistButton(
                   product: product,
                   shop: shop,
@@ -94,23 +113,27 @@ class CustomerProductDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Image Carousel
                   ProductImageCarousel(images: currentImages),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Product Name and Shop Name
                         ProductInfoSection(
                           productName: product.name,
                           shopName: shop.shopName,
                         ),
                         SizedBox(height: 12.h),
+                        // Original and Offer Price
                         ProductPricingSection(
                           originalPrice: product.originalPrice,
                           offerPrice: product.offerPrice,
                         ),
                         SizedBox(height: 20.h),
-                        if (uiState.variantWarningMessage != null) ...[
+                        // Variant Unavailable Warning Banner
+                        if (state.variantWarningMessage != null) ...[
                           Container(
                             width: double.infinity,
                             padding: EdgeInsets.symmetric(
@@ -132,7 +155,7 @@ class CustomerProductDetailPage extends StatelessWidget {
                                 SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
-                                    uiState.variantWarningMessage!,
+                                    state.variantWarningMessage!,
                                     style: TextStyle(
                                       fontSize: 13.sp,
                                       color: Colors.red[700]!,
@@ -145,19 +168,24 @@ class CustomerProductDetailPage extends StatelessWidget {
                           ),
                           SizedBox(height: 16.h),
                         ],
+                        // Shop Info Sold-by
                         ProductSoldBySection(shop: shop),
                         SizedBox(height: 20.h),
+                        // Color Variant Chips
                         if (product.allColors.isNotEmpty)
                           ProductColorSelection(
                             colors: product.allColors,
                             selectedColor: selectedColor,
                             onColorSelected: (color) {
-                              context.read<ProductDetailUiCubit>().selectColor(
-                                color,
-                                product,
+                              context.read<CustomerProductsBloc>().add(
+                                SelectProductColor(
+                                  color: color,
+                                  product: product,
+                                ),
                               );
                             },
                           ),
+                        // Size Variant Chips
                         if (product.allSizes.isNotEmpty)
                           ProductSizeSelection(
                             sizes: product.allSizes,
@@ -172,14 +200,16 @@ class CustomerProductDetailPage extends StatelessWidget {
                                   }
                                 : {},
                             onSizeSelected: (size) {
-                              context.read<ProductDetailUiCubit>().selectSize(
-                                size,
+                              context.read<CustomerProductsBloc>().add(
+                                SelectProductSize(size),
                               );
                             },
                           ),
+                        // Stock Badge
                         if (selectedColor != null && selectedSize != null)
                           StockStatusBadge(qty: currentQty),
                         SizedBox(height: 8.h),
+                        // Product Description
                         ProductDescriptionSection(
                           description: product.description,
                         ),
@@ -190,6 +220,7 @@ class CustomerProductDetailPage extends StatelessWidget {
                 ],
               ),
             ),
+            // Add to Cart and Buy Now Buttons Section
             bottomNavigationBar: ProductActionButtons(
               product: product,
               availableQty: currentQty,

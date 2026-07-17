@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Product Info Section
 class ProductInfoSection extends StatelessWidget {
   final String productName;
   final String shopName;
@@ -22,6 +23,7 @@ class ProductInfoSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
+              // Product Name
               child: Text(
                 productName,
                 style: TextStyle(
@@ -32,11 +34,9 @@ class ProductInfoSection extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.w),
+            // Product Rating
             Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 8.w,
-                vertical: 4.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
                 color: const Color(0xFFF3E8FF),
                 borderRadius: BorderRadius.circular(12.r),
@@ -64,6 +64,7 @@ class ProductInfoSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 4.h),
+        // Shop Name
         Text(
           shopName,
           style: TextStyle(

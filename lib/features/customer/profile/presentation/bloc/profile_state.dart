@@ -8,19 +8,66 @@ abstract class ProfileState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Initial state
 class ProfileInitial extends ProfileState {}
 
+// Profile Loading State
 class ProfileLoading extends ProfileState {}
 
+// Profile Loaded State
 class ProfileLoaded extends ProfileState {
   final ProfileModel profile;
 
-  const ProfileLoaded(this.profile);
+  final String? editImageUrl;
+
+  final String editActiveName;
+
+  final bool isUploadingImage;
+
+  final bool orderUpdates;
+
+  final bool offersPromotions;
+
+  const ProfileLoaded(
+    this.profile, {
+    this.editImageUrl,
+    this.editActiveName = '',
+    this.isUploadingImage = false,
+    this.orderUpdates = true,
+    this.offersPromotions = false,
+  });
 
   @override
-  List<Object?> get props => [profile];
+  List<Object?> get props => [
+    profile,
+    editImageUrl,
+    editActiveName,
+    isUploadingImage,
+    orderUpdates,
+    offersPromotions,
+  ];
+
+  ProfileLoaded copyWith({
+    ProfileModel? profile,
+    String? editImageUrl,
+    String? editActiveName,
+    bool? isUploadingImage,
+    bool? orderUpdates,
+    bool? offersPromotions,
+    bool clearImageUrl = false,
+  }) {
+    return ProfileLoaded(
+      profile ?? this.profile,
+      editImageUrl: clearImageUrl ? null : (editImageUrl ?? this.editImageUrl),
+      editActiveName: editActiveName ?? this.editActiveName,
+      isUploadingImage: isUploadingImage ?? this.isUploadingImage,
+      orderUpdates: orderUpdates ?? this.orderUpdates,
+      offersPromotions: offersPromotions ?? this.offersPromotions,
+    );
+  }
 }
 
+//Profile is Updated Successfull State
 class ProfileUpdateSuccess extends ProfileState {
   final ProfileModel profile;
 
@@ -30,6 +77,7 @@ class ProfileUpdateSuccess extends ProfileState {
   List<Object?> get props => [profile];
 }
 
+// Error Occurs during Profile Fetch/Update State
 class ProfileError extends ProfileState {
   final String message;
 
@@ -39,8 +87,10 @@ class ProfileError extends ProfileState {
   List<Object?> get props => [message];
 }
 
+// Profile Image is Uploading State
 class ProfileImageUploading extends ProfileState {}
 
+// Profile Image is Successfully Uploaded State
 class ProfileImageUploaded extends ProfileState {
   final String imageUrl;
 

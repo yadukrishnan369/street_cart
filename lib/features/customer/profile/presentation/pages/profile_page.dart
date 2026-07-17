@@ -19,6 +19,7 @@ import 'package:street_cart/features/customer/profile/presentation/widgets/logou
 import 'package:street_cart/features/customer/settings/presentation/pages/settings_page.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/profile_shimmer.dart';
 
+// Profile Page
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
 
@@ -55,6 +56,7 @@ class UserProfilePage extends StatelessWidget {
                     );
                   },
                 ),
+                // Header
                 title: Text(
                   'Profile',
                   style: TextStyle(
@@ -71,6 +73,7 @@ class UserProfilePage extends StatelessWidget {
                       color: Colors.black87,
                     ),
                     onPressed: () {
+                      // Navigate to Settings Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const SettingsPage()),
@@ -86,8 +89,10 @@ class UserProfilePage extends StatelessWidget {
               body: BlocBuilder<ProfileBloc, ProfileState>(
                 builder: (context, state) {
                   if (state is ProfileLoading || state is ProfileInitial) {
+                    // Shimmer Widget
                     return const ProfileShimmer();
                   } else if (state is ProfileError) {
+                    // Error Message
                     return Center(child: Text(state.message));
                   } else if (state is ProfileLoaded ||
                       state is ProfileUpdateSuccess) {
@@ -97,14 +102,19 @@ class UserProfilePage extends StatelessWidget {
                     return SingleChildScrollView(
                       child: Column(
                         children: [
+                          // Profile Header Section
                           ProfileHeader(profile: profile),
                           SizedBox(height: 8.h),
+                          // Account Settings Section
                           const AccountSettingsSection(),
                           SizedBox(height: 24.h),
+                          // Support Section
                           const SupportSection(),
                           SizedBox(height: 24.h),
+                          // About Section
                           const AboutSection(),
                           SizedBox(height: 32.h),
+                          // Logout Button
                           const LogoutButton(),
                           SizedBox(height: 32.h),
                         ],
@@ -114,9 +124,12 @@ class UserProfilePage extends StatelessWidget {
                   return const SizedBox();
                 },
               ),
-              bottomNavigationBar: const CustomerBottomNavigation(currentIndex: 4),
+              // Bottom Navigation Bar
+              bottomNavigationBar: const CustomerBottomNavigation(
+                currentIndex: 4,
+              ),
             );
-          }
+          },
         ),
       ),
     );

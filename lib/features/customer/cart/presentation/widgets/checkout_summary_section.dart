@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 
+// Checkout Summary Section
 class CheckoutSummarySection extends StatelessWidget {
   final List<CartItem> cartItems;
   final int productTypesCount;
@@ -80,8 +81,10 @@ class CheckoutSummarySection extends StatelessWidget {
           ),
           const Divider(color: CustomerAppColors.border),
           SizedBox(height: 12.h),
+          // Product Section
           _buildRow('Product Types', '$productTypesCount'),
           SizedBox(height: 8.h),
+          // Total Quantity Section
           _buildRow('Total Quantity', '$totalProductsCount'),
           SizedBox(height: 12.h),
           const Divider(color: CustomerAppColors.border),

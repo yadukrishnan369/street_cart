@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_event.dart';
+import 'package:street_cart/features/customer/products/presentation/utils/products_helper.dart';
 
+// Filter Categories Section
 class FilterCategoriesSection extends StatelessWidget {
   final ProductFilterState state;
-  final ProductFilterCubit cubit;
+  final ProductFilterBloc bloc;
 
   const FilterCategoriesSection({
     super.key,
     required this.state,
-    required this.cubit,
+    required this.bloc,
   });
 
   @override
   Widget build(BuildContext context) {
-    final filteredCats = state.allProducts
-        .map((p) => p.category)
-        .toSet()
-        .where((c) => c.toLowerCase().contains(state.categoryQuery.toLowerCase()))
-        .toList();
+    // Display Categories By Search
+    final displayCats = ProductsHelper.getDisplayCategories(state);
+    final showSeeAllButton = ProductsHelper.shouldShowSeeAll(
+      state,
+      displayCats,
+    );
 
-    final List<String> displayCats = ['All'];
-    displayCats.addAll(filteredCats);
-
-    final showSeeAllButton = displayCats.length > 5 && !state.showAllCategories && state.categoryQuery.isEmpty;
-    final catsToRender = (state.showAllCategories || state.categoryQuery.isNotEmpty)
+    // Limit List to 7 items
+    final catsToRender =
+        (state.showAllCategories || state.categoryQuery.isNotEmpty)
         ? displayCats
-        : displayCats.take(5).toList();
+        : displayCats.take(7).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,16 +43,20 @@ class FilterCategoriesSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.h),
+        // Category Search Field
         TextField(
           decoration: InputDecoration(
             hintText: 'Search categories...',
             prefixIcon: Icon(Icons.search, size: 20.sp, color: Colors.grey),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
             contentPadding: EdgeInsets.symmetric(vertical: 8.h),
           ),
-          onChanged: (val) => cubit.updateCategoryQuery(val),
+          onChanged: (val) => bloc.add(UpdateFilterCategoryQuery(val)),
         ),
         SizedBox(height: 8.h),
+        // List of Category Items
         Container(
           constraints: BoxConstraints(maxHeight: 180.h),
           decoration: BoxDecoration(
@@ -74,15 +80,19 @@ class FilterCategoriesSection extends StatelessWidget {
                   ),
                 ),
                 trailing: GestureDetector(
-                  onTap: () => cubit.toggleCategory(cat),
+                  onTap: () => bloc.add(ToggleFilterCategory(cat)),
                   child: Container(
                     width: 22.w,
                     height: 22.h,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isSelected ? CustomerAppColors.primary : Colors.transparent,
+                      color: isSelected
+                          ? CustomerAppColors.primary
+                          : Colors.transparent,
                       border: Border.all(
-                        color: isSelected ? CustomerAppColors.primary : Colors.grey[300]!,
+                        color: isSelected
+                            ? CustomerAppColors.primary
+                            : Colors.grey[300]!,
                         width: 1.5,
                       ),
                     ),
@@ -95,7 +105,8 @@ class FilterCategoriesSection extends StatelessWidget {
             },
           ),
         ),
-        if (state.categoryQuery.isNotEmpty && filteredCats.isEmpty) ...[
+        // Empty State when no Categories
+        if (state.categoryQuery.isNotEmpty && displayCats.length <= 1) ...[
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.h),
             child: Text(
@@ -108,11 +119,12 @@ class FilterCategoriesSection extends StatelessWidget {
             ),
           ),
         ],
+        // See all Button
         if (showSeeAllButton) ...[
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
-              onPressed: () => cubit.toggleShowAllCategories(true),
+              onPressed: () => bloc.add(ToggleFilterShowAllCategories(true)),
               icon: const Icon(Icons.keyboard_arrow_down),
               label: const Text('See All'),
               style: TextButton.styleFrom(

@@ -4,13 +4,11 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
 
+// Product sold By Section - Shop Details
 class ProductSoldBySection extends StatelessWidget {
   final ShopProfileModel shop;
 
-  const ProductSoldBySection({
-    super.key,
-    required this.shop,
-  });
+  const ProductSoldBySection({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +16,7 @@ class ProductSoldBySection extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => ShopDetailsPage(shop: shop),
-          ),
+          MaterialPageRoute(builder: (_) => ShopDetailsPage(shop: shop)),
         );
       },
       child: Container(
@@ -48,6 +44,7 @@ class ProductSoldBySection extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                // Shop Name and Address
                 children: [
                   Text(
                     'SOLD BY',
@@ -71,11 +68,7 @@ class ProductSoldBySection extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: Colors.grey,
-              size: 20.sp,
-            ),
+            Icon(Icons.chevron_right, color: Colors.grey, size: 20.sp),
           ],
         ),
       ),

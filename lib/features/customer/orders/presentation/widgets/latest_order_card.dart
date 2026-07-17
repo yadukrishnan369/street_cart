@@ -20,10 +20,7 @@ class LatestOrderCard extends StatelessWidget {
     if (order.items.isEmpty) return const SizedBox.shrink();
 
     final firstItem = order.items.first;
-    final totalItems = order.items.fold<int>(
-      0,
-      (sum, item) => sum + item.quantity,
-    );
+    final totalItems = OrdersHelper.getOrderTotalItems(order);
     final statusColor = OrdersHelper.getStatusColor(
       CustomerOrderStatus.fromString(order.status),
     );
@@ -55,6 +52,7 @@ class LatestOrderCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  // Product Info
                   children: [
                     Row(
                       children: [
@@ -103,6 +101,7 @@ class LatestOrderCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
+              // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
                 child: Image.network(
@@ -120,6 +119,7 @@ class LatestOrderCard extends StatelessWidget {
               ),
             ],
           ),
+          // Cancel Button
           if (OrdersHelper.isCancellable(
             CustomerOrderStatus.fromString(order.status),
           )) ...[

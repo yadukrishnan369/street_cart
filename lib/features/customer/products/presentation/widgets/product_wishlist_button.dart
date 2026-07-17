@@ -8,6 +8,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Product WishList Button
 class ProductWishlistButton extends StatelessWidget {
   final ProductModel product;
   final ShopProfileModel shop;
@@ -32,19 +33,14 @@ class ProductWishlistButton extends StatelessWidget {
         return IconButton(
           icon: Icon(
             isWishlisted ? Icons.favorite : Icons.favorite_border,
-            color: isWishlisted
-                ? Colors.red
-                : CustomerAppColors.textPrimary,
+            color: isWishlisted ? Colors.red : CustomerAppColors.textPrimary,
           ),
           onPressed: () {
             if (isWishlisted) {
               context.read<WishlistBloc>().add(
                 RemoveProductFromWishlist(productId: product.id),
               );
-              CustomSnackBar.show(
-                context,
-                message: 'Removed from wishlist',
-              );
+              CustomSnackBar.show(context, message: 'Removed from wishlist');
             } else {
               context.read<WishlistBloc>().add(
                 AddProductToWishlist(
@@ -54,10 +50,7 @@ class ProductWishlistButton extends StatelessWidget {
                   selectedSize: selectedSize,
                 ),
               );
-              CustomSnackBar.show(
-                context,
-                message: 'Added to wishlist',
-              );
+              CustomSnackBar.show(context, message: 'Added to wishlist');
             }
           },
         );

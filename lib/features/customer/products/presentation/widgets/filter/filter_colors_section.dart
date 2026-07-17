@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_event.dart';
 
+// Filter Colors Section
 class FilterColorsSection extends StatelessWidget {
   final ProductFilterState state;
-  final ProductFilterCubit cubit;
+  final ProductFilterBloc bloc;
 
   const FilterColorsSection({
     super.key,
     required this.state,
-    required this.cubit,
+    required this.bloc,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Hide Section when no Colors are Available
     if (state.availableColors.isEmpty) return const SizedBox();
 
     return Column(
@@ -30,6 +33,7 @@ class FilterColorsSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
+        // List Of Colors
         SizedBox(
           height: 48.h,
           child: ListView.builder(
@@ -39,9 +43,9 @@ class FilterColorsSection extends StatelessWidget {
               final colorName = state.availableColors[index];
               final isSelected = state.selectedColors.contains(colorName);
               final color = ShopAppColors.getColorFromName(colorName);
-              final isWhite = color.value == 0xFFFFFFFF;
+              final isWhite = color.toARGB32() == 0xFFFFFFFF;
               return GestureDetector(
-                onTap: () => cubit.toggleColor(colorName),
+                onTap: () => bloc.add(ToggleFilterColor(colorName)),
                 child: Container(
                   margin: EdgeInsets.only(right: 12.w),
                   width: 38.r,
@@ -57,11 +61,12 @@ class FilterColorsSection extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 4,
                       ),
                     ],
                   ),
+                  // Check Icon for Selected Color
                   child: isSelected
                       ? Icon(
                           Icons.check,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Support Footer Box
 class SupportFooterBox extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -28,6 +29,7 @@ class SupportFooterBox extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // Title
           Text(
             title,
             style: CustomerAppTextStyles.heading2.copyWith(
@@ -36,6 +38,7 @@ class SupportFooterBox extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
+          // Subtitle
           Text(
             subtitle,
             textAlign: TextAlign.center,
@@ -46,6 +49,7 @@ class SupportFooterBox extends StatelessWidget {
           SizedBox(height: 20.h),
           SizedBox(
             width: double.infinity,
+            // Button
             child: ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(

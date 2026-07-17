@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
 
+// Cart Empty State
 class CartEmptyState extends StatelessWidget {
   const CartEmptyState({super.key});
 

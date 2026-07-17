@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Complete Profile Modal
 class CompleteProfileModal extends StatelessWidget {
   final VoidCallback onCompleteProfile;
   final VoidCallback onMaybeLater;
@@ -90,6 +91,7 @@ class CompleteProfileModal extends StatelessWidget {
     );
   }
 
+  // dialogue header profile icon
   Widget _buildIcon() {
     return Container(
       width: 80.w,

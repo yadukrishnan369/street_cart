@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/support/presentation/widgets/faq_e
 import 'package:street_cart/features/customer/support/presentation/widgets/support_footer_box.dart';
 import 'contact_support_page.dart';
 
+// FAQ Page
 class FAQPage extends StatelessWidget {
   const FAQPage({super.key});
 
@@ -21,6 +22,7 @@ class FAQPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () => Navigator.pop(context),
         ),
+        // Page Title
         title: Text(
           'FAQ',
           style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
@@ -33,6 +35,7 @@ class FAQPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Header
               _buildHeader(),
               SizedBox(height: 32.h),
               Text(
@@ -45,11 +48,14 @@ class FAQPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
-              ...CustomerConstants.faqs.map((faq) => FAQExpansionTile(
-                    question: faq['question']!,
-                    answer: faq['answer']!,
-                  )),
+              ...CustomerConstants.faqs.map(
+                (faq) => FAQExpansionTile(
+                  question: faq['question']!,
+                  answer: faq['answer']!,
+                ),
+              ),
               SizedBox(height: 24.h),
+              // Support Footer Box
               SupportFooterBox(
                 title: 'Still need help?',
                 subtitle:

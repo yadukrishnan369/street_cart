@@ -38,6 +38,7 @@ class _CartPageState extends State<CartPage> {
     super.dispose();
   }
 
+  // listens to scroll, and show summary card
   void _scrollListener() {
     final state = context.read<CartBloc>().state;
     if (state is CartLoaded) {

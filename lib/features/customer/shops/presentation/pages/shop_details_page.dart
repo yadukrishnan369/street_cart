@@ -9,6 +9,7 @@ import 'package:street_cart/features/customer/shops/presentation/bloc/shop_detai
 import 'package:street_cart/features/customer/shops/presentation/widgets/shop_details_header.dart';
 import 'package:street_cart/features/customer/shops/presentation/widgets/shop_products_grid.dart';
 
+// Shop Details Page
 class ShopDetailsPage extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -26,6 +27,7 @@ class ShopDetailsPage extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: CustomerAppColors.background,
               elevation: 0,
+              // Page Header
               title: Text(
                 'Store Profile',
                 style: TextStyle(
@@ -36,24 +38,27 @@ class ShopDetailsPage extends StatelessWidget {
               ),
               centerTitle: true,
             ),
+            // Refresh Indicator
             body: RefreshIndicator(
               color: CustomerAppColors.primary,
               onRefresh: () async {
                 context.read<ShopDetailsBloc>().add(
-                      FetchShopProducts(shopId: shop.uid),
-                    );
+                  FetchShopProducts(shopId: shop.uid),
+                );
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
                     SizedBox(height: 16.h),
+                    // Shop Details Header
                     ShopDetailsHeader(shop: shop),
                     SizedBox(height: 24.h),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Align(
                         alignment: Alignment.centerLeft,
+                        // Shop Products Section Header
                         child: Text(
                           'Featured Products',
                           style: TextStyle(
@@ -65,6 +70,7 @@ class ShopDetailsPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 16.h),
+                    // Shop Products Grid
                     ShopProductsGrid(shop: shop),
                     SizedBox(height: 40.h),
                   ],

@@ -7,6 +7,7 @@ abstract class ShopDetailsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Fetch Shop Event
 class FetchShopProducts extends ShopDetailsEvent {
   final String shopId;
 

@@ -49,6 +49,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     return super.close();
   }
 
+  // Load WishList Products
   Future<void> _onLoadWishlist(
     LoadWishlist event,
     Emitter<WishlistState> emit,
@@ -63,6 +64,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     }
   }
 
+  // Add Product to WishList
   Future<void> _onAddProductToWishlist(
     AddProductToWishlist event,
     Emitter<WishlistState> emit,
@@ -73,17 +75,16 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
         (item) => item.product.id == event.product.id,
       );
       if (!itemExists) {
-        final optimisticallyAddedItems = List<WishlistItem>.from(
-          currentState.items,
-        )..insert(
-            0,
-            WishlistItem(
-              product: event.product,
-              shop: event.shop,
-              selectedColor: event.selectedColor,
-              selectedSize: event.selectedSize,
-            ),
-          );
+        final optimisticallyAddedItems =
+            List<WishlistItem>.from(currentState.items)..insert(
+              0,
+              WishlistItem(
+                product: event.product,
+                shop: event.shop,
+                selectedColor: event.selectedColor,
+                selectedSize: event.selectedSize,
+              ),
+            );
         emit(WishlistLoaded(items: optimisticallyAddedItems));
       }
 
@@ -117,6 +118,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     }
   }
 
+  // Remove Product From WishList
   Future<void> _onRemoveProductFromWishlist(
     RemoveProductFromWishlist event,
     Emitter<WishlistState> emit,
@@ -146,6 +148,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     }
   }
 
+  // Clear All Products From WishList
   Future<void> _onClearAllWishlist(
     ClearAllWishlist event,
     Emitter<WishlistState> emit,

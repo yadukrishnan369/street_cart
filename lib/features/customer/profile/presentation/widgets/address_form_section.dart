@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/profile/presentation/widgets/addre
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Address Form section
 class AddressFormSection extends StatefulWidget {
   final AddressModel? address;
 
@@ -28,7 +29,6 @@ class _AddressFormSectionState extends State<AddressFormSection> {
   late TextEditingController _districtController;
   late TextEditingController _stateController;
   late TextEditingController _pincodeController;
-  String _selectedType = 'HOME';
 
   @override
   void initState() {
@@ -46,7 +46,15 @@ class _AddressFormSectionState extends State<AddressFormSection> {
     );
     _stateController = TextEditingController(text: widget.address?.state);
     _pincodeController = TextEditingController(text: widget.address?.pincode);
-    _selectedType = widget.address?.type ?? 'HOME';
+
+    // Initialize Selected type
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AddressBloc>().add(
+          SelectAddressTypeEvent(widget.address?.type ?? 'HOME'),
+        );
+      }
+    });
   }
 
   @override
@@ -61,6 +69,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
     super.dispose();
   }
 
+  // Validate Fields and Add/Update address
   void _saveAddress() {
     if (_formKey.currentState!.validate()) {
       final address = AddressModel(
@@ -73,7 +82,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
         district: _districtController.text.trim(),
         state: _stateController.text.trim(),
         pincode: _pincodeController.text.trim(),
-        type: _selectedType,
+        type: context.read<AddressBloc>().state.selectedType,
         isDefault: widget.address?.isDefault ?? false,
         latitude: widget.address?.latitude,
         longitude: widget.address?.longitude,
@@ -94,6 +103,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Name Field
           CustomTextField(
             label: 'Full Name',
             hintText: 'e.g., Rahul Nair',
@@ -101,6 +111,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             validator: Validators.validateName,
           ),
           SizedBox(height: 20.h),
+          // Phone Field
           CustomTextField(
             label: 'Phone Number',
             hintText: 'e.g., 9876543210',
@@ -109,6 +120,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             validator: Validators.validateAddressPhone,
           ),
           SizedBox(height: 20.h),
+          // Primary Address
           CustomTextField(
             label: 'Address Line 1',
             hintText: 'House No., Building Name',
@@ -116,6 +128,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             validator: Validators.validateAddress1,
           ),
           SizedBox(height: 20.h),
+          // Secondary Address
           CustomTextField(
             label: 'Address Line 2',
             hintText: 'Street Name, Locality - e.g., Mavoor Road',
@@ -123,6 +136,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             validator: Validators.validateAddress2,
           ),
           SizedBox(height: 20.h),
+          // District Field
           CustomTextField(
             label: 'District',
             hintText: 'Kozhikode',
@@ -130,6 +144,7 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             validator: Validators.validateDistrict,
           ),
           SizedBox(height: 20.h),
+          // State and Pincode Fields
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -154,11 +169,19 @@ class _AddressFormSectionState extends State<AddressFormSection> {
             ],
           ),
           SizedBox(height: 32.h),
-          AddressTypeSelector(
-            selectedType: _selectedType,
-            onTypeChanged: (type) => setState(() => _selectedType = type),
+          // Type Selector- HOME, WORK, OTHER
+          BlocBuilder<AddressBloc, AddressState>(
+            builder: (context, state) {
+              return AddressTypeSelector(
+                selectedType: state.selectedType,
+                onTypeChanged: (type) => context.read<AddressBloc>().add(
+                  SelectAddressTypeEvent(type),
+                ),
+              );
+            },
           ),
           SizedBox(height: 48.h),
+          // Primary Button
           BlocBuilder<AddressBloc, AddressState>(
             builder: (context, state) {
               return PrimaryButton(

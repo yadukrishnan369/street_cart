@@ -4,12 +4,16 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 
 abstract class CustomerProductsState {}
 
+// Initial State
 class CustomerProductsInitial extends CustomerProductsState {}
 
+// Products Fetch in Loading
 class CustomerProductsLoading extends CustomerProductsState {}
 
+// Location Services Disabled State
 class CustomerProductsLocationDisabled extends CustomerProductsState {}
 
+// Products Successfully Loaded State
 class CustomerProductsLoaded extends CustomerProductsState {
   final List<ProductModel> allProducts;
   final List<ProductModel> filteredProducts;
@@ -36,8 +40,42 @@ class CustomerProductsLoaded extends CustomerProductsState {
   });
 }
 
+// Product Fetch Failed State
 class CustomerProductsError extends CustomerProductsState {
   final String message;
-
   CustomerProductsError({required this.message});
+}
+
+// Product Detail Page State
+class ProductDetailState extends CustomerProductsState {
+  final String? selectedColor;
+
+  final String? selectedSize;
+
+  final String? variantWarningMessage;
+
+  final int carouselIndex;
+
+  ProductDetailState({
+    this.selectedColor,
+    this.selectedSize,
+    this.variantWarningMessage,
+    this.carouselIndex = 0,
+  });
+
+  ProductDetailState copyWith({
+    String? selectedColor,
+    String? selectedSize,
+    String? Function()? variantWarningMessage,
+    int? carouselIndex,
+  }) {
+    return ProductDetailState(
+      selectedColor: selectedColor ?? this.selectedColor,
+      selectedSize: selectedSize ?? this.selectedSize,
+      variantWarningMessage: variantWarningMessage != null
+          ? variantWarningMessage()
+          : this.variantWarningMessage,
+      carouselIndex: carouselIndex ?? this.carouselIndex,
+    );
+  }
 }

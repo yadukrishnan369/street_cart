@@ -11,6 +11,7 @@ import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/wishlist_empty_state.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/wishlist_grid.dart';
 
+// WishList Page
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
 
@@ -25,6 +26,7 @@ class _WishlistPageState extends State<WishlistPage> {
     context.read<WishlistBloc>().add(LoadWishlist());
   }
 
+  // Confirmation for Clear WishList Items
   void _showClearWishlistDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -117,9 +119,10 @@ class _WishlistPageState extends State<WishlistPage> {
             final items = state.items;
 
             if (items.isEmpty) {
+              // Empty State
               return const WishlistEmptyState();
             }
-
+            // Wish List Grid
             return WishlistGrid(items: items);
           }
 

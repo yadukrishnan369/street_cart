@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
 
-class ProductImageCarousel extends StatefulWidget {
+// Product Image Carousel
+class ProductImageCarousel extends StatelessWidget {
   final List<String> images;
 
   const ProductImageCarousel({super.key, required this.images});
 
   @override
-  State<ProductImageCarousel> createState() => _ProductImageCarouselState();
-}
-
-class _ProductImageCarouselState extends State<ProductImageCarousel> {
-  int _currentIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    final bool hasMultipleImages = widget.images.length > 1;
+    final bool hasMultipleImages = images.length > 1;
 
-    if (widget.images.isEmpty) {
+    // Placeholder for when product has no images
+    if (images.isEmpty) {
       return ProductImagePlaceholder(
         width: double.infinity,
         height: 320.h,
@@ -32,13 +31,23 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
       );
     }
 
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.bottomCenter,
+    return BlocBuilder<CustomerProductsBloc, CustomerProductsState>(
+      buildWhen: (prev, curr) {
+        if (prev is ProductDetailState && curr is ProductDetailState) {
+          return prev.carouselIndex != curr.carouselIndex;
+        }
+        return false;
+      },
+      builder: (context, state) {
+        final currentIndex = state is ProductDetailState
+            ? state.carouselIndex
+            : 0;
+
+        return Column(
           children: [
+            // Image slider
             CarouselSlider.builder(
-              itemCount: widget.images.length,
+              itemCount: images.length,
               options: CarouselOptions(
                 height: 320.h,
                 viewportFraction: 1.0,
@@ -49,20 +58,22 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
                 autoPlayAnimationDuration: const Duration(milliseconds: 800),
                 autoPlayCurve: Curves.fastOutSlowIn,
                 onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
+                  // Dispatch index update
+                  context.read<CustomerProductsBloc>().add(
+                    UpdateCarouselIndex(index),
+                  );
                 },
               ),
               itemBuilder: (context, index, realIndex) {
-                final imageUrl = widget.images[index];
+                final imageUrl = images[index];
                 return GestureDetector(
                   onTap: () {
+                    // Full screen image preview
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => ImagePreviewPage(
-                          images: widget.images,
+                          images: images,
                           initialIndex: index,
                         ),
                       ),
@@ -87,28 +98,29 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
                 );
               },
             ),
+            // Dot indicator
+            if (hasMultipleImages) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: images.asMap().entries.map((entry) {
+                  return Container(
+                    width: currentIndex == entry.key ? 16.w : 8.w,
+                    height: 8.h,
+                    margin: EdgeInsets.symmetric(horizontal: 4.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.r),
+                      color: currentIndex == entry.key
+                          ? CustomerAppColors.primary
+                          : Colors.grey[300],
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 10.h),
+            ],
           ],
-        ),
-        if (hasMultipleImages) ...[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.images.asMap().entries.map((entry) {
-              return Container(
-                width: _currentIndex == entry.key ? 16.w : 8.w,
-                height: 8.h,
-                margin: EdgeInsets.symmetric(horizontal: 4.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.r),
-                  color: _currentIndex == entry.key
-                      ? CustomerAppColors.primary
-                      : Colors.grey[300],
-                ),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 10.h),
-        ],
-      ],
+        );
+      },
     );
   }
 }

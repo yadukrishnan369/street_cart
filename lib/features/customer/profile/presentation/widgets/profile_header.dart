@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/profile/presentation/pages/edit_pr
 import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 
+// Profile Header
 class ProfileHeader extends StatelessWidget {
   final ProfileModel profile;
 
@@ -55,6 +56,7 @@ class ProfileHeader extends StatelessWidget {
                       );
                     }
                   : null,
+              // Profile Image
               child: ClipOval(
                 child: SizedBox(
                   width: 100.w,
@@ -74,16 +76,19 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // Customer Name
           Text(
             profile.fullName.isEmpty ? 'User' : profile.fullName,
             style: CustomerAppTextStyles.heading1.copyWith(fontSize: 25.sp),
           ),
           SizedBox(height: 4.h),
+          // Customer Email
           Text(
             profile.email,
             style: CustomerAppTextStyles.heading2.copyWith(fontSize: 16.sp),
           ),
           SizedBox(height: 2.h),
+          // Customer Phone
           Text(
             profile.phone.isNotEmpty ? profile.phone : 'No phone number added',
             style: CustomerAppTextStyles.subtitle.copyWith(fontSize: 16.sp),
@@ -98,6 +103,7 @@ class ProfileHeader extends StatelessWidget {
                 color: Colors.grey.shade600,
               ),
               SizedBox(width: 4.w),
+              // Customer Location
               Text(
                 profile.locationName.isEmpty
                     ? 'Unknown Location'
@@ -109,6 +115,7 @@ class ProfileHeader extends StatelessWidget {
           SizedBox(height: 24.h),
           SizedBox(
             width: double.infinity,
+            // Edit Profile Button
             child: ElevatedButton(
               onPressed: () {
                 final profileBloc = context.read<ProfileBloc>();

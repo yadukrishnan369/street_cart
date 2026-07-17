@@ -5,9 +5,11 @@ import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_event.dart';
 
+// Logout Button
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
 
+  // Confirmation For Logout
   void _showLogoutConfirmation(BuildContext context) {
     showDialog(
       context: context,

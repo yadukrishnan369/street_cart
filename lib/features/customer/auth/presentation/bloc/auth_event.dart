@@ -66,3 +66,30 @@ class CheckEmailVerificationStatusEvent extends AuthEvent {
 }
 
 class VerificationCancelledEvent extends AuthEvent {}
+
+// Events for UI
+class ToggleLoginPasswordVisibility extends AuthEvent {}
+
+class ToggleSignupPasswordVisibility extends AuthEvent {}
+
+class ToggleConfirmPasswordVisibility extends AuthEvent {}
+
+class ToggleTermsAgreement extends AuthEvent {
+  final bool agreed;
+  ToggleTermsAgreement(this.agreed);
+}
+
+class SetVerificationSheetShowing extends AuthEvent {
+  final bool showing;
+  SetVerificationSheetShowing(this.showing);
+}
+
+class DecrementVerificationTimer extends AuthEvent {}
+
+class ResetVerificationTimer extends AuthEvent {}
+
+class StartVerificationTimerEvent extends AuthEvent {
+  final String fullName;
+  final String email;
+  StartVerificationTimerEvent({required this.fullName, required this.email});
+}

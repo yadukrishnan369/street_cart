@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Address Type Selector - Home, Office, Other
 class AddressTypeSelector extends StatelessWidget {
   final String selectedType;
   final Function(String) onTypeChanged;
@@ -26,6 +27,7 @@ class AddressTypeSelector extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
+        // Types Of Address
         Row(
           children: [
             _buildTypeButton(
@@ -73,7 +75,9 @@ class AddressTypeSelector extends StatelessWidget {
             color: isSelected ? CustomerAppColors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
-              color: isSelected ? CustomerAppColors.primary : Colors.grey.shade200,
+              color: isSelected
+                  ? CustomerAppColors.primary
+                  : Colors.grey.shade200,
               width: 1.5,
             ),
           ),

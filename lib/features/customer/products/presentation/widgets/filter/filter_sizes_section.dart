@@ -1,55 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_event.dart';
+import 'package:street_cart/features/customer/products/presentation/utils/products_helper.dart';
 
+// Filter Sizes Section
 class FilterSizesSection extends StatelessWidget {
   final ProductFilterState state;
-  final ProductFilterCubit cubit;
+  final ProductFilterBloc bloc;
 
   const FilterSizesSection({
     super.key,
     required this.state,
-    required this.cubit,
+    required this.bloc,
   });
 
   @override
   Widget build(BuildContext context) {
-    final selectedCatsWithoutAll = state.selectedCategories.where((c) => c != 'All').toList();
-    if (selectedCatsWithoutAll.isEmpty) {
-      return const SizedBox();
-    }
+    // Hide Section when no Specific Category is Selected
+    final selectedCatsWithoutAll = state.selectedCategories
+        .where((c) => c != 'All')
+        .toList();
+    if (selectedCatsWithoutAll.isEmpty) return const SizedBox();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: selectedCatsWithoutAll.map((cat) {
-        final Set<String> sizesForCat = {};
-        final useAllColors = state.selectedColors.isEmpty;
+        // Get sizes for this category
+        final sizesForCat = ProductsHelper.getSizesForCategory(state, cat);
 
-        for (final p in state.allProducts) {
-          if (p.category.toLowerCase() == cat.toLowerCase()) {
-            if (useAllColors) {
-              sizesForCat.addAll(p.allSizes);
-            } else {
-              for (final variant in p.variants) {
-                if (state.selectedColors.contains(variant.colorName)) {
-                  for (final entry in variant.sizes.entries) {
-                    if (entry.value > 0) {
-                      sizesForCat.add(entry.key);
-                    }
-                  }
-                }
-              }
-              if (!p.hasVariants && p.colors.any((c) => state.selectedColors.contains(c))) {
-                sizesForCat.addAll(p.allSizes);
-              }
-            }
-          }
-        }
-
-        if (sizesForCat.isEmpty) {
-          return const SizedBox();
-        }
+        if (sizesForCat.isEmpty) return const SizedBox();
 
         final sortedSizes = sizesForCat.toList();
 
@@ -65,6 +46,7 @@ class FilterSizesSection extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
+            // List Of Size Chips
             SizedBox(
               height: 40.h,
               child: ListView.builder(
@@ -74,12 +56,17 @@ class FilterSizesSection extends StatelessWidget {
                   final size = sortedSizes[index];
                   final isSelected = state.selectedSizes.contains(size);
                   return GestureDetector(
-                    onTap: () => cubit.toggleSize(size),
+                    onTap: () => bloc.add(ToggleFilterSize(size)),
                     child: Container(
                       margin: EdgeInsets.only(right: 10.w),
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: isSelected ? CustomerAppColors.primary : Colors.grey[100],
+                        color: isSelected
+                            ? CustomerAppColors.primary
+                            : Colors.grey[100],
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Center(
@@ -88,7 +75,9 @@ class FilterSizesSection extends StatelessWidget {
                           style: TextStyle(
                             color: isSelected ? Colors.white : Colors.black87,
                             fontSize: 13.sp,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ),

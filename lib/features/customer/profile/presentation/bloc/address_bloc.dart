@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/profile/domain/usecases/set_defaul
 import 'address_event.dart';
 import 'address_state.dart';
 
+// Address Bloc
 class AddressBloc extends Bloc<AddressEvent, AddressState> {
   final GetAddresses _getAddresses;
   final AddAddress _addAddress;
@@ -25,71 +26,92 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
        _updateAddress = updateAddress,
        _deleteAddress = deleteAddress,
        _setDefaultAddress = setDefaultAddress,
-       super(AddressInitial()) {
+       super(const AddressInitial()) {
     on<FetchAddresses>(_onFetchAddresses);
     on<AddAddressEvent>(_onAddAddress);
     on<UpdateAddressEvent>(_onUpdateAddress);
     on<DeleteAddressEvent>(_onDeleteAddress);
     on<ToggleDefaultAddressEvent>(_onToggleDefaultAddress);
+    on<SelectAddressTypeEvent>(_onSelectAddressType);
   }
 
+  // Fetch all saved addresses
   Future<void> _onFetchAddresses(
     FetchAddresses event,
     Emitter<AddressState> emit,
   ) async {
     if (state is! AddressesLoaded) {
-      emit(AddressLoading());
+      emit(AddressLoading(selectedType: state.selectedType));
     }
     try {
       final addresses = await _getAddresses();
-      emit(AddressesLoaded(addresses));
+      emit(AddressesLoaded(addresses, selectedType: state.selectedType));
     } catch (e) {
-      emit(AddressError(e.toString()));
+      emit(AddressError(e.toString(), selectedType: state.selectedType));
     }
   }
 
+  // Add a new address
   Future<void> _onAddAddress(
     AddAddressEvent event,
     Emitter<AddressState> emit,
   ) async {
-    emit(AddressActionLoading());
+    emit(AddressActionLoading(selectedType: state.selectedType));
     try {
       await _addAddress(event.address);
-      emit(const AddressActionSuccess('Address added successfully'));
+      emit(
+        AddressActionSuccess(
+          'Address added successfully',
+          selectedType: state.selectedType,
+        ),
+      );
       add(FetchAddresses());
     } catch (e) {
-      emit(AddressError(e.toString()));
+      emit(AddressError(e.toString(), selectedType: state.selectedType));
     }
   }
 
+  // Update an existing saved address
   Future<void> _onUpdateAddress(
     UpdateAddressEvent event,
     Emitter<AddressState> emit,
   ) async {
-    emit(AddressActionLoading());
+    emit(AddressActionLoading(selectedType: state.selectedType));
     try {
       await _updateAddress(event.address.id, event.address);
-      emit(const AddressActionSuccess('Address updated successfully'));
+      emit(
+        AddressActionSuccess(
+          'Address updated successfully',
+          selectedType: state.selectedType,
+        ),
+      );
       add(FetchAddresses());
     } catch (e) {
-      emit(AddressError(e.toString()));
+      emit(AddressError(e.toString(), selectedType: state.selectedType));
     }
   }
 
+  // Delete a saved address
   Future<void> _onDeleteAddress(
     DeleteAddressEvent event,
     Emitter<AddressState> emit,
   ) async {
-    emit(AddressActionLoading());
+    emit(AddressActionLoading(selectedType: state.selectedType));
     try {
       await _deleteAddress(event.id);
-      emit(const AddressActionSuccess('Address deleted successfully'));
+      emit(
+        AddressActionSuccess(
+          'Address deleted successfully',
+          selectedType: state.selectedType,
+        ),
+      );
       add(FetchAddresses());
     } catch (e) {
-      emit(AddressError(e.toString()));
+      emit(AddressError(e.toString(), selectedType: state.selectedType));
     }
   }
 
+  // Set selected address as default
   Future<void> _onToggleDefaultAddress(
     ToggleDefaultAddressEvent event,
     Emitter<AddressState> emit,
@@ -98,7 +120,39 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       await _setDefaultAddress(event.id);
       add(FetchAddresses());
     } catch (e) {
-      emit(AddressError(e.toString()));
+      emit(AddressError(e.toString(), selectedType: state.selectedType));
+    }
+  }
+
+  // Address type selection - HOME, WORK, OTHER
+  void _onSelectAddressType(
+    SelectAddressTypeEvent event,
+    Emitter<AddressState> emit,
+  ) {
+    if (state is AddressInitial) {
+      emit(AddressInitial(selectedType: event.type));
+    } else if (state is AddressLoading) {
+      emit(AddressLoading(selectedType: event.type));
+    } else if (state is AddressActionLoading) {
+      emit(AddressActionLoading(selectedType: event.type));
+    } else if (state is AddressesLoaded) {
+      emit(
+        AddressesLoaded(
+          (state as AddressesLoaded).addresses,
+          selectedType: event.type,
+        ),
+      );
+    } else if (state is AddressActionSuccess) {
+      emit(
+        AddressActionSuccess(
+          (state as AddressActionSuccess).message,
+          selectedType: event.type,
+        ),
+      );
+    } else if (state is AddressError) {
+      emit(
+        AddressError((state as AddressError).message, selectedType: event.type),
+      );
     }
   }
 }

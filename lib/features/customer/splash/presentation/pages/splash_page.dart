@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/splash/presentation/bloc/splash_bl
 import 'package:street_cart/features/customer/splash/presentation/bloc/splash_event.dart';
 import 'package:street_cart/features/customer/splash/presentation/bloc/splash_state.dart';
 
+// Splash Page
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -58,18 +59,21 @@ class _SplashPageState extends State<SplashPage>
           if (state is SplashLoaded) {
             switch (state.status) {
               case AppStatus.firstTime:
+                // Navigate to OnBoarding
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const OnboardingPage()),
                 );
                 break;
               case AppStatus.notLoggedIn:
+                // Navigate to Login
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const LoginPage()),
                 );
                 break;
               case AppStatus.loggedIn:
+                // Navigate to Home
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const HomePage()),
@@ -91,11 +95,13 @@ class _SplashPageState extends State<SplashPage>
                       children: [
                         AppLogo(isDark: true, size: 85.w),
                         32.verticalSpace,
+                        // App Name
                         Text(
                           "Street Cart",
                           style: CustomerAppTextStyles.heading1,
                         ),
                         8.verticalSpace,
+                        // Subtitle
                         Text(
                           "Discover shops around you",
                           style: CustomerAppTextStyles.subtitle,
@@ -110,6 +116,7 @@ class _SplashPageState extends State<SplashPage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Loading Count to 100
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -130,6 +137,7 @@ class _SplashPageState extends State<SplashPage>
                           ],
                         ),
                         12.verticalSpace,
+                        // Linear Progress Line
                         LinearProgressIndicator(
                           value: _controller.value,
                           backgroundColor: CustomerAppColors.primary

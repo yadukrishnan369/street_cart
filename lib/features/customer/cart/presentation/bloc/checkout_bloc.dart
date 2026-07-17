@@ -3,6 +3,7 @@ import 'package:street_cart/features/customer/cart/domain/usecases/get_shop_by_i
 import 'checkout_event.dart';
 import 'checkout_state.dart';
 
+// Checkout Bloc
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final GetShopById getShopById;
 
@@ -11,6 +12,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<SelectPaymentMethod>(_onSelectPaymentMethod);
   }
 
+  // fetches shop profiles to determine valid payment methods
   Future<void> _onLoadCheckout(
     LoadCheckout event,
     Emitter<CheckoutState> emit,
@@ -41,7 +43,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         );
       }
 
-      // If we cannot find any specific methods, using default to both as a fallback
+      // If we cannot find any specific methods, using default
       bool supportsCOD = true;
       bool supportsUPI = true;
 
@@ -68,7 +70,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       if (supportsUPI) allowed.add('UPI');
       if (supportsCOD) allowed.add('COD');
 
-      // If both are disabled, default to at least COD so checkout is possible
+      // If both are disabled, default to at least COD
       if (allowed.isEmpty) {
         allowed.addAll(['COD']);
       }
@@ -84,6 +86,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     }
   }
 
+  // changes selected payment method option
   void _onSelectPaymentMethod(
     SelectPaymentMethod event,
     Emitter<CheckoutState> emit,

@@ -43,3 +43,13 @@ class PaymentFailure extends PaymentState {
   @override
   List<Object?> get props => [message];
 }
+
+class PaymentOverlayPhase extends PaymentState {
+  final bool isLoading;
+  final int phase;
+
+  const PaymentOverlayPhase({required this.isLoading, required this.phase});
+
+  @override
+  List<Object?> get props => [isLoading, phase];
+}

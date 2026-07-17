@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/profile/data/models/profile_model.
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 
+// Edit Profile Header
 class EditProfileHeader extends StatelessWidget {
   final ProfileModel? profile;
   final String activeName;
@@ -52,19 +53,16 @@ class EditProfileHeader extends StatelessWidget {
                       width: 110.w,
                       height: 110.w,
                       child: hasImage
+                          // Profile Image
                           ? CachedNetworkImage(
                               imageUrl: imageUrl,
                               fit: BoxFit.cover,
-                              placeholder: (context, url) => CustomerImagePlaceholder(
-                                size: 110.w,
-                              ),
-                              errorWidget: (context, url, error) => CustomerImagePlaceholder(
-                                size: 110.w,
-                              ),
+                              placeholder: (context, url) =>
+                                  CustomerImagePlaceholder(size: 110.w),
+                              errorWidget: (context, url, error) =>
+                                  CustomerImagePlaceholder(size: 110.w),
                             )
-                          : CustomerImagePlaceholder(
-                              size: 110.w,
-                            ),
+                          : CustomerImagePlaceholder(size: 110.w),
                     ),
                   ),
                 ),

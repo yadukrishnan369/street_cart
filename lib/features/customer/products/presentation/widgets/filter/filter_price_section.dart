@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_event.dart';
 
+// Filter Price Section
 class FilterPriceSection extends StatelessWidget {
   final ProductFilterState state;
-  final ProductFilterCubit cubit;
+  final ProductFilterBloc bloc;
   final TextEditingController minPriceController;
   final TextEditingController maxPriceController;
 
   const FilterPriceSection({
     super.key,
     required this.state,
-    required this.cubit,
+    required this.bloc,
     required this.minPriceController,
     required this.maxPriceController,
   });
@@ -33,6 +35,7 @@ class FilterPriceSection extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
+            // Active Price Range Label
             Text(
               '₹${state.minPrice.round()} - ₹${state.maxPrice.round()}',
               style: TextStyle(
@@ -44,6 +47,7 @@ class FilterPriceSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 8.h),
+        // Slider For Update FilterPrice Range
         RangeSlider(
           values: RangeValues(state.minPrice, state.maxPrice),
           min: state.absoluteMinPrice,
@@ -53,12 +57,15 @@ class FilterPriceSection extends StatelessWidget {
               : 1,
           activeColor: CustomerAppColors.primary,
           inactiveColor: Colors.grey[200],
-          onChanged: (values) => cubit.updatePriceRange(values.start, values.end),
+          onChanged: (values) =>
+              bloc.add(UpdateFilterPriceRange(values.start, values.end)),
         ),
         SizedBox(height: 12.h),
+        // Min/Max Price text input fields
         Row(
           children: [
             Expanded(
+              // Min Price
               child: TextField(
                 controller: minPriceController,
                 keyboardType: TextInputType.number,
@@ -68,18 +75,22 @@ class FilterPriceSection extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
                 ),
                 onChanged: (val) {
                   final double? parsed = double.tryParse(val);
                   if (parsed != null) {
-                    cubit.updatePriceRange(parsed, state.maxPrice);
+                    bloc.add(UpdateFilterPriceRange(parsed, state.maxPrice));
                   }
                 },
               ),
             ),
             SizedBox(width: 16.w),
             Expanded(
+              // Max Price
               child: TextField(
                 controller: maxPriceController,
                 keyboardType: TextInputType.number,
@@ -89,12 +100,15 @@ class FilterPriceSection extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
                 ),
                 onChanged: (val) {
                   final double? parsed = double.tryParse(val);
                   if (parsed != null) {
-                    cubit.updatePriceRange(state.minPrice, parsed);
+                    bloc.add(UpdateFilterPriceRange(state.minPrice, parsed));
                   }
                 },
               ),

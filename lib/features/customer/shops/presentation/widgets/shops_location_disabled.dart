@@ -3,13 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
 
+// Shop Location Disabled
 class ShopsLocationDisabled extends StatelessWidget {
   final VoidCallback onRefreshLocation;
 
-  const ShopsLocationDisabled({
-    super.key,
-    required this.onRefreshLocation,
-  });
+  const ShopsLocationDisabled({super.key, required this.onRefreshLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +23,7 @@ class ShopsLocationDisabled extends StatelessWidget {
               color: CustomerAppColors.primary.withValues(alpha: 0.25),
             ),
             SizedBox(height: 20.h),
+            // Title
             Text(
               'Location Services Off',
               style: TextStyle(
@@ -34,6 +33,7 @@ class ShopsLocationDisabled extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
+            // Subtitle
             Text(
               'Enable location services to find local shops near you.',
               textAlign: TextAlign.center,
@@ -43,19 +43,20 @@ class ShopsLocationDisabled extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
+            // Navigate to Location Permission Page
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const LocationPermissionPage(
-                      isProfileCompleted: true,
-                    ),
+                    builder: (_) =>
+                        const LocationPermissionPage(isProfileCompleted: true),
                   ),
                 ).then((_) => onRefreshLocation());
               },
               icon: const Icon(Icons.my_location),
               label: const Text('Enable Location'),
+              // Enable Location Button
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomerAppColors.primary,
                 foregroundColor: Colors.white,

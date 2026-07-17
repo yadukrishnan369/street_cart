@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/products/presentation/pages/custom
 import 'package:street_cart/shared/components/customer_product_card.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Wish List Grid
 class WishlistGrid extends StatelessWidget {
   final List<WishlistItem> items;
 
@@ -31,6 +32,7 @@ class WishlistGrid extends StatelessWidget {
           ),
         ),
         Expanded(
+          // Products Grid View
           child: GridView.builder(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -66,6 +68,7 @@ class WishlistGrid extends StatelessWidget {
                     }
                   });
                 },
+                // Wish List Product Items
                 child: ProductCard(
                   imageUrl: product.images.isNotEmpty
                       ? product.images.first

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/core/utils/location_helper.dart';
+import 'package:street_cart/core/utils/logger.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/products/domain/repositories/i_customer_products_repository.dart';
@@ -14,9 +15,10 @@ class CustomerProductsRemoteDataSourceImpl
   CustomerProductsRemoteDataSourceImpl({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  })  : _auth = auth,
-        _firestore = firestore;
+  }) : _auth = auth,
+       _firestore = firestore;
 
+  // Fetches Customer Nearby Shops
   @override
   Future<List<ShopProfileModel>> getNearbyShops() async {
     try {
@@ -24,8 +26,12 @@ class CustomerProductsRemoteDataSourceImpl
       double? customerLat;
       double? customerLng;
 
+      // Read Customer Location
       if (user != null) {
-        final doc = await _firestore.collection('customers').doc(user.uid).get();
+        final doc = await _firestore
+            .collection('customers')
+            .doc(user.uid)
+            .get();
         if (doc.exists) {
           final data = doc.data();
           if (data != null && data['location'] != null) {
@@ -36,11 +42,13 @@ class CustomerProductsRemoteDataSourceImpl
         }
       }
 
+      // Return Empty when Customer not Save the Location
       if (customerLat == null || customerLng == null) {
-        print('Customer location is null. Returning empty list because location is off.');
+        AppLogger.info('Customer location is null, returning empty shop list.');
         return [];
       }
 
+      // Fetch Approved and Acctive Shops
       final shopsSnap = await _firestore
           .collection('shops')
           .where('is_approved', isEqualTo: true)
@@ -51,6 +59,7 @@ class CustomerProductsRemoteDataSourceImpl
           .where((shop) => !shop.isSuspended)
           .toList();
 
+      // Filter Shops Within the Customer Delivery Radius
       final filteredShops = allShops.where((shop) {
         if (shop.latitude == null || shop.longitude == null) return false;
         final distance = LocationHelper.calculateDistance(
@@ -68,6 +77,7 @@ class CustomerProductsRemoteDataSourceImpl
     }
   }
 
+  // Fetches All Active Products from Nearby Shops
   @override
   Future<List<ProductModel>> getNearbyProducts() async {
     try {
@@ -82,6 +92,7 @@ class CustomerProductsRemoteDataSourceImpl
           .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
           .toList();
 
+      // Filter by Active Status and not Disabled
       final filtered = allProducts
           .where(
             (p) =>
@@ -89,7 +100,7 @@ class CustomerProductsRemoteDataSourceImpl
           )
           .toList();
 
-      // Sort products by newest first
+      // Sort Products by Newest first
       filtered.sort((a, b) {
         if (a.createdAt == null && b.createdAt == null) return 0;
         if (a.createdAt == null) return 1;
@@ -103,6 +114,7 @@ class CustomerProductsRemoteDataSourceImpl
     }
   }
 
+  // Saves a Product to the Customer Wishlist
   @override
   Future<void> addToWishlist(
     ProductModel product,
@@ -131,6 +143,7 @@ class CustomerProductsRemoteDataSourceImpl
     }
   }
 
+  // Removes a Single Product from the Customer Wishlist
   @override
   Future<void> removeFromWishlist(String productId) async {
     try {
@@ -148,6 +161,7 @@ class CustomerProductsRemoteDataSourceImpl
     }
   }
 
+  // Fetches the Customer Wishlist
   @override
   Future<List<WishlistItem>> getWishlist() async {
     try {
@@ -167,6 +181,7 @@ class CustomerProductsRemoteDataSourceImpl
       final addedAtMap = <String, DateTime?>{};
       final selectedColorMap = <String, String?>{};
       final selectedSizeMap = <String, String?>{};
+
       for (final doc in snap.docs) {
         try {
           final data = doc.data();
@@ -179,56 +194,80 @@ class CustomerProductsRemoteDataSourceImpl
             selectedSizeMap[pId] = data['selected_size'] as String?;
           }
         } catch (e) {
-          print('Error parsing wishlist item ID: $e');
+          AppLogger.error(
+            'Error parsing wishlist item ID',
+            e,
+            StackTrace.current,
+          );
         }
       }
 
       if (productIds.isEmpty) return [];
 
+      // Fetch Product Docs
       final fetchedProducts = <ProductModel>[];
       for (var i = 0; i < productIds.length; i += 30) {
-        final chunk = productIds.sublist(i, i + 30 > productIds.length ? productIds.length : i + 30);
+        final chunk = productIds.sublist(
+          i,
+          i + 30 > productIds.length ? productIds.length : i + 30,
+        );
         final productsSnap = await _firestore
             .collection('products')
             .where(FieldPath.documentId, whereIn: chunk)
             .get();
         for (final productDoc in productsSnap.docs) {
           try {
-            fetchedProducts.add(ProductModel.fromMap(productDoc.data(), productDoc.id));
+            fetchedProducts.add(
+              ProductModel.fromMap(productDoc.data(), productDoc.id),
+            );
           } catch (e) {
-            print('Error parsing product ${productDoc.id}: $e');
+            AppLogger.error(
+              'Error parsing product ${productDoc.id}',
+              e,
+              StackTrace.current,
+            );
           }
         }
       }
 
       if (fetchedProducts.isEmpty) return [];
 
+      // Fetch Shop Docs for all Products
       final shopIds = fetchedProducts.map((p) => p.shopId).toSet().toList();
       final fetchedShopsMap = <String, ShopProfileModel>{};
-      
+
       for (var i = 0; i < shopIds.length; i += 30) {
-        final chunk = shopIds.sublist(i, i + 30 > shopIds.length ? shopIds.length : i + 30);
+        final chunk = shopIds.sublist(
+          i,
+          i + 30 > shopIds.length ? shopIds.length : i + 30,
+        );
         final shopsSnap = await _firestore
             .collection('shops')
             .where(FieldPath.documentId, whereIn: chunk)
             .get();
         for (final shopDoc in shopsSnap.docs) {
           try {
-            fetchedShopsMap[shopDoc.id] = ShopProfileModel.fromMap(shopDoc.data(), shopDoc.id);
+            fetchedShopsMap[shopDoc.id] = ShopProfileModel.fromMap(
+              shopDoc.data(),
+              shopDoc.id,
+            );
           } catch (e) {
-            print('Error parsing shop ${shopDoc.id}: $e');
+            AppLogger.error(
+              'Error parsing shop ${shopDoc.id}',
+              e,
+              StackTrace.current,
+            );
           }
         }
       }
 
+      // Collect Dead Products that no Longer Exist or no Shop
       final itemsWithTime = <MapEntry<WishlistItem, DateTime?>>[];
       final List<String> deadProductIds = [];
 
       final fetchedProductIds = fetchedProducts.map((p) => p.id).toSet();
       for (final pId in productIds) {
-        if (!fetchedProductIds.contains(pId)) {
-          deadProductIds.add(pId);
-        }
+        if (!fetchedProductIds.contains(pId)) deadProductIds.add(pId);
       }
 
       for (final product in fetchedProducts) {
@@ -238,17 +277,20 @@ class CustomerProductsRemoteDataSourceImpl
           continue;
         }
         final addedAt = addedAtMap[product.id];
-        itemsWithTime.add(MapEntry(
-          WishlistItem(
-            product: product,
-            shop: shop,
-            selectedColor: selectedColorMap[product.id],
-            selectedSize: selectedSizeMap[product.id],
+        itemsWithTime.add(
+          MapEntry(
+            WishlistItem(
+              product: product,
+              shop: shop,
+              selectedColor: selectedColorMap[product.id],
+              selectedSize: selectedSizeMap[product.id],
+            ),
+            addedAt,
           ),
-          addedAt,
-        ));
+        );
       }
 
+      // Clean up Dead Wishlist Products
       if (deadProductIds.isNotEmpty) {
         for (final pId in deadProductIds) {
           _firestore
@@ -257,10 +299,17 @@ class CustomerProductsRemoteDataSourceImpl
               .collection('wishlist')
               .doc(pId)
               .delete()
-              .catchError((e) => print('Error cleaning up wishlist item: $e'));
+              .catchError(
+                (e) => AppLogger.error(
+                  'Error cleaning up wishlist item',
+                  e,
+                  StackTrace.current,
+                ),
+              );
         }
       }
 
+      // Sort by Recently Added
       itemsWithTime.sort((a, b) {
         if (a.value == null && b.value == null) return 0;
         if (a.value == null) return 1;
@@ -274,6 +323,7 @@ class CustomerProductsRemoteDataSourceImpl
     }
   }
 
+  // Deletes all Wishlist
   @override
   Future<void> clearWishlist() async {
     try {

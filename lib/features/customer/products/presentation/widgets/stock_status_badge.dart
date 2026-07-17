@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Product Status Badge
 class StockStatusBadge extends StatelessWidget {
   final int qty;
 

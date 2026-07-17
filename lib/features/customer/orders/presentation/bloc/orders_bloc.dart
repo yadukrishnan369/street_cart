@@ -25,6 +25,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<UpdateOrderAddressEvent>(_onUpdateOrderAddress);
   }
 
+  // Fetch Orders of Specific Customer
   Future<void> _onFetchOrders(
     FetchOrders event,
     Emitter<OrdersState> emit,
@@ -41,6 +42,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
+  // Cancel Order
   Future<void> _onCancelOrder(
     CancelOrderEvent event,
     Emitter<OrdersState> emit,
@@ -54,6 +56,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
+  // Cancel Ordered Specific Product Item
   Future<void> _onCancelOrderItem(
     CancelOrderItemEvent event,
     Emitter<OrdersState> emit,
@@ -67,6 +70,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
+  // Update Delivery Address
   Future<void> _onUpdateOrderAddress(
     UpdateOrderAddressEvent event,
     Emitter<OrdersState> emit,

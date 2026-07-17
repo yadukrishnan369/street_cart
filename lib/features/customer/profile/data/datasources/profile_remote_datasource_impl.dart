@@ -19,7 +19,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     required this.locationService,
     required this.cloudinaryService,
   });
-
+  // Get Profile Data
   @override
   Future<ProfileModel?> getProfileData() async {
     try {
@@ -73,6 +73,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Update Profile Data
   @override
   Future<void> updateProfileData(ProfileModel updatedProfile) async {
     try {
@@ -93,6 +94,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Upload Profile Image
   @override
   Future<String?> uploadImage(File file) async {
     try {
@@ -102,6 +104,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Remove profile Image
   @override
   Future<void> removeProfileImage() async {
     try {
@@ -116,6 +119,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Get Address
   @override
   Future<List<AddressModel>> getAddresses() async {
     try {
@@ -136,6 +140,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Add new Address
   @override
   Future<void> addAddress(AddressModel address) async {
     try {
@@ -152,6 +157,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Update Existing Address
   @override
   Future<void> updateAddress(String id, AddressModel address) async {
     try {
@@ -169,6 +175,7 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Delete Address
   @override
   Future<void> deleteAddress(String id) async {
     try {
@@ -186,14 +193,17 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
     }
   }
 
+  // Set Defualt Address
   @override
   Future<void> setDefaultAddress(String id) async {
     try {
       final user = auth.currentUser;
       if (user == null) throw Exception('No authenticated user');
 
-      final addressesRef =
-          firestore.collection('customers').doc(user.uid).collection('addresses');
+      final addressesRef = firestore
+          .collection('customers')
+          .doc(user.uid)
+          .collection('addresses');
 
       final snapshot = await addressesRef.get();
       final batch = firestore.batch();
@@ -209,10 +219,8 @@ class ProfileRemoteDataSourceImpl implements IProfileRemoteDataSource {
 
       for (var doc in snapshot.docs) {
         if (doc.id == id) {
-          // toggle - if it was default, make it false. If it was false, make it true
           batch.update(doc.reference, {'isDefault': !isCurrentlyDefault});
         } else if (!isCurrentlyDefault) {
-          // if setting a NEW default, unset any other existing default
           if (doc.data()['isDefault'] == true) {
             batch.update(doc.reference, {'isDefault': false});
           }

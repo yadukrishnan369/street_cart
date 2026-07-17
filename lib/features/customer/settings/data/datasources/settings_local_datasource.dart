@@ -10,16 +10,19 @@ class SettingsLocalDataSourceImpl implements ISettingsLocalDataSource {
 
   SettingsLocalDataSourceImpl({required this.sharedPreferences});
 
+  // Get Theme, Location Access, Notifications, Order Alerts data
   @override
   Future<Map<String, dynamic>> getSettings() async {
     return {
       'darkMode': sharedPreferences.getBool('darkMode') ?? false,
       'locationServices': sharedPreferences.getBool('locationServices') ?? true,
-      'pushNotifications': sharedPreferences.getBool('pushNotifications') ?? true,
+      'pushNotifications':
+          sharedPreferences.getBool('pushNotifications') ?? true,
       'orderAlerts': sharedPreferences.getBool('orderAlerts') ?? true,
     };
   }
 
+  // Update Theme, Location Access, Notifications, Order Alerts data
   @override
   Future<void> updateSetting(String key, dynamic value) async {
     if (value is bool) {

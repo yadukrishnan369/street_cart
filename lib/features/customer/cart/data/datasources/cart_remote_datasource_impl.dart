@@ -23,6 +23,7 @@ class CartRemoteDataSourceImpl implements ICartRemoteDataSource {
     return _firestore.collection('customers').doc(user.uid).collection('cart');
   }
 
+  // Fetch Cusotmer Cart Items
   @override
   Future<List<CartItem>> getCartItems() async {
     try {
@@ -41,6 +42,7 @@ class CartRemoteDataSourceImpl implements ICartRemoteDataSource {
     }
   }
 
+  // Add to Cart
   @override
   Future<void> addToCart(CartItem item) async {
     try {
@@ -51,6 +53,7 @@ class CartRemoteDataSourceImpl implements ICartRemoteDataSource {
     }
   }
 
+  // Remove Item From Cart
   @override
   Future<void> removeFromCart(String itemId) async {
     try {
@@ -60,6 +63,7 @@ class CartRemoteDataSourceImpl implements ICartRemoteDataSource {
     }
   }
 
+  // Update the Item Quantity
   @override
   Future<void> updateQuantity(String itemId, int quantity) async {
     try {
@@ -69,6 +73,7 @@ class CartRemoteDataSourceImpl implements ICartRemoteDataSource {
     }
   }
 
+  // Remove All Items From Cart
   @override
   Future<void> clearCart() async {
     try {

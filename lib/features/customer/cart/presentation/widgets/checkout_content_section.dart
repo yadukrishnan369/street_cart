@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/cart/presentation/widgets/checkout
 import 'package:street_cart/features/customer/cart/presentation/widgets/checkout_payment_section.dart';
 import 'package:street_cart/features/customer/cart/presentation/widgets/checkout_summary_section.dart';
 
+// Checkout Content Section
 class CheckoutContentSection extends StatelessWidget {
   final List<CartItem> cartItems;
   final CheckoutLoaded checkoutState;
@@ -33,6 +34,7 @@ class CheckoutContentSection extends StatelessWidget {
         children: [
           const CheckoutAddressSection(),
           SizedBox(height: 24.h),
+          // Payment Section
           CheckoutPaymentSection(
             allowedMethods: checkoutState.allowedPaymentMethods,
             selectedMethod: checkoutState.selectedPaymentMethod,
@@ -41,6 +43,7 @@ class CheckoutContentSection extends StatelessWidget {
             },
           ),
           SizedBox(height: 24.h),
+          // Checkout Summary
           CheckoutSummarySection(
             cartItems: cartItems,
             productTypesCount: productTypes,

@@ -56,10 +56,13 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
           padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
           child: Column(
             children: [
+              // Order Placed Success Section
               OrderPlacedSuccessSection(orderIdSuffix: orderIdSuffix),
               SizedBox(height: 34.h),
+              // Order Success Buttons for Track Order and Continue Shopping
               const OrderSuccessButtonsSection(),
               SizedBox(height: 34.h),
+              // Order Suceess Delivery Estimate Banner
               OrderSuccessEstimationBanner(
                 totalAmount: widget.totalAmount,
                 paymentStatus: widget.paymentStatus,

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_event.dart';
 
+// Filter Rating Section
 class FilterRatingSection extends StatelessWidget {
   final String? selectedRating;
-  final ProductFilterCubit cubit;
+  final ProductFilterBloc bloc;
 
   const FilterRatingSection({
     super.key,
     required this.selectedRating,
-    required this.cubit,
+    required this.bloc,
   });
 
   @override
@@ -27,17 +29,18 @@ class FilterRatingSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
+        // List Of Rating Chips
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildRatingChip('4★ & above', selectedRating, cubit),
+              _buildRatingChip('4★ & above'),
               SizedBox(width: 8.w),
-              _buildRatingChip('3★ & above', selectedRating, cubit),
+              _buildRatingChip('3★ & above'),
               SizedBox(width: 8.w),
-              _buildRatingChip('2★ & above', selectedRating, cubit),
+              _buildRatingChip('2★ & above'),
               SizedBox(width: 8.w),
-              _buildRatingChip('1★ & above', selectedRating, cubit),
+              _buildRatingChip('1★ & above'),
             ],
           ),
         ),
@@ -45,10 +48,11 @@ class FilterRatingSection extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingChip(String label, String? selectedRating, ProductFilterCubit cubit) {
+  // Renders single rating chip
+  Widget _buildRatingChip(String label) {
     final isSelected = selectedRating == label;
     return GestureDetector(
-      onTap: () => cubit.toggleRating(label),
+      onTap: () => bloc.add(ToggleFilterRating(label)),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         decoration: BoxDecoration(

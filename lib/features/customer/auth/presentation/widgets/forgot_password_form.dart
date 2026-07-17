@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Forgot Password Form
 class ForgotPasswordForm extends StatefulWidget {
   final bool isLoading;
   final void Function(String email) onSendResetLink;

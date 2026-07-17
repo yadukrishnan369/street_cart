@@ -4,13 +4,11 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Address Empty State
 class AddressEmptyState extends StatelessWidget {
   final VoidCallback onAddAddress;
 
-  const AddressEmptyState({
-    super.key,
-    required this.onAddAddress,
-  });
+  const AddressEmptyState({super.key, required this.onAddAddress});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +22,7 @@ class AddressEmptyState extends StatelessWidget {
             color: CustomerAppColors.primary,
           ),
           SizedBox(height: 16.h),
+          // Title
           Text(
             'No saved addresses yet',
             style: CustomerAppTextStyles.heading2.copyWith(
@@ -32,6 +31,7 @@ class AddressEmptyState extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
+          // Subtitle
           Text(
             'Add an address to make delivery faster',
             style: CustomerAppTextStyles.body.copyWith(
@@ -39,6 +39,7 @@ class AddressEmptyState extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24.h),
+          // Button For Adding New Address
           SizedBox(
             width: 200.w,
             child: PrimaryButton(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Product Empty State
 class ProductsEmptyState extends StatelessWidget {
   const ProductsEmptyState({super.key});
 
@@ -23,6 +24,7 @@ class ProductsEmptyState extends StatelessWidget {
                 color: CustomerAppColors.primary,
               ),
               SizedBox(height: 12.h),
+              // Title
               Text(
                 "No products found",
                 style: TextStyle(
@@ -32,6 +34,7 @@ class ProductsEmptyState extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 4.h),
+              // Subtitle
               Text(
                 "No products match your search or filter options.",
                 style: TextStyle(

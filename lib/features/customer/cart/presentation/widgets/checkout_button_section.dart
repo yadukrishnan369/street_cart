@@ -14,6 +14,7 @@ import 'package:street_cart/features/customer/payment/presentation/utils/payment
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Checkout Button Section
 class CheckoutButtonSection extends StatelessWidget {
   final List<CartItem> cartItems;
   final CheckoutLoaded checkoutState;

@@ -3,13 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
 
+// Location Disabled Info State
 class ProductsLocationDisabled extends StatelessWidget {
   final VoidCallback onRefreshLocation;
 
-  const ProductsLocationDisabled({
-    super.key,
-    required this.onRefreshLocation,
-  });
+  const ProductsLocationDisabled({super.key, required this.onRefreshLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +27,7 @@ class ProductsLocationDisabled extends StatelessWidget {
                 color: CustomerAppColors.primary.withValues(alpha: 0.25),
               ),
               SizedBox(height: 20.h),
+              // Title
               Text(
                 'Location Services Off',
                 style: TextStyle(
@@ -38,6 +37,7 @@ class ProductsLocationDisabled extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8.h),
+              // Subtitle
               Text(
                 'Enable location services to find local products near you.',
                 textAlign: TextAlign.center,
@@ -47,6 +47,7 @@ class ProductsLocationDisabled extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
+              // Button for Enable Location Permission
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -63,7 +64,10 @@ class ProductsLocationDisabled extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CustomerAppColors.primary,
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 12.h,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),

@@ -12,6 +12,7 @@ import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bl
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 
 class OrdersHelper {
+  // Extract current Order
   static OrderModel getCurrentOrder(OrdersState state, OrderModel order) {
     if (state is OrdersLoaded) {
       return state.orders.firstWhere(
@@ -22,17 +23,44 @@ class OrdersHelper {
     return order;
   }
 
+  // Get Order ID
   static String getOrderIdSuffix(String id) {
     if (id.length <= 4) return 'SC-$id'.toUpperCase();
     return 'ORD-${id.substring(id.length - 4)}'.toUpperCase();
   }
 
+  // Date Formatter
   static String formatDateShort(DateTime dateTime) {
     return DateFormat('MMM dd').format(dateTime);
   }
 
+  // Check If order Able To Cancel
   static bool isCancellable(CustomerOrderStatus status) {
     return status == CustomerOrderStatus.placed;
+  }
+
+  // calculates total item counts inside an order
+  static int getOrderTotalItems(OrderModel order) {
+    return order.items.fold<int>(0, (sum, item) => sum + item.quantity);
+  }
+
+  // Check If Order Delivered or Not
+  static bool isDelivered(CustomerOrderStatus status) {
+    return status == CustomerOrderStatus.delivered;
+  }
+
+  // Check If Order Cancell or Not
+  static bool isCancelled(CustomerOrderStatus status) {
+    return status == CustomerOrderStatus.cancelled;
+  }
+
+  // formats products display label for order cards
+  static String getOrderDisplayName(OrderModel order) {
+    if (order.items.isEmpty) return '';
+    final firstItem = order.items.first;
+    return order.items.length > 1
+        ? '${firstItem.productName} and ${order.items.length - 1} more'
+        : firstItem.productName;
   }
 
   // Returns only if the order is delivered with return option
@@ -45,6 +73,7 @@ class OrdersHelper {
     return DateTime.now().isBefore(returnDeadline);
   }
 
+  // Get Order Tracking Status Color
   static Color getStatusColor(CustomerOrderStatus status) {
     switch (status) {
       case CustomerOrderStatus.placed:
@@ -62,6 +91,7 @@ class OrdersHelper {
     }
   }
 
+  // Get Order Tracking Status
   static String getDisplayStatus(CustomerOrderStatus status) {
     switch (status) {
       case CustomerOrderStatus.placed:
@@ -79,6 +109,7 @@ class OrdersHelper {
     }
   }
 
+  // Get Delivery Progress Index
   static int getProgressIndex(CustomerOrderStatus status) {
     switch (status) {
       case CustomerOrderStatus.placed:
@@ -94,6 +125,7 @@ class OrdersHelper {
     }
   }
 
+  // Get Delivery Progress Steps
   static List<Map<String, dynamic>> getProgressSteps(OrderModel order) {
     final status = CustomerOrderStatus.fromString(order.status);
 
@@ -140,14 +172,6 @@ class OrdersHelper {
     ];
   }
 
-  static bool isDelivered(CustomerOrderStatus status) {
-    return status == CustomerOrderStatus.delivered;
-  }
-
-  static bool isCancelled(CustomerOrderStatus status) {
-    return status == CustomerOrderStatus.cancelled;
-  }
-
   static List<CartItem> convertToCartItems(List<OrderItemModel> items) {
     return items.map((item) {
       return CartItem(
@@ -165,6 +189,7 @@ class OrdersHelper {
     }).toList();
   }
 
+  // Confirmation Modal For Change Delivery Address
   static void showChangeAddressConfirmation({
     required BuildContext context,
     required VoidCallback onConfirm,
@@ -187,6 +212,7 @@ class OrdersHelper {
     );
   }
 
+  // Modal For Cancel Entire Order
   static void showCancelOrderDialog({
     required BuildContext context,
     required String orderId,
@@ -211,6 +237,7 @@ class OrdersHelper {
     );
   }
 
+  // Modal For Cancel Product Item
   static void showCancelOrderItemDialog({
     required BuildContext context,
     required String orderId,
@@ -236,6 +263,7 @@ class OrdersHelper {
     );
   }
 
+  // Show Modal for Delivery Not Available
   static void showOutOfRadiusDialog(BuildContext context) {
     showDialog(
       context: context,

@@ -5,6 +5,7 @@ import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Edit Profile Form
 class EditProfileForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController nameController;
@@ -32,6 +33,7 @@ class EditProfileForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Name Field
           CustomTextField(
             label: 'Full Name',
             hintText: 'Enter your full name',
@@ -45,6 +47,7 @@ class EditProfileForm extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
+          // Email Field
           CustomTextField(
             label: 'Email Address',
             hintText: 'Enter your email address',
@@ -59,6 +62,7 @@ class EditProfileForm extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
+          // Phone Field
           CustomTextField(
             label: 'Phone Number',
             hintText: 'Enter your phone number',
@@ -73,6 +77,7 @@ class EditProfileForm extends StatelessWidget {
             ),
           ),
           SizedBox(height: 40.h),
+          // Save Button
           PrimaryButton(
             text: 'Save Changes',
             onPressed: onSave,

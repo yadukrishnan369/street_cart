@@ -15,7 +15,7 @@ class CustomerShopsRemoteDataSourceImpl
     required FirebaseFirestore firestore,
   }) : _auth = auth,
        _firestore = firestore;
-
+  // Fetch Nearby Shops
   @override
   Future<List<ShopProfileModel>> getNearbyShops() async {
     try {
@@ -83,6 +83,7 @@ class CustomerShopsRemoteDataSourceImpl
     }
   }
 
+  // Get Shop Products
   @override
   Future<List<ProductModel>> getShopProducts(String shopId) async {
     try {

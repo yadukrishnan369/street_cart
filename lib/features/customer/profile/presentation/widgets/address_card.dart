@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 
+// Address Card
 class AddressCard extends StatelessWidget {
   final AddressModel address;
   final bool isSelected;
@@ -84,6 +85,7 @@ class AddressCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          // Name
                           Text(
                             address.fullName,
                             style: CustomerAppTextStyles.body.copyWith(
@@ -92,10 +94,12 @@ class AddressCard extends StatelessWidget {
                               color: Colors.black87,
                             ),
                           ),
+                          // Address Type
                           _buildTypeBadge(),
                         ],
                       ),
                       SizedBox(height: 4.h),
+                      // Phone
                       Text(
                         address.phone,
                         style: CustomerAppTextStyles.body.copyWith(
@@ -104,6 +108,7 @@ class AddressCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8.h),
+                      // Delivery Address
                       Text(
                         '${address.addressLine1}, ${address.addressLine2.isNotEmpty ? "${address.addressLine2}, " : ""}'
                         '${address.district.isNotEmpty ? address.district : address.city}'
@@ -125,6 +130,7 @@ class AddressCard extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Row(
+              // Action Buttons for Edit/Delete
               children: [
                 _buildActionButton(
                   icon: Icons.edit_outlined,

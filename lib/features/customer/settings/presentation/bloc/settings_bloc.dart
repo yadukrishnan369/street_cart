@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/settings/domain/usecases/update_se
 import 'settings_event.dart';
 import 'settings_state.dart';
 
+// Settings Bloc
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final GetSettings getSettings;
   final UpdateSetting updateSetting;
@@ -18,16 +19,28 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     required this.updateSetting,
     required this.locationRepository,
     required this.authRepository,
-  }) : super(SettingsInitial()) {
+  }) : super(const SettingsInitial()) {
     on<FetchSettingsData>(_onFetchSettingsData);
     on<ToggleSetting>(_onToggleSetting);
+    on<ToggleObscureDeletePassword>(_onToggleObscureDeletePassword);
+    on<ToggleObscureCurrentPassword>(_onToggleObscureCurrentPassword);
+    on<ToggleObscureNewPassword>(_onToggleObscureNewPassword);
+    on<ToggleObscureConfirmPassword>(_onToggleObscureConfirmPassword);
   }
 
+  // Fetches settings configuration Data
   Future<void> _onFetchSettingsData(
     FetchSettingsData event,
     Emitter<SettingsState> emit,
   ) async {
-    emit(SettingsLoading());
+    emit(
+      SettingsLoading(
+        obscureDeletePassword: state.obscureDeletePassword,
+        obscureCurrentPassword: state.obscureCurrentPassword,
+        obscureNewPassword: state.obscureNewPassword,
+        obscureConfirmPassword: state.obscureConfirmPassword,
+      ),
+    );
     try {
       final settings = await getSettings();
       final user = FirebaseAuth.instance.currentUser;
@@ -35,18 +48,33 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
       if (user != null) {
         final profile = await authRepository.getCustomer(user.uid);
-        // User has "allowed location once" if the location field exists in Firestore
         hasLocationData = profile?.locationName != null;
       }
 
       emit(
-        SettingsLoaded(settings: settings, hasLocationData: hasLocationData),
+        SettingsLoaded(
+          settings: settings,
+          hasLocationData: hasLocationData,
+          obscureDeletePassword: state.obscureDeletePassword,
+          obscureCurrentPassword: state.obscureCurrentPassword,
+          obscureNewPassword: state.obscureNewPassword,
+          obscureConfirmPassword: state.obscureConfirmPassword,
+        ),
       );
     } catch (e) {
-      emit(SettingsError(message: e.toString()));
+      emit(
+        SettingsError(
+          message: e.toString(),
+          obscureDeletePassword: state.obscureDeletePassword,
+          obscureCurrentPassword: state.obscureCurrentPassword,
+          obscureNewPassword: state.obscureNewPassword,
+          obscureConfirmPassword: state.obscureConfirmPassword,
+        ),
+      );
     }
   }
 
+  // Toggles location services
   Future<void> _onToggleSetting(
     ToggleSetting event,
     Emitter<SettingsState> emit,
@@ -54,15 +82,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (state is SettingsLoaded) {
       final currentState = state as SettingsLoaded;
       try {
-        // Update Local Storage
         await updateSetting(event.key, event.value);
 
         if (event.key == 'locationServices') {
           if (event.value == true) {
-            // Turning ON - Fetch and save location
             await locationRepository.requestAndSaveLocation();
           } else {
-            // Turning OFF - Set location_permission to false
             await locationRepository.skipLocation();
           }
         }
@@ -71,18 +96,87 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           currentState.settings,
         );
         updatedSettings[event.key] = event.value;
-        emit(
-          SettingsLoaded(
-            settings: updatedSettings,
-            hasLocationData: currentState.hasLocationData,
-          ),
-        );
+        emit(currentState.copyWith(settings: updatedSettings));
       } catch (e) {
         emit(
-          SettingsError(message: "Failed to update setting: ${e.toString()}"),
+          SettingsError(
+            message: "Failed to update setting: ${e.toString()}",
+            obscureDeletePassword: state.obscureDeletePassword,
+            obscureCurrentPassword: state.obscureCurrentPassword,
+            obscureNewPassword: state.obscureNewPassword,
+            obscureConfirmPassword: state.obscureConfirmPassword,
+          ),
         );
         emit(currentState);
       }
+    }
+  }
+
+  // Toggle password in Delete Account page
+  void _onToggleObscureDeletePassword(
+    ToggleObscureDeletePassword event,
+    Emitter<SettingsState> emit,
+  ) {
+    if (state is SettingsLoaded) {
+      final current = state as SettingsLoaded;
+      emit(
+        current.copyWith(obscureDeletePassword: !current.obscureDeletePassword),
+      );
+    } else if (state is SettingsInitial) {
+      emit(
+        SettingsInitial(obscureDeletePassword: !state.obscureDeletePassword),
+      );
+    }
+  }
+
+  // Toggle current password in change Password form
+  void _onToggleObscureCurrentPassword(
+    ToggleObscureCurrentPassword event,
+    Emitter<SettingsState> emit,
+  ) {
+    if (state is SettingsLoaded) {
+      final current = state as SettingsLoaded;
+      emit(
+        current.copyWith(
+          obscureCurrentPassword: !current.obscureCurrentPassword,
+        ),
+      );
+    } else if (state is SettingsInitial) {
+      emit(
+        SettingsInitial(obscureCurrentPassword: !state.obscureCurrentPassword),
+      );
+    }
+  }
+
+  // Toggle new password in change Password form
+  void _onToggleObscureNewPassword(
+    ToggleObscureNewPassword event,
+    Emitter<SettingsState> emit,
+  ) {
+    if (state is SettingsLoaded) {
+      final current = state as SettingsLoaded;
+      emit(current.copyWith(obscureNewPassword: !current.obscureNewPassword));
+    } else if (state is SettingsInitial) {
+      emit(SettingsInitial(obscureNewPassword: !state.obscureNewPassword));
+    }
+  }
+
+  // Toggle confirm password in change Password form
+  void _onToggleObscureConfirmPassword(
+    ToggleObscureConfirmPassword event,
+    Emitter<SettingsState> emit,
+  ) {
+    if (state is SettingsLoaded) {
+      final current = state as SettingsLoaded;
+      emit(
+        current.copyWith(
+          obscureConfirmPassword: !current.obscureConfirmPassword,
+        ),
+      );
+    } else if (state is SettingsInitial) {
+      emit(
+        SettingsInitial(obscureConfirmPassword: !state.obscureConfirmPassword),
+      );
     }
   }
 }

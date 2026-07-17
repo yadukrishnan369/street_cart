@@ -9,11 +9,13 @@ import 'package:street_cart/features/customer/cart/presentation/bloc/cart_event.
 import 'package:street_cart/features/customer/cart/presentation/bloc/cart_state.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/cart_page.dart';
 import 'package:street_cart/features/customer/cart/presentation/utils/cart_helper.dart';
-import 'package:street_cart/features/customer/products/presentation/bloc/product_detail_ui_cubit.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
+import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Product Action Buttons
 class ProductActionButtons extends StatelessWidget {
   final ProductModel product;
   final int availableQty;
@@ -26,9 +28,14 @@ class ProductActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uiState = context.watch<ProductDetailUiCubit>().state;
-    final selectedColor = uiState.selectedColor;
-    final selectedSize = uiState.selectedSize;
+    // Read Selected Variant
+    final blocState = context.watch<CustomerProductsBloc>().state;
+    final selectedColor = blocState is ProductDetailState
+        ? blocState.selectedColor
+        : null;
+    final selectedSize = blocState is ProductDetailState
+        ? blocState.selectedSize
+        : null;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -67,7 +74,7 @@ class ProductActionButtons extends StatelessWidget {
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: isOutOfStock
                         ? null
                         : () {
@@ -126,6 +133,8 @@ class ProductActionButtons extends StatelessWidget {
                               ),
                             );
                           },
+                    icon: const Icon(Icons.bolt, size: 18),
+                    label: const Text('Buy Now'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: CustomerAppColors.primary,
                       disabledBackgroundColor: Colors.grey[300],
@@ -136,7 +145,6 @@ class ProductActionButtons extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: const Text('Buy Now'),
                   ),
                 ),
               ],
@@ -170,7 +178,7 @@ class ProductActionButtons extends StatelessWidget {
     }
 
     if (isInCart) {
-      // Go to Cart state
+      // Go to Cart
       final Color yellowColor = const Color(0xFFF59E0B);
       return ElevatedButton.icon(
         onPressed: () {

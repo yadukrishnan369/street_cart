@@ -24,10 +24,7 @@ class AuthRepositoryImpl implements IAuthRepository {
       throw NetworkException('Please check your internet connection.');
     }
 
-    await _remoteDataSource.initiateSignUp(
-      email: email,
-      password: password,
-    );
+    await _remoteDataSource.initiateSignUp(email: email, password: password);
   }
 
   @override
@@ -109,7 +106,7 @@ class AuthRepositoryImpl implements IAuthRepository {
     if (!await _networkInfo.isConnected) {
       throw NetworkException('Please check your internet connection.');
     }
-    
+
     await _remoteDataSource.updateCustomerProfile(userId: userId, data: data);
   }
 

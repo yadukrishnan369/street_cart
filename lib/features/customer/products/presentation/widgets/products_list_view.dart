@@ -15,6 +15,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/customer/products/presentation/utils/products_helper.dart';
 
+// Product List View
 class ProductsListView extends StatelessWidget {
   final String initialSearchQuery;
   final String initialSelectedSort;
@@ -39,7 +40,8 @@ class ProductsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CustomerProductsBloc, CustomerProductsState>(
       builder: (context, state) {
-        if (state is CustomerProductsInitial || state is CustomerProductsLoading) {
+        if (state is CustomerProductsInitial ||
+            state is CustomerProductsLoading) {
           return const ProductCardShimmer(
             itemCount: 6,
             physics: AlwaysScrollableScrollPhysics(),
@@ -48,16 +50,16 @@ class ProductsListView extends StatelessWidget {
           return ProductsLocationDisabled(
             onRefreshLocation: () {
               context.read<CustomerProductsBloc>().add(
-                    FetchCustomerProducts(
-                      initialSearchQuery: initialSearchQuery,
-                      initialSelectedSort: initialSelectedSort,
-                      initialPriceRange: initialPriceRange,
-                      initialSelectedCategories: initialSelectedCategories,
-                      initialSelectedRating: initialSelectedRating,
-                      initialSelectedColors: initialSelectedColors,
-                      initialSelectedSizes: initialSelectedSizes,
-                    ),
-                  );
+                FetchCustomerProducts(
+                  initialSearchQuery: initialSearchQuery,
+                  initialSelectedSort: initialSelectedSort,
+                  initialPriceRange: initialPriceRange,
+                  initialSelectedCategories: initialSelectedCategories,
+                  initialSelectedRating: initialSelectedRating,
+                  initialSelectedColors: initialSelectedColors,
+                  initialSelectedSizes: initialSelectedSizes,
+                ),
+              );
             },
           );
         } else if (state is CustomerProductsError) {
@@ -80,19 +82,28 @@ class ProductsListView extends StatelessWidget {
               final wishlistedIds = wishlistState is WishlistLoaded
                   ? wishlistState.items.map((i) => i.product.id).toSet()
                   : <String>{};
-
+              // Product Card
               return ProductsGrid(
                 products: filteredProducts,
                 shops: state.shops,
                 shopNames: shopNames,
                 wishlistedProductIds: wishlistedIds,
                 onFavoriteTap: (product, isWishlisted) {
-                  final shop = state.shops.firstWhere((s) => s.uid == product.shopId);
+                  final shop = state.shops.firstWhere(
+                    (s) => s.uid == product.shopId,
+                  );
                   if (isWishlisted) {
-                    context.read<WishlistBloc>().add(RemoveProductFromWishlist(productId: product.id));
-                    CustomSnackBar.show(context, message: 'Removed from wishlist');
+                    context.read<WishlistBloc>().add(
+                      RemoveProductFromWishlist(productId: product.id),
+                    );
+                    CustomSnackBar.show(
+                      context,
+                      message: 'Removed from wishlist',
+                    );
                   } else {
-                    context.read<WishlistBloc>().add(AddProductToWishlist(product: product, shop: shop));
+                    context.read<WishlistBloc>().add(
+                      AddProductToWishlist(product: product, shop: shop),
+                    );
                     CustomSnackBar.show(context, message: 'Added to wishlist');
                   }
                 },

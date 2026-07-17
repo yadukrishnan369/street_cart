@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Product Description Section
 class ProductDescriptionSection extends StatelessWidget {
   final String description;
 
-  const ProductDescriptionSection({
-    super.key,
-    required this.description,
-  });
+  const ProductDescriptionSection({super.key, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +22,7 @@ class ProductDescriptionSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
+        // Description
         Text(
           description,
           style: TextStyle(

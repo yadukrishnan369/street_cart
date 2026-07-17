@@ -58,15 +58,18 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
             );
           } else if (state is LocationFailure) {
             final errorMessage = state.message;
-            final isPermanentlyDenied = errorMessage.contains('permanently denied');
+            final isPermanentlyDenied = errorMessage.contains(
+              'permanently denied',
+            );
 
             CustomSnackBar.show(
               context,
               message: errorMessage.replaceAll("Exception: ", ""),
               isError: true,
               actionLabel: isPermanentlyDenied ? "Settings" : null,
-              onActionPressed:
-                  isPermanentlyDenied ? () => Geolocator.openAppSettings() : null,
+              onActionPressed: isPermanentlyDenied
+                  ? () => Geolocator.openAppSettings()
+                  : null,
             );
           }
         },
@@ -76,6 +79,7 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
             child: Center(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(AppConstants.defaultPadding.w),
+                // Location Permission Card Section
                 child: Card(
                   elevation: 4,
                   color: CustomerAppColors.surface,
@@ -129,7 +133,9 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
                                 : PrimaryButton(
                                     text: "Allow Location",
                                     onPressed: () {
-                                      context.read<LocationBloc>().add(RequestLocationEvent());
+                                      context.read<LocationBloc>().add(
+                                        RequestLocationEvent(),
+                                      );
                                     },
                                   ),
                             16.verticalSpace,
@@ -137,15 +143,18 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
                               onPressed: isLoading
                                   ? null
                                   : () {
-                                      context.read<LocationBloc>().add(SkipLocationEvent());
+                                      context.read<LocationBloc>().add(
+                                        SkipLocationEvent(),
+                                      );
                                     },
                               child: Text(
                                 "Not Now",
-                                style: CustomerAppTextStyles.buttonText.copyWith(
-                                  color: isLoading
-                                      ? Colors.grey
-                                      : CustomerAppColors.textSecondary,
-                                ),
+                                style: CustomerAppTextStyles.buttonText
+                                    .copyWith(
+                                      color: isLoading
+                                          ? Colors.grey
+                                          : CustomerAppColors.textSecondary,
+                                    ),
                               ),
                             ),
                           ],
@@ -160,4 +169,5 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
         ),
       ),
     );
-  }}
+  }
+}

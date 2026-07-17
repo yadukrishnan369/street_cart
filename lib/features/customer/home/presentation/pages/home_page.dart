@@ -20,9 +20,9 @@ import 'package:street_cart/features/customer/home/presentation/widgets/shimmer/
 import 'package:street_cart/features/customer/home/presentation/widgets/home_app_bar.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/trending_products_section.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
-import 'package:street_cart/features/customer/home/presentation/bloc/home_ui_cubit.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 
+// Home Page
 class HomePage extends StatefulWidget {
   final bool showProfileModal;
   const HomePage({super.key, this.showProfileModal = false});
@@ -53,11 +53,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider.value(value: sl<HomeBloc>()..add(FetchHomeData())),
-        BlocProvider(create: (context) => HomeUiCubit()),
-      ],
+    return BlocProvider.value(
+      value: sl<HomeBloc>()..add(FetchHomeData()),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthInitial || state is AuthError) {
@@ -85,94 +82,93 @@ class _HomePageState extends State<HomePage> {
               }
             }
 
-            return BlocBuilder<HomeUiCubit, HomeUiState>(
-              builder: (context, uiState) {
-                return Scaffold(
-                  backgroundColor: CustomerAppColors.background,
-                  appBar: HomeAppBar(
-                    isLoading: isLoading,
-                    hasLocation: hasLocation,
-                    address: address,
-                  ),
-                  body: Column(
-                    children: [
-                      CustomSearchBar(
-                        hintText: "Search for 'Product' or 'Stores' in $city",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CustomerProductsPage(
-                                shouldFocusSearch: true,
-                              ),
-                            ),
-                          );
-                        },
-                        onFilterTap: () =>
-                            HomeHelper.navigateToFilter(context, homeState),
-                      ),
-                      Expanded(
-                        child: RefreshIndicator(
-                          color: CustomerAppColors.primary,
-                          onRefresh: () async {
-                            context.read<HomeUiCubit>().selectCategory('All');
-                            context.read<HomeBloc>().add(FetchHomeData());
-                          },
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (isLoading)
-                                  const HomePageShimmer()
-                                else ...[
-                                  HomeBanner(
-                                    shops: homeState is HomeLoaded
-                                        ? homeState.homeData.nearbyShops
-                                        : const [],
-                                    products: homeState is HomeLoaded
-                                        ? homeState.homeData.nearbyProducts
-                                        : const [],
-                                  ),
-                                  if (homeState is HomeLoaded) ...[
-                                    CategoriesRow(
-                                      categories: HomeHelper.extractCategories(
-                                        homeState.homeData.nearbyProducts,
-                                      ),
-                                      selectedCategory:
-                                          uiState.selectedCategory,
-                                      onCategorySelected: (cat) {
-                                        context
-                                            .read<HomeUiCubit>()
-                                            .selectCategory(cat);
-                                      },
-                                    ),
-                                    ShopsListSection(
-                                      shops: homeState.homeData.nearbyShops,
-                                    ),
-                                    SizedBox(height: 16.h),
-                                    TrendingProductsSection(
-                                      products:
-                                          homeState.homeData.nearbyProducts,
-                                      shops: homeState.homeData.nearbyShops,
-                                      selectedCategory:
-                                          uiState.selectedCategory,
-                                    ),
-                                  ],
-                                ],
-                                SizedBox(height: 24.h),
-                              ],
-                            ),
+            return Scaffold(
+              backgroundColor: CustomerAppColors.background,
+              appBar: HomeAppBar(
+                isLoading: isLoading,
+                hasLocation: hasLocation,
+                address: address,
+              ),
+              body: Column(
+                children: [
+                  CustomSearchBar(
+                    hintText: "Search for 'Product' or 'Stores' in $city",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CustomerProductsPage(
+                            shouldFocusSearch: true,
                           ),
                         ),
+                      );
+                    },
+                    onFilterTap: () =>
+                        HomeHelper.navigateToFilter(context, homeState),
+                  ),
+                  Expanded(
+                    child: RefreshIndicator(
+                      color: CustomerAppColors.primary,
+                      onRefresh: () async {
+                        context.read<HomeBloc>().add(SelectCategory('All'));
+                        context.read<HomeBloc>().add(FetchHomeData());
+                      },
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (isLoading)
+                              // Shimmer Section
+                              const HomePageShimmer()
+                            else ...[
+                              // Home Banner Section
+                              HomeBanner(
+                                shops: homeState is HomeLoaded
+                                    ? homeState.homeData.nearbyShops
+                                    : const [],
+                                products: homeState is HomeLoaded
+                                    ? homeState.homeData.nearbyProducts
+                                    : const [],
+                              ),
+                              if (homeState is HomeLoaded) ...[
+                                // Category Row Section
+                                CategoriesRow(
+                                  categories: HomeHelper.extractCategories(
+                                    homeState.homeData.nearbyProducts,
+                                  ),
+                                  selectedCategory: homeState.selectedCategory,
+                                  onCategorySelected: (cat) {
+                                    context.read<HomeBloc>().add(
+                                      SelectCategory(cat),
+                                    );
+                                  },
+                                ),
+                                // Shop List Section
+                                ShopsListSection(
+                                  shops: homeState.homeData.nearbyShops,
+                                ),
+                                SizedBox(height: 16.h),
+                                // Trending Products Section
+                                TrendingProductsSection(
+                                  products: homeState.homeData.nearbyProducts,
+                                  shops: homeState.homeData.nearbyShops,
+                                  selectedCategory: homeState.selectedCategory,
+                                ),
+                              ],
+                            ],
+                            SizedBox(height: 24.h),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                  bottomNavigationBar: const CustomerBottomNavigation(
-                    currentIndex: 0,
-                  ),
-                );
-              },
+                ],
+              ),
+              // Bottom Navigation Bar
+              bottomNavigationBar: const CustomerBottomNavigation(
+                currentIndex: 0,
+              ),
             );
           },
         ),

@@ -1,23 +1,35 @@
 import 'package:equatable/equatable.dart';
 
 abstract class OnboardingState extends Equatable {
-  const OnboardingState();
+  final int currentPage;
+
+  const OnboardingState({this.currentPage = 0});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [currentPage];
 }
 
-class OnboardingInitial extends OnboardingState {}
+// Initial state
+class OnboardingInitial extends OnboardingState {
+  const OnboardingInitial({super.currentPage});
+}
 
-class OnboardingLoading extends OnboardingState {}
+// Loading state
+class OnboardingLoading extends OnboardingState {
+  const OnboardingLoading({required super.currentPage});
+}
 
-class OnboardingCompleted extends OnboardingState {}
+// State for onboarding completes successfully
+class OnboardingCompleted extends OnboardingState {
+  const OnboardingCompleted({required super.currentPage});
+}
 
+// State for onboarding completion error
 class OnboardingError extends OnboardingState {
   final String message;
 
-  const OnboardingError(this.message);
+  const OnboardingError(this.message, {required super.currentPage});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, currentPage];
 }

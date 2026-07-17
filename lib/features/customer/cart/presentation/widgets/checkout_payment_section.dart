@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Checkout Payment Section
 class CheckoutPaymentSection extends StatelessWidget {
   final List<String> allowedMethods;
   final String selectedMethod;
@@ -31,7 +32,7 @@ class CheckoutPaymentSection extends StatelessWidget {
         if (allowedMethods.contains('UPI')) ...[
           _buildPaymentCard(
             methodKey: 'UPI',
-            title: 'UPI (Google Pay)',
+            title: 'UPI (Online Payment)',
             subtitle: 'Pay directly from your bank account',
             icon: Icons.account_balance_wallet_outlined,
           ),

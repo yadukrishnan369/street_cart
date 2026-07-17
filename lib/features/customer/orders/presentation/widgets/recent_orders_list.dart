@@ -107,14 +107,8 @@ class _ActiveOrderCard extends StatelessWidget {
     final statusText = OrdersHelper.getDisplayStatus(
       CustomerOrderStatus.fromString(order.status),
     );
-    final totalItems = order.items.fold<int>(
-      0,
-      (sum, item) => sum + item.quantity,
-    );
-
-    final displayName = order.items.length > 1
-        ? '${firstItem.productName} and ${order.items.length - 1} more'
-        : firstItem.productName;
+    final totalItems = OrdersHelper.getOrderTotalItems(order);
+    final displayName = OrdersHelper.getOrderDisplayName(order);
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
@@ -311,9 +305,7 @@ class _HistoryOrderCard extends StatelessWidget {
     final isDelivered = order.status.toLowerCase() == 'delivered';
     final activeColor = const Color(0xFF5E5CE6);
 
-    final displayName = order.items.length > 1
-        ? '${firstItem.productName} and ${order.items.length - 1} more'
-        : firstItem.productName;
+    final displayName = OrdersHelper.getOrderDisplayName(order);
 
     String statusDisplay;
     if (order.status.toLowerCase() == 'cancelled') {
@@ -402,6 +394,7 @@ class _HistoryOrderCard extends StatelessWidget {
                 ],
               ),
             ),
+            // Retuen Button
             if (OrdersHelper.isReturnEligible(order)) ...[
               TextButton(
                 onPressed: () {

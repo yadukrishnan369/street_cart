@@ -1,3 +1,4 @@
+// Onboarding Helper - static assets and texts contents
 class OnboardingHelper {
   static const List<Map<String, String>> onboardingData = [
     {

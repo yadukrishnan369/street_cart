@@ -56,6 +56,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     return super.close();
   }
 
+  // fetches items in cart
   Future<void> _onLoadCart(LoadCart event, Emitter<CartState> emit) async {
     emit(CartLoading());
     try {
@@ -66,6 +67,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // adds new product or increments existing quantity
   Future<void> _onAddProductToCart(
     AddProductToCart event,
     Emitter<CartState> emit,
@@ -131,6 +133,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // modifies quantity of an item
   Future<void> _onUpdateItemQuantity(
     UpdateItemQuantity event,
     Emitter<CartState> emit,
@@ -193,6 +196,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // deletes a specific item from the cart
   Future<void> _onRemoveItem(RemoveItem event, Emitter<CartState> emit) async {
     final currentState = state;
     if (currentState is CartLoaded) {
@@ -213,6 +217,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // removes all items from the customer cart
   Future<void> _onClearAllCart(
     ClearAllCart event,
     Emitter<CartState> emit,
@@ -227,6 +232,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // toggles showing order summary details
   void _onToggleSummaryVisibility(
     ToggleSummaryVisibility event,
     Emitter<CartState> emit,

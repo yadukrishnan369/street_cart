@@ -29,6 +29,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<CompleteOrderWithCOD>(_onCompleteOrderWithCOD);
     on<PaymentCompletedInternal>(_onPaymentCompletedInternal);
     on<ProcessPaymentPlacement>(_onProcessPaymentPlacement);
+    on<UpdatePaymentOverlayPhase>(_onUpdateOverlayPhase);
 
     // Initialize Razorpay listeners
     razorpayService.initialize(
@@ -38,6 +39,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     );
   }
 
+  // Initiate Razorpay payment
   Future<void> _onInitiateRazorpayPayment(
     InitiateRazorpayPayment event,
     Emitter<PaymentState> emit,
@@ -59,7 +61,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       final email = (profile != null && profile.email.isNotEmpty)
           ? profile.email
           : 'customer@streetcart.com';
-
+      // Open Razorpay Checkout Overlay
       razorpayService.openCheckout(
         amount: event.totalAmount,
         name: 'Street Cart',
@@ -73,6 +75,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
   }
 
+  // Complete Order via Cash on Delivery
   Future<void> _onCompleteOrderWithCOD(
     CompleteOrderWithCOD event,
     Emitter<PaymentState> emit,
@@ -124,6 +127,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
 
     try {
+      // place order
       final orderId = await placeCustomerOrder(
         items: _currentItems!,
         address: _currentAddress!,
@@ -152,6 +156,13 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
   }
 
+  void _onUpdateOverlayPhase(
+    UpdatePaymentOverlayPhase event,
+    Emitter<PaymentState> emit,
+  ) {
+    emit(PaymentOverlayPhase(isLoading: event.isLoading, phase: event.phase));
+  }
+
   void _onSuccessfulOnlinePayment() {
     add(
       const ProcessPaymentPlacement(
@@ -161,6 +172,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     );
   }
 
+  // Handle Razorpay Failure and Cancelled
   void _handlePaymentFailure(PaymentFailureResponse response) {
     String errorMsg = response.message ?? 'Payment failed or cancelled';
     if (errorMsg.trim().toLowerCase() == 'undefined' ||

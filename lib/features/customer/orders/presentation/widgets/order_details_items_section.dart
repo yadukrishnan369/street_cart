@@ -42,6 +42,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Product Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
                     child: CachedNetworkImage(
@@ -67,6 +68,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Product Name
                         Text(
                           item.productName,
                           style: TextStyle(
@@ -78,6 +80,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 4.h),
+                        // Color and Size
                         Text(
                           'Size: ${item.selectedSize ?? "M"}  |  Color: ${item.selectedColor ?? "Default"}',
                           style: TextStyle(
@@ -88,6 +91,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                         SizedBox(height: 8.h),
                         Row(
                           children: [
+                            // Price
                             Text(
                               '₹${item.price.toStringAsFixed(0)}',
                               style: TextStyle(
@@ -116,6 +120,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                 SizedBox(height: 16.h),
                 Row(
                   children: [
+                    // Review Button
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
@@ -145,6 +150,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Return Button
                     if (OrdersHelper.isReturnEligible(order)) ...[
                       SizedBox(width: 12.w),
                       Expanded(
@@ -194,6 +200,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                   ),
                 ],
               ],
+              // Cancel Button
               if (OrdersHelper.isCancellable(
                 CustomerOrderStatus.fromString(order.status),
               )) ...[

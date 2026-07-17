@@ -4,6 +4,7 @@ import 'package:street_cart/features/customer/support/presentation/pages/about_a
 import 'package:street_cart/features/customer/support/presentation/pages/privacy_policy_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/terms_conditions_page.dart';
 
+// About Section
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
 
@@ -14,6 +15,7 @@ class AboutSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'ABOUT STREET CART',
             style: TextStyle(
@@ -31,14 +33,17 @@ class AboutSection extends StatelessWidget {
             ),
             child: Column(
               children: [
+                // About App
                 _buildListTile(context, 'About App', const AboutAppPage()),
                 Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
+                // Privacy Policy
                 _buildListTile(
                   context,
                   'Privacy Policy',
                   const PrivacyPolicyPage(),
                 ),
                 Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
+                // Terms and Conditions
                 _buildListTile(
                   context,
                   'Terms & Conditions',
@@ -46,7 +51,10 @@ class AboutSection extends StatelessWidget {
                 ),
                 Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -79,10 +87,8 @@ class AboutSection extends StatelessWidget {
 
   Widget _buildListTile(BuildContext context, String title, Widget page) {
     return InkWell(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => page),
-      ),
+      onTap: () =>
+          Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
       borderRadius: BorderRadius.circular(16.r),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),

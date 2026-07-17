@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Categories Row
 class CategoriesRow extends StatelessWidget {
   final List<String> categories;
   final String selectedCategory;
@@ -35,7 +36,9 @@ class CategoriesRow extends StatelessWidget {
                   color: isSelected ? CustomerAppColors.primary : Colors.white,
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
-                    color: isSelected ? Colors.transparent : Colors.grey.shade300,
+                    color: isSelected
+                        ? Colors.transparent
+                        : Colors.grey.shade300,
                   ),
                 ),
                 child: Text(
@@ -43,7 +46,9 @@ class CategoriesRow extends StatelessWidget {
                   style: TextStyle(
                     color: isSelected ? Colors.white : Colors.black87,
                     fontSize: 14.sp,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ),

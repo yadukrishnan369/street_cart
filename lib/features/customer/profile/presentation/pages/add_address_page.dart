@@ -9,8 +9,9 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/address_
 import 'package:street_cart/features/customer/profile/presentation/widgets/address_form_section.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Address Page
 class AddAddressPage extends StatelessWidget {
-  final AddressModel? address; // existing address for editing
+  final AddressModel? address; // Existing Address for Editing
 
   const AddAddressPage({super.key, this.address});
 
@@ -42,6 +43,7 @@ class AddAddressPage extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.black87),
             onPressed: () => Navigator.pop(context),
           ),
+          // title
           title: Text(
             address == null ? 'Add New Address' : 'Edit Address',
             style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
@@ -50,6 +52,7 @@ class AddAddressPage extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(24.w),
+          // Address Form Section
           child: AddressFormSection(address: address),
         ),
       ),

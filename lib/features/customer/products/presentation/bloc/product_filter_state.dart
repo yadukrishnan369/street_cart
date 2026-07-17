@@ -23,7 +23,7 @@ class ProductFilterState {
   final List<String> availableSizes;
   final Set<String> selectedSizes;
 
-  // Rating Placeholder
+  // Ratings
   final String? selectedRating;
 
   ProductFilterState({

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/features/customer/auth/domain/usecases/sign_in_with_google.dart';
@@ -33,6 +34,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CheckEmailVerification _checkEmailVerification;
   final FinalizeSignUp _finalizeSignUp;
 
+  // local UI states
+  bool _isPasswordVisible = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  bool _agreedToTerms = false;
+  bool _isVerificationSheetShowing = false;
+  int _secondsRemaining = 90;
+  Timer? _pollingTimer;
+  Timer? _countdownTimer;
+
+  @override
+  Future<void> close() {
+    _pollingTimer?.cancel();
+    _countdownTimer?.cancel();
+    return super.close();
+  }
+
   AuthBloc({
     required SignUp signUp,
     required Login login,
@@ -58,7 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
        _sendEmailVerification = sendEmailVerification,
        _checkEmailVerification = checkEmailVerification,
        _finalizeSignUp = finalizeSignUp,
-       super(AuthInitial()) {
+       super(const AuthInitial()) {
     on<SignUpRequested>(_onSignUpRequested);
     on<LoginRequested>(_onLoginRequested);
     on<GoogleSignInRequested>(_onGoogleSignInRequested);
@@ -70,13 +88,196 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SendEmailVerificationEvent>(_onSendEmailVerificationEvent);
     on<CheckEmailVerificationStatusEvent>(_onCheckEmailVerificationStatusEvent);
     on<VerificationCancelledEvent>(_onVerificationCancelledEvent);
+    on<ToggleLoginPasswordVisibility>((event, emit) {
+      _isPasswordVisible = !_isPasswordVisible;
+      _emit(emit, state);
+    });
+    on<ToggleSignupPasswordVisibility>((event, emit) {
+      _obscurePassword = !_obscurePassword;
+      _emit(emit, state);
+    });
+    on<ToggleConfirmPasswordVisibility>((event, emit) {
+      _obscureConfirmPassword = !_obscureConfirmPassword;
+      _emit(emit, state);
+    });
+    on<ToggleTermsAgreement>((event, emit) {
+      _agreedToTerms = event.agreed;
+      _emit(emit, state);
+    });
+    on<SetVerificationSheetShowing>((event, emit) {
+      _isVerificationSheetShowing = event.showing;
+      _emit(emit, state);
+    });
+    on<StartVerificationTimerEvent>((event, emit) {
+      _pollingTimer?.cancel();
+      _countdownTimer?.cancel();
+      _secondsRemaining = 90;
+
+      _pollingTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+        add(
+          CheckEmailVerificationStatusEvent(
+            fullName: event.fullName,
+            email: event.email,
+          ),
+        );
+      });
+
+      _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        add(DecrementVerificationTimer());
+      });
+
+      _emit(
+        emit,
+        AuthVerificationWaiting(fullName: event.fullName, email: event.email),
+      );
+    });
+    on<DecrementVerificationTimer>((event, emit) {
+      if (_secondsRemaining > 0) {
+        _secondsRemaining--;
+        _emit(emit, state);
+      } else {
+        _pollingTimer?.cancel();
+        _countdownTimer?.cancel();
+        _emit(
+          emit,
+          const AuthError('Verification time expired. Please try again.'),
+        );
+      }
+    });
+    on<ResetVerificationTimer>((event, emit) {
+      _secondsRemaining = 90;
+      _emit(emit, state);
+    });
+  }
+
+  // emit helper
+  void _emit(Emitter<AuthState> emit, AuthState newState) {
+    if (newState is AuthInitial) {
+      emit(
+        AuthInitial(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthLoading) {
+      emit(
+        AuthLoading(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthSuccess) {
+      emit(
+        AuthSuccess(
+          isNewUser: newState.isNewUser,
+          isProfileCompleted: newState.isProfileCompleted,
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthVerificationWaiting) {
+      emit(
+        AuthVerificationWaiting(
+          fullName: newState.fullName,
+          email: newState.email,
+          isResend: newState.isResend,
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthVerificationSuccess) {
+      emit(
+        AuthVerificationSuccess(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthPasswordResetEmailSent) {
+      emit(
+        AuthPasswordResetEmailSent(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthPasswordResetSuccess) {
+      emit(
+        AuthPasswordResetSuccess(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthPasswordChangeSuccess) {
+      emit(
+        AuthPasswordChangeSuccess(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthError) {
+      emit(
+        AuthError(
+          newState.message,
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else if (newState is AuthAccountDeleted) {
+      emit(
+        AuthAccountDeleted(
+          isPasswordVisible: _isPasswordVisible,
+          obscurePassword: _obscurePassword,
+          obscureConfirmPassword: _obscureConfirmPassword,
+          agreedToTerms: _agreedToTerms,
+          isVerificationSheetShowing: _isVerificationSheetShowing,
+          secondsRemaining: _secondsRemaining,
+        ),
+      );
+    } else {
+      emit(newState);
+    }
   }
 
   Future<void> _onSignUpRequested(
     SignUpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       await _signUp(
@@ -85,19 +286,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         fullName: event.fullName,
       );
 
-      // Trigger verification email immediately
+      // Trigger verification email
       add(SendEmailVerificationEvent());
-      
-      emit(AuthVerificationWaiting(
-        fullName: event.fullName,
-        email: event.email,
-      ));
+
+      _emit(
+        emit,
+        AuthVerificationWaiting(fullName: event.fullName, email: event.email),
+      );
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -109,14 +310,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _sendEmailVerification();
       if (state is AuthVerificationWaiting) {
         final currentState = state as AuthVerificationWaiting;
-        emit(AuthVerificationWaiting(
-          fullName: currentState.fullName,
-          email: currentState.email,
-          isResend: true,
-        ));
+        _emit(
+          emit,
+          AuthVerificationWaiting(
+            fullName: currentState.fullName,
+            email: currentState.email,
+            isResend: true,
+          ),
+        );
       }
     } catch (e) {
-       // Silent error for resend
+      // error for resend
     }
   }
 
@@ -127,29 +331,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final isVerified = await _checkEmailVerification();
       if (isVerified) {
-        // Only now we finalize signed up by creating Firestore record
-        await _finalizeSignUp(
-          fullName: event.fullName,
-          email: event.email,
-        );
-        emit(AuthVerificationSuccess());
-        emit(AuthSuccess(isNewUser: true, isProfileCompleted: false));
+        _pollingTimer?.cancel();
+        _countdownTimer?.cancel();
+        // finalize signed up by creating record
+        await _finalizeSignUp(fullName: event.fullName, email: event.email);
+        _emit(emit, AuthVerificationSuccess());
+        _emit(emit, AuthSuccess(isNewUser: true, isProfileCompleted: false));
       } else {
-        // Silent for polling
+        // break polling
       }
     } on ServerException catch (e) {
-      // Keep real server errors
-      emit(AuthError(e.message));
-      emit(AuthVerificationWaiting(
-        fullName: event.fullName,
-        email: event.email,
-      ));
+      _emit(emit, AuthError(e.message));
+      _emit(
+        emit,
+        AuthVerificationWaiting(fullName: event.fullName, email: event.email),
+      );
     } catch (e) {
-      emit(AuthError('An error occurred: $e'));
-      emit(AuthVerificationWaiting(
-        fullName: event.fullName,
-        email: event.email,
-      ));
+      _emit(emit, AuthError('An error occurred: $e'));
+      _emit(
+        emit,
+        AuthVerificationWaiting(fullName: event.fullName, email: event.email),
+      );
     }
   }
 
@@ -157,12 +359,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     VerificationCancelledEvent event,
     Emitter<AuthState> emit,
   ) async {
+    _pollingTimer?.cancel();
+    _countdownTimer?.cancel();
     try {
-      // Delete the Auth account if user cancels verification
+      // Delete the account if user cancels verification
       await _deleteAccount(null);
-      emit(AuthInitial());
+      _emit(emit, AuthInitial());
     } catch (e) {
-      emit(AuthInitial());
+      _emit(emit, AuthInitial());
     }
   }
 
@@ -170,7 +374,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       await _login(email: event.email, password: event.password);
@@ -178,20 +382,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = FirebaseAuth.instance.currentUser;
 
       if (user == null) {
-        emit(AuthError("User not found"));
+        _emit(emit, AuthError("User not found"));
         return;
       }
 
       final isCompleted = await _getCustomerProfile(user.uid);
 
       sl<HomeBloc>().add(ResetHome());
-      emit(AuthSuccess(isNewUser: false, isProfileCompleted: isCompleted));
+      _emit(
+        emit,
+        AuthSuccess(isNewUser: false, isProfileCompleted: isCompleted),
+      );
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -199,7 +406,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     GoogleSignInRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       final isNewUser = await _signInWithGoogle();
@@ -207,20 +414,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = FirebaseAuth.instance.currentUser;
 
       if (user == null) {
-        emit(AuthError("User not found"));
+        _emit(emit, AuthError("User not found"));
         return;
       }
 
       final isCompleted = await _getCustomerProfile(user.uid);
 
       sl<HomeBloc>().add(ResetHome());
-      emit(AuthSuccess(isNewUser: isNewUser, isProfileCompleted: isCompleted));
+      _emit(
+        emit,
+        AuthSuccess(isNewUser: isNewUser, isProfileCompleted: isCompleted),
+      );
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -231,13 +441,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _logout();
       sl<HomeBloc>().add(ResetHome());
-      emit(AuthInitial());
+      _emit(emit, AuthInitial());
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -245,17 +455,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     PasswordResetRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       await _sendPasswordResetEmail(email: event.email);
-      emit(AuthPasswordResetSuccess());
+      _emit(emit, AuthPasswordResetSuccess());
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -263,23 +473,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     UpdateProfileRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        emit(AuthError("User not found"));
+        _emit(emit, AuthError("User not found"));
         return;
       }
-      
+
       await _updateCustomerProfile(userId: user.uid, data: event.data);
-      emit(AuthSuccess(isNewUser: false, isProfileCompleted: true));
+      _emit(emit, AuthSuccess(isNewUser: false, isProfileCompleted: true));
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -287,20 +497,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ChangePasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       await _changePassword(
         currentPassword: event.oldPassword,
         newPassword: event.newPassword,
       );
-      emit(AuthPasswordChangeSuccess());
+      _emit(emit, AuthPasswordChangeSuccess());
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 
@@ -308,18 +518,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     DeleteAccountRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    _emit(emit, AuthLoading());
 
     try {
       await _deleteAccount(event.password);
       sl<HomeBloc>().add(ResetHome());
-      emit(AuthAccountDeleted());
+      _emit(emit, AuthAccountDeleted());
     } on ServerException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } on NetworkException catch (e) {
-      emit(AuthError(e.message));
+      _emit(emit, AuthError(e.message));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred: $e"));
+      _emit(emit, AuthError("An unexpected error occurred: $e"));
     }
   }
 }

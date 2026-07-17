@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/support/presentation/widgets/suppo
 import 'package:street_cart/features/customer/support/presentation/widgets/support_footer_box.dart';
 import 'contact_support_page.dart';
 
+// Help Support Page
 class HelpSupportPage extends StatelessWidget {
   const HelpSupportPage({super.key});
 
@@ -21,6 +22,7 @@ class HelpSupportPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () => Navigator.pop(context),
         ),
+        // Page Title
         title: Text(
           'Help & Support',
           style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
@@ -35,6 +37,7 @@ class HelpSupportPage extends StatelessWidget {
             children: [
               _buildHelpHeader(),
               SizedBox(height: 32.h),
+              // Categories
               _buildCategory(0, Icons.inventory_2_outlined),
               _buildCategory(1, Icons.assignment_return_outlined),
               _buildCategory(2, Icons.payment_outlined),
@@ -61,6 +64,7 @@ class HelpSupportPage extends StatelessWidget {
     );
   }
 
+  // Help Section Header
   Widget _buildHelpHeader() {
     return Container(
       width: double.infinity,

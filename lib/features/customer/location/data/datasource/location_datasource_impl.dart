@@ -30,10 +30,10 @@ class LocationDataSourceImpl implements LocationDataSource {
       );
     }
 
-    // Standardize permission request flow for maximum reliability
+    // Standardize permission request flow
     LocationPermission permission = await locationService.checkPermission();
 
-    // If permission is permanently denied, we can't show the modal anymore
+    // If permission is permanently denied, we can't show the modal
     if (permission == LocationPermission.deniedForever) {
       throw LocationException(
         "Location permissions are permanently denied. Please enable them in App Settings to proceed.",
@@ -80,7 +80,7 @@ class LocationDataSourceImpl implements LocationDataSource {
           'location_updated_at': FieldValue.serverTimestamp(),
         });
 
-        // SYNC PREFERENCE
+        // Location Enable Disable PREFERENCE
         await sharedPreferences.setBool('locationServices', true);
       } catch (e) {
         throw Exception(
@@ -103,7 +103,7 @@ class LocationDataSourceImpl implements LocationDataSource {
           'location_updated_at': FieldValue.serverTimestamp(),
         });
 
-        // SYNC PREFERENCE
+        // Location Disabled After Skip
         await sharedPreferences.setBool('locationServices', false);
       } catch (e) {
         throw Exception('An error occurred while updating user location: $e');

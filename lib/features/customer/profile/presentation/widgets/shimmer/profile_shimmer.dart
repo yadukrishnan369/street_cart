@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Profile Shimmer
 class ProfileShimmer extends StatelessWidget {
   const ProfileShimmer({super.key});
 

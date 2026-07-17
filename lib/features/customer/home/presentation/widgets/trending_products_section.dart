@@ -12,7 +12,9 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 
+// Trending Products Section
 class TrendingProductsSection extends StatelessWidget {
   final List<ProductModel> products;
   final List<ShopProfileModel> shops;
@@ -74,14 +76,10 @@ class TrendingProductsSection extends StatelessWidget {
     final shopNames = {for (final s in shops) s.uid: s.shopName};
 
     // Filter by selected category
-    final filteredProducts = selectedCategory == 'All'
-        ? products
-        : products
-              .where(
-                (p) =>
-                    p.category.toLowerCase() == selectedCategory.toLowerCase(),
-              )
-              .toList();
+    final filteredProducts = HomeHelper.filterProductsByCategory(
+      products: products,
+      selectedCategory: selectedCategory,
+    );
 
     if (filteredProducts.isEmpty) {
       return Padding(

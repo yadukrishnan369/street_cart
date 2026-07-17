@@ -8,24 +8,32 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 import 'customer_products_event.dart';
 import 'customer_products_state.dart';
 
-class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsState> {
+// Customer Products Bloc
+class CustomerProductsBloc
+    extends Bloc<CustomerProductsEvent, CustomerProductsState> {
   final GetCustomerProducts getCustomerProducts;
   final SharedPreferences _sharedPreferences;
 
   CustomerProductsBloc({
     required this.getCustomerProducts,
     required SharedPreferences sharedPreferences,
-  })  : _sharedPreferences = sharedPreferences,
-        super(CustomerProductsInitial()) {
+  }) : _sharedPreferences = sharedPreferences,
+       super(CustomerProductsInitial()) {
     on<FetchCustomerProducts>(_onFetchCustomerProducts);
     on<UpdateFilters>(_onUpdateFilters);
+    on<InitProductDetail>(_onInitProductDetail);
+    on<SelectProductColor>(_onSelectProductColor);
+    on<SelectProductSize>(_onSelectProductSize);
+    on<UpdateCarouselIndex>(_onUpdateCarouselIndex);
   }
 
+  // Fetch Nearby Products and Shops
   Future<void> _onFetchCustomerProducts(
     FetchCustomerProducts event,
     Emitter<CustomerProductsState> emit,
   ) async {
-    final locationEnabled = _sharedPreferences.getBool('locationServices') ?? false;
+    final locationEnabled =
+        _sharedPreferences.getBool('locationServices') ?? false;
     if (!locationEnabled) {
       emit(CustomerProductsLocationDisabled());
       return;
@@ -37,9 +45,10 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
       final allProducts = data.products;
       final shops = data.shops;
 
-      final searchQuery = event.initialSearchQuery ?? "";
-      final selectedCategories = event.initialSelectedCategories ?? const {'All'};
-      final selectedSort = event.initialSelectedSort ?? "Newest";
+      final searchQuery = event.initialSearchQuery ?? '';
+      final selectedCategories =
+          event.initialSelectedCategories ?? const {'All'};
+      final selectedSort = event.initialSelectedSort ?? 'Newest';
       final priceRange = event.initialPriceRange ?? const RangeValues(0, 10000);
       final selectedRating = event.initialSelectedRating;
       final selectedColors = event.initialSelectedColors ?? const <String>{};
@@ -57,24 +66,27 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
         selectedSizes: selectedSizes,
       );
 
-      emit(CustomerProductsLoaded(
-        allProducts: allProducts,
-        filteredProducts: filteredProducts,
-        shops: shops,
-        searchQuery: searchQuery,
-        selectedCategories: selectedCategories,
-        selectedSort: selectedSort,
-        priceRange: priceRange,
-        selectedRating: selectedRating,
-        selectedColors: selectedColors,
-        selectedSizes: selectedSizes,
-      ));
+      emit(
+        CustomerProductsLoaded(
+          allProducts: allProducts,
+          filteredProducts: filteredProducts,
+          shops: shops,
+          searchQuery: searchQuery,
+          selectedCategories: selectedCategories,
+          selectedSort: selectedSort,
+          priceRange: priceRange,
+          selectedRating: selectedRating,
+          selectedColors: selectedColors,
+          selectedSizes: selectedSizes,
+        ),
+      );
     } catch (e, stack) {
       AppLogger.error('Failed to fetch customer products', e, stack);
       emit(CustomerProductsError(message: 'Failed to load products.'));
     }
   }
 
+  // Re-Filters and Re-Sorts to Already Loaded Products List
   void _onUpdateFilters(
     UpdateFilters event,
     Emitter<CustomerProductsState> emit,
@@ -93,21 +105,115 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
         selectedSizes: event.selectedSizes,
       );
 
-      emit(CustomerProductsLoaded(
-        allProducts: currentState.allProducts,
-        filteredProducts: filtered,
-        shops: currentState.shops,
-        searchQuery: event.searchQuery,
-        selectedCategories: event.selectedCategories,
-        selectedSort: event.selectedSort,
-        priceRange: event.priceRange,
-        selectedRating: event.selectedRating,
-        selectedColors: event.selectedColors,
-        selectedSizes: event.selectedSizes,
-      ));
+      emit(
+        CustomerProductsLoaded(
+          allProducts: currentState.allProducts,
+          filteredProducts: filtered,
+          shops: currentState.shops,
+          searchQuery: event.searchQuery,
+          selectedCategories: event.selectedCategories,
+          selectedSort: event.selectedSort,
+          priceRange: event.priceRange,
+          selectedRating: event.selectedRating,
+          selectedColors: event.selectedColors,
+          selectedSizes: event.selectedSizes,
+        ),
+      );
     }
   }
 
+  // Initializes Detail
+  void _onInitProductDetail(
+    InitProductDetail event,
+    Emitter<CustomerProductsState> emit,
+  ) {
+    final product = event.product;
+    final colors = product.allColors;
+    final sizes = product.allSizes;
+
+    bool hasSavedVariant =
+        event.initialColor != null || event.initialSize != null;
+    bool isSavedVariantAvailable = false;
+
+    String? selectedColor;
+    String? selectedSize;
+    String? variantWarningMessage;
+
+    // Validate if the Previous Saved Variant is Still in Stock
+    if (hasSavedVariant) {
+      if (event.initialColor != null && event.initialSize != null) {
+        final hasColor = colors.contains(event.initialColor);
+        final hasSize = sizes.contains(event.initialSize);
+        final stock = product.stockForVariant(
+          event.initialColor!,
+          event.initialSize!,
+        );
+        if (hasColor && hasSize && stock > 0) {
+          selectedColor = event.initialColor;
+          selectedSize = event.initialSize;
+          isSavedVariantAvailable = true;
+        }
+      }
+
+      if (!isSavedVariantAvailable) {
+        variantWarningMessage =
+            'The saved variant is unavailable. Please choose another available variant.';
+      }
+    }
+
+    // Show First Available Color and Size when no Saved Variant
+    if (!isSavedVariantAvailable) {
+      if (colors.isNotEmpty) selectedColor = colors.first;
+      if (sizes.isNotEmpty) selectedSize = sizes.first;
+    }
+
+    emit(
+      ProductDetailState(
+        selectedColor: selectedColor,
+        selectedSize: selectedSize,
+        variantWarningMessage: variantWarningMessage,
+      ),
+    );
+  }
+
+  // Selects a Color and Resets Sizes
+  void _onSelectProductColor(
+    SelectProductColor event,
+    Emitter<CustomerProductsState> emit,
+  ) {
+    if (state is ProductDetailState) {
+      final current = state as ProductDetailState;
+      final sizes = event.product.allSizes;
+      final defaultSize = sizes.isNotEmpty ? sizes.first : null;
+      emit(
+        current.copyWith(selectedColor: event.color, selectedSize: defaultSize),
+      );
+    }
+  }
+
+  // Updates the Selected Size for the Current Detail Page Variant
+  void _onSelectProductSize(
+    SelectProductSize event,
+    Emitter<CustomerProductsState> emit,
+  ) {
+    if (state is ProductDetailState) {
+      final current = state as ProductDetailState;
+      emit(current.copyWith(selectedSize: event.size));
+    }
+  }
+
+  // Updates the Active Image in the Product Carousel
+  void _onUpdateCarouselIndex(
+    UpdateCarouselIndex event,
+    Emitter<CustomerProductsState> emit,
+  ) {
+    if (state is ProductDetailState) {
+      final current = state as ProductDetailState;
+      emit(current.copyWith(carouselIndex: event.index));
+    }
+  }
+
+  // Filter + Sort Logic applied to Product List
   List<ProductModel> _filterAndSort({
     required List<ProductModel> allProducts,
     required List<ShopProfileModel> shops,
@@ -119,16 +225,20 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
     required Set<String> selectedColors,
     required Set<String> selectedSizes,
   }) {
-    final shopNames = {
-      for (final s in shops) s.uid: s.shopName,
-    };
+    final shopNames = {for (final s in shops) s.uid: s.shopName};
 
     final filtered = allProducts.where((product) {
+      // Match Product name, Description or Shop name By Search query
       final matchQuery =
           product.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().contains(searchQuery.toLowerCase()) ||
-          (shopNames[product.shopId] ?? '').toLowerCase().contains(searchQuery.toLowerCase());
+          product.description.toLowerCase().contains(
+            searchQuery.toLowerCase(),
+          ) ||
+          (shopNames[product.shopId] ?? '').toLowerCase().contains(
+            searchQuery.toLowerCase(),
+          );
 
+      // Match By Selected Category
       final matchCat =
           selectedCategories.contains('All') ||
           selectedCategories.isEmpty ||
@@ -136,18 +246,18 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
             (cat) => cat.toLowerCase() == product.category.toLowerCase(),
           );
 
+      // Match Product Price Within the Selected Range
       final productPrice = product.offerPrice ?? product.originalPrice;
       final matchPrice =
-          productPrice >= priceRange.start &&
-          productPrice <= priceRange.end;
+          productPrice >= priceRange.start && productPrice <= priceRange.end;
 
-      // Color filter matching logic
+      // Color Filter logic
       bool matchColor = selectedColors.isEmpty;
       if (!matchColor) {
         matchColor = product.allColors.any((c) => selectedColors.contains(c));
       }
 
-      // Size filter matching logic
+      // Size Filter logic
       bool matchSize = selectedSizes.isEmpty;
       if (!matchSize) {
         matchSize = product.allSizes.any((s) => selectedSizes.contains(s));
@@ -156,6 +266,7 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
       return matchQuery && matchCat && matchPrice && matchColor && matchSize;
     }).toList();
 
+    // Sort Filtered Products by Selected Sort Option
     if (selectedSort == 'Newest') {
       filtered.sort((a, b) {
         if (a.createdAt == null && b.createdAt == null) return 0;
@@ -180,4 +291,3 @@ class CustomerProductsBloc extends Bloc<CustomerProductsEvent, CustomerProductsS
     return filtered;
   }
 }
-

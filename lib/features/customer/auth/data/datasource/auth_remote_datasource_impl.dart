@@ -14,6 +14,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
   }) : _authService = authService,
        _firestore = firestore;
 
+  // Initiate Signup
   @override
   Future<void> initiateSignUp({
     required String email,
@@ -28,17 +29,20 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
   }
 
+  // Send Email Verification to Customer
   @override
   Future<void> sendEmailVerification() async {
     await _authService.sendEmailVerification();
   }
 
+  // Check Email Verification
   @override
   Future<bool> checkEmailVerification() async {
     await _authService.reloadUser();
     return _authService.isEmailVerified();
   }
 
+  // Finalize  Signup
   @override
   Future<void> finalizeSignUp({
     required String fullName,
@@ -59,6 +63,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
   }
 
+  // Customr Login
   @override
   Future<void> login({required String email, required String password}) async {
     try {
@@ -90,6 +95,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
   }
 
+  // Customer Signup With Google Option
   @override
   Future<bool> signInWithGoogle() async {
     try {
@@ -127,11 +133,13 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
   }
 
+  // Customer Logout
   @override
   Future<void> logout() async {
     await _authService.signOut();
   }
 
+  // Send a Reset Mail Email to Customer
   @override
   Future<void> sendPasswordResetEmail(String email) async {
     try {
@@ -177,6 +185,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     await _authService.sendPasswordResetEmail(email);
   }
 
+  // Get Cusotmer
   @override
   Future<ProfileModel?> getCustomer(String userId) async {
     try {
@@ -193,6 +202,7 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
   }
 
+  // Update Customer Profile
   @override
   Future<void> updateCustomerProfile({
     required String userId,
@@ -207,11 +217,13 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
   }
 
+  // Get current Customer ID
   @override
   Future<String?> getCurrentUserId() async {
     return _authService.getCurrentUserId();
   }
 
+  // Change Password
   @override
   Future<void> changePassword({
     required String currentPassword,
@@ -223,11 +235,13 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     );
   }
 
+  // Check, if Email Password Customer or Not
   @override
   Future<bool> isEmailPasswordUser() async {
     return _authService.isEmailPasswordUser();
   }
 
+  // Delete Customer Account
   @override
   Future<void> deleteAccount(String? password) async {
     try {

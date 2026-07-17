@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Shop Shimmer Card
 class ShopCardShimmer extends StatelessWidget {
   const ShopCardShimmer({super.key});
 
@@ -61,7 +62,7 @@ class ShopCardShimmer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title + Category label row
+                  // Title + Category label
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -89,7 +90,7 @@ class ShopCardShimmer extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Container(width: 220.w, height: 12.h, color: Colors.white),
                   SizedBox(height: 16.h),
-                  // Location and Action row
+                  // Location and Action
                   Row(
                     children: [
                       Container(width: 12.w, height: 12.h, color: Colors.white),

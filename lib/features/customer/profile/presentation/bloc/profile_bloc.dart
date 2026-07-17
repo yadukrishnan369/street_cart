@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/profile/domain/usecases/remove_pro
 import 'profile_event.dart';
 import 'profile_state.dart';
 
+// Profile Bloc
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetProfileData getProfileData;
   final UpdateProfileData updateProfileData;
@@ -18,12 +19,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.uploadProfileImage,
     required this.removeProfileImage,
   }) : super(ProfileInitial()) {
+    // Fetch profile data
     on<FetchProfileData>((event, emit) async {
       emit(ProfileLoading());
       try {
         final profile = await getProfileData();
         if (profile != null) {
-          emit(ProfileLoaded(profile));
+          emit(
+            ProfileLoaded(
+              profile,
+              editImageUrl: profile.profileImageUrl,
+              editActiveName: profile.fullName,
+            ),
+          );
         } else {
           emit(const ProfileError('Failed to load profile data'));
         }
@@ -32,6 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     });
 
+    // Update profile data
     on<UpdateProfileDataEvent>((event, emit) async {
       emit(ProfileLoading());
       try {
@@ -39,6 +48,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         final profile = await getProfileData();
         if (profile != null) {
           emit(ProfileUpdateSuccess(profile));
+          emit(
+            ProfileLoaded(
+              profile,
+              editImageUrl: profile.profileImageUrl,
+              editActiveName: profile.fullName,
+            ),
+          );
         } else {
           emit(const ProfileError('Updated but failed to reload details.'));
         }
@@ -47,30 +63,68 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     });
 
+    // Upload profile picture
     on<UploadProfileImageEvent>((event, emit) async {
-      emit(ProfileImageUploading());
-      try {
-        final url = await uploadProfileImage(event.imageFile);
-        if (url != null) {
-          emit(ProfileImageUploaded(url));
-        } else {
-          emit(const ProfileError('Failed to upload image.'));
+      if (state is ProfileLoaded) {
+        final current = state as ProfileLoaded;
+        emit(current.copyWith(isUploadingImage: true));
+        try {
+          final url = await uploadProfileImage(event.imageFile);
+          if (url != null) {
+            emit(current.copyWith(isUploadingImage: false, editImageUrl: url));
+            emit(ProfileImageUploaded(url));
+          } else {
+            emit(const ProfileError('Failed to upload image.'));
+          }
+        } catch (e) {
+          emit(ProfileError(e.toString()));
         }
-      } catch (e) {
-        emit(ProfileError(e.toString()));
       }
     });
 
+    // Remove profile picture
     on<RemoveProfileImageEvent>((event, emit) async {
-      emit(ProfileLoading());
-      try {
-        await removeProfileImage();
-        final profile = await getProfileData();
-        if (profile != null) {
-          emit(ProfileUpdateSuccess(profile));
+      if (state is ProfileLoaded) {
+        final current = state as ProfileLoaded;
+        emit(current.copyWith(isUploadingImage: true));
+        try {
+          await removeProfileImage();
+          emit(current.copyWith(isUploadingImage: false, clearImageUrl: true));
+        } catch (e) {
+          emit(ProfileError(e.toString()));
         }
-      } catch (e) {
-        emit(ProfileError(e.toString()));
+      }
+    });
+
+    // Update, user typed name changes in the Edit Profile Page
+    on<UpdateActiveNameEvent>((event, emit) {
+      if (state is ProfileLoaded) {
+        final current = state as ProfileLoaded;
+        emit(current.copyWith(editActiveName: event.name));
+      }
+    });
+
+    // Clears the selected profile image
+    on<ClearProfileImageUrlEvent>((event, emit) {
+      if (state is ProfileLoaded) {
+        final current = state as ProfileLoaded;
+        emit(current.copyWith(clearImageUrl: true));
+      }
+    });
+
+    // Order Updates Toggle changes
+    on<ToggleOrderUpdatesEvent>((event, emit) {
+      if (state is ProfileLoaded) {
+        final current = state as ProfileLoaded;
+        emit(current.copyWith(orderUpdates: event.value));
+      }
+    });
+
+    // Offers & Promotions Toggle changes
+    on<ToggleOffersPromotionsEvent>((event, emit) {
+      if (state is ProfileLoaded) {
+        final current = state as ProfileLoaded;
+        emit(current.copyWith(offersPromotions: event.value));
       }
     });
   }

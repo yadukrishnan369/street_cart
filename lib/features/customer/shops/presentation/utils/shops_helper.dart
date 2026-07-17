@@ -1,6 +1,7 @@
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
 class ShopsHelper {
+  // Filter Shops
   static List<ShopProfileModel> filterShops(
     List<ShopProfileModel> shops,
     String searchQuery,

@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
 
+// Refresh Indicator for Fetch Product
 class ProductsRefreshIndicator extends StatelessWidget {
   final Widget child;
   final VoidCallback? onRefreshStarted;
@@ -23,16 +24,16 @@ class ProductsRefreshIndicator extends StatelessWidget {
           onRefreshStarted!();
         }
         context.read<CustomerProductsBloc>().add(
-              FetchCustomerProducts(
-                initialSearchQuery: "",
-                initialSelectedSort: "Newest",
-                initialPriceRange: const RangeValues(0, 10000),
-                initialSelectedCategories: const {'All'},
-                initialSelectedRating: null,
-                initialSelectedColors: const {},
-                initialSelectedSizes: const {},
-              ),
-            );
+          FetchCustomerProducts(
+            initialSearchQuery: "",
+            initialSelectedSort: "Newest",
+            initialPriceRange: const RangeValues(0, 10000),
+            initialSelectedCategories: const {'All'},
+            initialSelectedRating: null,
+            initialSelectedColors: const {},
+            initialSelectedSizes: const {},
+          ),
+        );
       },
       child: child,
     );

@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 
+// Shop Details Header
 class ShopDetailsHeader extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -34,7 +35,7 @@ class ShopDetailsHeader extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Circular Shop Profile Image
+            // Shop Profile Image
             Container(
               width: 110.w,
               height: 110.h,
@@ -49,6 +50,7 @@ class ShopDetailsHeader extends StatelessWidget {
                   ),
                 ],
               ),
+              // Profile Image Preview
               child: GestureDetector(
                 onTap: shop.profileImageUrl.isNotEmpty
                     ? () {
@@ -63,6 +65,7 @@ class ShopDetailsHeader extends StatelessWidget {
                         );
                       }
                     : null,
+                // Shop Profile Image
                 child: ClipOval(
                   child: shop.profileImageUrl.isNotEmpty
                       ? CachedNetworkImage(
@@ -106,6 +109,7 @@ class ShopDetailsHeader extends StatelessWidget {
                     size: 14.sp,
                   ),
                   SizedBox(width: 4.w),
+                  // Shop Landmark
                   Flexible(
                     child: Text(
                       shop.landmark.isNotEmpty
@@ -129,7 +133,7 @@ class ShopDetailsHeader extends StatelessWidget {
               child: Divider(color: CustomerAppColors.border, height: 1),
             ),
 
-            // Horizontal info stats
+            // Info Stats
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -171,6 +175,7 @@ class ShopDetailsHeader extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
+                  // Confirmation for Phone Call
                   onPressed: () {
                     showDialog(
                       context: context,

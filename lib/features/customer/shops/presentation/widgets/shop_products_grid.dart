@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Shops Products Grid
 class ShopProductsGrid extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -32,7 +33,7 @@ class ShopProductsGrid extends StatelessWidget {
             ),
           );
         }
-
+        // Shops Details Error
         if (state is ShopDetailsError) {
           return SizedBox(
             height: 200.h,
@@ -64,6 +65,7 @@ class ShopProductsGrid extends StatelessWidget {
                       color: CustomerAppColors.primary,
                     ),
                     SizedBox(height: 12.h),
+                    // No Products Content
                     Text(
                       'No products available in this shop yet.',
                       style: TextStyle(
@@ -84,7 +86,7 @@ class ShopProductsGrid extends StatelessWidget {
                 final wishlistedIds = wishlistState is WishlistLoaded
                     ? wishlistState.items.map((i) => i.product.id).toSet()
                     : <String>{};
-
+                // Shop Products Grid View
                 return GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -102,7 +104,7 @@ class ShopProductsGrid extends StatelessWidget {
                         : '₹${PriceUtils.formatPrice(product.originalPrice)}';
 
                     final isWishlisted = wishlistedIds.contains(product.id);
-
+                    // Navigate To Product Details Page
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -115,8 +117,11 @@ class ShopProductsGrid extends StatelessWidget {
                           ),
                         );
                       },
+                      // Product Card
                       child: ProductCard(
-                        imageUrl: product.images.isNotEmpty ? product.images.first : '',
+                        imageUrl: product.images.isNotEmpty
+                            ? product.images.first
+                            : '',
                         brand: shop.shopName,
                         title: product.name,
                         price: formattedPrice,
@@ -125,31 +130,40 @@ class ShopProductsGrid extends StatelessWidget {
                             : null,
                         discountPercentage: product.offerPrice != null
                             ? (((product.originalPrice - product.offerPrice!) /
-                                        product.originalPrice) *
-                                    100)
-                                .round()
+                                          product.originalPrice) *
+                                      100)
+                                  .round()
                             : null,
                         isFavorite: isWishlisted,
+                        // Add/Remove WishList Products
                         onFavoriteTap: () {
                           if (isWishlisted) {
                             context.read<WishlistBloc>().add(
-                                  RemoveProductFromWishlist(
-                                    productId: product.id,
-                                  ),
-                                );
-                            CustomSnackBar.show(context, message: 'Removed from wishlist');
+                              RemoveProductFromWishlist(productId: product.id),
+                            );
+                            CustomSnackBar.show(
+                              context,
+                              message: 'Removed from wishlist',
+                            );
                           } else {
                             context.read<WishlistBloc>().add(
-                                  AddProductToWishlist(
-                                    product: product,
-                                    shop: shop,
-                                  ),
-                                );
-                            CustomSnackBar.show(context, message: 'Added to wishlist');
+                              AddProductToWishlist(
+                                product: product,
+                                shop: shop,
+                              ),
+                            );
+                            CustomSnackBar.show(
+                              context,
+                              message: 'Added to wishlist',
+                            );
                           }
                         },
-                        isNew: product.createdAt != null &&
-                            DateTime.now().difference(product.createdAt!).inDays < 7,
+                        isNew:
+                            product.createdAt != null &&
+                            DateTime.now()
+                                    .difference(product.createdAt!)
+                                    .inDays <
+                                7,
                       ),
                     );
                   },

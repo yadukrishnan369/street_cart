@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Support Category Section
 class SupportCategorySection extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> items;
@@ -35,43 +36,45 @@ class SupportCategorySection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12.h),
-        ...items.map((item) => Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  dividerColor: Colors.transparent,
+        ...items.map(
+          (item) => Container(
+            margin: EdgeInsets.only(bottom: 8.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Theme(
+              data: Theme.of(
+                context,
+              ).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                title: Text(
+                  item['title'],
+                  style: CustomerAppTextStyles.body.copyWith(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                child: ExpansionTile(
-                  title: Text(
-                    item['title'],
+                iconColor: CustomerAppColors.primary,
+                collapsedIconColor: Colors.grey.shade400,
+                childrenPadding: EdgeInsets.only(
+                  left: 16.w,
+                  right: 16.w,
+                  bottom: 16.h,
+                ),
+                children: [
+                  Text(
+                    item['content'],
                     style: CustomerAppTextStyles.body.copyWith(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade600,
+                      height: 1.5,
                     ),
                   ),
-                  iconColor: CustomerAppColors.primary,
-                  collapsedIconColor: Colors.grey.shade400,
-                  childrenPadding: EdgeInsets.only(
-                    left: 16.w,
-                    right: 16.w,
-                    bottom: 16.h,
-                  ),
-                  children: [
-                    Text(
-                      item['content'],
-                      style: CustomerAppTextStyles.body.copyWith(
-                        color: Colors.grey.shade600,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
-            )),
+            ),
+          ),
+        ),
         SizedBox(height: 16.h),
       ],
     );

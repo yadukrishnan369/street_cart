@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Product Size Selection
 class ProductSizeSelection extends StatelessWidget {
   final List<String> sizes;
   final String? selectedSize;
@@ -47,6 +48,7 @@ class ProductSizeSelection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12.h),
+        // List Of Available Sizes
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -97,7 +99,7 @@ class ProductSizeSelection extends StatelessWidget {
                               : null,
                         ),
                       ),
-                      // Show quantity badge if sizeStock provided
+                      // Show quantity badge if sizeStock Less than 5
                       if (qty != null && !isOutOfStock && qty <= 5)
                         Text(
                           '$qty left',

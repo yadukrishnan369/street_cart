@@ -18,6 +18,7 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
        _firestore = firestore,
        _deliveryValidator = deliveryValidator;
 
+  // Fetch Customer Orders
   @override
   Stream<List<OrderModel>> getCustomerOrders() {
     final user = _auth.currentUser;
@@ -41,6 +42,7 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
         });
   }
 
+  // Cancel Order
   @override
   Future<void> cancelOrder(String orderId) async {
     final user = _auth.currentUser;
@@ -123,6 +125,7 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
     });
   }
 
+  // Cancel Specif Order Item
   @override
   Future<void> cancelOrderItem(String orderId, String orderItemId) async {
     final user = _auth.currentUser;
@@ -212,6 +215,7 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
     });
   }
 
+  // Update Delivery Address
   @override
   Future<void> updateOrderAddress(String orderId, AddressModel address) async {
     final user = _auth.currentUser;
