@@ -598,7 +598,7 @@ void _initCustomerProfile() {
   );
 
   sl.registerLazySingleton<IProfileRepository>(
-    () => ProfileRepositoryImpl(remoteDataSource: sl()),
+    () => ProfileRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   sl.registerLazySingleton(() => GetProfileData(sl()));
@@ -644,7 +644,7 @@ void _initCustomerLocation() {
   );
 
   sl.registerLazySingleton<ILocationRepository>(
-    () => LocationRepositoryImpl(dataSource: sl()),
+    () => LocationRepositoryImpl(dataSource: sl(), networkInfo: sl()),
   );
 
   sl.registerLazySingleton(() => RequestLocationAndSave(sl()));
@@ -721,7 +721,10 @@ void _initCustomerProducts() {
   );
 
   sl.registerLazySingleton<ICustomerProductsRepository>(
-    () => CustomerProductsRepositoryImpl(remoteDataSource: sl()),
+    () => CustomerProductsRepositoryImpl(
+      remoteDataSource: sl(),
+      networkInfo: sl(),
+    ),
   );
 
   sl.registerLazySingleton(() => GetCustomerProducts(repository: sl()));
@@ -734,6 +737,7 @@ void _initCustomerProducts() {
     () => CustomerProductsBloc(
       getCustomerProducts: sl(),
       sharedPreferences: sl(),
+      networkInfo: sl(),
     ),
   );
 
@@ -755,7 +759,7 @@ void _initCustomerCart() {
   );
 
   sl.registerLazySingleton<ICartRepository>(
-    () => CartRepositoryImpl(remoteDataSource: sl()),
+    () => CartRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   sl.registerLazySingleton(() => GetCart(repository: sl()));
@@ -797,7 +801,7 @@ void _initCustomerPayment() {
 
   // Repository
   sl.registerLazySingleton<IPaymentRepository>(
-    () => PaymentRepositoryImpl(remoteDataSource: sl()),
+    () => PaymentRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use Case
@@ -821,7 +825,8 @@ void _initCustomerShops() {
   );
 
   sl.registerLazySingleton<ICustomerShopsRepository>(
-    () => CustomerShopsRepositoryImpl(remoteDataSource: sl()),
+    () =>
+        CustomerShopsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   sl.registerLazySingleton(() => GetNearbyShops(repository: sl()));
@@ -1160,7 +1165,7 @@ void _initAdminProducts() {
 // ================= CUSTOMER ORDERS =================
 void _initCustomerOrders() {
   sl.registerLazySingleton<DeliveryValidator>(
-    () => DeliveryValidator(firestore: sl()),
+    () => DeliveryValidator(firestore: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton<IOrdersRemoteDataSource>(
     () => OrdersRemoteDataSourceImpl(
@@ -1170,7 +1175,7 @@ void _initCustomerOrders() {
     ),
   );
   sl.registerLazySingleton<IOrdersRepository>(
-    () => OrdersRepositoryImpl(remoteDataSource: sl()),
+    () => OrdersRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton(() => GetCustomerOrders(sl()));
   sl.registerLazySingleton(() => CancelOrder(sl()));

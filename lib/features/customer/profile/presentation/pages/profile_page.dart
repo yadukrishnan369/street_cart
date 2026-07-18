@@ -18,6 +18,7 @@ import 'package:street_cart/features/customer/profile/presentation/widgets/about
 import 'package:street_cart/features/customer/profile/presentation/widgets/logout_button.dart';
 import 'package:street_cart/features/customer/settings/presentation/pages/settings_page.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/profile_shimmer.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Profile Page
 class UserProfilePage extends StatelessWidget {
@@ -92,8 +93,12 @@ class UserProfilePage extends StatelessWidget {
                     // Shimmer Widget
                     return const ProfileShimmer();
                   } else if (state is ProfileError) {
-                    // Error Message
-                    return Center(child: Text(state.message));
+                    // Error State
+                    return AppErrorView(
+                      message: state.message,
+                      onRetry: () =>
+                          context.read<ProfileBloc>().add(FetchProfileData()),
+                    );
                   } else if (state is ProfileLoaded ||
                       state is ProfileUpdateSuccess) {
                     final profile = state is ProfileLoaded

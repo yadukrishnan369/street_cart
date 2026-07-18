@@ -16,6 +16,7 @@ import 'package:street_cart/features/customer/orders/presentation/widgets/order_
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_reorder_button.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Orders Details Page
 class OrderDetailsPage extends StatelessWidget {
   final OrderModel order;
 
@@ -42,6 +43,7 @@ class OrderDetailsPage extends StatelessWidget {
             centerTitle: true,
             title: Column(
               children: [
+                // Page Header
                 Text(
                   'Order Details',
                   style: TextStyle(
@@ -50,6 +52,7 @@ class OrderDetailsPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                // Order ID
                 Text(
                   orderIdText,
                   style: TextStyle(

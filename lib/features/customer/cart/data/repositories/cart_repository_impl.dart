@@ -1,3 +1,5 @@
+import 'package:street_cart/core/network/network_info.dart';
+import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/cart/domain/repositories/i_cart_repository.dart';
 import 'package:street_cart/features/customer/cart/data/datasources/cart_remote_datasource.dart';
@@ -6,11 +8,18 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 
 class CartRepositoryImpl implements ICartRepository {
   final ICartRemoteDataSource remoteDataSource;
+  final INetworkInfo networkInfo;
 
-  CartRepositoryImpl({required this.remoteDataSource});
+  CartRepositoryImpl({
+    required this.remoteDataSource,
+    required this.networkInfo,
+  });
 
   @override
   Future<List<CartItem>> getCartItems() async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       return await remoteDataSource.getCartItems();
     } catch (e) {
@@ -20,6 +29,9 @@ class CartRepositoryImpl implements ICartRepository {
 
   @override
   Future<void> addToCart(CartItem item) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       await remoteDataSource.addToCart(item);
     } catch (e) {
@@ -29,6 +41,9 @@ class CartRepositoryImpl implements ICartRepository {
 
   @override
   Future<void> removeFromCart(String itemId) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       await remoteDataSource.removeFromCart(itemId);
     } catch (e) {
@@ -38,6 +53,9 @@ class CartRepositoryImpl implements ICartRepository {
 
   @override
   Future<void> updateQuantity(String itemId, int quantity) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       await remoteDataSource.updateQuantity(itemId, quantity);
     } catch (e) {
@@ -47,6 +65,9 @@ class CartRepositoryImpl implements ICartRepository {
 
   @override
   Future<void> clearCart() async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       await remoteDataSource.clearCart();
     } catch (e) {
@@ -56,6 +77,9 @@ class CartRepositoryImpl implements ICartRepository {
 
   @override
   Future<ProductModel> getProductById(String productId) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       return await remoteDataSource.getProductById(productId);
     } catch (e) {
@@ -65,6 +89,9 @@ class CartRepositoryImpl implements ICartRepository {
 
   @override
   Future<ShopProfileModel> getShopById(String shopId) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     try {
       return await remoteDataSource.getShopById(shopId);
     } catch (e) {

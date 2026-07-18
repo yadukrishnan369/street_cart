@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/cart_event.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.dart';
@@ -12,8 +13,10 @@ import 'package:street_cart/features/customer/cart/presentation/widgets/cart_emp
 import 'package:street_cart/features/customer/cart/presentation/utils/cart_helper.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/features/customer/cart/presentation/widgets/shimmer/cart_shimmer.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Cart Page
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
@@ -29,6 +32,11 @@ class _CartPageState extends State<CartPage> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<CartBloc>().add(LoadCart());
+      }
+    });
   }
 
   @override
@@ -73,6 +81,7 @@ class _CartPageState extends State<CartPage> {
           },
         ),
         centerTitle: true,
+        // Page Header
         title: Text(
           'My Cart',
           style: TextStyle(
@@ -113,15 +122,15 @@ class _CartPageState extends State<CartPage> {
             if (state is CartLoading) {
               return const CartShimmer();
             } else if (state is CartError) {
-              return Center(
-                child: Text(
-                  state.message,
-                  style: const TextStyle(color: CustomerAppColors.error),
-                ),
+              // Error State
+              return AppErrorView(
+                message: state.message,
+                onRetry: () => context.read<CartBloc>().add(LoadCart()),
               );
             } else if (state is CartLoaded) {
               final items = state.items;
               if (items.isEmpty) {
+                // Cart Empty State
                 return const CartEmptyState();
               }
 

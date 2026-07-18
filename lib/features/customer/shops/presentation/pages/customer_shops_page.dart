@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/shops/presentation/widgets/shops_l
 import 'package:street_cart/features/customer/shops/presentation/widgets/shops_empty_state.dart';
 import 'package:street_cart/features/customer/shops/presentation/widgets/shimmer/shop_card_shimmer.dart';
 import 'package:street_cart/features/customer/shops/presentation/utils/shops_helper.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 
 // Customer Shops Page
@@ -129,39 +130,10 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
                   }
                   // Error UI state with retry Button
                   if (state is CustomerShopsError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.wifi_off_rounded,
-                            size: 64.sp,
-                            color: CustomerAppColors.textSecondary.withValues(
-                              alpha: 0.4,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            'Failed to load shops',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                              color: CustomerAppColors.textPrimary,
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          ElevatedButton.icon(
-                            onPressed: () => context
-                                .read<CustomerShopsBloc>()
-                                .add(FetchCustomerShops()),
-                            icon: const Icon(Icons.refresh),
-                            label: const Text('Retry'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: CustomerAppColors.primary,
-                              foregroundColor: Colors.white,
-                            ),
-                          ),
-                        ],
+                    return AppErrorView(
+                      message: state.message,
+                      onRetry: () => context.read<CustomerShopsBloc>().add(
+                        FetchCustomerShops(),
                       ),
                     );
                   }

@@ -95,6 +95,9 @@ class AuthRepositoryImpl implements IAuthRepository {
 
   @override
   Future<ProfileModel?> getCustomer(String userId) async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     return await _remoteDataSource.getCustomer(userId);
   }
 

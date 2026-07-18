@@ -102,6 +102,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 icon: const Icon(Icons.close, color: Colors.black87),
                 onPressed: () => Navigator.pop(context),
               ),
+              // Page Header
               title: Text(
                 'Edit Profile',
                 style: TextStyle(

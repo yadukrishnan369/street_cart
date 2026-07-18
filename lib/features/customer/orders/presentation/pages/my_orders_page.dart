@@ -11,8 +11,10 @@ import 'package:street_cart/features/customer/orders/presentation/widgets/recent
 import 'package:street_cart/features/customer/orders/presentation/widgets/shimmer/customer_orders_shimmer.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// My Orders Page
 class MyOrdersPage extends StatelessWidget {
   const MyOrdersPage({super.key});
 
@@ -26,6 +28,7 @@ class MyOrdersPage extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0.5,
           centerTitle: true,
+          // Page Header
           title: Text(
             'My Orders',
             style: TextStyle(
@@ -68,18 +71,20 @@ class MyOrdersPage extends StatelessWidget {
                 state is OrderItemCancelledSuccess ||
                 state is OrderAddressUpdating ||
                 state is OrderAddressUpdateSuccess) {
+              // Loading Shimmer
               return const CustomerOrdersShimmer();
             }
 
             if (state is OrdersLoaded) {
               final orders = state.orders;
               if (orders.isEmpty) {
+                // Empty Orders View
                 return EmptyOrdersView(
                   onRefresh: () =>
                       context.read<OrdersBloc>().add(FetchOrders()),
                 );
               }
-
+              // Refresh Indicator
               return RefreshIndicator(
                 color: CustomerAppColors.primary,
                 onRefresh: () async =>
@@ -97,10 +102,18 @@ class MyOrdersPage extends StatelessWidget {
                 ),
               );
             }
+            // Error State
+            if (state is OrdersFailure) {
+              return AppErrorView(
+                message: state.message,
+                onRetry: () => context.read<OrdersBloc>().add(FetchOrders()),
+              );
+            }
 
             return const Center(child: Text('Something went wrong.'));
           },
         ),
+        // BOttom Navigation Bar
         bottomNavigationBar: const CustomerBottomNavigation(currentIndex: 3),
       ),
     );

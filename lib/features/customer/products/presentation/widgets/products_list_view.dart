@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
@@ -13,6 +11,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/features/customer/products/presentation/utils/products_helper.dart';
 
 // Product List View
@@ -63,11 +62,22 @@ class ProductsListView extends StatelessWidget {
             },
           );
         } else if (state is CustomerProductsError) {
-          return Center(
-            child: Text(
-              state.message,
-              style: TextStyle(fontSize: 14.sp, color: CustomerAppColors.error),
-            ),
+          // Error State
+          return AppErrorView(
+            message: state.message,
+            onRetry: () {
+              context.read<CustomerProductsBloc>().add(
+                FetchCustomerProducts(
+                  initialSearchQuery: initialSearchQuery,
+                  initialSelectedSort: initialSelectedSort,
+                  initialPriceRange: initialPriceRange,
+                  initialSelectedCategories: initialSelectedCategories,
+                  initialSelectedRating: initialSelectedRating,
+                  initialSelectedColors: initialSelectedColors,
+                  initialSelectedSizes: initialSelectedSizes,
+                ),
+              );
+            },
           );
         } else if (state is CustomerProductsLoaded) {
           final filteredProducts = state.filteredProducts;

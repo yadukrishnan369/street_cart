@@ -27,7 +27,7 @@ class ShopDetailsBloc extends Bloc<ShopDetailsEvent, ShopDetailsState> {
         e,
         stack,
       );
-      emit(const ShopDetailsError(message: 'Failed to load products.'));
+      emit(ShopDetailsError(message: e.toString()));
     }
   }
 }

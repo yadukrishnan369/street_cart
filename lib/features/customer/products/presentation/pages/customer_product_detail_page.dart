@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
-import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
@@ -18,8 +17,9 @@ import 'package:street_cart/features/customer/products/presentation/widgets/prod
 import 'package:street_cart/features/customer/products/presentation/widgets/product_color_selection.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_description_section.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_action_buttons.dart';
-import 'package:street_cart/features/customer/products/presentation/widgets/product_wishlist_button.dart';
+import 'package:street_cart/features/customer/products/presentation/widgets/product_detail_app_bar.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/stock_status_badge.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Customer Product Detail Page
 class CustomerProductDetailPage extends StatelessWidget {
@@ -48,13 +48,33 @@ class CustomerProductDetailPage extends StatelessWidget {
           ),
         ),
       child: BlocBuilder<CustomerProductsBloc, CustomerProductsState>(
-        buildWhen: (prev, curr) => curr is ProductDetailState,
+        buildWhen: (prev, curr) =>
+            curr is ProductDetailState || curr is CustomerProductsError,
         builder: (context, state) {
+          if (state is CustomerProductsError) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Product Details'),
+                backgroundColor: CustomerAppColors.surface,
+                elevation: 0.5,
+              ),
+              body: AppErrorView(
+                message: state.message,
+                onRetry: () {
+                  context.read<CustomerProductsBloc>().add(
+                    InitProductDetail(
+                      product: product,
+                      initialColor: initialColor,
+                      initialSize: initialSize,
+                    ),
+                  );
+                },
+              ),
+            );
+          }
           if (state is! ProductDetailState) return const SizedBox.shrink();
-
           final selectedColor = state.selectedColor;
           final selectedSize = state.selectedSize;
-
           // Get Current Stock and Images
           final currentQty = ProductsHelper.getVariantStock(
             product,
@@ -65,49 +85,14 @@ class CustomerProductDetailPage extends StatelessWidget {
             product,
             selectedColor,
           );
-
           return Scaffold(
             backgroundColor: CustomerAppColors.background,
-            appBar: AppBar(
-              backgroundColor: CustomerAppColors.surface,
-              elevation: 0.5,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: CustomerAppColors.textPrimary,
-                ),
-                onPressed: () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  } else {
-                    Navigator.pushReplacement(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => const HomePage(),
-                        transitionDuration: Duration.zero,
-                      ),
-                    );
-                  }
-                },
-              ),
-              centerTitle: true,
-              title: Text(
-                'Product Details',
-                style: TextStyle(
-                  color: CustomerAppColors.textPrimary,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              actions: [
-                // Wishlist Toggle
-                ProductWishlistButton(
-                  product: product,
-                  shop: shop,
-                  selectedColor: selectedColor,
-                  selectedSize: selectedSize,
-                ),
-              ],
+            //  App Bar
+            appBar: ProductDetailAppBar(
+              product: product,
+              shop: shop,
+              selectedColor: selectedColor,
+              selectedSize: selectedSize,
             ),
             body: SingleChildScrollView(
               child: Column(

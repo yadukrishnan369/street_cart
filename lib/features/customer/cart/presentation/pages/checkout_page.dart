@@ -19,7 +19,10 @@ import 'package:street_cart/features/customer/payment/presentation/bloc/payment_
 import 'package:street_cart/features/customer/payment/presentation/widgets/payment_processing_overlay.dart';
 import 'package:street_cart/features/customer/payment/presentation/widgets/order_error_dialog.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
+// Checkout Page
 class CheckoutPage extends StatelessWidget {
   final List<CartItem> cartItems;
 
@@ -50,6 +53,7 @@ class CheckoutPage extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
           centerTitle: true,
+          // Page Header
           title: Text(
             'Checkout',
             style: TextStyle(
@@ -80,13 +84,29 @@ class CheckoutPage extends StatelessWidget {
               if (paymentState.message.contains(
                 "does not deliver to the selected address",
               )) {
+                // Delivery Validation Error
                 OrdersHelper.showOutOfRadiusDialog(context);
               } else {
-                showDialog(
-                  context: context,
-                  builder: (_) =>
-                      OrderErrorDialog(message: paymentState.message),
-                );
+                final isNetwork =
+                    paymentState.message.toLowerCase().contains('connection') ||
+                    paymentState.message.toLowerCase().contains('internet') ||
+                    paymentState.message.toLowerCase().contains('network') ||
+                    paymentState.message.toLowerCase().contains('offline');
+
+                if (isNetwork) {
+                  // Network Error
+                  CustomSnackBar.show(
+                    context,
+                    message: paymentState.message,
+                    isError: true,
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (_) =>
+                        OrderErrorDialog(message: paymentState.message),
+                  );
+                }
               }
             }
           },
@@ -101,9 +121,20 @@ class CheckoutPage extends StatelessWidget {
                       return const CheckoutShimmer();
                     }
 
-                    if (checkoutState is CheckoutError) {
-                      return Center(
-                        child: Text('Error: ${checkoutState.message}'),
+                    if (checkoutState is CheckoutError ||
+                        addressState is AddressError) {
+                      final String errorMessage = checkoutState is CheckoutError
+                          ? (checkoutState).message
+                          : (addressState as AddressError).message;
+                      // Error State
+                      return AppErrorView(
+                        message: errorMessage,
+                        onRetry: () {
+                          context.read<CheckoutBloc>().add(
+                            LoadCheckout(cartItems),
+                          );
+                          context.read<AddressBloc>().add(FetchAddresses());
+                        },
                       );
                     }
 

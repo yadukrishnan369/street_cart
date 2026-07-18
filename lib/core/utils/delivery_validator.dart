@@ -1,25 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:street_cart/core/network/network_info.dart';
 import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 
 class DeliveryValidator {
   final FirebaseFirestore _firestore;
+  final INetworkInfo _networkInfo;
 
-  DeliveryValidator({required FirebaseFirestore firestore})
-    : _firestore = firestore;
-
+  DeliveryValidator({
+    required FirebaseFirestore firestore,
+    required INetworkInfo networkInfo,
+  }) : _firestore = firestore,
+       _networkInfo = networkInfo;
+  // Validate the Delivery Address before Proceed the Order
   Future<AddressModel> validateAddress({
     required AddressModel address,
     required List<String> shopIds,
   }) async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
     final query =
         "${address.addressLine1}, ${address.addressLine2}, ${address.district}, ${address.state}, ${address.pincode}";
     double lat;
     double lng;
 
     try {
+      // Convert the Delivery Address to Latitude and Longitude
       final locations = await locationFromAddress(query);
       if (locations.isEmpty) {
         throw AddressVerificationException();

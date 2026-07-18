@@ -171,7 +171,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             emit(
               CartItemUpdateError(
                 items: currentItems,
-                errorMessage: 'Failed to verify stock',
+                errorMessage: e.toString(),
               ),
             );
             return;

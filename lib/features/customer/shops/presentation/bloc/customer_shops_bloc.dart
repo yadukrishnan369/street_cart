@@ -43,7 +43,7 @@ class CustomerShopsBloc extends Bloc<CustomerShopsEvent, CustomerShopsState> {
       emit(CustomerShopsLoaded(shops: shops, locationText: address));
     } catch (e, stack) {
       AppLogger.error('Failed to fetch customer shops', e, stack);
-      emit(CustomerShopsError(message: 'Failed to load shops.'));
+      emit(CustomerShopsError(message: e.toString()));
     }
   }
 

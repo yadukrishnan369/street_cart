@@ -15,6 +15,7 @@ import 'package:street_cart/features/customer/settings/presentation/widgets/app_
 import 'package:street_cart/features/customer/settings/presentation/widgets/notification_settings_section.dart';
 import 'package:street_cart/features/customer/settings/presentation/widgets/privacy_security_section.dart';
 import 'package:street_cart/features/customer/settings/presentation/widgets/app_settings_section.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Settings Page
 class SettingsPage extends StatelessWidget {
@@ -57,7 +58,11 @@ class SettingsPage extends StatelessWidget {
                 return const SettingsShimmer();
               } else if (state is SettingsError) {
                 // Error Text
-                return Center(child: Text(state.message));
+                return AppErrorView(
+                  message: state.message,
+                  onRetry: () =>
+                      context.read<SettingsBloc>().add(FetchSettingsData()),
+                );
               } else if (state is SettingsLoaded) {
                 return SingleChildScrollView(
                   child: Column(
