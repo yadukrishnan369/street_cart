@@ -5,12 +5,11 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_bloc.dart';
-import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_event.dart';
-import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_state.dart';
-import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onboarding_ui_cubit.dart';
 import 'package:street_cart/features/shop/onboarding/data/models/onboarding_content.dart';
+import 'package:street_cart/features/shop/onboarding/presentation/widgets/shop_onboarding_page_view.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Shop Onboarding Pages
 class ShopOnboardingPage extends StatefulWidget {
   const ShopOnboardingPage({super.key});
 
@@ -30,163 +29,113 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ShopOnboardingBloc>(
-          create: (_) => sl<ShopOnboardingBloc>(),
-        ),
-        BlocProvider<ShopOnboardingUiCubit>(
-          create: (_) => ShopOnboardingUiCubit(),
-        ),
-      ],
-      child: BlocListener<ShopOnboardingBloc, ShopOnboardingState>(
+    return BlocProvider<ShopOnboardingBloc>(
+      create: (_) => sl<ShopOnboardingBloc>(),
+      child: BlocConsumer<ShopOnboardingBloc, ShopOnboardingState>(
         listener: (context, state) {
-          if (state is ShopOnboardingCompleted) {
+          if (state.status == ShopOnboardingStatus.completed) {
+            // Navigate to Login Page After Onboarding Completes
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const ShopLoginPage()),
             );
           }
         },
-        child: BlocBuilder<ShopOnboardingUiCubit, ShopOnboardingUiState>(
-          builder: (context, uiState) {
-            return Scaffold(
-              backgroundColor: ShopAppColors.background,
-              body: SafeArea(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 30.w, top: 5.h),
-                      child: Align(
-                        child: TextButton(
-                          onPressed: () {
-                            context.read<ShopOnboardingBloc>().add(
-                              CompleteShopOnboardingEvent(),
-                            );
-                          },
-                          child: Text(
-                            'Skip',
-                            style: TextStyle(
-                              color: ShopAppColors.primary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                            ),
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: ShopAppColors.background,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  // Skip Button Section
+                  Padding(
+                    padding: EdgeInsets.only(right: 30.w, top: 5.h),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<ShopOnboardingBloc>().add(
+                            CompleteShopOnboardingEvent(),
+                          );
+                        },
+                        child: Text(
+                          'Skip',
+                          style: TextStyle(
+                            color: ShopAppColors.primary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
                           ),
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: _contents.length,
-                        onPageChanged: (index) {
-                          context.read<ShopOnboardingUiCubit>().setPage(index);
-                        },
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40.w),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(
-                                    _contents[index].image,
-                                    height: 300.h,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                SizedBox(height: 48.h),
-                                Text(
-                                  _contents[index].title,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 28.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: ShopAppColors.textPrimary,
-                                  ),
-                                ),
-                                SizedBox(height: 16.h),
-                                Text(
-                                  _contents[index].description,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: ShopAppColors.textSecondary,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(40.w),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              _contents.length,
-                              (index) => Container(
-                                margin: EdgeInsets.only(right: 8.w),
-                                height: 8.h,
-                                width: uiState.currentPage == index
-                                    ? 24.w
-                                    : 8.w,
-                                decoration: BoxDecoration(
-                                  color: uiState.currentPage == index
-                                      ? ShopAppColors.primary
-                                      : ShopAppColors.primary.withAlpha(51),
-                                  borderRadius: BorderRadius.circular(4.r),
-                                ),
+                  ),
+                  // Onboarding PageView Section
+                  ShopOnboardingPageView(
+                    controller: _pageController,
+                    contents: _contents,
+                    onPageChanged: (index) {
+                      context.read<ShopOnboardingBloc>().add(
+                        ShopOnboardingPageChangedEvent(index),
+                      );
+                    },
+                  ),
+                  // Onboarding indicators and action buttons
+                  Padding(
+                    padding: EdgeInsets.all(40.w),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            _contents.length,
+                            (index) => Container(
+                              margin: EdgeInsets.only(right: 8.w),
+                              height: 8.h,
+                              width: state.currentPage == index ? 24.w : 8.w,
+                              decoration: BoxDecoration(
+                                color: state.currentPage == index
+                                    ? ShopAppColors.primary
+                                    : ShopAppColors.primary.withAlpha(51),
+                                borderRadius: BorderRadius.circular(4.r),
                               ),
                             ),
                           ),
-                          SizedBox(height: 40.h),
-                          BlocBuilder<ShopOnboardingBloc, ShopOnboardingState>(
-                            builder: (context, state) {
-                              return PrimaryButton(
-                                text:
-                                    uiState.currentPage == _contents.length - 1
-                                    ? 'Get Started'
-                                    : 'Next',
-                                isLoading: state is ShopOnboardingLoading,
-                                backgroundColor: ShopAppColors.primary,
-                                textStyle: TextStyle(
-                                  color: ShopAppColors.textLight,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.sp,
-                                ),
-                                onPressed: () {
-                                  if (uiState.currentPage ==
-                                      _contents.length - 1) {
-                                    context.read<ShopOnboardingBloc>().add(
-                                      CompleteShopOnboardingEvent(),
-                                    );
-                                  } else {
-                                    _pageController.nextPage(
-                                      duration: const Duration(
-                                        milliseconds: 300,
-                                      ),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  }
-                                },
-                              );
-                            },
+                        ),
+                        SizedBox(height: 40.h),
+                        // Primary Button
+                        PrimaryButton(
+                          text: state.currentPage == _contents.length - 1
+                              ? 'Get Started'
+                              : 'Next',
+                          isLoading:
+                              state.status == ShopOnboardingStatus.loading,
+                          backgroundColor: ShopAppColors.primary,
+                          textStyle: TextStyle(
+                            color: ShopAppColors.textLight,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
                           ),
-                        ],
-                      ),
+                          onPressed: () {
+                            if (state.currentPage == _contents.length - 1) {
+                              context.read<ShopOnboardingBloc>().add(
+                                CompleteShopOnboardingEvent(),
+                              );
+                            } else {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

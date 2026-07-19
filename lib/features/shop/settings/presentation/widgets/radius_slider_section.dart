@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'green_border_thumb_shape.dart';
 
+// Radius Slider Section
 class RadiusSliderSection extends StatelessWidget {
   final double radius;
   final ValueChanged<double> onChanged;
@@ -23,6 +24,7 @@ class RadiusSliderSection extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // Page Title
               children: [
                 Text(
                   'Delivery Radius',
@@ -32,6 +34,7 @@ class RadiusSliderSection extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 2.h),
+                // Subtitle
                 Text(
                   'Set the maximum distance for orders',
                   style: ShopAppTextStyles.bodySmall.copyWith(
@@ -47,6 +50,7 @@ class RadiusSliderSection extends StatelessWidget {
                 color: ShopAppColors.primary,
                 borderRadius: BorderRadius.circular(16.r),
               ),
+              // Delivery Radius KM
               child: Text(
                 '${radius.toStringAsFixed(1)} km',
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -58,6 +62,7 @@ class RadiusSliderSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 16.h),
+        // Delivery Radius Slider Section
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             trackHeight: 6.h,

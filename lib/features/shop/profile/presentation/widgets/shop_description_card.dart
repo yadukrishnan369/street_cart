@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'shop_profile_section_block.dart';
 
+// Shop Description Card
 class ShopDescriptionCard extends StatelessWidget {
   final ShopProfileModel profile;
 
@@ -12,7 +13,9 @@ class ShopDescriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShopProfileSectionBlock(
+      // Title
       title: 'SHOP DESCRIPTION',
+      // Shop Description
       child: Text(
         profile.description.isNotEmpty
             ? profile.description

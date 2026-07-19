@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/presentation/widgets/submitted_in
 import 'package:street_cart/features/shop/auth/presentation/widgets/resubmission_guidance_card.dart';
 import 'package:street_cart/features/shop/auth/presentation/widgets/what_should_you_do_section.dart';
 
+// Rejection Details Page
 class RejectionDetailsPage extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -24,6 +25,7 @@ class RejectionDetailsPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
+        // Page Header
         title: Text(
           'Rejection Details',
           style: ShopAppTextStyles.heading4.copyWith(
@@ -55,6 +57,7 @@ class RejectionDetailsPage extends StatelessWidget {
                         size: 24.sp,
                       ),
                       SizedBox(width: 12.w),
+                      // Title
                       Text(
                         'Reason for Rejection',
                         style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -64,6 +67,7 @@ class RejectionDetailsPage extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16.h),
+                  // Rejection Reason
                   Text(
                     shop.rejectionReason.isNotEmpty
                         ? shop.rejectionReason
@@ -77,10 +81,13 @@ class RejectionDetailsPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 32.h),
+            // Submitted Previous Shop Info Card
             SubmittedInformationCard(shop: shop),
             SizedBox(height: 32.h),
+            // Resubmission Guidence Card
             const ResubmissionGuidanceCard(),
             SizedBox(height: 32.h),
+            // Guidence Points Section
             const WhatShouldYouDoSection(),
             SizedBox(height: 40.h),
           ],

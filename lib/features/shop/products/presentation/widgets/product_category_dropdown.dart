@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Product Category Dropdown
 class ProductCategoryDropdown extends StatelessWidget {
   final String selectedCategory;
   final List<String> categories;
@@ -19,6 +20,7 @@ class ProductCategoryDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text(
           'Category',
           style: TextStyle(
@@ -28,6 +30,7 @@ class ProductCategoryDropdown extends StatelessWidget {
           ),
         ),
         8.verticalSpace,
+        // Dropdown for Select Product Category
         DropdownButtonFormField<String>(
           value: selectedCategory,
           isExpanded: true,

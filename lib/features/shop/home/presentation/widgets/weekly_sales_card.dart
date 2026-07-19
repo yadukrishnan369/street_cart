@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Weekly Sales Card
 class WeeklySalesCard extends StatelessWidget {
   const WeeklySalesCard({super.key});
 
@@ -23,6 +24,7 @@ class WeeklySalesCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Title
               Text(
                 'WEEKLY SALES',
                 style: ShopAppTextStyles.bodySmallBold.copyWith(
@@ -30,6 +32,7 @@ class WeeklySalesCard extends StatelessWidget {
                   letterSpacing: 0.5.sp,
                 ),
               ),
+              // Title
               Text(
                 'LAST 7 DAYS',
                 style: ShopAppTextStyles.caption.copyWith(
@@ -44,6 +47,7 @@ class WeeklySalesCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              // Amount
               Text(
                 '₹85,200',
                 style: ShopAppTextStyles.heading2.copyWith(

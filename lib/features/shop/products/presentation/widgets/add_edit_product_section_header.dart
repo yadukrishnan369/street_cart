@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Add Edit Product Section Header
 class AddEditProductSectionHeader extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -33,8 +34,10 @@ class AddEditProductSectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title
               Text(title, style: ShopAppTextStyles.heading3),
               SizedBox(height: 2.h),
+              // Subtitle
               Text(
                 subtitle,
                 style: TextStyle(

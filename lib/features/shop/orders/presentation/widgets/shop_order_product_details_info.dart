@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
+// Shop Order Product Details Info
 class ShopOrderProductDetailsInfo extends StatelessWidget {
   final OrderItemModel item;
 
@@ -29,6 +30,7 @@ class ShopOrderProductDetailsInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'Item Specification',
             style: TextStyle(
@@ -38,16 +40,22 @@ class ShopOrderProductDetailsInfo extends StatelessWidget {
             ),
           ),
           const Divider(),
+          // Selected Size
           _buildRow('Selected Size', item.selectedSize ?? 'Default Size'),
+          // Selected Color
           _buildRow('Selected Color', item.selectedColor ?? 'Default Color'),
+          // Item Quantity
           _buildRow('Quantity', 'x${item.quantity}'),
+          // Item Price
           _buildRow('Unit Price', '₹${PriceUtils.formatPrice(item.price)}'),
+          // SubTotal
           _buildRow(
             'Subtotal',
             '₹${PriceUtils.formatPrice(total)}',
             isBold: true,
           ),
           SizedBox(height: 16.h),
+          // Earning section Title
           Text(
             'Earnings Breakdown',
             style: TextStyle(
@@ -57,11 +65,13 @@ class ShopOrderProductDetailsInfo extends StatelessWidget {
             ),
           ),
           const Divider(),
+          // Admin Commision Amount
           _buildRow(
             'Admin Commission',
             '-₹${PriceUtils.formatPrice(item.adminCommission)}',
             valueColor: Colors.red[700],
           ),
+          // Shop Earnings
           _buildRow(
             'Your Earnings',
             '₹${PriceUtils.formatPrice(item.vendorEarnings)}',

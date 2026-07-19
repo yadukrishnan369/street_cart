@@ -7,11 +7,13 @@ class ShopHomeLocalDataSourceImpl implements IShopHomeLocalDataSource {
 
   ShopHomeLocalDataSourceImpl(this._sharedPreferences);
 
+  /// Saves Shops, visited the Home Page
   @override
   Future<void> setFirstHomeVisitFalse() async {
     await _sharedPreferences.setBool(_key, false);
   }
 
+  // Check, the shop visited the home page First time or not
   @override
   Future<bool> isFirstHomeVisit() async {
     return _sharedPreferences.getBool(_key) ?? true;

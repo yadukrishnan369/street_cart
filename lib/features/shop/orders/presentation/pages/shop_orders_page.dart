@@ -5,8 +5,6 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
-import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_event.dart';
-import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_state.dart';
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_details_page.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_card.dart';
@@ -16,13 +14,14 @@ import 'package:street_cart/features/shop/orders/presentation/widgets/shimmer/sh
 import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 
+// Shop Orders Page
 class ShopOrdersPage extends StatelessWidget {
   const ShopOrdersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final authState = context.read<ShopAuthBloc>().state;
-    final shopId = authState is ShopStatusLoaded
+    final shopId = authState.status == ShopAuthStatus.authenticated
         ? (authState.shop?.uid ?? '')
         : '';
     final activeTabNotifier = ValueNotifier<int>(0);
@@ -38,6 +37,7 @@ class ShopOrdersPage extends StatelessWidget {
             backgroundColor: Colors.white,
             elevation: 0.5,
             centerTitle: true,
+            // Page Title
             title: Text(
               'Orders',
               style: TextStyle(
@@ -62,17 +62,20 @@ class ShopOrdersPage extends StatelessWidget {
                 }
               },
             ),
+            // Orders Tab Bar
             bottom: ShopOrdersTabBar(activeTabNotifier: activeTabNotifier),
           ),
           body: BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
             builder: (context, state) {
-              if (state is ShopOrdersLoading || state is ShopOrdersInitial) {
+              if (state.status == ShopOrdersStatus.loading ||
+                  state.status == ShopOrdersStatus.initial) {
+                // Shop Orders Shimmer
                 return const ShopOrdersShimmer();
               }
 
-              if (state is ShopOrdersLoaded) {
+              if (state.status == ShopOrdersStatus.loaded) {
                 final allOrders = state.orders;
-
+                // Tab Bar Views
                 return TabBarView(
                   physics: const BouncingScrollPhysics(),
                   children: List.generate(5, (tabIndex) {
@@ -82,6 +85,7 @@ class ShopOrdersPage extends StatelessWidget {
                     );
 
                     if (filteredList.isEmpty) {
+                      // Empty Shop Order View
                       return EmptyShopOrdersView(
                         onRefresh: () => context.read<ShopOrdersBloc>().add(
                           FetchShopOrdersEvent(shopId),
@@ -89,7 +93,7 @@ class ShopOrdersPage extends StatelessWidget {
                         tabIndex: tabIndex,
                       );
                     }
-
+                    // Refresh Indicators
                     return RefreshIndicator(
                       onRefresh: () async => context.read<ShopOrdersBloc>().add(
                         FetchShopOrdersEvent(shopId),
@@ -101,6 +105,7 @@ class ShopOrdersPage extends StatelessWidget {
                           final order = filteredList[index];
                           return GestureDetector(
                             onTap: () {
+                              // Navigate to Shop Order Details Page
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -114,6 +119,7 @@ class ShopOrdersPage extends StatelessWidget {
                                 ),
                               );
                             },
+                            // Shop Order Card
                             child: ShopOrderCard(
                               order: order,
                               shopId: shopId,
@@ -138,6 +144,7 @@ class ShopOrdersPage extends StatelessWidget {
               return const Center(child: Text('Something went wrong.'));
             },
           ),
+          // Bottom Navigation Bar
           bottomNavigationBar: const ShopBottomNavigation(currentIndex: 2),
         ),
       ),

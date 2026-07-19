@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
-import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_state.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
 
+// Shop Orders Tabbar
 class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
   final ValueNotifier<int> activeTabNotifier;
 
@@ -15,7 +15,7 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
       builder: (context, state) {
-        final orders = state is ShopOrdersLoaded
+        final orders = state.status == ShopOrdersStatus.loaded
             ? state.orders
             : const <dynamic>[];
 
@@ -41,6 +41,7 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        //Tab Title
                         Text(
                           tabTitles[index],
                           style: TextStyle(
@@ -63,6 +64,7 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
                                 : Colors.grey[200],
                             borderRadius: BorderRadius.circular(10.r),
                           ),
+                          // Tab Orders Count
                           child: Text(
                             '$count',
                             style: TextStyle(

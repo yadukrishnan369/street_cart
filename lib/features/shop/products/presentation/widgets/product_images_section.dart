@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Product Images Section
 class ProductImagesSection extends StatelessWidget {
   final List<dynamic> images;
   final Function(int index) onPickImage;
@@ -31,6 +32,7 @@ class ProductImagesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text(
           'PRODUCT IMAGES',
           style: ShopAppTextStyles.caption.copyWith(
@@ -40,7 +42,7 @@ class ProductImagesSection extends StatelessWidget {
         SizedBox(height: 12.h),
 
         if (hasNoImages)
-          // Multi Image Upload Box
+          // Multi Image Upload
           GestureDetector(
             onTap: onPickMultiImage,
             child: Container(
@@ -190,7 +192,7 @@ class ProductImagesSection extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Horizontal scrollable list
+          // Horizontal Product Image list
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),

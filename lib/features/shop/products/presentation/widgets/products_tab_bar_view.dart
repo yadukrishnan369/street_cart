@@ -4,6 +4,7 @@ import 'package:street_cart/features/shop/products/presentation/bloc/shop_produc
 import 'package:street_cart/features/shop/products/presentation/widgets/shop_product_list_view.dart';
 import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 
+// Products Tab Bar View
 class ProductsTabBarView extends StatelessWidget {
   final TabController tabController;
   final List<ProductModel> allProducts;
@@ -26,18 +27,21 @@ class ProductsTabBarView extends StatelessWidget {
     return TabBarView(
       controller: tabController,
       children: [
+        // Shop Product List for All Products
         ShopProductListView(
           products: allProducts,
           shopId: shopId,
           productsBloc: productsBloc,
           tabIndex: 0,
         ),
+        // Shop Product List for Active Products
         ShopProductListView(
           products: active,
           shopId: shopId,
           productsBloc: productsBloc,
           tabIndex: 1,
         ),
+        // Shop Product List for Out of Stock Products
         ShopProductListView(
           products: outOfStock,
           shopId: shopId,

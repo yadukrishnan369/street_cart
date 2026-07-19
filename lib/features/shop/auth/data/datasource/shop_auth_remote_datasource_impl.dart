@@ -19,7 +19,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
   }) : _authService = authService,
        _firestore = firestore,
        _cloudinaryService = cloudinaryService;
-
+  // Shop Signup
   @override
   Future<void> signUp({required String email, required String password}) async {
     try {
@@ -32,6 +32,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // Shop Login
   @override
   Future<void> login({required String email, required String password}) async {
     try {
@@ -64,6 +65,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // finalize Signup
   @override
   Future<void> finalizeSignUp({
     required String ownerName,
@@ -89,6 +91,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // Setup Shop Profile
   @override
   Future<void> setupShopProfile({
     required String userId,
@@ -151,16 +154,19 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     return _authService.authStateChanges.map((user) => user?.uid);
   }
 
+  // Logout
   @override
   Future<void> logout() async {
     await _authService.signOut();
   }
 
+  // Get Current user ID
   @override
   Future<String?> getCurrentUserId() async {
     return _authService.getCurrentUserId();
   }
 
+  // Send Password Reset Email
   @override
   Future<void> sendPasswordResetEmail(String email) async {
     try {
@@ -206,17 +212,20 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     await _authService.sendPasswordResetEmail(email);
   }
 
+  // Send Email Verification
   @override
   Future<void> sendEmailVerification() async {
     await _authService.sendEmailVerification();
   }
 
+  // Check Email Verification
   @override
   Future<bool> checkEmailVerification() async {
     await _authService.reloadUser();
     return _authService.isEmailVerified();
   }
 
+  // Delete Shop Account
   @override
   Future<void> deleteAccount(String? password) async {
     try {
@@ -245,6 +254,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // Change Shop Password
   @override
   Future<void> changePassword({
     required String currentPassword,
@@ -262,6 +272,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // Get Business Category
   @override
   Future<List<String>> getBusinessCategories() async {
     try {
@@ -284,6 +295,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // Get Product Categories
   @override
   Future<List<String>> getProductCategories() async {
     try {
@@ -306,6 +318,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
     }
   }
 
+  // Get Payment Settings
   @override
   Future<Map<String, bool>> getPaymentSettings() async {
     try {

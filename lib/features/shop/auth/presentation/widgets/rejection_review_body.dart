@@ -6,6 +6,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/auth/presentation/pages/rejection_details_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Rejection Review Body
 class RejectionReviewBody extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -21,6 +22,7 @@ class RejectionReviewBody extends StatelessWidget {
             margin: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30.r),
+              // Page Decoration Shop Image
               image: const DecorationImage(
                 image: AssetImage('assets/images/shop_review_waiting.png'),
                 fit: BoxFit.cover,
@@ -61,6 +63,7 @@ class RejectionReviewBody extends StatelessWidget {
                     bottom: 20.h,
                     left: 20.w,
                     right: 20.w,
+                    // Rejected Text
                     child: Text(
                       'Application Rejected',
                       textAlign: TextAlign.center,
@@ -110,6 +113,7 @@ class RejectionReviewBody extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 16.w),
+                      // Feedback State Contents
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,6 +134,7 @@ class RejectionReviewBody extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40.h),
+                // Button for View Rejection Details
                 PrimaryButton(
                   text: 'View Rejection Details',
                   backgroundColor: Colors.red.shade700,
@@ -137,6 +142,7 @@ class RejectionReviewBody extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    // Navigate to Rejection Detail Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(

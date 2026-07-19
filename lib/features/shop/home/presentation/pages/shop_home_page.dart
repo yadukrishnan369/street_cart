@@ -19,6 +19,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/home/presentation/widgets/shimmer/shop_home_shimmer.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 
+// Shop Home Page
 class ShopHomePage extends StatefulWidget {
   const ShopHomePage({super.key});
 
@@ -35,7 +36,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
     _homeBloc = sl<ShopHomeBloc>();
     context.read<ShopAuthBloc>().add(ShopStatusSubscriptionRequested());
     final authState = context.read<ShopAuthBloc>().state;
-    if (authState is ShopStatusLoaded) {
+    if (authState.status == ShopAuthStatus.authenticated) {
       final shopId = authState.shop?.uid ?? '';
       if (shopId.isNotEmpty) {
         if (_homeBloc.state is! ShopHomeDataLoaded) {
@@ -59,7 +60,8 @@ class _ShopHomePageState extends State<ShopHomePage> {
         listeners: [
           BlocListener<ShopAuthBloc, ShopAuthState>(
             listener: (context, state) {
-              if (state is ShopAuthInitial) {
+              if (state.status == ShopAuthStatus.initial) {
+                // Navigate to Shop Login Page
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -67,7 +69,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                   ),
                   (route) => false,
                 );
-              } else if (state is ShopStatusLoaded) {
+              } else if (state.status == ShopAuthStatus.authenticated) {
                 final shopId = state.shop?.uid ?? '';
                 if (shopId.isNotEmpty &&
                     _homeBloc.state is! ShopHomeDataLoaded) {
@@ -85,9 +87,10 @@ class _ShopHomePageState extends State<ShopHomePage> {
                     if (mounted) {
                       final authState = context.read<ShopAuthBloc>().state;
                       ShopProfileModel? profile;
-                      if (authState is ShopStatusLoaded) {
+                      if (authState.status == ShopAuthStatus.authenticated) {
                         profile = authState.shop;
                       }
+                      // Show Profile Completion
                       ShopHomeHelper.showProfileCompletionDialog(
                         context,
                         profile,
@@ -107,13 +110,15 @@ class _ShopHomePageState extends State<ShopHomePage> {
           body: BlocBuilder<ShopHomeBloc, ShopHomeState>(
             builder: (context, state) {
               if (state is! ShopHomeDataLoaded) {
+                // Shome Page Shimmer
                 return const ShopHomePageShimmer();
               }
+              // Refresh Indicator
               return RefreshIndicator(
                 color: ShopAppColors.primary,
                 onRefresh: () async {
                   final authState = context.read<ShopAuthBloc>().state;
-                  if (authState is ShopStatusLoaded) {
+                  if (authState.status == ShopAuthStatus.authenticated) {
                     final shopId = authState.shop?.uid ?? '';
                     if (shopId.isNotEmpty) {
                       _homeBloc.add(FetchShopHomeDataEvent(shopId));
@@ -130,16 +135,20 @@ class _ShopHomePageState extends State<ShopHomePage> {
                       SizedBox(height: 20.h),
                       BlocBuilder<ShopAuthBloc, ShopAuthState>(
                         builder: (context, authState) {
-                          final shopId = authState is ShopStatusLoaded
+                          final shopId =
+                              authState.status == ShopAuthStatus.authenticated
                               ? (authState.shop?.uid ?? '')
                               : '';
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Performace Stats
                               PerformanceStats(shopId: shopId),
                               SizedBox(height: 20.h),
+                              // Weekly Sales Card
                               const WeeklySalesCard(),
                               SizedBox(height: 20.h),
+                              // Quick Actions
                               QuickActions(
                                 onAddProductTap: () {
                                   if (shopId.isNotEmpty) {
@@ -153,7 +162,8 @@ class _ShopHomePageState extends State<ShopHomePage> {
                                   ShopHomeHelper.onViewOrdersTap(context);
                                 },
                                 onEditProfileTap: () {
-                                  if (authState is ShopStatusLoaded) {
+                                  if (authState.status ==
+                                      ShopAuthStatus.authenticated) {
                                     final profile = authState.shop;
                                     if (profile != null) {
                                       ShopHomeHelper.onEditProfileTap(
@@ -165,6 +175,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                                 },
                               ),
                               SizedBox(height: 20.h),
+                              // Recent Orders List
                               RecentOrdersList(shopId: shopId),
                             ],
                           );

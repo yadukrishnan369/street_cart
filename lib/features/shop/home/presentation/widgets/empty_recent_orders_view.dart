@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Empty Recent Orders State
 class EmptyRecentOrdersView extends StatelessWidget {
   const EmptyRecentOrdersView({super.key});
 
@@ -32,6 +33,7 @@ class EmptyRecentOrdersView extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // Title
           Text(
             'No New Orders Yet',
             style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -40,6 +42,7 @@ class EmptyRecentOrdersView extends StatelessWidget {
             ),
           ),
           SizedBox(height: 6.h),
+          // Subtitle
           Text(
             'When customers place orders, they will show up here.',
             textAlign: TextAlign.center,

@@ -5,12 +5,12 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_login_ui_cubit.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/forgot_password_page.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/signup_page.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Shop Login Form
 class ShopLoginForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -29,10 +29,11 @@ class ShopLoginForm extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Form(
         key: formKey,
-        child: BlocBuilder<ShopLoginUiCubit, ShopLoginUiState>(
-          builder: (context, uiState) {
+        child: BlocBuilder<ShopAuthBloc, ShopAuthState>(
+          builder: (context, state) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // Welcome Contents
               children: [
                 Text('Welcome back', style: ShopAppTextStyles.heading1),
                 SizedBox(height: 8.h),
@@ -41,6 +42,7 @@ class ShopLoginForm extends StatelessWidget {
                   style: ShopAppTextStyles.bodyMedium,
                 ),
                 SizedBox(height: 24.h),
+                // Email Field
                 CustomTextField(
                   label: "Business Email",
                   controller: emailController,
@@ -62,11 +64,12 @@ class ShopLoginForm extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20.h),
+                // Password Field
                 CustomTextField(
                   label: "Password",
                   controller: passwordController,
                   hintText: 'Enter your password',
-                  isPassword: !uiState.isPasswordVisible,
+                  isPassword: !state.isPasswordVisible,
                   validator: Validators.validateShopPassword,
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,
@@ -83,20 +86,21 @@ class ShopLoginForm extends StatelessWidget {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      uiState.isPasswordVisible
+                      state.isPasswordVisible
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
                       color: ShopAppColors.textSecondary,
                       size: 20.sp,
                     ),
                     onPressed: () {
-                      context
-                          .read<ShopLoginUiCubit>()
-                          .togglePasswordVisibility();
+                      context.read<ShopAuthBloc>().add(
+                        ShopTogglePasswordVisibility(),
+                      );
                     },
                   ),
                   labelTrailing: InkWell(
                     onTap: () {
+                      // Navigate to forgot Password Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -104,6 +108,7 @@ class ShopLoginForm extends StatelessWidget {
                         ),
                       );
                     },
+                    // Forgot password option
                     child: Text(
                       "Forgot password?",
                       style: ShopAppTextStyles.bodySmallBold.copyWith(
@@ -113,24 +118,21 @@ class ShopLoginForm extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 48.h),
-                BlocBuilder<ShopAuthBloc, ShopAuthState>(
-                  builder: (context, state) {
-                    return PrimaryButton(
-                      text: 'Login',
-                      isLoading: state is ShopAuthLoading,
-                      backgroundColor: ShopAppColors.primary,
-                      textStyle: ShopAppTextStyles.buttonText,
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          context.read<ShopAuthBloc>().add(
-                            ShopLoginStarted(
-                              email: emailController.text.trim(),
-                              password: passwordController.text,
-                            ),
-                          );
-                        }
-                      },
-                    );
+                // Button for Login
+                PrimaryButton(
+                  text: 'Login',
+                  isLoading: state.status == ShopAuthStatus.loading,
+                  backgroundColor: ShopAppColors.primary,
+                  textStyle: ShopAppTextStyles.buttonText,
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      context.read<ShopAuthBloc>().add(
+                        ShopLoginStarted(
+                          email: emailController.text.trim(),
+                          password: passwordController.text,
+                        ),
+                      );
+                    }
                   },
                 ),
                 SizedBox(height: 24.h),
@@ -140,6 +142,7 @@ class ShopLoginForm extends StatelessWidget {
                     Text('New seller? ', style: ShopAppTextStyles.bodyMedium),
                     GestureDetector(
                       onTap: () {
+                        // Navigate to Signup Page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -167,6 +170,7 @@ class ShopLoginForm extends StatelessWidget {
                         color: ShopAppColors.textTertiary,
                       ),
                       SizedBox(width: 8.w),
+                      // Bottom Content
                       Text(
                         'SECURE MERCHANT AUTHENTICATION',
                         style: ShopAppTextStyles.caption.copyWith(

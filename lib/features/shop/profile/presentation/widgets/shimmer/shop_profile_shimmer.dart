@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Shop Profile Shimmer
 class ShopProfileShimmer extends StatelessWidget {
   const ShopProfileShimmer({super.key});
 
@@ -119,7 +120,7 @@ class ShopProfileShimmer extends StatelessWidget {
                       _box(width: 100.w, height: 13.h, radius: 4),
                       SizedBox(height: 10.h),
 
-                      // Location row
+                      // Location
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

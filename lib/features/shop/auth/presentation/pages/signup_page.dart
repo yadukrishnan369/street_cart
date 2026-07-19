@@ -4,12 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_signup_ui_cubit.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/profile_setup_page.dart';
 import 'package:street_cart/features/shop/auth/presentation/widgets/shop_signup_form.dart';
 import 'package:street_cart/features/shop/auth/presentation/widgets/verification_bottom_sheet.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Shop Signup Page
 class ShopSignupPage extends StatefulWidget {
   const ShopSignupPage({super.key});
 
@@ -35,11 +35,11 @@ class _ShopSignupPageState extends State<ShopSignupPage> {
     super.dispose();
   }
 
-  void _showVerificationSheet(
-    BuildContext context,
-    ShopAuthVerificationWaiting state,
-  ) {
-    context.read<ShopSignupUiCubit>().setVerificationSheetShowing(true);
+  // Showing Verification sheet
+  void _showVerificationSheet(BuildContext context, ShopAuthState state) {
+    context.read<ShopAuthBloc>().add(
+      const ShopSetVerificationSheetShowing(true),
+    );
     showModalBottomSheet(
       context: context,
       isDismissible: false,
@@ -52,72 +52,73 @@ class _ShopSignupPageState extends State<ShopSignupPage> {
       builder: (_) => BlocProvider.value(
         value: context.read<ShopAuthBloc>(),
         child: ShopVerificationBottomSheet(
-          ownerName: state.ownerName,
-          shopName: state.shopName,
-          email: state.email,
+          ownerName: state.ownerName ?? '',
+          shopName: state.shopName ?? '',
+          email: state.email ?? '',
         ),
       ),
     ).then((_) {
       if (mounted) {
-        context.read<ShopSignupUiCubit>().setVerificationSheetShowing(false);
+        context.read<ShopAuthBloc>().add(
+          const ShopSetVerificationSheetShowing(false),
+        );
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ShopSignupUiCubit(),
-      child: BlocBuilder<ShopSignupUiCubit, ShopSignupUiState>(
-        builder: (context, uiState) {
-          return BlocListener<ShopAuthBloc, ShopAuthState>(
-            listener: (context, state) {
-              if (state is ShopAuthVerificationWaiting &&
-                  !uiState.isVerificationSheetShowing) {
-                _showVerificationSheet(context, state);
-              } else if (state is ShopAuthSuccess) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ShopProfileSetupPage(),
-                  ),
-                  (route) => false,
-                );
-              } else if (state is ShopAuthFailure) {
-                CustomSnackBar.show(
-                  context,
-                  message: state.message,
-                  isError: true,
-                );
-              }
-            },
-            child: Scaffold(
-              backgroundColor: ShopAppColors.background,
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: ShopAppColors.primary),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                title: Text('Shop Signup', style: ShopAppTextStyles.heading4),
-                centerTitle: true,
-              ),
-              body: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: ShopSignupForm(
-                  ownerNameController: _ownerNameController,
-                  shopNameController: _shopNameController,
-                  emailController: _emailController,
-                  passwordController: _passwordController,
-                  confirmPasswordController: _confirmPasswordController,
-                  formKey: _formKey,
-                ),
-              ),
+    return BlocConsumer<ShopAuthBloc, ShopAuthState>(
+      listener: (context, state) {
+        if (state.status == ShopAuthStatus.verificationWaiting &&
+            !state.isVerificationSheetShowing) {
+          _showVerificationSheet(context, state);
+        } else if (state.status == ShopAuthStatus.authenticated) {
+          // Navigate to Shop Profile Setup Page
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ShopProfileSetupPage(),
             ),
+            (route) => false,
           );
-        },
-      ),
+        } else if (state.status == ShopAuthStatus.failure &&
+            state.errorMessage != null) {
+          CustomSnackBar.show(
+            context,
+            message: state.errorMessage!,
+            isError: true,
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: ShopAppColors.background,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: ShopAppColors.primary),
+              onPressed: () => Navigator.pop(context),
+            ),
+            // Page Title
+            title: Text('Shop Signup', style: ShopAppTextStyles.heading4),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            // Shop Signup Form Section
+            child: ShopSignupForm(
+              ownerNameController: _ownerNameController,
+              shopNameController: _shopNameController,
+              emailController: _emailController,
+              passwordController: _passwordController,
+              confirmPasswordController: _confirmPasswordController,
+              formKey: _formKey,
+            ),
+          ),
+        );
+      },
     );
   }
 }

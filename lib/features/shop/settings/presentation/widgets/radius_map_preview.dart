@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Radius Map Preview
 class RadiusMapPreview extends StatelessWidget {
   final double radius;
 
@@ -22,11 +23,13 @@ class RadiusMapPreview extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Positioned.fill(
+              // Map Image
               child: Image.asset(
                 'assets/images/shop_location_map.png',
                 fit: BoxFit.cover,
               ),
             ),
+            // Delivery Radius Dummy Circle
             AnimatedContainer(
               duration: const Duration(milliseconds: 100),
               width: 30.h + (radius / 500.0) * 150.h,

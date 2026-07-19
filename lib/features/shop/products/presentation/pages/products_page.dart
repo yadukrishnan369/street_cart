@@ -7,7 +7,6 @@ import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_state.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/products_ui_cubit.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/product_search_text_field.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/products_tab_bar.dart';
@@ -19,6 +18,7 @@ import 'package:street_cart/features/shop/products/presentation/widgets/shimmer/
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Products Page
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
 
@@ -40,7 +40,7 @@ class _ProductsPageState extends State<ProductsPage>
     _productsBloc = sl<ShopProductsBloc>();
 
     final authState = context.read<ShopAuthBloc>().state;
-    if (authState is ShopStatusLoaded) {
+    if (authState.status == ShopAuthStatus.authenticated) {
       _shopId = authState.shop?.uid ?? '';
       _productsBloc.add(LoadShopProductsEvent(_shopId));
     }
@@ -55,21 +55,25 @@ class _ProductsPageState extends State<ProductsPage>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ShopProductsBloc>(create: (context) => _productsBloc),
-        BlocProvider<ProductsUiCubit>(create: (context) => ProductsUiCubit()),
-      ],
+    return BlocProvider<ShopProductsBloc>(
+      create: (context) => _productsBloc,
       child: BlocListener<ShopProductsBloc, ShopProductsState>(
         listener: (context, state) {
-          if (state is ShopProductsOperationSuccess) {
-            CustomSnackBar.show(context, message: state.message);
-          } else if (state is ShopProductsError) {
-            CustomSnackBar.show(context, message: state.error, isError: true);
+          if (state.status == ShopProductsStatus.operationSuccess) {
+            CustomSnackBar.show(
+              context,
+              message: state.successMessage ?? 'Operation successful',
+            );
+          } else if (state.status == ShopProductsStatus.error) {
+            CustomSnackBar.show(
+              context,
+              message: state.errorMessage ?? 'An error occurred',
+              isError: true,
+            );
           }
         },
-        child: BlocBuilder<ProductsUiCubit, ProductsUiState>(
-          builder: (context, uiState) {
+        child: BlocBuilder<ShopProductsBloc, ShopProductsState>(
+          builder: (context, state) {
             return Scaffold(
               backgroundColor: ShopAppColors.background,
               appBar: AppBar(
@@ -94,7 +98,8 @@ class _ProductsPageState extends State<ProductsPage>
                     }
                   },
                 ),
-                title: uiState.isSearching
+                // Page Header / Search Field
+                title: state.isSearching
                     ? ProductSearchTextField(
                         controller: _searchController,
                         productsBloc: _productsBloc,
@@ -103,62 +108,52 @@ class _ProductsPageState extends State<ProductsPage>
                 actions: [
                   IconButton(
                     icon: Icon(
-                      uiState.isSearching ? Icons.close : Icons.search,
+                      state.isSearching ? Icons.close : Icons.search,
                       color: ShopAppColors.textPrimary,
                     ),
                     onPressed: () {
-                      if (uiState.isSearching) {
-                        context.read<ProductsUiCubit>().toggleSearch(false);
+                      if (state.isSearching) {
+                        _productsBloc.add(const ToggleSearchEvent(false));
                         _searchController.clear();
                         _productsBloc.add(const SearchProductsEvent(''));
                       } else {
-                        context.read<ProductsUiCubit>().toggleSearch(true);
+                        _productsBloc.add(const ToggleSearchEvent(true));
                       }
                     },
                   ),
-                  BlocBuilder<ShopProductsBloc, ShopProductsState>(
-                    builder: (context, state) {
-                      final isFiltered =
-                          state is ShopProductsLoaded &&
-                          state.selectedCategories.isNotEmpty &&
-                          !state.selectedCategories.contains('All');
-                      List<String> categories = ['All'];
-                      if (state is ShopProductsLoaded) {
-                        categories = ProductsPageHelper.extractCategories(
-                          state.allProducts,
-                        );
-                      }
-                      return IconButton(
-                        icon: Icon(
-                          Icons.filter_list,
-                          color: isFiltered
-                              ? ShopAppColors.primary
-                              : ShopAppColors.textPrimary,
-                        ),
-                        onPressed: () => ProductsPageHelper.showCategoryFilter(
-                          context,
-                          _productsBloc,
-                          categories,
-                        ),
-                      );
-                    },
+                  IconButton(
+                    icon: Icon(
+                      Icons.filter_list,
+                      color:
+                          (state.selectedCategories.isNotEmpty &&
+                              !state.selectedCategories.contains('All'))
+                          ? ShopAppColors.primary
+                          : ShopAppColors.textPrimary,
+                    ),
+                    onPressed: () => ProductsPageHelper.showCategoryFilter(
+                      context,
+                      _productsBloc,
+                      ProductsPageHelper.extractCategories(state.allProducts),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                 ],
+                // Products Tab Bar
                 bottom: ProductsTabBar(controller: _tabController),
               ),
               body: BlocBuilder<ShopProductsBloc, ShopProductsState>(
                 buildWhen: (previous, current) =>
-                    current is ShopProductsLoaded ||
-                    current is ShopProductsLoading ||
-                    current is ShopProductsInitial,
+                    current.status == ShopProductsStatus.loaded ||
+                    current.status == ShopProductsStatus.loading ||
+                    current.status == ShopProductsStatus.initial,
                 builder: (context, state) {
-                  if (state is ShopProductsLoading ||
-                      state is ShopProductsInitial) {
+                  if (state.status == ShopProductsStatus.loading ||
+                      state.status == ShopProductsStatus.initial) {
                     return const ShopProductsShimmer(itemCount: 5);
                   }
 
-                  if (state is ShopProductsLoaded) {
+                  if (state.status == ShopProductsStatus.loaded) {
+                    // Products Tab Bar View
                     return ProductsTabBarView(
                       tabController: _tabController,
                       allProducts: state.filteredProducts,
@@ -174,6 +169,7 @@ class _ProductsPageState extends State<ProductsPage>
                 backgroundColor: ShopAppColors.primary,
                 shape: const CircleBorder(),
                 onPressed: () {
+                  // Navigate to Add Edit Product Page
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -186,6 +182,7 @@ class _ProductsPageState extends State<ProductsPage>
                 },
                 child: const Icon(Icons.add, color: Colors.white),
               ),
+              // Bottom Navigation Bar
               bottomNavigationBar: const ShopBottomNavigation(currentIndex: 1),
             );
           },

@@ -6,13 +6,13 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_ui_cubit.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/setting_card_widgets.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/delivery_radius_settings_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/change_password_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/delete_account_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/clear_data_page.dart';
 
+// Business Configuration Section
 class BusinessConfigurationSection extends StatelessWidget {
   final ShopProfileModel? profile;
 
@@ -28,10 +28,12 @@ class BusinessConfigurationSection extends StatelessWidget {
           children: [
             SettingRowItem(
               icon: Icons.my_location_outlined,
+              // Title
               title: 'Delivery Radius Setup',
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Delivery Area Distance
                   Text(
                     profile != null
                         ? '${profile!.deliveryRadius.toStringAsFixed(1)} km'
@@ -51,12 +53,14 @@ class BusinessConfigurationSection extends StatelessWidget {
               ),
               onTap: () {
                 if (profile != null) {
+                  // Navigate to Delivery Radius Settings Page
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => DeliveryRadiusSettingsPage(
                         profile: profile!,
                         profileBloc: context.read<ShopProfileBloc>(),
+                        settingsBloc: context.read<ShopSettingsBloc>(),
                       ),
                     ),
                   );
@@ -70,8 +74,9 @@ class BusinessConfigurationSection extends StatelessWidget {
   }
 }
 
+// Preference Section
 class PreferencesSection extends StatelessWidget {
-  final ShopSettingsUiState uiState;
+  final ShopSettingsState uiState;
 
   const PreferencesSection({super.key, required this.uiState});
 
@@ -80,16 +85,19 @@ class PreferencesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         const SettingSectionHeader(title: 'PREFERENCES'),
         SettingSectionCard(
           children: [
             SettingRowItem(
               icon: Icons.nightlight_outlined,
               title: 'App Theme',
+              // Theme Switch
               trailing: SettingCustomSwitch(
                 value: uiState.appTheme,
-                onChanged: (val) =>
-                    context.read<ShopSettingsUiCubit>().toggleAppTheme(val),
+                onChanged: (val) => context.read<ShopSettingsBloc>().add(
+                  ToggleAppThemeEvent(val),
+                ),
               ),
             ),
           ],
@@ -99,8 +107,9 @@ class PreferencesSection extends StatelessWidget {
   }
 }
 
+// Notifications Section
 class NotificationsSection extends StatelessWidget {
-  final ShopSettingsUiState uiState;
+  final ShopSettingsState uiState;
 
   const NotificationsSection({super.key, required this.uiState});
 
@@ -109,27 +118,32 @@ class NotificationsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         const SettingSectionHeader(title: 'NOTIFICATIONS'),
         SettingSectionCard(
           children: [
             SettingRowItem(
               icon: Icons.notifications_none_outlined,
               title: 'Push Notifications',
+              // Push Notification Switch
               trailing: SettingCustomSwitch(
                 value: uiState.pushNotifications,
-                onChanged: (val) => context
-                    .read<ShopSettingsUiCubit>()
-                    .togglePushNotifications(val),
+                onChanged: (val) => context.read<ShopSettingsBloc>().add(
+                  TogglePushNotificationsEvent(val),
+                ),
               ),
             ),
             const SettingRowDivider(),
             SettingRowItem(
               icon: Icons.campaign_outlined,
+              // Title
               title: 'Order Alerts',
+              // Order Alert Switch
               trailing: SettingCustomSwitch(
                 value: uiState.orderAlerts,
-                onChanged: (val) =>
-                    context.read<ShopSettingsUiCubit>().toggleOrderAlerts(val),
+                onChanged: (val) => context.read<ShopSettingsBloc>().add(
+                  ToggleOrderAlertsEvent(val),
+                ),
               ),
             ),
           ],
@@ -139,6 +153,7 @@ class NotificationsSection extends StatelessWidget {
   }
 }
 
+// Security Section
 class SecuritySection extends StatelessWidget {
   const SecuritySection({super.key});
 
@@ -147,6 +162,7 @@ class SecuritySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         const SettingSectionHeader(title: 'SECURITY'),
         SettingSectionCard(
           children: [
@@ -160,6 +176,7 @@ class SecuritySection extends StatelessWidget {
               ),
               onTap: () {
                 final settingsBloc = context.read<ShopSettingsBloc>();
+                // Navigate to Change Password Page
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -178,6 +195,7 @@ class SecuritySection extends StatelessWidget {
   }
 }
 
+// Account Management Section
 class AccountManagementSection extends StatelessWidget {
   const AccountManagementSection({super.key});
 
@@ -186,6 +204,7 @@ class AccountManagementSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Section Header
         const SettingSectionHeader(title: 'ACCOUNT MANAGEMENT'),
         SettingSectionCard(
           children: [
@@ -193,6 +212,7 @@ class AccountManagementSection extends StatelessWidget {
               icon: Icons.block_outlined,
               iconBgColor: const Color(0xFFFFEBEE),
               iconColor: const Color(0xFFD32F2F),
+              // Title
               title: 'Delete Account',
               titleColor: const Color(0xFFD32F2F),
               trailing: Icon(
@@ -202,6 +222,7 @@ class AccountManagementSection extends StatelessWidget {
               ),
               onTap: () {
                 final settingsBloc = context.read<ShopSettingsBloc>();
+                // Navigate to Delete Account Page
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -214,6 +235,7 @@ class AccountManagementSection extends StatelessWidget {
               },
             ),
             const SettingRowDivider(),
+            // Title
             SettingRowItem(
               icon: Icons.storage_outlined,
               title: 'Clear Data',
@@ -223,9 +245,16 @@ class AccountManagementSection extends StatelessWidget {
                 color: ShopAppColors.textSecondary,
               ),
               onTap: () {
+                final settingsBloc = context.read<ShopSettingsBloc>();
+                // Navigate to Clear Data Page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const ClearDataPage()),
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: settingsBloc,
+                      child: const ClearDataPage(),
+                    ),
+                  ),
                 );
               },
             ),

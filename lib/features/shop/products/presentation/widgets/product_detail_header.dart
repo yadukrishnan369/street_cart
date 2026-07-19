@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
+// Product Detail Header
 class ProductDetailHeader extends StatelessWidget {
   final String category;
   final String name;
@@ -34,6 +35,7 @@ class ProductDetailHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
+                  // Product Category
                   category.toUpperCase(),
                   style: TextStyle(
                     fontSize: 12.sp,
@@ -50,6 +52,7 @@ class ProductDetailHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  // Product Price
                   Text(
                     '₹${PriceUtils.formatPrice(offerPrice ?? originalPrice)}',
                     style: TextStyle(
@@ -61,6 +64,7 @@ class ProductDetailHeader extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (offerPrice != null)
+                    // Product Offer Price
                     Text(
                       '₹${PriceUtils.formatPrice(originalPrice)}',
                       style: TextStyle(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Terms Conditions Page
 class TermsConditionsPage extends StatelessWidget {
   const TermsConditionsPage({super.key});
 
@@ -31,6 +32,7 @@ class TermsConditionsPage extends StatelessWidget {
             ),
           ),
         ),
+        // Page Header
         title: Text(
           'Terms & Conditions',
           style: ShopAppTextStyles.heading4.copyWith(
@@ -55,6 +57,7 @@ class TermsConditionsPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4.h),
+            // Last Update
             Text(
               'Last updated: March 03, 2026',
               style: ShopAppTextStyles.bodySmall.copyWith(

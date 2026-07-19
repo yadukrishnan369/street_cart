@@ -9,6 +9,7 @@ import 'package:street_cart/features/shop/auth/presentation/widgets/forgot_passw
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Shop Forgot Password Page
 class ShopForgotPasswordPage extends StatelessWidget {
   const ShopForgotPasswordPage({super.key});
 
@@ -31,17 +32,19 @@ class ShopForgotPasswordPage extends StatelessWidget {
           ),
           child: BlocConsumer<ShopAuthBloc, ShopAuthState>(
             listener: (context, state) {
-              if (state is ShopAuthPasswordResetSuccess) {
+              if (state.status == ShopAuthStatus.passwordResetSuccess) {
+                // Reset Link Info Snackbar
                 CustomSnackBar.show(
                   context,
                   message:
                       "If an account exists, a secure login link was sent to your email!",
                 );
                 Navigator.pop(context); // Go back to Login
-              } else if (state is ShopAuthFailure) {
+              } else if (state.status == ShopAuthStatus.failure &&
+                  state.errorMessage != null) {
                 CustomSnackBar.show(
                   context,
-                  message: state.message,
+                  message: state.errorMessage!,
                   isError: true,
                 );
               }
@@ -51,12 +54,14 @@ class ShopForgotPasswordPage extends StatelessWidget {
                 child: Column(
                   children: [
                     40.verticalSpace,
+                    // App Logo Section
                     const AppLogo(
                       size: 80,
                       backgroundColor: ShopAppColors.primary,
                       logoColor: Colors.white,
                     ),
                     16.verticalSpace,
+                    // App name
                     Text(
                       "Street Cart",
                       style: ShopAppTextStyles.heading2.copyWith(
@@ -64,6 +69,7 @@ class ShopForgotPasswordPage extends StatelessWidget {
                       ),
                     ),
                     40.verticalSpace,
+                    // Page Title and Contents
                     Text("Forgot Password", style: ShopAppTextStyles.heading1),
                     16.verticalSpace,
                     Padding(
@@ -78,9 +84,9 @@ class ShopForgotPasswordPage extends StatelessWidget {
                       ),
                     ),
                     40.verticalSpace,
-
+                    // Forgot Password Form Section
                     ShopForgotPasswordForm(
-                      isLoading: state is ShopAuthLoading,
+                      isLoading: state.status == ShopAuthStatus.loading,
                       onSendResetLink: (email) {
                         context.read<ShopAuthBloc>().add(
                           ShopPasswordResetRequested(email),
@@ -89,6 +95,7 @@ class ShopForgotPasswordPage extends StatelessWidget {
                     ),
 
                     32.verticalSpace,
+                    // Back to Login Page
                     TextButton.icon(
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(

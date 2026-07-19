@@ -5,6 +5,7 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
 
+// Product Detail Edit Button
 class ProductDetailEditButton extends StatelessWidget {
   final ProductModel product;
   final String shopId;
@@ -30,6 +31,7 @@ class ProductDetailEditButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
+          // Navigate to Add Edit Product Page
           Navigator.push(
             context,
             MaterialPageRoute(

@@ -7,6 +7,8 @@ abstract class ShopLocationEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Request Location Enabled Event
 class RequestShopLocationEvent extends ShopLocationEvent {}
 
+// Skip Location Event
 class SkipShopLocationEvent extends ShopLocationEvent {}

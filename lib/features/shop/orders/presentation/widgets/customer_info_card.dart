@@ -6,6 +6,7 @@ import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Customer Info Card
 class CustomerInfoCard extends StatelessWidget {
   final OrderModel order;
 
@@ -18,6 +19,7 @@ class CustomerInfoCard extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          // Card Title
           child: Text(
             'CUSTOMER INFORMATION',
             style: TextStyle(
@@ -40,6 +42,7 @@ class CustomerInfoCard extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // Profile Icon
               CircleAvatar(
                 radius: 28.r,
                 backgroundColor: const Color(0xFFE2E8F0),
@@ -54,6 +57,7 @@ class CustomerInfoCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Customer Name from Delivery Address Details
                     Text(
                       order.deliveryAddress.fullName,
                       style: TextStyle(
@@ -63,6 +67,7 @@ class CustomerInfoCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4.h),
+                    // Delivery Address Phone Number
                     Text(
                       order.deliveryAddress.phone,
                       style: TextStyle(
@@ -75,6 +80,7 @@ class CustomerInfoCard extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
+                  // Confirmation for Call the Customer
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => CustomAlertDialog(
@@ -148,6 +154,7 @@ class CustomerInfoCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 6.h),
+                    // Full Shipping Address Details
                     Text(
                       '${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.addressLine2.isNotEmpty ? "${order.deliveryAddress.addressLine2}, " : ""}${order.deliveryAddress.city} - ${order.deliveryAddress.pincode}',
                       style: TextStyle(

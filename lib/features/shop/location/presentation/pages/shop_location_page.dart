@@ -12,6 +12,7 @@ import 'package:street_cart/features/shop/location/presentation/bloc/shop_locati
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_event.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_state.dart';
 
+// Shop Location Permission Page
 class ShopLocationPermissionPage extends StatefulWidget {
   final bool isFromProfile;
   const ShopLocationPermissionPage({super.key, this.isFromProfile = false});
@@ -34,6 +35,7 @@ class _ShopLocationPermissionPageState
               if (widget.isFromProfile) {
                 Navigator.pop(context, true);
               } else {
+                // Navigate to Account Review Page
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -46,6 +48,7 @@ class _ShopLocationPermissionPageState
             if (widget.isFromProfile) {
               Navigator.pop(context);
             } else {
+              // Navigate to Account Review Page
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -67,6 +70,7 @@ class _ShopLocationPermissionPageState
             backgroundColor: Colors.transparent,
             elevation: 0,
             automaticallyImplyLeading: widget.isFromProfile,
+            // Page Title
             title: Text(
               'Location Setup',
               style: TextStyle(
@@ -87,8 +91,10 @@ class _ShopLocationPermissionPageState
                   return Column(
                     children: [
                       SizedBox(height: 20.h),
+                      // Map Illustration Section
                       const MapIllustration(),
                       SizedBox(height: 30.h),
+                      // Content 1
                       Text(
                         'Reach Nearby\nCustomers',
                         textAlign: TextAlign.center,
@@ -100,6 +106,7 @@ class _ShopLocationPermissionPageState
                         ),
                       ),
                       SizedBox(height: 16.h),
+                      // Location Access Info
                       Text(
                         'Enable location to show your shop to nearby customers. This helps buyers find you more easily and increases local sales.',
                         textAlign: TextAlign.center,
@@ -112,6 +119,7 @@ class _ShopLocationPermissionPageState
                       SizedBox(height: 25.h),
                       const WhyWeNeedThisCard(),
                       SizedBox(height: 30.h),
+                      // Button for Enable Location
                       PrimaryButton(
                         text: 'Allow Location Access',
                         isLoading: isLoading,
@@ -129,6 +137,7 @@ class _ShopLocationPermissionPageState
                       ),
                       if (!widget.isFromProfile) ...[
                         SizedBox(height: 8.h),
+                        // Button for Skip the Location Accesss
                         TextButton(
                           onPressed: isLoading
                               ? null

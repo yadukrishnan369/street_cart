@@ -29,7 +29,7 @@ class Validators {
 
   static String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return null;
+      return 'Phone number is required';
     }
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
       return 'Phone number should contain only digits';
@@ -128,6 +128,27 @@ class Validators {
     }
     if (value.length < 8) {
       return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  static String? validateShopAddress(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Address is required';
+    }
+    return null;
+  }
+
+  static String? validateLandmark(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Landmark is required';
+    }
+    return null;
+  }
+
+  static String? validateShopCity(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'City is required';
     }
     return null;
   }

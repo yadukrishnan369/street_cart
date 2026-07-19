@@ -7,10 +7,11 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_state.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_ui_cubit.dart';
+import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/shop_settings_sections.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Shop Settings Page
 class ShopSettingsPage extends StatelessWidget {
   final ShopAuthBloc authBloc;
 
@@ -18,86 +19,84 @@ class ShopSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ShopSettingsUiCubit(),
-      child: BlocConsumer<ShopProfileBloc, ShopProfileState>(
-        listener: (context, state) {
-          if (state is ShopProfileUpdateSuccess) {
-            CustomSnackBar.show(
-              context,
-              message: 'Settings updated successfully!',
-            );
-          } else if (state is ShopProfileError) {
-            CustomSnackBar.show(context, message: state.message, isError: true);
-          }
-        },
-        builder: (context, profileState) {
-          ShopProfileModel? profile;
-          if (profileState is ShopProfileLoaded) {
-            profile = profileState.profile;
-          } else if (profileState is ShopProfileUpdateSuccess) {
-            profile = profileState.profile;
-          }
+    return BlocConsumer<ShopProfileBloc, ShopProfileState>(
+      listener: (context, state) {
+        if (state.status == ShopProfileStatus.updateSuccess) {
+          CustomSnackBar.show(
+            context,
+            message: 'Settings updated successfully!',
+          );
+        } else if (state.status == ShopProfileStatus.error) {
+          CustomSnackBar.show(context, message: state.message ?? 'An error occurred', isError: true);
+        }
+      },
+      builder: (context, profileState) {
+        ShopProfileModel? profile;
+        if (profileState.status == ShopProfileStatus.loaded) {
+          profile = profileState.profile;
+        } else if (profileState.status == ShopProfileStatus.updateSuccess) {
+          profile = profileState.profile;
+        }
 
-          return Scaffold(
-            backgroundColor: const Color(0xFFF8F9FA),
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.5,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: ShopAppColors.primary,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: Text(
-                'Settings',
-                style: ShopAppTextStyles.heading4.copyWith(
-                  color: ShopAppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              centerTitle: true,
+        return Scaffold(
+          backgroundColor: const Color(0xFFF8F9FA),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.5,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
+              onPressed: () => Navigator.pop(context),
             ),
-            body: BlocBuilder<ShopSettingsUiCubit, ShopSettingsUiState>(
-              builder: (context, uiState) {
-                return SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.w,
-                    vertical: 20.h,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BusinessConfigurationSection(profile: profile),
-                      SizedBox(height: 24.h),
-                      PreferencesSection(uiState: uiState),
-                      SizedBox(height: 24.h),
-                      NotificationsSection(uiState: uiState),
-                      SizedBox(height: 24.h),
-                      const SecuritySection(),
-                      SizedBox(height: 24.h),
-                      const AccountManagementSection(),
-                      SizedBox(height: 32.h),
-                      Center(
-                        child: Text(
-                          'Street Cart Seller App v2.4.0',
-                          style: ShopAppTextStyles.bodySmall.copyWith(
-                            color: ShopAppColors.textTertiary,
-                            fontSize: 11.sp,
-                          ),
+            // Page Header
+            title: Text(
+              'Settings',
+              style: ShopAppTextStyles.heading4.copyWith(
+                color: ShopAppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
+          ),
+          body: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
+            builder: (context, uiState) {
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Business Configuration Section
+                    BusinessConfigurationSection(profile: profile),
+                    SizedBox(height: 24.h),
+                    // Preferences Section
+                    PreferencesSection(uiState: uiState),
+                    SizedBox(height: 24.h),
+                    // Notifications Section
+                    NotificationsSection(uiState: uiState),
+                    SizedBox(height: 24.h),
+                    // Security Section
+                    const SecuritySection(),
+                    SizedBox(height: 24.h),
+                    // Account Management Section
+                    const AccountManagementSection(),
+                    SizedBox(height: 32.h),
+                    Center(
+                      // Footer App Info
+                      child: Text(
+                        'Street Cart Seller App v2.4.0',
+                        style: ShopAppTextStyles.bodySmall.copyWith(
+                          color: ShopAppColors.textTertiary,
+                          fontSize: 11.sp,
                         ),
                       ),
-                      SizedBox(height: 16.h),
-                    ],
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
+                    ),
+                    SizedBox(height: 16.h),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -4,7 +4,8 @@ import 'package:street_cart/features/shop/products/data/models/variant_image_dra
 import 'add_edit_product_event.dart';
 import 'add_edit_product_state.dart';
 
-class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> {
+class AddEditProductBloc
+    extends Bloc<AddEditProductEvent, AddEditProductState> {
   AddEditProductBloc() : super(const AddEditProductState()) {
     on<InitFromProductEvent>(_onInitFromProduct);
     on<InitDefaultsEvent>(_onInitDefaults);
@@ -20,9 +21,84 @@ class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> 
     on<SetPublishingEvent>(_onSetPublishing);
     on<SetErrorEvent>(_onSetError);
     on<ClearErrorEvent>(_onClearError);
-  }
 
-  void _onInitFromProduct(InitFromProductEvent event, Emitter<AddEditProductState> emit) {
+    // Variant Draft details events
+    on<InitVariantDraftEvent>((event, emit) {
+      final existing = event.existingVariant;
+      final sizes = {
+        for (final size in event.availableSizes)
+          size: existing?.sizes[size] ?? 0,
+      };
+      final initialColor =
+          existing?.colorName ??
+          (event.availableColors.isNotEmpty
+              ? event.availableColors.keys.first
+              : '');
+      emit(
+        state.copyWith(
+          editingVariant: VariantDraft(
+            colorName: initialColor,
+            images: List<dynamic>.from(existing?.images ?? []),
+            sizes: sizes,
+          ),
+          variantErrorMessage: null,
+        ),
+      );
+    });
+
+    on<UpdateDraftColorEvent>((event, emit) {
+      if (state.editingVariant != null) {
+        emit(
+          state.copyWith(
+            editingVariant: state.editingVariant!.copyWith(
+              colorName: event.colorName,
+            ),
+          ),
+        );
+      }
+    });
+
+    on<UpdateDraftImagesEvent>((event, emit) {
+      if (state.editingVariant != null) {
+        emit(
+          state.copyWith(
+            editingVariant: state.editingVariant!.copyWith(
+              images: event.images,
+            ),
+          ),
+        );
+      }
+    });
+    // Update Draft Size Qty
+    on<UpdateDraftSizeQtyEvent>((event, emit) {
+      if (state.editingVariant != null) {
+        final currentSizes = Map<String, int>.from(state.editingVariant!.sizes);
+        currentSizes[event.size] = event.qty;
+        emit(
+          state.copyWith(
+            editingVariant: state.editingVariant!.copyWith(sizes: currentSizes),
+          ),
+        );
+      }
+    });
+
+    on<SetPickingImagesEvent>((event, emit) {
+      emit(state.copyWith(isPickingImages: event.value));
+    });
+
+    on<SetVariantErrorEvent>((event, emit) {
+      if (event.message == null) {
+        emit(state.copyWith(clearVariantError: true));
+      } else {
+        emit(state.copyWith(variantErrorMessage: event.message));
+      }
+    });
+  }
+  // Init From Product
+  void _onInitFromProduct(
+    InitFromProductEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     final product = event.product;
     final variants = product.variants
         .map(
@@ -34,58 +110,97 @@ class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> 
         )
         .toList();
 
-    emit(state.copyWith(
-      name: product.name,
-      originalPrice: product.originalPrice.toString(),
-      offerPrice: product.offerPrice?.toString() ?? '',
-      description: product.description,
-      category: product.category,
-      sizeStandard: product.sizeStandard,
-      variants: variants,
-    ));
+    emit(
+      state.copyWith(
+        name: product.name,
+        originalPrice: product.originalPrice.toString(),
+        offerPrice: product.offerPrice?.toString() ?? '',
+        description: product.description,
+        category: product.category,
+        sizeStandard: product.sizeStandard,
+        variants: variants,
+      ),
+    );
   }
 
-  void _onInitDefaults(InitDefaultsEvent event, Emitter<AddEditProductState> emit) {
-    emit(state.copyWith(
-      category: event.defaultCategory,
-      sizeStandard: event.defaultSizeStandard,
-    ));
+  // Init Defaults
+  void _onInitDefaults(
+    InitDefaultsEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        category: event.defaultCategory,
+        sizeStandard: event.defaultSizeStandard,
+      ),
+    );
   }
 
+  // Update Name
   void _onUpdateName(UpdateNameEvent event, Emitter<AddEditProductState> emit) {
     emit(state.copyWith(name: event.name));
   }
 
-  void _onUpdateOriginalPrice(UpdateOriginalPriceEvent event, Emitter<AddEditProductState> emit) {
+  // Update Original Price
+  void _onUpdateOriginalPrice(
+    UpdateOriginalPriceEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     emit(state.copyWith(originalPrice: event.price));
   }
 
-  void _onUpdateOfferPrice(UpdateOfferPriceEvent event, Emitter<AddEditProductState> emit) {
+  // Update Offer Price
+  void _onUpdateOfferPrice(
+    UpdateOfferPriceEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     emit(state.copyWith(offerPrice: event.offerPrice));
   }
 
-  void _onUpdateDescription(UpdateDescriptionEvent event, Emitter<AddEditProductState> emit) {
+  // Update Description
+  void _onUpdateDescription(
+    UpdateDescriptionEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     emit(state.copyWith(description: event.description));
   }
 
-  void _onUpdateCategory(UpdateCategoryEvent event, Emitter<AddEditProductState> emit) {
+  // Update Category
+  void _onUpdateCategory(
+    UpdateCategoryEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     emit(state.copyWith(category: event.category));
   }
 
-  void _onUpdateSizeStandard(UpdateSizeStandardEvent event, Emitter<AddEditProductState> emit) {
+  // Update Size Standard
+  void _onUpdateSizeStandard(
+    UpdateSizeStandardEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     final updatedVariants = state.variants.map((v) {
       final newSizes = {for (final s in event.newSizeKeys) s: v.sizes[s] ?? 0};
       return v.copyWith(sizes: newSizes);
     }).toList();
-    emit(state.copyWith(sizeStandard: event.sizeStandard, variants: updatedVariants));
+    emit(
+      state.copyWith(
+        sizeStandard: event.sizeStandard,
+        variants: updatedVariants,
+      ),
+    );
   }
 
+  // Add new Varient
   void _onAddVariant(AddVariantEvent event, Emitter<AddEditProductState> emit) {
     final updated = [...state.variants, event.draft];
     emit(state.copyWith(variants: updated, clearError: true));
   }
 
-  void _onUpdateVariant(UpdateVariantEvent event, Emitter<AddEditProductState> emit) {
+  // Update Varient
+  void _onUpdateVariant(
+    UpdateVariantEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     final list = List<VariantDraft>.from(state.variants);
     if (event.index >= 0 && event.index < list.length) {
       list[event.index] = event.updated;
@@ -93,7 +208,11 @@ class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> 
     }
   }
 
-  void _onRemoveVariant(RemoveVariantEvent event, Emitter<AddEditProductState> emit) {
+  // Remove Varient
+  void _onRemoveVariant(
+    RemoveVariantEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     final list = List<VariantDraft>.from(state.variants);
     if (event.index >= 0 && event.index < list.length) {
       list.removeAt(event.index);
@@ -101,7 +220,10 @@ class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> 
     }
   }
 
-  void _onSetPublishing(SetPublishingEvent event, Emitter<AddEditProductState> emit) {
+  void _onSetPublishing(
+    SetPublishingEvent event,
+    Emitter<AddEditProductState> emit,
+  ) {
     emit(state.copyWith(isPublishing: event.isPublishing));
   }
 
@@ -113,6 +235,7 @@ class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> 
     emit(state.copyWith(clearError: true));
   }
 
+  // Build Product Model
   ProductModel buildProductModel(String shopId, {String productId = ''}) {
     final totalStock = state.totalStock;
     return ProductModel(
@@ -145,6 +268,7 @@ class AddEditProductBloc extends Bloc<AddEditProductEvent, AddEditProductState> 
         .toList();
   }
 
+  // Product Validation
   String? validate() {
     if (state.name.trim().isEmpty) return 'Product name is required.';
     if (state.originalPrice.trim().isEmpty ||

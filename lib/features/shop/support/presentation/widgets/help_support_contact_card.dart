@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/support/presentation/pages/contact_support_page.dart';
 
+// Help Support Contact Card
 class HelpSupportContactCard extends StatelessWidget {
   const HelpSupportContactCard({super.key});
 
@@ -19,6 +20,7 @@ class HelpSupportContactCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'Still need help?',
             style: ShopAppTextStyles.heading4.copyWith(
@@ -27,6 +29,7 @@ class HelpSupportContactCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 6.h),
+          // Subtitle
           Text(
             'Our support team is available 24/7 for street cart owners.',
             style: ShopAppTextStyles.bodySmall.copyWith(
@@ -36,8 +39,10 @@ class HelpSupportContactCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
+          // Button for Contact
           ElevatedButton(
             onPressed: () {
+              // Navigate to Contact Support Page
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ContactSupportPage()),

@@ -20,7 +20,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
     required this.firebaseFirestore,
     required this.sharedPreferences,
   });
-
+  // Save Location
   @override
   Future<bool> requestAndSave() async {
     // Check if location services are enabled
@@ -31,10 +31,10 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
       );
     }
 
-    // Standardize permission request flow for maximum reliability
+    // permission request
     LocationPermission permission = await locationService.checkPermission();
 
-    // If permission is permanently denied, we can't show the modal anymore
+    // If permission is permanently denied, can't show the modal anymore
     if (permission == LocationPermission.deniedForever) {
       throw LocationException(
         "Location permissions are permanently denied. Please enable them in App Settings to proceed.",
@@ -70,7 +70,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
       );
     }
 
-    // Save to Firestore under shops collection
+    // Save to under shops collection
     final user = firebaseAuth.currentUser;
 
     if (user != null) {
@@ -149,7 +149,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
             .doc(user.uid)
             .update(updateData);
 
-        // SYNC PREFERENCE
+        // Save Locally
         await sharedPreferences.setBool('shopLocationServices', true);
       } catch (e) {
         throw Exception(
@@ -161,6 +161,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
     return success;
   }
 
+  // Skip Location Access
   @override
   Future<void> skip() async {
     final user = firebaseAuth.currentUser;
@@ -172,7 +173,7 @@ class ShopLocationDataSourceImpl implements ShopLocationDataSource {
           'location_updated_at': FieldValue.serverTimestamp(),
         });
 
-        // SYNC PREFERENCE
+        // Save Locally
         await sharedPreferences.setBool('shopLocationServices', false);
       } catch (e) {
         throw Exception('An error occurred while updating shop location: $e');

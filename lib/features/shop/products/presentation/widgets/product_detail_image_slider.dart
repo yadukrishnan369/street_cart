@@ -6,34 +6,26 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
-class ProductDetailImageSlider extends StatefulWidget {
+// Product Detail Image Slider
+class ProductDetailImageSlider extends StatelessWidget {
   final List<String?> images;
   final int currentImageIndex;
-  final VoidCallback onNext;
-  final VoidCallback onPrev;
+  final ValueChanged<int> onPageChanged;
 
   const ProductDetailImageSlider({
     super.key,
     required this.images,
     required this.currentImageIndex,
-    required this.onNext,
-    required this.onPrev,
+    required this.onPageChanged,
   });
 
   @override
-  State<ProductDetailImageSlider> createState() =>
-      _ProductDetailImageSliderState();
-}
-
-class _ProductDetailImageSliderState extends State<ProductDetailImageSlider> {
-  int _currentIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    final validImages = widget.images.whereType<String>().toList();
+    final validImages = images.whereType<String>().toList();
     final bool hasMultipleImages = validImages.length > 1;
 
     if (validImages.isEmpty) {
+      // Image Placeholder
       return ProductImagePlaceholder(
         width: double.infinity,
         height: 320.h,
@@ -48,6 +40,7 @@ class _ProductDetailImageSliderState extends State<ProductDetailImageSlider> {
         Stack(
           alignment: Alignment.bottomCenter,
           children: [
+            // Product Image Carousal
             CarouselSlider.builder(
               itemCount: validImages.length,
               options: CarouselOptions(
@@ -59,16 +52,13 @@ class _ProductDetailImageSliderState extends State<ProductDetailImageSlider> {
                 autoPlayInterval: const Duration(seconds: 3),
                 autoPlayAnimationDuration: const Duration(milliseconds: 800),
                 autoPlayCurve: Curves.fastOutSlowIn,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
+                onPageChanged: (index, reason) => onPageChanged(index),
               ),
               itemBuilder: (context, index, realIndex) {
                 final imageUrl = validImages[index];
                 return GestureDetector(
                   onTap: () {
+                    // Navigate to Image Preview Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -85,6 +75,7 @@ class _ProductDetailImageSliderState extends State<ProductDetailImageSlider> {
                     padding: EdgeInsets.all(12.w),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.r),
+                      // Product Image
                       child: CachedNetworkImage(
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
@@ -106,12 +97,12 @@ class _ProductDetailImageSliderState extends State<ProductDetailImageSlider> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: validImages.asMap().entries.map((entry) {
               return Container(
-                width: _currentIndex == entry.key ? 16.w : 8.w,
+                width: currentImageIndex == entry.key ? 16.w : 8.w,
                 height: 8.h,
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.r),
-                  color: _currentIndex == entry.key
+                  color: currentImageIndex == entry.key
                       ? ShopAppColors.primary
                       : Colors.grey[300],
                 ),

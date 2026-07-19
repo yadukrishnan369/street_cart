@@ -7,13 +7,12 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_state.dart';
-import 'package:street_cart/features/shop/profile/presentation/bloc/edit_shop_profile_ui_cubit.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/edit_shop_profile_form_steps.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/edit_shop_profile_submit_button.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
-import 'package:street_cart/di/dependency_injection.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 
+// Edit ShopProfile Page
 class EditShopProfilePage extends StatefulWidget {
   final ShopProfileModel profile;
 
@@ -56,6 +55,8 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ShopProfileBloc>().add(FetchShopPaymentSettings());
+      context.read<ShopAuthBloc>().add(ShopLoadCategories());
+      context.read<ShopProfileBloc>().add(EditProfileInitEvent(widget.profile));
     });
   }
 
@@ -76,133 +77,103 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ShopCategoriesCubit>(
-          create: (context) => sl<ShopCategoriesCubit>()..loadCategories(),
-        ),
-        BlocProvider<EditShopProfileUiCubit>(
-          create: (context) => EditShopProfileUiCubit(widget.profile),
-        ),
-      ],
-      child: BlocBuilder<EditShopProfileUiCubit, EditShopProfileUiState>(
-        builder: (context, uiState) {
-          return BlocListener<ShopProfileBloc, ShopProfileState>(
-            listener: (context, state) {
-              if (state is ShopProfileImageUploaded) {
-                context.read<EditShopProfileUiCubit>().updateProfileImageUrl(
-                  state.imageUrl,
-                );
-                context.read<EditShopProfileUiCubit>().updateUploadingImage(
-                  false,
-                );
-                CustomSnackBar.show(
-                  context,
-                  message: 'Profile picture updated!',
-                );
-              } else if (state is ShopProfileUpdateSuccess) {
-                CustomSnackBar.show(
-                  context,
-                  message: 'Profile updated successfully!',
-                );
-                Navigator.pop(context);
-              } else if (state is ShopProfileError) {
-                context.read<EditShopProfileUiCubit>().updateUploadingImage(
-                  false,
-                );
-                CustomSnackBar.show(
-                  context,
-                  message: state.message,
-                  isError: true,
-                );
-              } else if (state is ShopProfileImageRemoved) {
-                context.read<EditShopProfileUiCubit>().updateProfileImageUrl(
-                  '',
-                );
-                context.read<EditShopProfileUiCubit>().updateUploadingImage(
-                  false,
-                );
-                CustomSnackBar.show(
-                  context,
-                  message: 'Profile picture removed!',
-                );
-              }
-            },
-            child: Scaffold(
-              backgroundColor: ShopAppColors.background,
-              appBar: AppBar(
-                backgroundColor: ShopAppColors.background,
-                elevation: 0,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: ShopAppColors.primary,
-                  ),
-                  onPressed: () {
-                    if (uiState.currentStep == 3) {
-                      context.read<EditShopProfileUiCubit>().updateStep(2);
-                    } else if (uiState.currentStep == 2) {
-                      context.read<EditShopProfileUiCubit>().updateStep(1);
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                ),
-                title: Text(
-                  'Edit Profile',
-                  style: ShopAppTextStyles.heading4.copyWith(
-                    color: ShopAppColors.textPrimary,
-                  ),
-                ),
-                centerTitle: true,
-              ),
-              body: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    EditShopProfileFormSteps(
-                      profile: widget.profile,
-                      uiState: uiState,
-                      formKeyStep1: _formKeyStep1,
-                      formKeyStep2: _formKeyStep2,
-                      formKeyStep3: _formKeyStep3,
-                      ownerNameController: _ownerNameController,
-                      shopNameController: _shopNameController,
-                      descriptionController: _descriptionController,
-                      fullAddressController: _fullAddressController,
-                      landmarkController: _landmarkController,
-                      cityController: _cityController,
-                      pincodeController: _pincodeController,
-                      emailController: _emailController,
-                      phoneController: _phoneController,
-                      gstController: _gstController,
-                    ),
-                    SizedBox(height: 40.h),
-                    EditShopProfileSubmitButton(
-                      profile: widget.profile,
-                      uiState: uiState,
-                      formKeyStep1: _formKeyStep1,
-                      formKeyStep2: _formKeyStep2,
-                      formKeyStep3: _formKeyStep3,
-                      ownerNameController: _ownerNameController,
-                      shopNameController: _shopNameController,
-                      descriptionController: _descriptionController,
-                      fullAddressController: _fullAddressController,
-                      landmarkController: _landmarkController,
-                      cityController: _cityController,
-                      pincodeController: _pincodeController,
-                      emailController: _emailController,
-                      phoneController: _phoneController,
-                      gstController: _gstController,
-                    ),
-                  ],
-                ),
+    return BlocConsumer<ShopProfileBloc, ShopProfileState>(
+      listener: (context, state) {
+        if (state.status == ShopProfileStatus.imageUploaded) {
+          context.read<ShopProfileBloc>().add(UpdateUploadingImageEvent(false));
+          CustomSnackBar.show(context, message: 'Profile picture updated!');
+        } else if (state.status == ShopProfileStatus.updateSuccess) {
+          CustomSnackBar.show(
+            context,
+            message: 'Profile updated successfully!',
+          );
+          Navigator.pop(context);
+        } else if (state.status == ShopProfileStatus.error) {
+          context.read<ShopProfileBloc>().add(UpdateUploadingImageEvent(false));
+          CustomSnackBar.show(
+            context,
+            message: state.message ?? 'Operation failed',
+            isError: true,
+          );
+        } else if (state.status == ShopProfileStatus.imageRemoved) {
+          context.read<ShopProfileBloc>().add(UpdateUploadingImageEvent(false));
+          CustomSnackBar.show(context, message: 'Profile picture removed!');
+        }
+      },
+      builder: (context, uiState) {
+        return Scaffold(
+          backgroundColor: ShopAppColors.background,
+          appBar: AppBar(
+            backgroundColor: ShopAppColors.background,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
+              onPressed: () {
+                if (uiState.currentStep == 3) {
+                  context.read<ShopProfileBloc>().add(const UpdateStepEvent(2));
+                } else if (uiState.currentStep == 2) {
+                  context.read<ShopProfileBloc>().add(const UpdateStepEvent(1));
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+            // Page Header
+            title: Text(
+              'Edit Profile',
+              style: ShopAppTextStyles.heading4.copyWith(
+                color: ShopAppColors.textPrimary,
               ),
             ),
-          );
-        },
-      ),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Edit Shop Profile Form Steps
+                EditShopProfileFormSteps(
+                  profile: widget.profile,
+                  uiState: uiState,
+                  formKeyStep1: _formKeyStep1,
+                  formKeyStep2: _formKeyStep2,
+                  formKeyStep3: _formKeyStep3,
+                  ownerNameController: _ownerNameController,
+                  shopNameController: _shopNameController,
+                  descriptionController: _descriptionController,
+                  fullAddressController: _fullAddressController,
+                  landmarkController: _landmarkController,
+                  cityController: _cityController,
+                  pincodeController: _pincodeController,
+                  emailController: _emailController,
+                  phoneController: _phoneController,
+                  gstController: _gstController,
+                ),
+                SizedBox(height: 40.h),
+                // Submit Button
+                EditShopProfileSubmitButton(
+                  profile: widget.profile,
+                  uiState: uiState,
+                  formKeyStep1: _formKeyStep1,
+                  formKeyStep2: _formKeyStep2,
+                  formKeyStep3: _formKeyStep3,
+                  ownerNameController: _ownerNameController,
+                  shopNameController: _shopNameController,
+                  descriptionController: _descriptionController,
+                  fullAddressController: _fullAddressController,
+                  landmarkController: _landmarkController,
+                  cityController: _cityController,
+                  pincodeController: _pincodeController,
+                  emailController: _emailController,
+                  phoneController: _phoneController,
+                  gstController: _gstController,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

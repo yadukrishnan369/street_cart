@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Radius Info Box
 class RadiusInfoBox extends StatelessWidget {
   final double radius;
 
@@ -23,6 +24,7 @@ class RadiusInfoBox extends StatelessWidget {
           Icon(Icons.info_outline, color: ShopAppColors.primary, size: 20.sp),
           SizedBox(width: 12.w),
           Expanded(
+            // Delivery Area Info with KM
             child: RichText(
               text: TextSpan(
                 style: ShopAppTextStyles.bodyMedium.copyWith(

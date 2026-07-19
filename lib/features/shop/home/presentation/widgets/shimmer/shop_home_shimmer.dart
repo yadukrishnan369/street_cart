@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Shop Home Page Shimmer
 class ShopHomePageShimmer extends StatelessWidget {
   const ShopHomePageShimmer({super.key});
 

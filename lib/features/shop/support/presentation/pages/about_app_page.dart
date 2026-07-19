@@ -4,9 +4,11 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/constants/shop_constants.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
+import 'package:street_cart/features/shop/support/presentation/widgets/about_app_action_card.dart';
 import 'privacy_policy_page.dart';
 import 'terms_conditions_page.dart';
 
+// About App Page
 class AboutAppPage extends StatelessWidget {
   const AboutAppPage({super.key});
 
@@ -35,6 +37,7 @@ class AboutAppPage extends StatelessWidget {
             ),
           ),
         ),
+        // Page Header
         title: Text(
           'About App',
           style: ShopAppTextStyles.heading4.copyWith(
@@ -134,11 +137,11 @@ class AboutAppPage extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
 
-              // Privacy Policy Action Row
-              _buildActionCard(
-                context,
+              // Privacy Policy Action
+              AboutAppActionCard(
                 icon: Icons.verified_user_outlined,
                 title: 'Privacy Policy',
+                // Navigate to Privacy Policy Page
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const PrivacyPolicyPage()),
@@ -146,11 +149,11 @@ class AboutAppPage extends StatelessWidget {
               ),
               SizedBox(height: 12.h),
 
-              // Terms & Conditions Action Row
-              _buildActionCard(
-                context,
+              // Terms & Conditions Action
+              AboutAppActionCard(
                 icon: Icons.description_outlined,
                 title: 'Terms & Conditions',
+                // Navigate to Terms Conditions Page
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -172,38 +175,6 @@ class AboutAppPage extends StatelessWidget {
               SizedBox(height: 24.h),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
-      ),
-      child: ListTile(
-        onTap: onTap,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-        leading: Icon(icon, color: ShopAppColors.primary, size: 22.sp),
-        title: Text(
-          title,
-          style: ShopAppTextStyles.bodyMediumBold.copyWith(
-            color: ShopAppColors.textPrimary,
-            fontSize: 14.sp,
-          ),
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 14.sp,
-          color: ShopAppColors.textSecondary,
         ),
       ),
     );

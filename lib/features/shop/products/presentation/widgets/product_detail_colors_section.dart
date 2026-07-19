@@ -4,11 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/product_detail_ui_cubit.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_state.dart';
 
+// Product Detail Colors Section
 class ProductDetailColorsSection extends StatelessWidget {
   final ProductModel product;
-  final ProductDetailUiState uiState;
+  final ShopProductsState uiState;
 
   const ProductDetailColorsSection({
     super.key,
@@ -23,6 +26,7 @@ class ProductDetailColorsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text('Available Colors', style: ShopAppTextStyles.bodyMediumBold),
         SizedBox(height: 10.h),
         Wrap(
@@ -34,8 +38,8 @@ class ProductDetailColorsSection extends StatelessWidget {
             final isSelected = uiState.selectedColor == colorName;
             return GestureDetector(
               onTap: () {
-                context.read<ProductDetailUiCubit>().selectColor(
-                  isSelected ? null : colorName,
+                context.read<ShopProductsBloc>().add(
+                  SelectColorEvent(isSelected ? null : colorName),
                 );
               },
               child: Container(
@@ -76,6 +80,7 @@ class ProductDetailColorsSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8.w),
+                    // Color Name
                     Text(
                       colorName,
                       style: TextStyle(

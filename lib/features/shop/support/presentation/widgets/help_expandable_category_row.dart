@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/faq_expansion_tile.dart';
 
+// Help Expandable Category Row
 class HelpExpandableCategoryRow extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -42,6 +43,7 @@ class HelpExpandableCategoryRow extends StatelessWidget {
             ),
             child: Icon(icon, color: ShopAppColors.primary, size: 22.sp),
           ),
+          // Title
           title: Text(
             title,
             style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -49,6 +51,7 @@ class HelpExpandableCategoryRow extends StatelessWidget {
               fontSize: 14.sp,
             ),
           ),
+          // Subtitle
           subtitle: Padding(
             padding: EdgeInsets.only(top: 2.h),
             child: Text(
@@ -66,6 +69,7 @@ class HelpExpandableCategoryRow extends StatelessWidget {
             vertical: 8.h,
           ),
           children: items.map((item) {
+            // Expansion Tile
             return FAQExpansionTile(
               question: item['question']!,
               answer: item['answer']!,

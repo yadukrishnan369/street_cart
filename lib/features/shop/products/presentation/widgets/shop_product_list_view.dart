@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/products/presentation/widgets/product_
 import 'package:street_cart/features/shop/products/presentation/widgets/empty_shop_products_view.dart';
 import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 
+// Shop Product List View
 class ShopProductListView extends StatelessWidget {
   final List<ProductModel> products;
   final String shopId;
@@ -25,6 +26,7 @@ class ShopProductListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (products.isEmpty) {
+      // Empty Shop Products View
       return EmptyShopProductsView(
         onRefresh: () async {
           productsBloc.add(LoadShopProductsEvent(shopId));
@@ -32,7 +34,7 @@ class ShopProductListView extends StatelessWidget {
         tabIndex: tabIndex,
       );
     }
-
+    // Refresh Indicator
     return RefreshIndicator(
       onRefresh: () async {
         productsBloc.add(LoadShopProductsEvent(shopId));
@@ -44,6 +46,7 @@ class ShopProductListView extends StatelessWidget {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
+          // Product List Item
           return ProductListItem(
             product: product,
             shopId: shopId,

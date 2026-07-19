@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 
+// Edit Step2 Address
 class EditStep2Address extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController fullAddressController;
@@ -50,11 +52,13 @@ class EditStep2Address extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'Address Details',
             style: ShopAppTextStyles.heading1.copyWith(fontSize: 22.sp),
           ),
           SizedBox(height: 8.h),
+          // Subtitle
           Text(
             'Please provide the physical location of your business for customers to find you.',
             style: ShopAppTextStyles.bodyMedium.copyWith(
@@ -62,17 +66,17 @@ class EditStep2Address extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24.h),
+          // Full Address Field
           CustomTextField(
             label: "Full Address (Building No, Street, Area)",
             controller: fullAddressController,
             hintText: 'e.g. 12/456, Textile Street, SM Street',
             maxLines: 3,
-            validator: (val) {
-              if (val == null || val.trim().isEmpty) {
-                return 'Address is required';
-              }
-              return null;
-            },
+            validator: Validators.validateShopAddress,
+            prefixIcon: const Icon(
+              Icons.location_on_outlined,
+              color: ShopAppColors.primary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
             hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -83,16 +87,16 @@ class EditStep2Address extends StatelessWidget {
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 20.h),
+          // Landmark Field
           CustomTextField(
             label: "Landmark",
             controller: landmarkController,
             hintText: 'e.g. Near Old Mosque',
-            validator: (val) {
-              if (val == null || val.trim().isEmpty) {
-                return 'Landmark is required';
-              }
-              return null;
-            },
+            validator: Validators.validateLandmark,
+            prefixIcon: const Icon(
+              Icons.signpost_outlined,
+              color: ShopAppColors.primary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
             hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -107,16 +111,16 @@ class EditStep2Address extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                // City Field
                 child: CustomTextField(
                   label: "City",
                   controller: cityController,
                   hintText: 'Kozhikode',
-                  validator: (val) {
-                    if (val == null || val.trim().isEmpty) {
-                      return 'City is required';
-                    }
-                    return null;
-                  },
+                  validator: Validators.validateShopCity,
+                  prefixIcon: const Icon(
+                    Icons.location_city,
+                    color: ShopAppColors.primary,
+                  ),
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,
                   hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -129,17 +133,17 @@ class EditStep2Address extends StatelessWidget {
               ),
               SizedBox(width: 16.w),
               Expanded(
+                // PIN Code Field
                 child: CustomTextField(
                   label: "Pincode",
                   controller: pincodeController,
                   hintText: '673001',
                   keyboardType: TextInputType.number,
-                  validator: (val) {
-                    if (val == null || val.trim().isEmpty) {
-                      return 'Pincode is required';
-                    }
-                    return null;
-                  },
+                  validator: Validators.validatePincode,
+                  prefixIcon: const Icon(
+                    Icons.markunread_mailbox_outlined,
+                    color: ShopAppColors.primary,
+                  ),
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,
                   hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -162,6 +166,7 @@ class EditStep2Address extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(bottom: 8.h),
+                      // Select District Dropdown
                       child: Text(
                         'District',
                         style: ShopAppTextStyles.bodyMediumBold,
@@ -169,7 +174,7 @@ class EditStep2Address extends StatelessWidget {
                     ),
                     DropdownButtonFormField<String>(
                       isExpanded: true,
-                      value: selectedDistrict,
+                      initialValue: selectedDistrict,
                       decoration: _buildDropdownDecoration(),
                       items: districts.map((String district) {
                         return DropdownMenuItem<String>(
@@ -192,6 +197,7 @@ class EditStep2Address extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(bottom: 8.h),
+                      // Select State Dropdown
                       child: Text(
                         'State',
                         style: ShopAppTextStyles.bodyMediumBold,
@@ -218,6 +224,7 @@ class EditStep2Address extends StatelessWidget {
             ],
           ),
           SizedBox(height: 28.h),
+          // Available Payment Methods
           if (enableCod || enableOnline) ...[
             Text(
               'Payment Methods',
@@ -254,6 +261,7 @@ class EditStep2Address extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: ShopAppColors.border),
       ),
+      prefixIcon: const Icon(Icons.map_outlined, color: ShopAppColors.primary),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: ShopAppColors.border),

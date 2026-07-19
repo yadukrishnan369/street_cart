@@ -6,6 +6,7 @@ import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/core/utils/validators.dart';
 import 'document_picker_widget.dart';
 
+// Edit Step3 Verification
 class EditStep3Verification extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -50,6 +51,7 @@ class EditStep3Verification extends StatelessWidget {
             children: [
               Container(width: 4.w, height: 18.h, color: ShopAppColors.primary),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'CONTACT INFO',
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -59,6 +61,7 @@ class EditStep3Verification extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20.h),
+          // Business Email Field
           CustomTextField(
             label: "Business Email",
             controller: emailController,
@@ -67,7 +70,7 @@ class EditStep3Verification extends StatelessWidget {
             validator: Validators.validateEmail,
             prefixIcon: const Icon(
               Icons.email_outlined,
-              color: ShopAppColors.textSecondary,
+              color: ShopAppColors.primary,
             ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
@@ -79,20 +82,16 @@ class EditStep3Verification extends StatelessWidget {
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 20.h),
+          // Business Phone Number Field
           CustomTextField(
             label: "Business Phone Number",
             controller: phoneController,
             hintText: 'Enter phone number',
             keyboardType: TextInputType.phone,
-            validator: (val) {
-              if (val == null || val.trim().isEmpty)
-                return 'Phone number is required';
-              if (val.trim().length < 10) return 'Enter a valid phone number';
-              return null;
-            },
+            validator: Validators.validatePhone,
             prefixIcon: const Icon(
               Icons.phone_outlined,
-              color: ShopAppColors.textSecondary,
+              color: ShopAppColors.primary,
             ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
@@ -108,6 +107,7 @@ class EditStep3Verification extends StatelessWidget {
             children: [
               Container(width: 4.w, height: 18.h, color: ShopAppColors.primary),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'VERIFICATION DETAILS',
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -117,6 +117,7 @@ class EditStep3Verification extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20.h),
+          // GST Number Field
           CustomTextField(
             label: "GST Number",
             controller: gstController,
@@ -124,7 +125,7 @@ class EditStep3Verification extends StatelessWidget {
             validator: Validators.validateGST,
             prefixIcon: const Icon(
               Icons.description_outlined,
-              color: ShopAppColors.textSecondary,
+              color: ShopAppColors.primary,
             ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
@@ -136,6 +137,7 @@ class EditStep3Verification extends StatelessWidget {
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 24.h),
+          // Business Licence Image Picker
           DocumentPickerWidget(
             title: "Business License",
             subtitle: "PDF, JPG or PNG (Max 5MB)",
@@ -147,6 +149,7 @@ class EditStep3Verification extends StatelessWidget {
             onClear: onClearLicense,
           ),
           SizedBox(height: 24.h),
+          // Owner ID Proof Image Picker
           DocumentPickerWidget(
             title: "Owner ID Proof",
             subtitle: "Passport, Driving License, or National ID",

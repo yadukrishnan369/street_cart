@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Product Submit Button
 class ProductSubmitButton extends StatelessWidget {
   final bool isPublishing;
   final bool isEdit;
@@ -26,6 +27,7 @@ class ProductSubmitButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
           ),
         ),
+        // Showing Loading Progress while Saving
         onPressed: isPublishing ? null : onPressed,
         child: isPublishing
             ? const SizedBox(

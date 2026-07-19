@@ -10,6 +10,7 @@ import 'package:street_cart/features/shop/orders/presentation/widgets/order_time
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_delivered_banner.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_details_action_button.dart';
 
+// Shop Order Details Page
 class ShopOrderDetailsPage extends StatelessWidget {
   final OrderModel order;
   final String shopId;
@@ -36,6 +37,7 @@ class ShopOrderDetailsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.5,
         centerTitle: true,
+        // Page Order ID Title
         title: Text(
           'Order #ORD-$orderIdPrefix',
           style: TextStyle(
@@ -54,17 +56,22 @@ class ShopOrderDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Shop Order Delivered Banner Section
             ShopOrderDeliveredBanner(order: order),
             SizedBox(height: 8.h),
+            // Customer Info Card Section
             CustomerInfoCard(order: order),
             SizedBox(height: 16.h),
+            // Item Summary Card Section
             ItemSummaryCard(order: order, shopId: shopId),
             SizedBox(height: 16.h),
+            // Order Timeline Tracker Section
             OrderTimelineTracker(order: order),
             SizedBox(height: 120.h),
           ],
         ),
       ),
+      // Bottom Action Buttons - Add to Cart and Buynow
       bottomSheet: (nextStatusLabel != null && nextStatus != null)
           ? ShopOrderDetailsActionButton(order: order, shopId: shopId)
           : null,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Map Illustration
 class MapIllustration extends StatelessWidget {
   const MapIllustration({super.key});
 
@@ -24,6 +25,7 @@ class MapIllustration extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
                 shape: BoxShape.rectangle,
+                // Image
                 image: const DecorationImage(
                   image: AssetImage('assets/images/shop_location_map.png'),
                   fit: BoxFit.cover,

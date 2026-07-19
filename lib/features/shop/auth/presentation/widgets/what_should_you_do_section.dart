@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/profile_setup_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Guidence Info Section
 class WhatShouldYouDoSection extends StatelessWidget {
   const WhatShouldYouDoSection({super.key});
 
@@ -15,6 +16,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
       children: [
         Text('What should you do?', style: ShopAppTextStyles.heading3),
         SizedBox(height: 16.h),
+        // Guidence info 1
         _buildStepRow(
           icon: Icons.edit_outlined,
           title: 'Correct Information',
@@ -22,6 +24,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
               'Tap the button below to update your documents or fields matching the feedback.',
         ),
         SizedBox(height: 16.h),
+        // Guidence info 2
         _buildStepRow(
           icon: Icons.send_outlined,
           title: 'Resubmit Application',
@@ -29,6 +32,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
               'After editing, save changes to resubmit your profile for review.',
         ),
         SizedBox(height: 48.h),
+        // Primary Button for Submit Details Again
         PrimaryButton(
           text: 'Correct Details & Resubmit',
           backgroundColor: ShopAppColors.primary,

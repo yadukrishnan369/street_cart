@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Submitted Info Card
 class SubmittedInformationCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -14,6 +15,7 @@ class SubmittedInformationCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text('Submitted Information', style: ShopAppTextStyles.heading3),
         SizedBox(height: 16.h),
         Container(
@@ -35,6 +37,7 @@ class SubmittedInformationCard extends StatelessWidget {
           ),
           child: Column(
             children: [
+              // Shop name
               _buildDetailRow(
                 Icons.storefront_outlined,
                 'Shop Name',
@@ -44,6 +47,7 @@ class SubmittedInformationCard extends StatelessWidget {
                 height: 24.h,
                 color: ShopAppColors.textSecondary.withAlpha(26),
               ),
+              // Owner name
               _buildDetailRow(
                 Icons.person_outline_rounded,
                 'Owner Name',
@@ -53,6 +57,7 @@ class SubmittedInformationCard extends StatelessWidget {
                 height: 24.h,
                 color: ShopAppColors.textSecondary.withAlpha(26),
               ),
+              // Email Address
               _buildDetailRow(
                 Icons.mail_outline_rounded,
                 'Email Address',
@@ -62,6 +67,7 @@ class SubmittedInformationCard extends StatelessWidget {
                 height: 24.h,
                 color: ShopAppColors.textSecondary.withAlpha(26),
               ),
+              // Business category
               _buildDetailRow(
                 Icons.category_outlined,
                 'Category',

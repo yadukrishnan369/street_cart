@@ -6,6 +6,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_state.dart';
 
+// Add Edit Product App Bar
 class AddEditProductAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final bool isEdit;
@@ -26,6 +27,7 @@ class AddEditProductAppBar extends StatelessWidget
         icon: Icon(Icons.arrow_back, color: ShopAppColors.textPrimary),
         onPressed: () => Navigator.pop(context),
       ),
+      // App Bar Title
       title: Text(
         !isEdit ? 'Add Product' : 'Edit Product',
         style: ShopAppTextStyles.heading3,
@@ -33,6 +35,7 @@ class AddEditProductAppBar extends StatelessWidget
       actions: [
         BlocBuilder<AddEditProductBloc, AddEditProductState>(
           builder: (context, state) {
+            // Button for Uploading Product
             return TextButton(
               onPressed: state.isPublishing ? null : onPublish,
               child: Text(

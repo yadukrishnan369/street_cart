@@ -7,12 +7,11 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_profile_setup_ui_cubit.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Shop Profile Setup Form
 class ShopProfileSetupForm extends StatefulWidget {
   const ShopProfileSetupForm({super.key});
 
@@ -33,14 +32,15 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
     super.dispose();
   }
 
+  // Uploading Proofs photo
   Future<void> _pickImage(BuildContext context, bool isLicense) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       if (isLicense) {
-        context.read<ShopProfileSetupUiCubit>().selectBusinessLicense(file);
+        context.read<ShopAuthBloc>().add(ShopSelectBusinessLicense(file));
       } else {
-        context.read<ShopProfileSetupUiCubit>().selectOwnerId(file);
+        context.read<ShopAuthBloc>().add(ShopSelectOwnerId(file));
       }
     }
   }
@@ -49,8 +49,8 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: BlocBuilder<ShopProfileSetupUiCubit, ShopProfileSetupUiState>(
-        builder: (context, uiState) {
+      child: BlocBuilder<ShopAuthBloc, ShopAuthState>(
+        builder: (context, state) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -61,56 +61,46 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 style: ShopAppTextStyles.heading2.copyWith(height: 1.2),
               ),
               SizedBox(height: 40.h),
+              // Category Section
               _buildFieldLabel('Business Category'),
-              BlocBuilder<ShopCategoriesCubit, ShopCategoriesState>(
-                builder: (context, catState) {
-                  List<String> categories = [];
-                  bool isLoading = catState is ShopCategoriesLoading;
-                  if (catState is ShopCategoriesLoaded) {
-                    categories = catState.categories;
-                  }
-
-                  if (isLoading) {
-                    return const Center(
+              state.categoriesLoading
+                  ? const Center(
                       child: CircularProgressIndicator(
                         color: ShopAppColors.primary,
                       ),
-                    );
-                  }
-
-                  return DropdownButtonFormField<String>(
-                    isExpanded: true,
-                    hint: Text(
-                      'Select a category...',
-                      style: ShopAppTextStyles.bodyMedium,
-                    ),
-                    initialValue: uiState.selectedCategory,
-                    decoration: _inputDecoration(),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: ShopAppColors.textSecondary,
-                    ),
-                    items: categories.map((String category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(
-                          category,
-                          style: ShopAppTextStyles.bodyMediumBold,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        context.read<ShopProfileSetupUiCubit>().selectCategory(
-                          value,
+                    )
+                  : DropdownButtonFormField<String>(
+                      isExpanded: true,
+                      hint: Text(
+                        'Select a category...',
+                        style: ShopAppTextStyles.bodyMedium,
+                      ),
+                      value: state.selectedCategory,
+                      decoration: _inputDecoration(),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: ShopAppColors.textSecondary,
+                      ),
+                      items: state.categories.map((String category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(
+                            category,
+                            style: ShopAppTextStyles.bodyMediumBold,
+                          ),
                         );
-                      }
-                    },
-                    validator: Validators.validateCategory,
-                  );
-                },
-              ),
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          context.read<ShopAuthBloc>().add(
+                            ShopSelectCategory(value),
+                          );
+                        }
+                      },
+                      validator: Validators.validateCategory,
+                    ),
               SizedBox(height: 20.h),
+              // Shop Description Field
               CustomTextField(
                 label: "Short Shop Description",
                 controller: _descriptionController,
@@ -127,6 +117,7 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 focusedBorderColor: ShopAppColors.primary,
               ),
               SizedBox(height: 20.h),
+              // Shop GST Field
               CustomTextField(
                 label: "GST NUMBER",
                 controller: _gstController,
@@ -142,60 +133,60 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 focusedBorderColor: ShopAppColors.primary,
               ),
               SizedBox(height: 32.h),
+              // Documents Section
               _buildFieldLabel('REQUIRED DOCUMENTS'),
+              // Business Licence Document Selector
               _buildDocumentPicker(
                 'Business License',
                 'PDF, JPG or PNG (Max 5MB)',
                 Icons.description_outlined,
-                uiState.businessLicense != null,
+                state.businessLicense != null,
                 () => _pickImage(context, true),
               ),
               SizedBox(height: 16.h),
+              // Owner ID Proof Document Selector
               _buildDocumentPicker(
                 'Owner ID',
                 'National ID or Passport',
                 Icons.badge_outlined,
-                uiState.ownerId != null,
+                state.ownerId != null,
                 () => _pickImage(context, false),
               ),
               SizedBox(height: 48.h),
-              BlocBuilder<ShopAuthBloc, ShopAuthState>(
-                builder: (context, state) {
-                  return PrimaryButton(
-                    text: 'Save & Continue',
-                    isLoading: state is ShopAuthLoading,
-                    backgroundColor: ShopAppColors.primary,
-                    textStyle: ShopAppTextStyles.buttonText,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        if (uiState.selectedCategory == null) {
-                          CustomSnackBar.show(
-                            context,
-                            message: 'Please select a business category',
-                          );
-                          return;
-                        }
-                        if (uiState.businessLicense == null ||
-                            uiState.ownerId == null) {
-                          CustomSnackBar.show(
-                            context,
-                            message: 'Please upload required documents',
-                          );
-                          return;
-                        }
+              // Save and Continue button
+              PrimaryButton(
+                text: 'Save & Continue',
+                isLoading: state.status == ShopAuthStatus.loading,
+                backgroundColor: ShopAppColors.primary,
+                textStyle: ShopAppTextStyles.buttonText,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    if (state.selectedCategory == null) {
+                      CustomSnackBar.show(
+                        context,
+                        message: 'Please select a business category',
+                      );
+                      return;
+                    }
+                    if (state.businessLicense == null ||
+                        state.ownerId == null) {
+                      CustomSnackBar.show(
+                        context,
+                        message: 'Please upload required documents',
+                      );
+                      return;
+                    }
 
-                        context.read<ShopAuthBloc>().add(
-                          ShopSetupProfileStarted(
-                            category: uiState.selectedCategory!,
-                            description: _descriptionController.text.trim(),
-                            gstNumber: _gstController.text.trim(),
-                            businessLicenseFile: uiState.businessLicense!,
-                            ownerIdFile: uiState.ownerId!,
-                          ),
-                        );
-                      }
-                    },
-                  );
+                    context.read<ShopAuthBloc>().add(
+                      ShopSetupProfileStarted(
+                        category: state.selectedCategory!,
+                        description: _descriptionController.text.trim(),
+                        gstNumber: _gstController.text.trim(),
+                        businessLicenseFile: state.businessLicense!,
+                        ownerIdFile: state.ownerId!,
+                      ),
+                    );
+                  }
                 },
               ),
               SizedBox(height: 32.h),
@@ -267,7 +258,7 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(10.w),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: ShopAppColors.primary.withAlpha(20),
                 borderRadius: BorderRadius.circular(12.r),

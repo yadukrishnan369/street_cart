@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/auth/presentation/widgets/rejection_re
 import 'package:street_cart/features/shop/auth/presentation/widgets/normal_review_body.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Account Review Page
 class AccountReviewPage extends StatefulWidget {
   const AccountReviewPage({super.key});
 
@@ -30,30 +31,38 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        // Page Header
         title: Text('Account Status', style: ShopAppTextStyles.heading4),
       ),
       body: BlocListener<ShopAuthBloc, ShopAuthState>(
         listener: (context, state) {
-          if (state is ShopAuthInitial) {
+          if (state.status == ShopAuthStatus.initial) {
+            // Navigate to Shop Login Page
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const ShopLoginPage()),
               (route) => false,
             );
-          } else if (state is ShopAuthFailure) {
-            CustomSnackBar.show(context, message: state.message, isError: true);
+          } else if (state.status == ShopAuthStatus.failure &&
+              state.errorMessage != null) {
+            CustomSnackBar.show(
+              context,
+              message: state.errorMessage!,
+              isError: true,
+            );
           }
         },
         child: BlocBuilder<ShopAuthBloc, ShopAuthState>(
           builder: (context, state) {
-            final shop = state is ShopStatusLoaded ? state.shop : null;
+            final shop = state.shop;
             final bool isApproved = shop?.isApproved ?? false;
             final bool isRejected = shop?.isRejected ?? false;
 
             if (isRejected && shop != null) {
+              // Rejection Review Body Part
               return RejectionReviewBody(shop: shop);
             }
-
+            // Normal Review Body Part (Waiting for Approval)
             return NormalReviewBody(isApproved: isApproved);
           },
         ),

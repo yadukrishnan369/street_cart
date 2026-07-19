@@ -1,78 +1,116 @@
 import 'package:equatable/equatable.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
-abstract class ShopProfileState extends Equatable {
-  const ShopProfileState();
-
-  @override
-  List<Object?> get props => [];
+// Enum - status of shop profile actions
+enum ShopProfileStatus {
+  initial,
+  loading,
+  loaded,
+  updateSuccess,
+  error,
+  imageUploading,
+  imageUploaded,
+  imageRemoved,
+  paymentSettingsLoading,
+  paymentSettingsLoaded,
+  paymentSettingsError,
 }
 
-class ShopProfileInitial extends ShopProfileState {}
+class ShopProfileState extends Equatable {
+  final ShopProfileStatus status;
+  final String? message;
+  final ShopProfileModel? profile;
+  final String? imageUrl;
+  final Map<String, bool>? paymentSettings;
 
-class ShopProfileLoading extends ShopProfileState {}
+  // Edit fields from Edit Shop Profile
+  final int currentStep;
+  final String? selectedCategory;
+  final String? profileImageUrl;
+  final String? businessLicenseUrl;
+  final String? ownerIdUrl;
+  final String? selectedDistrict;
+  final String? selectedState;
+  final List<String> selectedPaymentMethods;
+  final bool isUploadingImage;
+  final bool isUploadingLicense;
+  final bool isUploadingOwnerId;
 
-class ShopProfileLoaded extends ShopProfileState {
-  final ShopProfileModel profile;
+  const ShopProfileState({
+    this.status = ShopProfileStatus.initial,
+    this.message,
+    this.profile,
+    this.imageUrl,
+    this.paymentSettings,
+    this.currentStep = 1,
+    this.selectedCategory,
+    this.profileImageUrl,
+    this.businessLicenseUrl,
+    this.ownerIdUrl,
+    this.selectedDistrict,
+    this.selectedState,
+    this.selectedPaymentMethods = const [],
+    this.isUploadingImage = false,
+    this.isUploadingLicense = false,
+    this.isUploadingOwnerId = false,
+  });
 
-  const ShopProfileLoaded(this.profile);
+  ShopProfileState copyWith({
+    ShopProfileStatus? status,
+    String? message,
+    ShopProfileModel? profile,
+    String? imageUrl,
+    Map<String, bool>? paymentSettings,
+    int? currentStep,
+    String? selectedCategory,
+    String? profileImageUrl,
+    String? businessLicenseUrl,
+    String? ownerIdUrl,
+    String? selectedDistrict,
+    String? selectedState,
+    List<String>? selectedPaymentMethods,
+    bool? isUploadingImage,
+    bool? isUploadingLicense,
+    bool? isUploadingOwnerId,
+  }) {
+    return ShopProfileState(
+      status: status ?? this.status,
+      message: message ?? this.message,
+      profile: profile ?? this.profile,
+      imageUrl: imageUrl ?? this.imageUrl,
+      paymentSettings: paymentSettings ?? this.paymentSettings,
+      currentStep: currentStep ?? this.currentStep,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      businessLicenseUrl: businessLicenseUrl ?? this.businessLicenseUrl,
+      ownerIdUrl: ownerIdUrl ?? this.ownerIdUrl,
+      selectedDistrict: selectedDistrict ?? this.selectedDistrict,
+      selectedState: selectedState ?? this.selectedState,
+      selectedPaymentMethods:
+          selectedPaymentMethods ?? this.selectedPaymentMethods,
+      isUploadingImage: isUploadingImage ?? this.isUploadingImage,
+      isUploadingLicense: isUploadingLicense ?? this.isUploadingLicense,
+      isUploadingOwnerId: isUploadingOwnerId ?? this.isUploadingOwnerId,
+    );
+  }
 
   @override
-  List<Object?> get props => [profile];
-}
-
-class ShopProfileUpdateSuccess extends ShopProfileState {
-  final ShopProfileModel profile;
-
-  const ShopProfileUpdateSuccess(this.profile);
-
-  @override
-  List<Object?> get props => [profile];
-}
-
-class ShopProfileError extends ShopProfileState {
-  final String message;
-
-  const ShopProfileError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class ShopProfileImageUploading extends ShopProfileState {}
-
-class ShopProfileImageUploaded extends ShopProfileState {
-  final String imageUrl;
-
-  const ShopProfileImageUploaded(this.imageUrl);
-
-  @override
-  List<Object?> get props => [imageUrl];
-}
-
-class ShopProfileImageRemoved extends ShopProfileState {
-  const ShopProfileImageRemoved();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class ShopPaymentSettingsLoading extends ShopProfileState {}
-
-class ShopPaymentSettingsLoaded extends ShopProfileState {
-  final Map<String, bool> settings;
-
-  const ShopPaymentSettingsLoaded(this.settings);
-
-  @override
-  List<Object?> get props => [settings];
-}
-
-class ShopPaymentSettingsError extends ShopProfileState {
-  final String message;
-
-  const ShopPaymentSettingsError(this.message);
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [
+    status,
+    message,
+    profile,
+    imageUrl,
+    paymentSettings,
+    currentStep,
+    selectedCategory,
+    profileImageUrl,
+    businessLicenseUrl,
+    ownerIdUrl,
+    selectedDistrict,
+    selectedState,
+    selectedPaymentMethods,
+    isUploadingImage,
+    isUploadingLicense,
+    isUploadingOwnerId,
+  ];
 }

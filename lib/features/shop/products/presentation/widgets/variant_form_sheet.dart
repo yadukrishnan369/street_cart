@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
-import 'package:street_cart/core/utils/image_picker_helper.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_event.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_state.dart';
+import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 import 'color_selector.dart';
 import 'image_picker_area.dart';
 import 'size_qty_grid.dart';
 
+// Variant Form Sheet
 class VariantFormSheet extends StatefulWidget {
   final VariantDraft? existingVariant;
   final Map<String, String> availableColors;
@@ -27,30 +31,32 @@ class VariantFormSheet extends StatefulWidget {
 }
 
 class _VariantFormSheetState extends State<VariantFormSheet> {
-  late String _selectedColor;
-  late List<dynamic> _images;
   late Map<String, TextEditingController> _sizeControllers;
-  bool _isPickingImages = false;
-  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    final existing = widget.existingVariant;
-    // Set initial color selection
-    _selectedColor =
-        existing?.colorName ??
-        (widget.availableColors.isNotEmpty
-            ? widget.availableColors.keys.first
-            : '');
-    // Load existing variant images if editing
-    _images = List.from(existing?.images ?? []);
-    // Initialize controller inputs with current quantities
+    final bloc = context.read<AddEditProductBloc>();
+
+    // Initialize Variant Draft Event
+    bloc.add(
+      InitVariantDraftEvent(
+        existingVariant: widget.existingVariant,
+        availableSizes: widget.availableSizes,
+        availableColors: widget.availableColors,
+      ),
+    );
+
+    // Initialize controller inputs fields
     _sizeControllers = {
       for (final size in widget.availableSizes)
-        size: TextEditingController(
-          text: (existing?.sizes[size] ?? 0).toString(),
-        ),
+        size:
+            TextEditingController(
+              text: (widget.existingVariant?.sizes[size] ?? 0).toString(),
+            )..addListener(() {
+              final val = int.tryParse(_sizeControllers[size]!.text) ?? 0;
+              bloc.add(UpdateDraftSizeQtyEvent(size, val));
+            }),
     };
   }
 
@@ -62,130 +68,105 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
     super.dispose();
   }
 
-  // Opens gallery to pick multiple images
-  Future<void> _pickImages() async {
-    setState(() => _isPickingImages = true);
-    try {
-      final files = await ImagePickerHelper.pickMultiImage(limit: 8);
-      if (files.isNotEmpty) {
-        setState(() => _images = List<dynamic>.from(files));
-      }
-    } catch (_) {
-    } finally {
-      setState(() => _isPickingImages = false);
-    }
-  }
-
-  // Parses user text input controllers into a map of sizes and quantities
-  Map<String, int> _buildSizesMap() {
-    return _sizeControllers.map(
-      (k, v) => MapEntry(k, int.tryParse(v.text) ?? 0),
-    );
-  }
-
-  // Validates inputs and returns the variant configuration draft
-  void _save() {
-    setState(() => _errorMessage = null);
-
-    if (_selectedColor.isEmpty) {
-      setState(() => _errorMessage = 'Please select a color.');
-      return;
-    }
-    if (_images.isEmpty) {
-      setState(
-        () => _errorMessage = 'Add at least one image for this variant.',
-      );
-      return;
-    }
-
-    final sizesMap = _buildSizesMap();
-    if (sizesMap.isEmpty || sizesMap.values.every((qty) => qty == 0)) {
-      setState(
-        () => _errorMessage =
-            'Please enter a stock quantity for at least one size.',
-      );
-      return;
-    }
-
-    widget.onSave(
-      VariantDraft(
-        colorName: _selectedColor,
-        images: List<dynamic>.from(_images),
-        sizes: sizesMap,
-      ),
-    );
-    Navigator.pop(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.existingVariant != null;
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.92 - bottomInset,
-        decoration: BoxDecoration(
-          color: ShopAppColors.background,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: Column(
-          children: [
-            _SheetHeader(
-              title: isEditing ? 'Edit Variant' : 'Add Variant',
-              onClose: () => Navigator.pop(context),
-              onSave: _save,
+    return BlocBuilder<AddEditProductBloc, AddEditProductState>(
+      builder: (context, state) {
+        final draft = state.editingVariant ?? const VariantDraft(colorName: '');
+        final errorMessage = state.variantErrorMessage;
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.92 - bottomInset,
+            decoration: BoxDecoration(
+              color: ShopAppColors.background,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_errorMessage != null) _buildErrorCard(),
-                    _SectionLabel('Color'),
-                    SizedBox(height: 10.h),
-                    ColorSelector(
-                      availableColors: widget.availableColors,
-                      selectedColor: _selectedColor,
-                      onSelected: (c) => setState(() => _selectedColor = c),
-                    ),
-                    SizedBox(height: 24.h),
-                    _SectionLabel('Images for this Color'),
-                    SizedBox(height: 10.h),
-                    ImagePickerArea(
-                      images: _images,
-                      isLoading: _isPickingImages,
-                      onPick: _pickImages,
-                      onRemove: (idx) => setState(() => _images.removeAt(idx)),
-                    ),
-                    SizedBox(height: 24.h),
-                    if (widget.availableSizes.isNotEmpty) ...[
-                      _SectionLabel('Size Quantities'),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Enter the number of items available for each size.',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: ShopAppColors.textSecondary,
-                        ),
-                      ),
-                      SizedBox(height: 14.h),
-                      SizeQtyGrid(controllers: _sizeControllers),
-                    ],
-                    SizedBox(height: 32.h),
-                  ],
+            child: Column(
+              children: [
+                // Header Section
+                _SheetHeader(
+                  title: isEditing ? 'Edit Variant' : 'Add Variant',
+                  onClose: () => Navigator.pop(context),
+                  onSave: () => ProductsPageHelper.saveVariant(
+                    context: context,
+                    state: state,
+                    onSave: widget.onSave,
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 16.h,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (errorMessage != null) _buildErrorCard(errorMessage),
+                        // Section Label
+                        const _SectionLabel('Color'),
+                        SizedBox(height: 10.h),
+                        // Color Selector
+                        ColorSelector(
+                          availableColors: widget.availableColors,
+                          selectedColor: draft.colorName,
+                          onSelected: (c) => context
+                              .read<AddEditProductBloc>()
+                              .add(UpdateDraftColorEvent(c)),
+                        ),
+                        SizedBox(height: 24.h),
+                        // Section Label
+                        const _SectionLabel('Images for this Color'),
+                        SizedBox(height: 10.h),
+                        // Image Picker Section
+                        ImagePickerArea(
+                          images: draft.images,
+                          isLoading: state.isPickingImages,
+                          onPick: () =>
+                              ProductsPageHelper.pickVariantImages(context),
+                          onRemove: (idx) {
+                            final list = List<dynamic>.from(draft.images);
+                            list.removeAt(idx);
+                            context.read<AddEditProductBloc>().add(
+                              UpdateDraftImagesEvent(list),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 24.h),
+                        if (widget.availableSizes.isNotEmpty) ...[
+                          // Section Label
+                          const _SectionLabel('Size Quantities'),
+                          SizedBox(height: 4.h),
+                          Text(
+                            'Enter the number of items available for each size.',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: ShopAppColors.textSecondary,
+                            ),
+                          ),
+                          SizedBox(height: 14.h),
+                          // Size Quantity Grid
+                          SizeQtyGrid(controllers: _sizeControllers),
+                        ],
+                        SizedBox(height: 32.h),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildErrorCard() {
+  Widget _buildErrorCard(String errorMsg) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(bottom: 16.h),
@@ -201,7 +182,7 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
           SizedBox(width: 8.w),
           Expanded(
             child: Text(
-              _errorMessage!,
+              errorMsg,
               style: TextStyle(fontSize: 12.sp, color: ShopAppColors.error),
             ),
           ),
@@ -211,6 +192,7 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
   }
 }
 
+// Sheet Header
 class _SheetHeader extends StatelessWidget {
   final String title;
   final VoidCallback onClose;

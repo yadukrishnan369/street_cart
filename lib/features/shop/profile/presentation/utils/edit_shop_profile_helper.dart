@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
-import 'package:street_cart/features/shop/profile/presentation/bloc/edit_shop_profile_ui_cubit.dart';
+import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_state.dart';
 import 'package:street_cart/core/utils/image_picker_helper.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
+import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
 class EditShopProfileHelper {
   static Future<void> pickProfileImage(BuildContext context) async {
@@ -14,7 +17,7 @@ class EditShopProfileHelper {
     if (file != null) {
       if (context.mounted) {
         context.read<ShopProfileBloc>().add(UploadShopProfileImageEvent(file));
-        context.read<EditShopProfileUiCubit>().updateUploadingImage(true);
+        context.read<ShopProfileBloc>().add(const UpdateUploadingImageEvent(true));
       }
     }
   }
@@ -23,18 +26,14 @@ class EditShopProfileHelper {
     final file = await ImagePickerHelper.pickImageFromGallery();
     if (file != null) {
       if (context.mounted) {
-        context.read<EditShopProfileUiCubit>().updateUploadingLicense(true);
+        context.read<ShopProfileBloc>().add(const UpdateUploadingLicenseEvent(true));
         try {
           final url = await context.read<ShopProfileBloc>().uploadProfileImage(
             file,
           );
           if (context.mounted) {
-            context.read<EditShopProfileUiCubit>().updateBusinessLicenseUrl(
-              url,
-            );
-            context.read<EditShopProfileUiCubit>().updateUploadingLicense(
-              false,
-            );
+            context.read<ShopProfileBloc>().add(UpdateBusinessLicenseUrlEvent(url));
+            context.read<ShopProfileBloc>().add(const UpdateUploadingLicenseEvent(false));
             CustomSnackBar.show(
               context,
               message: 'License uploaded successfully!',
@@ -42,9 +41,7 @@ class EditShopProfileHelper {
           }
         } catch (e) {
           if (context.mounted) {
-            context.read<EditShopProfileUiCubit>().updateUploadingLicense(
-              false,
-            );
+            context.read<ShopProfileBloc>().add(const UpdateUploadingLicenseEvent(false));
             CustomSnackBar.show(
               context,
               message: 'Failed to upload license: $e',
@@ -60,16 +57,14 @@ class EditShopProfileHelper {
     final file = await ImagePickerHelper.pickImageFromGallery();
     if (file != null) {
       if (context.mounted) {
-        context.read<EditShopProfileUiCubit>().updateUploadingOwnerId(true);
+        context.read<ShopProfileBloc>().add(const UpdateUploadingOwnerIdEvent(true));
         try {
           final url = await context.read<ShopProfileBloc>().uploadProfileImage(
             file,
           );
           if (context.mounted) {
-            context.read<EditShopProfileUiCubit>().updateOwnerIdUrl(url);
-            context.read<EditShopProfileUiCubit>().updateUploadingOwnerId(
-              false,
-            );
+            context.read<ShopProfileBloc>().add(UpdateOwnerIdUrlEvent(url));
+            context.read<ShopProfileBloc>().add(const UpdateUploadingOwnerIdEvent(false));
             CustomSnackBar.show(
               context,
               message: 'Owner ID uploaded successfully!',
@@ -77,9 +72,7 @@ class EditShopProfileHelper {
           }
         } catch (e) {
           if (context.mounted) {
-            context.read<EditShopProfileUiCubit>().updateUploadingOwnerId(
-              false,
-            );
+            context.read<ShopProfileBloc>().add(const UpdateUploadingOwnerIdEvent(false));
             CustomSnackBar.show(
               context,
               message: 'Failed to upload ID: $e',
@@ -111,14 +104,14 @@ class EditShopProfileHelper {
 
   static void goToStep2(BuildContext context, GlobalKey<FormState> formKey) {
     if (formKey.currentState!.validate()) {
-      context.read<EditShopProfileUiCubit>().updateStep(2);
+      context.read<ShopProfileBloc>().add(const UpdateStepEvent(2));
     }
   }
 
   static void goToStep3(
     BuildContext context,
     GlobalKey<FormState> formKey,
-    EditShopProfileUiState uiState,
+    ShopProfileState uiState,
   ) {
     if (formKey.currentState!.validate()) {
       if (uiState.selectedDistrict == null) {
@@ -145,14 +138,14 @@ class EditShopProfileHelper {
         );
         return;
       }
-      context.read<EditShopProfileUiCubit>().updateStep(3);
+      context.read<ShopProfileBloc>().add(const UpdateStepEvent(3));
     }
   }
 
   static void saveChanges({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
-    required EditShopProfileUiState uiState,
+    required ShopProfileState uiState,
     required ShopProfileModel profile,
     required String ownerName,
     required String shopName,
@@ -214,5 +207,31 @@ class EditShopProfileHelper {
     );
 
     context.read<ShopProfileBloc>().add(UpdateShopProfileDataEvent(updated));
+  }
+
+  /// Triggers confirmation dialog before logging out from the profile tab.
+  static void onLogout({
+    required BuildContext context,
+    required ShopAuthBloc authBloc,
+  }) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => ConfirmationModal(
+        title: 'Logout',
+        content: 'Are you sure you want to logout?',
+        confirmText: 'Logout',
+        confirmColor: ShopAppColors.primary,
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          authBloc.add(ShopLogoutRequested());
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const ShopLoginPage()),
+            (route) => false,
+          );
+        },
+        onCancel: () => Navigator.pop(dialogContext),
+      ),
+    );
   }
 }

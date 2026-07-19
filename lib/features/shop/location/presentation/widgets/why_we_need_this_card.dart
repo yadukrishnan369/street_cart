@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Why We Need This Card - Info about the importance of Location Permission
 class WhyWeNeedThisCard extends StatelessWidget {
   const WhyWeNeedThisCard({super.key});
 
@@ -16,6 +17,7 @@ class WhyWeNeedThisCard extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Icon
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
@@ -33,6 +35,7 @@ class WhyWeNeedThisCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //Title
                 Text(
                   'Why we need this',
                   style: TextStyle(
@@ -42,6 +45,7 @@ class WhyWeNeedThisCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.h),
+                // Subtitle
                 Text(
                   'We only use your location to calculate distance for delivery and to list your shop in local search results. Your privacy is our top priority.',
                   style: TextStyle(

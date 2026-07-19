@@ -8,11 +8,13 @@ class ShopOnboardingLocalDataSourceImpl
 
   ShopOnboardingLocalDataSourceImpl(this._sharedPreferences);
 
+  // Saves to local, Shop completed the onboarding
   @override
   Future<void> setFirstTimeFalse() async {
     await _sharedPreferences.setBool(_key, false);
   }
 
+  // Checks, if Shop is launching the application for first time
   @override
   Future<bool> isFirstTime() async {
     return _sharedPreferences.getBool(_key) ?? true;

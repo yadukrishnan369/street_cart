@@ -52,7 +52,7 @@ class ShopBottomNavigation extends StatelessWidget {
               int newOrdersCount = 0;
               if (state is ShopHomeDataLoaded) {
                 final authState = context.read<ShopAuthBloc>().state;
-                if (authState is ShopStatusLoaded) {
+                if (authState.status == ShopAuthStatus.authenticated) {
                   final shopId = authState.shop?.uid ?? '';
                   newOrdersCount = state.orders.where((o) {
                     final hasShopItem = o.items.any((i) => i.shopId == shopId);
@@ -82,7 +82,7 @@ class ShopBottomNavigation extends StatelessWidget {
               int newOrdersCount = 0;
               if (state is ShopHomeDataLoaded) {
                 final authState = context.read<ShopAuthBloc>().state;
-                if (authState is ShopStatusLoaded) {
+                if (authState.status == ShopAuthStatus.authenticated) {
                   final shopId = authState.shop?.uid ?? '';
                   newOrdersCount = state.orders.where((o) {
                     final hasShopItem = o.items.any((i) => i.shopId == shopId);

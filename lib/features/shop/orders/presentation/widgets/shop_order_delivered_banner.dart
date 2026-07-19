@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 
+// Shop Order Delivered Banner
 class ShopOrderDeliveredBanner extends StatelessWidget {
   final OrderModel order;
 
@@ -24,6 +25,7 @@ class ShopOrderDeliveredBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Icon
           Container(
             padding: EdgeInsets.all(10.w),
             decoration: const BoxDecoration(
@@ -41,6 +43,7 @@ class ShopOrderDeliveredBanner extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Banner Title
                 Text(
                   'Order Delivered',
                   style: TextStyle(
@@ -50,6 +53,7 @@ class ShopOrderDeliveredBanner extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.h),
+                // Delivered Date
                 Text(
                   'Delivered on: ${DateFormatter.formatToOrderDateTime(order.deliveredAt ?? order.createdAt)}',
                   style: TextStyle(fontSize: 13.sp, color: Colors.grey[700]),

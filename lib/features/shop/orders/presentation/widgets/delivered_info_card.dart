@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 
+// Delivered Info Card
 class DeliveredInfoCard extends StatelessWidget {
   final OrderModel order;
 
@@ -30,6 +31,7 @@ class DeliveredInfoCard extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Icon
           Container(
             padding: EdgeInsets.all(10.w),
             decoration: const BoxDecoration(
@@ -47,6 +49,7 @@ class DeliveredInfoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   'Order Delivered',
                   style: TextStyle(
@@ -56,6 +59,7 @@ class DeliveredInfoCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.h),
+                // Delivery Date
                 Text(
                   'Delivered on: $formattedTime',
                   style: TextStyle(fontSize: 13.sp, color: Colors.grey[700]),

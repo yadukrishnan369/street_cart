@@ -9,6 +9,7 @@ import 'package:street_cart/features/shop/location/presentation/pages/shop_locat
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 
+// Shop Profile Header Card
 class ShopProfileHeaderCard extends StatelessWidget {
   final ShopProfileModel profile;
 
@@ -31,6 +32,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.shade100, width: 3),
                 ),
+                // Shop Profile Image
                 child: CircleAvatar(
                   radius: 56.r,
                   backgroundColor: const Color(0xFF1E2E2D),
@@ -46,6 +48,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
                       : null,
                 ),
               ),
+              // Approved Label
               if (profile.isApproved)
                 Positioned(
                   bottom: 2.h,
@@ -66,6 +69,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
+          // Shop Name
           Text(
             profile.shopName.isEmpty ? 'Shop Name' : profile.shopName,
             style: ShopAppTextStyles.heading2.copyWith(
@@ -75,6 +79,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 4.h),
+          // Shop Category
           Text(
             profile.category.isEmpty ? 'Category' : profile.category,
             style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -86,6 +91,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
           SizedBox(height: 6.h),
           InkWell(
             onTap: () {
+              // Navigate to Shop Location Permission Page
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -111,6 +117,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
                     color: ShopAppColors.textSecondary,
                   ),
                   SizedBox(width: 4.w),
+                  // Shop Location/Address
                   Text(
                     '${profile.city.isNotEmpty ? profile.city : 'Location'}, ${profile.state.isNotEmpty ? profile.state : 'State'}',
                     style: ShopAppTextStyles.bodySmall.copyWith(
@@ -123,6 +130,7 @@ class ShopProfileHeaderCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
+          // Verified Label
           Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
             decoration: BoxDecoration(

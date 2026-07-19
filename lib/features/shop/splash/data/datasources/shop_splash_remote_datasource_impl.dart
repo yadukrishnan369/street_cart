@@ -13,16 +13,19 @@ class ShopSplashRemoteDataSourceImpl implements IShopSplashRemoteDataSource {
   }) : _firebaseAuth = firebaseAuth,
        _firestore = firestore;
 
+  // Check, User Logged in or not
   @override
   Future<bool> isUserLoggedIn() async {
     return _firebaseAuth.currentUser != null;
   }
 
+  // Get Current User ID
   @override
   String? getCurrentUserId() {
     return _firebaseAuth.currentUser?.uid;
   }
 
+  // Get Shop Profile
   @override
   Future<ShopProfileModel?> getShopProfile(String userId) async {
     final doc = await _firestore.collection('shops').doc(userId).get();

@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/change_password_ui_cubit.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_event.dart';
 import 'package:street_cart/features/shop/settings/presentation/utils/change_password_validators.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Change Password Form
 class ChangePasswordForm extends StatefulWidget {
   final bool isLoading;
 
@@ -48,9 +47,9 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: BlocBuilder<ChangePasswordUiCubit, ChangePasswordUiState>(
+      child: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
         builder: (context, uiState) {
-          final cubit = context.read<ChangePasswordUiCubit>();
+          final bloc = context.read<ShopSettingsBloc>();
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +73,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                     color: ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
-                  onPressed: cubit.toggleObscureCurrent,
+                  onPressed: () => bloc.add(ToggleObscureCurrentEvent()),
                 ),
                 validator: ChangePasswordValidators.validateCurrentPassword,
               ),
@@ -99,7 +98,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                     color: ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
-                  onPressed: cubit.toggleObscureNew,
+                  onPressed: () => bloc.add(ToggleObscureNewEvent()),
                 ),
                 validator: ChangePasswordValidators.validateNewPassword,
               ),
@@ -124,7 +123,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                     color: ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
-                  onPressed: cubit.toggleObscureConfirm,
+                  onPressed: () => bloc.add(ToggleObscureConfirmEvent()),
                 ),
                 validator: (val) =>
                     ChangePasswordValidators.validateConfirmPassword(
@@ -154,7 +153,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               ),
               SizedBox(height: 32.h),
 
-              // Action Button
+              // Update Password Action Button
               PrimaryButton(
                 text: 'Update Password',
                 backgroundColor: ShopAppColors.primary,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Document Picker Widget
 class DocumentPickerWidget extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -64,9 +65,11 @@ class DocumentPickerWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
+                // Title
                 children: [
                   Text(title, style: ShopAppTextStyles.bodyMediumBold),
                   SizedBox(height: 2.h),
+                  // Subtitle
                   Text(
                     subtitle,
                     style: ShopAppTextStyles.bodySmall.copyWith(
@@ -75,6 +78,7 @@ class DocumentPickerWidget extends StatelessWidget {
                   ),
                   if (hasDocument && onClear != null) ...[
                     SizedBox(height: 4.h),
+                    // Option to Clear File
                     GestureDetector(
                       onTap: onClear,
                       child: Text(

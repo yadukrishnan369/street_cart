@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'shop_profile_section_block.dart';
 
+// Shop Verification Docs Card
 class ShopVerificationDocsCard extends StatelessWidget {
   final ShopProfileModel profile;
 
@@ -15,12 +16,14 @@ class ShopVerificationDocsCard extends StatelessWidget {
     return ShopProfileSectionBlock(
       title: 'VERIFICATION DETAILS',
       child: Column(
+        // Business Licence
         children: [
           _buildDocVerificationItem(
             title: 'Business License',
             icon: Icons.description_outlined,
             isUploaded: profile.businessLicenseUrl.isNotEmpty,
           ),
+          // GST ID
           SizedBox(height: 12.h),
           _buildDocVerificationItem(
             title: 'GST Number',
@@ -28,6 +31,7 @@ class ShopVerificationDocsCard extends StatelessWidget {
             isUploaded: profile.gstNumber.isNotEmpty,
           ),
           SizedBox(height: 12.h),
+          // Owner ID
           _buildDocVerificationItem(
             title: 'Owner ID Proof',
             icon: Icons.badge_outlined,
@@ -55,6 +59,7 @@ class ShopVerificationDocsCard extends StatelessWidget {
           Icon(icon, color: ShopAppColors.textSecondary, size: 20.sp),
           SizedBox(width: 12.w),
           Expanded(
+            // Title
             child: Text(
               title,
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -71,6 +76,7 @@ class ShopVerificationDocsCard extends StatelessWidget {
                   : const Color(0xFFECEFF1),
               borderRadius: BorderRadius.circular(4.r),
             ),
+            // Label
             child: Text(
               isUploaded ? 'VERIFIED' : 'NOT PROVIDED',
               style: ShopAppTextStyles.bodySmallBold.copyWith(

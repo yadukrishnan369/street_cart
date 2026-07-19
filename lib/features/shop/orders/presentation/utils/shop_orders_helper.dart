@@ -45,10 +45,12 @@ class ShopOrdersHelper {
     }
   }
 
+  // Get Orders Count
   static int getCount(List<OrderModel> orders, int tabIndex) {
     return filterOrders(orders, tabIndex).length;
   }
 
+  // Get Time
   static String getRelativeTimeAgo(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
@@ -67,6 +69,7 @@ class ShopOrdersHelper {
     }
   }
 
+  // Get Selected Payment Method
   static String getDisplayPaymentMethod(String method) {
     final m = method.toLowerCase();
     if (m.contains('cod') || m.contains('cash')) {
@@ -78,6 +81,7 @@ class ShopOrdersHelper {
     return method.toUpperCase();
   }
 
+  // Get Next Status Action Label
   static String? getNextStatusActionLabel(ShopOrderStatus currentStatus) {
     switch (currentStatus) {
       case ShopOrderStatus.placed:
@@ -91,6 +95,7 @@ class ShopOrdersHelper {
     }
   }
 
+  // Get Next Status
   static ShopOrderStatus? getNextStatus(ShopOrderStatus currentStatus) {
     switch (currentStatus) {
       case ShopOrderStatus.placed:
@@ -104,12 +109,14 @@ class ShopOrdersHelper {
     }
   }
 
+  // Get Order ID
   static String getOrderIdPrefix(String orderId) {
     final length = orderId.length;
     final prefix = orderId.substring(0, length.clamp(0, 5));
     return prefix.toUpperCase();
   }
 
+  // Status Change Confirmation Modal
   static void showStatusChangeConfirmation({
     required BuildContext context,
     required String statusLabel,
@@ -130,5 +137,65 @@ class ShopOrdersHelper {
         onCancel: () => Navigator.pop(ctx),
       ),
     );
+  }
+
+  // Filtering items in an order of shop, calculates total amount
+  static Map<String, dynamic> getShopOrderCardData({
+    required OrderModel order,
+    required String shopId,
+  }) {
+    final shopItems = order.items
+        .where((item) => item.shopId == shopId)
+        .toList();
+    if (shopItems.isEmpty) return const {};
+
+    final firstItem = shopItems.first;
+    final totalAmount = shopItems.fold<double>(
+      0.0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
+
+    return {
+      'shopItems': shopItems,
+      'firstItem': firstItem,
+      'totalAmount': totalAmount,
+    };
+  }
+
+  // Calculates total price, commission, commission percentage, final earnings and payment label
+  static Map<String, dynamic> getItemSummaryCardData({
+    required OrderModel order,
+    required String shopId,
+  }) {
+    final shopItems = order.items
+        .where((item) => item.shopId == shopId)
+        .toList();
+    if (shopItems.isEmpty) return const {};
+
+    final totalAmount = shopItems.fold<double>(
+      0.0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
+
+    final commission = shopItems.fold<double>(
+      0.0,
+      (sum, item) => sum + item.adminCommission,
+    );
+
+    final commissionPercentage = totalAmount > 0
+        ? (commission / totalAmount) * 100
+        : 0.0;
+
+    final finalEarnings = totalAmount - commission;
+    final paymentLabel = getDisplayPaymentMethod(order.paymentMethod);
+
+    return {
+      'shopItems': shopItems,
+      'totalAmount': totalAmount,
+      'commission': commission,
+      'commissionPercentage': commissionPercentage,
+      'finalEarnings': finalEarnings,
+      'paymentLabel': paymentLabel,
+    };
   }
 }

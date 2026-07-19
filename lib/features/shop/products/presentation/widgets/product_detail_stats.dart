@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Product Detail Stats
 class ProductDetailStats extends StatelessWidget {
   final int stockQuantity;
   final int totalQuantity;
@@ -24,6 +25,7 @@ class ProductDetailStats extends StatelessWidget {
     return Row(
       children: [
         Expanded(
+          // Total Stock Section
           child: _buildStatCard(
             'STOCK',
             stockText,
@@ -32,6 +34,7 @@ class ProductDetailStats extends StatelessWidget {
         ),
         SizedBox(width: 16.w),
         Expanded(
+          // Total Product Sale Section
           child: _buildStatCard(
             'TOTAL PRODUCT SALES',
             '$salesCount units',

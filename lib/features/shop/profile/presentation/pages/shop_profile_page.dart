@@ -12,8 +12,7 @@ import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile
 import 'package:street_cart/features/shop/settings/presentation/pages/shop_settings_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
-import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
+import 'package:street_cart/features/shop/profile/presentation/utils/edit_shop_profile_helper.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_profile_header_card.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_owner_info_card.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_description_card.dart';
@@ -24,32 +23,11 @@ import 'package:street_cart/features/shop/profile/presentation/widgets/shop_veri
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_profile_action_buttons.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shimmer/shop_profile_shimmer.dart';
 
+// Shop Profile Page
 class ShopProfilePage extends StatelessWidget {
   final ShopAuthBloc authBloc;
 
   const ShopProfilePage({super.key, required this.authBloc});
-
-  void _onLogout(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => ConfirmationModal(
-        title: 'Logout',
-        content: 'Are you sure you want to logout?',
-        confirmText: 'Logout',
-        confirmColor: ShopAppColors.primary,
-        onConfirm: () {
-          Navigator.pop(dialogContext);
-          authBloc.add(ShopLogoutRequested());
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const ShopLoginPage()),
-            (route) => false,
-          );
-        },
-        onCancel: () => Navigator.pop(dialogContext),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +55,7 @@ class ShopProfilePage extends StatelessWidget {
                   );
                 },
               ),
+              // Page Header
               title: Text(
                 'Shop Profile',
                 style: ShopAppTextStyles.heading4.copyWith(
@@ -94,6 +73,7 @@ class ShopProfilePage extends StatelessWidget {
                   ),
                   onPressed: () {
                     final profileBloc = context.read<ShopProfileBloc>();
+                    // Navigate to Shop Settings Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -118,68 +98,77 @@ class ShopProfilePage extends StatelessWidget {
             ),
             body: BlocBuilder<ShopProfileBloc, ShopProfileState>(
               builder: (context, state) {
-                if (state is ShopProfileLoading ||
-                    state is ShopProfileInitial) {
-                  return const ShopProfileShimmer();
-                } else if (state is ShopProfileError) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(24.w),
-                      child: Text(
-                        state.message,
-                        style: ShopAppTextStyles.bodyMedium.copyWith(
-                          color: Colors.redAccent,
+                if (state.profile == null) {
+                  if (state.status == ShopProfileStatus.loading ||
+                      state.status == ShopProfileStatus.initial) {
+                    return const ShopProfileShimmer();
+                  } else if (state.status == ShopProfileStatus.error) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24.w),
+                        child: Text(
+                          state.message ?? 'An error occurred',
+                          style: ShopAppTextStyles.bodyMedium.copyWith(
+                            color: Colors.redAccent,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                } else if (state is ShopProfileLoaded ||
-                    state is ShopProfileUpdateSuccess) {
-                  final profile = state is ShopProfileLoaded
-                      ? state.profile
-                      : (state as ShopProfileUpdateSuccess).profile;
-
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<ShopProfileBloc>().add(
-                        FetchShopProfileData(),
-                      );
-                    },
-                    color: ShopAppColors.primary,
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ShopProfileHeaderCard(profile: profile),
-                          SizedBox(height: 8.h),
-                          ShopOwnerInfoCard(profile: profile),
-                          SizedBox(height: 8.h),
-                          ShopDescriptionCard(profile: profile),
-                          SizedBox(height: 8.h),
-                          ShopDeliveryRadiusCard(profile: profile),
-                          SizedBox(height: 8.h),
-                          ShopPaymentMethodsCard(profile: profile),
-                          SizedBox(height: 8.h),
-                          ShopLocationDetailsCard(profile: profile),
-                          SizedBox(height: 8.h),
-                          ShopVerificationDocsCard(profile: profile),
-                          SizedBox(height: 24.h),
-
-                          // Action Buttons
-                          ShopProfileActionButtons(
-                            profile: profile,
-                            onLogout: () => _onLogout(context),
-                          ),
-                          SizedBox(height: 32.h),
-                        ],
-                      ),
-                    ),
-                  );
+                    );
+                  }
+                  return const SizedBox();
                 }
-                return const SizedBox();
+
+                final profile = state.profile!;
+                // Refresh Indicator
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<ShopProfileBloc>().add(
+                      FetchShopProfileData(),
+                    );
+                  },
+                  color: ShopAppColors.primary,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Shop Profile Header Card
+                        ShopProfileHeaderCard(profile: profile),
+                        SizedBox(height: 8.h),
+                        // Shop Owner Info Card
+                        ShopOwnerInfoCard(profile: profile),
+                        SizedBox(height: 8.h),
+                        // Shop Description Card
+                        ShopDescriptionCard(profile: profile),
+                        SizedBox(height: 8.h),
+                        // Shop Delivery Radius Card
+                        ShopDeliveryRadiusCard(profile: profile),
+                        SizedBox(height: 8.h),
+                        // Shop Payment Methods Card
+                        ShopPaymentMethodsCard(profile: profile),
+                        SizedBox(height: 8.h),
+                        // Shop Location Details Card
+                        ShopLocationDetailsCard(profile: profile),
+                        SizedBox(height: 8.h),
+                        // Shop Verification Docs Card
+                        ShopVerificationDocsCard(profile: profile),
+                        SizedBox(height: 24.h),
+                        // Button for Logout
+                        ShopProfileActionButtons(
+                          profile: profile,
+                          onLogout: () => EditShopProfileHelper.onLogout(
+                            context: context,
+                            authBloc: authBloc,
+                          ),
+                        ),
+                        SizedBox(height: 32.h),
+                      ],
+                    ),
+                  ),
+                );
               },
             ),
+            // Bottom Navigation Bar
             bottomNavigationBar: const ShopBottomNavigation(currentIndex: 3),
           );
         },

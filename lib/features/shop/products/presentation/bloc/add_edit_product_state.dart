@@ -1,14 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-
 class VariantDraft extends Equatable {
   // Color name
   final String colorName;
 
-  // Images each entry is either a newly picked or a existing Cloudinary URL
+  // Images
   final List<dynamic> images;
 
-  // Size  quantity map
+  // Size quantity
   final Map<String, int> sizes;
 
   const VariantDraft({
@@ -35,8 +34,6 @@ class VariantDraft extends Equatable {
   List<Object?> get props => [colorName, images, sizes];
 }
 
-// State
-
 class AddEditProductState extends Equatable {
   final String name;
   final String originalPrice;
@@ -48,6 +45,10 @@ class AddEditProductState extends Equatable {
   final bool isPublishing;
   final String? errorMessage;
 
+  final VariantDraft? editingVariant;
+  final bool isPickingImages;
+  final String? variantErrorMessage;
+
   const AddEditProductState({
     this.name = '',
     this.originalPrice = '',
@@ -58,12 +59,14 @@ class AddEditProductState extends Equatable {
     this.variants = const [],
     this.isPublishing = false,
     this.errorMessage,
+    this.editingVariant,
+    this.isPickingImages = false,
+    this.variantErrorMessage,
   });
 
   int get totalStock => variants.fold(0, (s, v) => s + v.totalStock);
   bool get hasVariants => variants.isNotEmpty;
 
-  // All color names already used in variants to prevent duplicates
   List<String> get usedColorNames => variants.map((v) => v.colorName).toList();
 
   AddEditProductState copyWith({
@@ -77,6 +80,11 @@ class AddEditProductState extends Equatable {
     bool? isPublishing,
     String? errorMessage,
     bool clearError = false,
+    VariantDraft? editingVariant,
+    bool clearEditingVariant = false,
+    bool? isPickingImages,
+    String? variantErrorMessage,
+    bool clearVariantError = false,
   }) => AddEditProductState(
     name: name ?? this.name,
     originalPrice: originalPrice ?? this.originalPrice,
@@ -87,6 +95,13 @@ class AddEditProductState extends Equatable {
     variants: variants ?? this.variants,
     isPublishing: isPublishing ?? this.isPublishing,
     errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    editingVariant: clearEditingVariant
+        ? null
+        : (editingVariant ?? this.editingVariant),
+    isPickingImages: isPickingImages ?? this.isPickingImages,
+    variantErrorMessage: clearVariantError
+        ? null
+        : (variantErrorMessage ?? this.variantErrorMessage),
   );
 
   @override
@@ -100,5 +115,8 @@ class AddEditProductState extends Equatable {
     variants,
     isPublishing,
     errorMessage,
+    editingVariant,
+    isPickingImages,
+    variantErrorMessage,
   ];
 }

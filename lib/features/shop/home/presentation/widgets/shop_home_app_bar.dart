@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 
+// Shop Home App bar
 class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ShopHomeAppBar({super.key});
 
@@ -20,6 +20,7 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: 70.w,
       leading: Builder(
         builder: (context) {
+          // Open Drawer
           return GestureDetector(
             onTap: () {
               Scaffold.of(context).openDrawer();
@@ -40,11 +41,12 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: BlocBuilder<ShopAuthBloc, ShopAuthState>(
         builder: (context, state) {
           String shopName = "My Shop";
-          if (state is ShopStatusLoaded) {
+          if (state.status == ShopAuthStatus.authenticated) {
             shopName = state.shop?.shopName ?? "My Shop";
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            // Shop name
             children: [
               Text(shopName, style: ShopAppTextStyles.heading4),
               Text('Street Cart Partner', style: ShopAppTextStyles.labelBold),
@@ -52,6 +54,7 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           );
         },
       ),
+      // Notification Icon
       actions: [
         Stack(
           alignment: Alignment.center,
@@ -62,9 +65,7 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: ShopAppColors.textSecondary,
                 size: 26.sp,
               ),
-              onPressed: () {
-                ShopHomeHelper.showLogoutConfirmation(context);
-              },
+              onPressed: () {},
             ),
             Positioned(
               right: 12.w,

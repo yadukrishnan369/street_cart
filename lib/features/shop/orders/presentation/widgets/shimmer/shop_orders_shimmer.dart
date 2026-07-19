@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Shop Orders Shimmer
 class ShopOrdersShimmer extends StatelessWidget {
   const ShopOrdersShimmer({super.key});
 

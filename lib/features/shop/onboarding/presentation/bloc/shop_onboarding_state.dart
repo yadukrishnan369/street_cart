@@ -1,23 +1,32 @@
-import 'package:equatable/equatable.dart';
+part of 'shop_onboarding_bloc.dart';
 
-abstract class ShopOnboardingState extends Equatable {
-  const ShopOnboardingState();
+// Statuses of onboarding workflow
+enum ShopOnboardingStatus { initial, loading, completed, error }
+
+// Onboarding states, loading states, error, active page
+class ShopOnboardingState extends Equatable {
+  final ShopOnboardingStatus status;
+  final String? errorMessage;
+  final int currentPage;
+
+  const ShopOnboardingState({
+    this.status = ShopOnboardingStatus.initial,
+    this.errorMessage,
+    this.currentPage = 0,
+  });
+
+  ShopOnboardingState copyWith({
+    ShopOnboardingStatus? status,
+    String? errorMessage,
+    int? currentPage,
+  }) {
+    return ShopOnboardingState(
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+      currentPage: currentPage ?? this.currentPage,
+    );
+  }
 
   @override
-  List<Object?> get props => [];
-}
-
-class ShopOnboardingInitial extends ShopOnboardingState {}
-
-class ShopOnboardingLoading extends ShopOnboardingState {}
-
-class ShopOnboardingCompleted extends ShopOnboardingState {}
-
-class ShopOnboardingError extends ShopOnboardingState {
-  final String message;
-
-  const ShopOnboardingError(this.message);
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [status, errorMessage, currentPage];
 }

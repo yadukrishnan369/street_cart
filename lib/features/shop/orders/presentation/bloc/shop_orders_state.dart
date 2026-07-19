@@ -1,35 +1,35 @@
-import 'package:equatable/equatable.dart';
-import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+part of 'shop_orders_bloc.dart';
 
-abstract class ShopOrdersState extends Equatable {
-  const ShopOrdersState();
+enum ShopOrdersStatus { initial, loading, loaded, failure }
 
-  @override
-  List<Object?> get props => [];
-}
-
-class ShopOrdersInitial extends ShopOrdersState {}
-
-class ShopOrdersLoading extends ShopOrdersState {}
-
-class ShopOrdersLoaded extends ShopOrdersState {
+// State -  orders lists, loaded statuses, errors, and payment status
+class ShopOrdersState extends Equatable {
+  final ShopOrdersStatus status;
   final List<OrderModel> orders;
+  final String? errorMessage;
+  final bool isPaymentReceived;
 
-  const ShopOrdersLoaded(this.orders);
+  const ShopOrdersState({
+    this.status = ShopOrdersStatus.initial,
+    this.orders = const [],
+    this.errorMessage,
+    this.isPaymentReceived = false,
+  });
+
+  ShopOrdersState copyWith({
+    ShopOrdersStatus? status,
+    List<OrderModel>? orders,
+    String? errorMessage,
+    bool? isPaymentReceived,
+  }) {
+    return ShopOrdersState(
+      status: status ?? this.status,
+      orders: orders ?? this.orders,
+      errorMessage: errorMessage ?? this.errorMessage,
+      isPaymentReceived: isPaymentReceived ?? this.isPaymentReceived,
+    );
+  }
 
   @override
-  List<Object?> get props => [orders];
+  List<Object?> get props => [status, orders, errorMessage, isPaymentReceived];
 }
-
-class ShopOrdersFailure extends ShopOrdersState {
-  final String message;
-
-  const ShopOrdersFailure(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class ShopOrderStatusUpdating extends ShopOrdersState {}
-
-class ShopOrderStatusUpdated extends ShopOrdersState {}

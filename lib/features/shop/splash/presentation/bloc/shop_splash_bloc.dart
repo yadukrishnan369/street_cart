@@ -8,6 +8,7 @@ class ShopSplashBloc extends Bloc<ShopSplashEvent, ShopSplashState> {
 
   ShopSplashBloc({required this.checkShopAppStatus})
     : super(ShopSplashInitial()) {
+    // Check App Status
     on<CheckShopAppStatusEvent>((event, emit) async {
       emit(ShopSplashLoading());
       try {

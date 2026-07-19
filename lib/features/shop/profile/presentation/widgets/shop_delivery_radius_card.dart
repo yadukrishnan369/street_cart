@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Shop Delivery Radius Card
 class ShopDeliveryRadiusCard extends StatelessWidget {
   final ShopProfileModel profile;
 
@@ -23,6 +24,7 @@ class ShopDeliveryRadiusCard extends StatelessWidget {
         ),
         child: Row(
           children: [
+            // Icon
             Icon(
               Icons.local_shipping_outlined,
               color: ShopAppColors.primary,
@@ -32,6 +34,7 @@ class ShopDeliveryRadiusCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   'Delivery Radius',
                   style: ShopAppTextStyles.bodySmall.copyWith(
@@ -40,6 +43,7 @@ class ShopDeliveryRadiusCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 2.h),
+                // Delivery Radius KM
                 Text(
                   '${profile.deliveryRadius.toStringAsFixed(0)} km coverage',
                   style: ShopAppTextStyles.bodyMediumBold.copyWith(

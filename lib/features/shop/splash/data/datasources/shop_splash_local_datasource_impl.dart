@@ -6,6 +6,7 @@ class ShopSplashLocalDataSourceImpl implements IShopSplashLocalDataSource {
 
   ShopSplashLocalDataSourceImpl(this.sharedPreferences);
 
+  // Save Locally, if the Shop Visit the App First Time
   @override
   Future<bool> isFirstTime() async {
     return sharedPreferences.getBool('isFirstTimeShopOpen') ?? true;

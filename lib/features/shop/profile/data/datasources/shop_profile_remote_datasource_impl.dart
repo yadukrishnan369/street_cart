@@ -14,7 +14,7 @@ class ShopProfileRemoteDataSourceImpl implements IShopProfileRemoteDataSource {
     required CloudinaryService cloudinaryService,
   }) : _firestore = firestore,
        _cloudinaryService = cloudinaryService;
-
+  // Fetch Shop profile data
   @override
   Future<ShopProfileModel?> getShopProfile(String userId) async {
     try {
@@ -28,6 +28,7 @@ class ShopProfileRemoteDataSourceImpl implements IShopProfileRemoteDataSource {
     }
   }
 
+  // Update Shop Profile
   @override
   Future<void> updateShopProfile({
     required String userId,
@@ -40,6 +41,7 @@ class ShopProfileRemoteDataSourceImpl implements IShopProfileRemoteDataSource {
     }
   }
 
+  // Upload Profile Image
   @override
   Future<String> uploadProfileImage(File imageFile) async {
     try {
@@ -53,6 +55,7 @@ class ShopProfileRemoteDataSourceImpl implements IShopProfileRemoteDataSource {
     }
   }
 
+  // Remove Profile Image
   @override
   Future<void> removeProfileImage(String userId) async {
     try {

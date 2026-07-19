@@ -8,10 +8,12 @@ abstract class ShopSplashState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Splash Initial State
 class ShopSplashInitial extends ShopSplashState {}
 
 class ShopSplashLoading extends ShopSplashState {}
 
+// Spalsh Loaded State
 class ShopSplashLoaded extends ShopSplashState {
   final ShopAppStatus status;
 
@@ -21,6 +23,7 @@ class ShopSplashLoaded extends ShopSplashState {
   List<Object?> get props => [status];
 }
 
+// Splash Error State
 class ShopSplashError extends ShopSplashState {
   final String message;
 

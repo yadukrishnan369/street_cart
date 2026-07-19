@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
+// Item Summary Card
 class ItemSummaryCard extends StatelessWidget {
   final OrderModel order;
   final String shopId;
@@ -16,28 +17,18 @@ class ItemSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shopItems = order.items
-        .where((item) => item.shopId == shopId)
-        .toList();
-    if (shopItems.isEmpty) return const SizedBox.shrink();
+    final summaryData = ShopOrdersHelper.getItemSummaryCardData(
+      order: order,
+      shopId: shopId,
+    );
+    if (summaryData.isEmpty) return const SizedBox.shrink();
 
-    final totalAmount = shopItems.fold<double>(
-      0.0,
-      (sum, item) => sum + (item.price * item.quantity),
-    );
-
-    // Calculate Street cart commission
-    final commission = shopItems.fold<double>(
-      0.0,
-      (sum, item) => sum + item.adminCommission,
-    );
-    final commissionPercentage = totalAmount > 0
-        ? (commission / totalAmount) * 100
-        : 0.0;
-    final finalEarnings = totalAmount - commission;
-    final paymentLabel = ShopOrdersHelper.getDisplayPaymentMethod(
-      order.paymentMethod,
-    );
+    final shopItems = summaryData['shopItems'] as List<OrderItemModel>;
+    final totalAmount = summaryData['totalAmount'] as double;
+    final commission = summaryData['commission'] as double;
+    final commissionPercentage = summaryData['commissionPercentage'] as double;
+    final finalEarnings = summaryData['finalEarnings'] as double;
+    final paymentLabel = summaryData['paymentLabel'] as String;
     final badgeColor = paymentLabel == 'COD'
         ? const Color(0xFFF2A900)
         : const Color(0xFF10B981);
@@ -49,6 +40,7 @@ class ItemSummaryCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Card Title
               Text(
                 'ITEM SUMMARY',
                 style: TextStyle(
@@ -65,6 +57,7 @@ class ItemSummaryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(color: badgeColor.withOpacity(0.15)),
                 ),
+                // Payment Label
                 child: Text(
                   paymentLabel == 'COD' ? 'COD' : '${paymentLabel}',
                   style: TextStyle(
@@ -91,6 +84,7 @@ class ItemSummaryCard extends StatelessWidget {
               ...shopItems.map(
                 (item) => InkWell(
                   onTap: () {
+                    // Navigate to Shop Order Product Details Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -105,6 +99,7 @@ class ItemSummaryCard extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12.r),
+                          // Product Image
                           child: CachedNetworkImage(
                             imageUrl: item.productImage,
                             width: 60.w,
@@ -129,6 +124,7 @@ class ItemSummaryCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Product name
                               Text(
                                 item.productName,
                                 style: TextStyle(
@@ -138,6 +134,7 @@ class ItemSummaryCard extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 4.h),
+                              // Product Selected Size and Color
                               Text(
                                 '${item.selectedSize ?? "Default Size"}, ${item.selectedColor ?? "Default Color"}',
                                 style: TextStyle(
@@ -150,6 +147,7 @@ class ItemSummaryCard extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
+                                  // Item Price
                                   Text(
                                     '₹${PriceUtils.formatPrice(item.price)}',
                                     style: TextStyle(
@@ -158,6 +156,7 @@ class ItemSummaryCard extends StatelessWidget {
                                       color: ShopAppColors.primary,
                                     ),
                                   ),
+                                  // Item Quantity
                                   Text(
                                     'Qty: ${item.quantity.toString().padLeft(2, '0')}',
                                     style: TextStyle(
@@ -179,7 +178,7 @@ class ItemSummaryCard extends StatelessWidget {
 
               const Divider(height: 1.0, thickness: 0.2),
 
-              // Items Total Row
+              // Items Total
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Row(
@@ -207,7 +206,7 @@ class ItemSummaryCard extends StatelessWidget {
 
               const Divider(height: 1.0, thickness: 0.2),
 
-              // Commission Row
+              // Commission Amount
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Row(
@@ -235,7 +234,7 @@ class ItemSummaryCard extends StatelessWidget {
 
               const Divider(height: 1.0, thickness: 0.2),
 
-              // Total Row
+              // Total Amount
               Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(

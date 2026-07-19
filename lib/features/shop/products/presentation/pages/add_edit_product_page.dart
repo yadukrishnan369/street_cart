@@ -4,8 +4,6 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_event.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_state.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_ui_cubit.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_state.dart';
@@ -14,6 +12,7 @@ import 'package:street_cart/features/shop/products/presentation/widgets/add_edit
 import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Add Edit Product Page
 class AddEditProductPage extends StatefulWidget {
   final String shopId;
   final ProductModel? product;
@@ -63,6 +62,7 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
     super.dispose();
   }
 
+  // Publish Product
   void _onPublish(BuildContext context) {
     ProductsPageHelper.publishProduct(
       bloc: context.read<AddEditProductBloc>(),
@@ -91,51 +91,24 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
             return bloc;
           },
         ),
-        BlocProvider<AddEditProductUiCubit>(
-          create: (_) => AddEditProductUiCubit(),
-        ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<ShopProductsBloc, ShopProductsState>(
-            listener: (context, state) {
-              if (state is ShopProductsOperationSuccess) {
-                context.read<AddEditProductBloc>().add(
-                  const SetPublishingEvent(false),
-                );
-                CustomSnackBar.show(context, message: state.message);
-                Navigator.pop(context);
-              } else if (state is ShopProductsError) {
-                context.read<AddEditProductBloc>().add(
-                  SetErrorEvent(state.error),
-                );
-              }
-            },
-          ),
-          BlocListener<AddEditProductBloc, AddEditProductState>(
-            listener: (context, state) {
-              final cubit = context.read<AddEditProductUiCubit>();
-              if (state.name != cubit.state.name) {
-                cubit.updateName(state.name);
-              }
-              if (state.originalPrice != cubit.state.originalPrice) {
-                cubit.updateOriginalPrice(state.originalPrice);
-              }
-              if (state.offerPrice != cubit.state.offerPrice) {
-                cubit.updateOfferPrice(state.offerPrice);
-              }
-              if (state.description != cubit.state.description) {
-                cubit.updateDescription(state.description);
-              }
-              if (state.category != cubit.state.category) {
-                cubit.updateCategory(state.category);
-              }
-              if (state.sizeStandard != cubit.state.sizeStandard) {
-                cubit.updateSizeStandard(state.sizeStandard);
-              }
-            },
-          ),
-        ],
+      child: BlocListener<ShopProductsBloc, ShopProductsState>(
+        listener: (context, state) {
+          if (state.status == ShopProductsStatus.operationSuccess) {
+            context.read<AddEditProductBloc>().add(
+              const SetPublishingEvent(false),
+            );
+            CustomSnackBar.show(
+              context,
+              message: state.successMessage ?? 'Operation successful',
+            );
+            Navigator.pop(context);
+          } else if (state.status == ShopProductsStatus.error) {
+            context.read<AddEditProductBloc>().add(
+              SetErrorEvent(state.errorMessage ?? 'An error occurred'),
+            );
+          }
+        },
         child: Scaffold(
           backgroundColor: ShopAppColors.background,
           appBar: PreferredSize(
@@ -149,12 +122,12 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
           ),
           body: BlocBuilder<ShopProductsBloc, ShopProductsState>(
             builder: (context, productsState) {
-              if (productsState is ShopProductsLoading) {
+              if (productsState.status == ShopProductsStatus.loading) {
                 return const Center(child: CircularProgressIndicator());
               }
 
               Map<String, dynamic> customConfig = {};
-              if (productsState is ShopProductsLoaded) {
+              if (productsState.status == ShopProductsStatus.loaded) {
                 customConfig = productsState.customConfig;
                 ProductsPageHelper.initAddEditDefaults(
                   bloc: context.read<AddEditProductBloc>(),
@@ -167,7 +140,7 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
                 productsState,
                 widget.product,
               );
-
+              // Add Edit Product Form Content
               return AddEditProductFormContent(
                 formKey: _formKey,
                 nameController: _nameController,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Product Color Selection
 class ProductColorSelection extends StatelessWidget {
   final List<String> availableColors;
   final List<String> selectedColors;
@@ -21,6 +22,7 @@ class ProductColorSelection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text(
           'Colors',
           style: TextStyle(
@@ -30,6 +32,7 @@ class ProductColorSelection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
+        // List of Colors
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -77,6 +80,7 @@ class ProductColorSelection extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 8.w),
+                          // Color Name
                           Text(
                             colorName,
                             style: TextStyle(

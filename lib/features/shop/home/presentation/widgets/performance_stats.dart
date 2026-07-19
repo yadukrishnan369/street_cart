@@ -6,6 +6,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
 
+// Performance Status
 class PerformanceStats extends StatelessWidget {
   final String shopId;
 
@@ -45,10 +46,12 @@ class PerformanceStats extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Title
                 Text(
                   'Performance Today',
                   style: ShopAppTextStyles.bodyLargeBold,
                 ),
+                // Live Updates Label
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 10.w,
@@ -73,16 +76,19 @@ class PerformanceStats extends StatelessWidget {
             Row(
               children: [
                 Expanded(
+                  // Today Orders Card
                   child: _buildStatCard(
                     'TODAY ORDERS',
                     todayOrdersCount.toString().padLeft(2, '0'),
                   ),
                 ),
                 SizedBox(width: 16.w),
+                // Todal Sales Card
                 Expanded(child: _buildStatCard('TODAY SALES', '₹12,450.0')),
               ],
             ),
             SizedBox(height: 20.h),
+            // Pending Delivery Card
             _buildPendingCard(
               'PENDING DELIVERIES',
               pendingDeliveriesCount.toString().padLeft(2, '0'),

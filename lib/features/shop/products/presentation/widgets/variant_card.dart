@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_state.dart';
 
-// card that single color variant
+// Card for Single Color Variant
 class VariantCard extends StatelessWidget {
   final VariantDraft variant;
   final int index;
@@ -78,6 +78,7 @@ class VariantCard extends StatelessWidget {
                 ),
                 SizedBox(width: 10.w),
                 Expanded(
+                  // Color Name
                   child: Text(
                     variant.colorName,
                     style: TextStyle(
@@ -99,6 +100,7 @@ class VariantCard extends StatelessWidget {
                         : Colors.grey[100],
                     borderRadius: BorderRadius.circular(20.r),
                   ),
+                  // Varient Total Stock
                   child: Text(
                     '${variant.totalStock} pcs',
                     style: TextStyle(
@@ -133,7 +135,7 @@ class VariantCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Images row
+                // Images
                 if (variant.images.isNotEmpty) ...[
                   _ImageThumbnailRow(images: variant.images),
                   SizedBox(height: 12.h),
@@ -195,6 +197,7 @@ class VariantCard extends StatelessWidget {
   }
 }
 
+// Image Thumbnail
 class _ImageThumbnailRow extends StatelessWidget {
   final List<dynamic> images;
 
@@ -227,6 +230,7 @@ class _ImageThumbnailRow extends StatelessWidget {
   }
 }
 
+// Action Button
 class _ActionButton extends StatelessWidget {
   final IconData icon;
   final Color color;

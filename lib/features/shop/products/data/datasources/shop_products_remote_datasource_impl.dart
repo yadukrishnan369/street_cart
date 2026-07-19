@@ -53,6 +53,7 @@ class ShopProductsRemoteDataSourceImpl
     }
   }
 
+  // Update Product
   @override
   Future<void> updateProduct(
     ProductModel product,
@@ -70,6 +71,7 @@ class ShopProductsRemoteDataSourceImpl
     }
   }
 
+  // Delete Product
   @override
   Future<void> deleteProduct(String shopId, String productId) async {
     try {
@@ -79,11 +81,11 @@ class ShopProductsRemoteDataSourceImpl
     }
   }
 
-  // Get Product Config filter categories and size groups based on shop's category
+  // Get Product Config
   @override
   Future<Map<String, dynamic>> getShopProductConfig(String shopId) async {
     try {
-      //  Get the shop's profile to retrieve its registered business category
+      //  Get the shop registered business category
       final shopDoc = await _firestore.collection('shops').doc(shopId).get();
       final String shopCategory = (shopDoc.exists && shopDoc.data() != null)
           ? (shopDoc.data()!['category']?.toString() ?? '')
@@ -109,7 +111,7 @@ class ShopProductsRemoteDataSourceImpl
           for (final raw in rawBusinessCats) {
             final map = Map<String, dynamic>.from(raw as Map);
             final name = map['name']?.toString() ?? '';
-            // If it matches the shop's business category, extract its children & size groups
+            // If it matches the shop business category, extract its children & size groups
             if (name.toLowerCase() == shopCategory.toLowerCase()) {
               final rawProds = map['product_categories'] as List<dynamic>?;
               final rawSizes = map['size_groups'] as List<dynamic>?;
@@ -130,7 +132,7 @@ class ShopProductsRemoteDataSourceImpl
         result.addAll(configDoc.data()!);
       }
 
-      // Filter available size groups based on matching ones
+      // Filter available size groups based on matching
       if (result['size_groups'] != null) {
         final List<dynamic> filteredGroups = [];
         for (final group in result['size_groups'] as List<dynamic>) {
@@ -143,7 +145,7 @@ class ShopProductsRemoteDataSourceImpl
         result['size_groups'] = filteredGroups;
       }
 
-      // Add dynamic allowed categories to map so it can be accessed in add_edit_product_page
+      // Add allowed categories, can be accessed in add_edit_product_page
       result['allowed_categories'] = allowedProductCats;
 
       return result;
@@ -152,6 +154,7 @@ class ShopProductsRemoteDataSourceImpl
     }
   }
 
+  // Save Shop Product Config
   @override
   Future<void> saveShopProductConfig(
     String shopId,
@@ -169,6 +172,7 @@ class ShopProductsRemoteDataSourceImpl
     }
   }
 
+  // Upload Variants
   Future<List<ProductVariantModel>> _uploadVariants(
     List<VariantImageDraft> drafts,
   ) async {

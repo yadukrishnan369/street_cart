@@ -39,6 +39,7 @@ class ProductBasicDetailsForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text(
           'BASIC DETAILS',
           style: ShopAppTextStyles.caption.copyWith(
@@ -47,7 +48,7 @@ class ProductBasicDetailsForm extends StatelessWidget {
         ),
         SizedBox(height: 12.h),
 
-        // Product Name
+        // Product Name Field
         CustomTextField(
           label: 'Product Name',
           hintText: 'e.g. Slim Fit Cotton Shirt',
@@ -69,7 +70,7 @@ class ProductBasicDetailsForm extends StatelessWidget {
         ),
         SizedBox(height: 16.h),
 
-        // Prices row
+        // Prices Field
         Row(
           children: [
             Expanded(
@@ -127,13 +128,14 @@ class ProductBasicDetailsForm extends StatelessWidget {
           ],
         ),
         SizedBox(height: 6.h),
+        // Info
         Text(
           'Leave offer price empty if no discount available',
           style: TextStyle(fontSize: 11.sp, color: ShopAppColors.textSecondary),
         ),
         SizedBox(height: 16.h),
 
-        // Description
+        // Product Description Field
         CustomTextField(
           label: 'Description',
           hintText: 'Describe your product...',
@@ -156,7 +158,7 @@ class ProductBasicDetailsForm extends StatelessWidget {
         ),
         SizedBox(height: 16.h),
 
-        // Category dropdown
+        // Product Category dropdown
         Text(
           'Category',
           style: TextStyle(

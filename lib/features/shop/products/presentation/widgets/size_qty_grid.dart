@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Size Qty Grid
 class SizeQtyGrid extends StatelessWidget {
   final Map<String, TextEditingController> controllers;
 
@@ -10,6 +11,7 @@ class SizeQtyGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sizes = controllers.keys.toList();
+    // Grid View
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -41,6 +43,7 @@ class SizeQtyGrid extends StatelessWidget {
                   ),
                 ),
                 alignment: Alignment.center,
+                // Size name
                 child: Text(
                   size,
                   style: TextStyle(
@@ -51,6 +54,7 @@ class SizeQtyGrid extends StatelessWidget {
                 ),
               ),
               Expanded(
+                // Size Quantity Field
                 child: TextField(
                   controller: controllers[size],
                   keyboardType: TextInputType.number,

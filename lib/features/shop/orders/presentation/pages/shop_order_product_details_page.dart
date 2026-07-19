@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/orders/data/models/order_model.dar
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_product_header.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_product_details_info.dart';
 
+// Shop Order Product Details Page
 class ShopOrderProductDetailsPage extends StatelessWidget {
   final OrderItemModel item;
 
@@ -18,6 +19,7 @@ class ShopOrderProductDetailsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.5,
         centerTitle: true,
+        // Page Header
         title: Text(
           'Product Info',
           style: TextStyle(
@@ -35,7 +37,9 @@ class ShopOrderProductDetailsPage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
+            // Shop Order Product Header Section
             ShopOrderProductHeader(item: item),
+            // Shop Order Product Details Info
             ShopOrderProductDetailsInfo(item: item),
           ],
         ),

@@ -1,5 +1,6 @@
-import 'package:equatable/equatable.dart';
+part of 'shop_orders_bloc.dart';
 
+// Base class
 abstract class ShopOrdersEvent extends Equatable {
   const ShopOrdersEvent();
 
@@ -7,6 +8,7 @@ abstract class ShopOrdersEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Fetch list of Orders of a Shop
 class FetchShopOrdersEvent extends ShopOrdersEvent {
   final String shopId;
 
@@ -16,6 +18,7 @@ class FetchShopOrdersEvent extends ShopOrdersEvent {
   List<Object?> get props => [shopId];
 }
 
+// Update Status of an Order
 class UpdateOrderStatusEvent extends ShopOrdersEvent {
   final String shopId;
   final String orderId;
@@ -29,4 +32,14 @@ class UpdateOrderStatusEvent extends ShopOrdersEvent {
 
   @override
   List<Object?> get props => [shopId, orderId, newStatus];
+}
+
+// Toggle state of the payment received checkbox
+class TogglePaymentReceivedEvent extends ShopOrdersEvent {
+  final bool isReceived;
+
+  const TogglePaymentReceivedEvent(this.isReceived);
+
+  @override
+  List<Object?> get props => [isReceived];
 }

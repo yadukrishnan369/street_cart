@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Products Tab Bar
 class ProductsTabBar extends StatelessWidget implements PreferredSizeWidget {
   final TabController controller;
 
@@ -22,6 +23,7 @@ class ProductsTabBar extends StatelessWidget implements PreferredSizeWidget {
           fontSize: 14.sp,
           fontWeight: FontWeight.normal,
         ),
+        // Tab Titles
         tabs: const [
           Tab(text: 'All Products'),
           Tab(text: 'Active'),

@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 import 'package:street_cart/features/shop/profile/presentation/pages/edit_shop_profile_page.dart';
 
+// Shop Profile Action Buttons
 class ShopProfileActionButtons extends StatelessWidget {
   final ShopProfileModel profile;
   final VoidCallback onLogout;
@@ -30,6 +31,7 @@ class ShopProfileActionButtons extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () {
                 final profileBloc = context.read<ShopProfileBloc>();
+                // Navigate to Edit Shop Profile Page
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -63,6 +65,7 @@ class ShopProfileActionButtons extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
+          // Shop Logout Button
           SizedBox(
             width: double.infinity,
             height: 48.h,

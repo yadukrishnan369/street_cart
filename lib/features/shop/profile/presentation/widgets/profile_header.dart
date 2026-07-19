@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Shop Profile Header
 class ShopProfileHeader extends StatelessWidget {
   final ShopProfileModel profile;
   final VoidCallback onEditPressed;
@@ -43,6 +44,7 @@ class ShopProfileHeader extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.grey.shade200, width: 2),
             ),
+            // Shop Profile Image
             child: CircleAvatar(
               radius: 40.r,
               backgroundColor: const Color(0xFF1E2E2D),
@@ -59,12 +61,14 @@ class ShopProfileHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // Shop Name
           Text(
             profile.shopName.isEmpty ? 'Shop Name' : profile.shopName,
             textAlign: TextAlign.center,
             style: ShopAppTextStyles.heading2.copyWith(fontSize: 22.sp),
           ),
           SizedBox(height: 4.h),
+          // Shop Category
           Text(
             profile.category.isEmpty ? 'General Store' : profile.category,
             style: ShopAppTextStyles.bodyMedium.copyWith(
@@ -75,16 +79,20 @@ class ShopProfileHeader extends StatelessWidget {
           SizedBox(height: 16.h),
           const Divider(color: ShopAppColors.border),
           SizedBox(height: 16.h),
+          // Owner Name Section
           _buildInfoRow(Icons.person_outline, 'Owner', profile.ownerName),
           SizedBox(height: 12.h),
+          // Email Section
           _buildInfoRow(Icons.email_outlined, 'Email', profile.email),
           SizedBox(height: 12.h),
+          // Phone Number Section
           _buildInfoRow(
             Icons.phone_outlined,
             'Phone',
             profile.phone.isNotEmpty ? profile.phone : 'Not added',
           ),
           SizedBox(height: 12.h),
+          // Verification Badge Section
           _buildInfoRow(
             Icons.verified_user_outlined,
             'Status',
@@ -96,6 +104,7 @@ class ShopProfileHeader extends StatelessWidget {
           SizedBox(height: 24.h),
           SizedBox(
             width: double.infinity,
+            // Edit Profile Button
             child: ElevatedButton(
               onPressed: onEditPressed,
               style: ElevatedButton.styleFrom(
@@ -124,6 +133,7 @@ class ShopProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18.sp, color: ShopAppColors.textSecondary),
         SizedBox(width: 12.w),
+        // Label
         Text(
           '$label:',
           style: ShopAppTextStyles.bodySmall.copyWith(

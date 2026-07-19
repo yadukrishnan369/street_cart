@@ -8,10 +8,13 @@ abstract class ShopHomeState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Intital State
 class ShopHomeInitial extends ShopHomeState {}
 
+// Loading State
 class ShopHomeLoading extends ShopHomeState {}
 
+// First Visit Completed State
 class ShopHomeFirstVisitCheckCompleted extends ShopHomeState {
   final bool isFirstVisit;
 
@@ -21,8 +24,10 @@ class ShopHomeFirstVisitCheckCompleted extends ShopHomeState {
   List<Object?> get props => [isFirstVisit];
 }
 
+// Action succes State
 class ShopHomeActionSuccess extends ShopHomeState {}
 
+// Home Loaded State
 class ShopHomeDataLoaded extends ShopHomeState {
   final List<OrderModel> orders;
 
@@ -32,6 +37,7 @@ class ShopHomeDataLoaded extends ShopHomeState {
   List<Object?> get props => [orders];
 }
 
+// Shop Error State
 class ShopHomeError extends ShopHomeState {
   final String message;
 

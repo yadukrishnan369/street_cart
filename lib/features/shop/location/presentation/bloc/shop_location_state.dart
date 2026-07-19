@@ -7,10 +7,13 @@ abstract class ShopLocationState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Initial State
 class ShopLocationInitial extends ShopLocationState {}
 
+//  Loading State
 class ShopLocationLoading extends ShopLocationState {}
 
+// Location Success State
 class ShopLocationSuccess extends ShopLocationState {
   final bool success;
 
@@ -20,8 +23,10 @@ class ShopLocationSuccess extends ShopLocationState {
   List<Object?> get props => [success];
 }
 
+// Location Skip State
 class ShopLocationSkipped extends ShopLocationState {}
 
+// Location Failure State
 class ShopLocationFailure extends ShopLocationState {
   final String message;
 

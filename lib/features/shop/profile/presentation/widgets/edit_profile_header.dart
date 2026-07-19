@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Shop Edit Profile Header
 class ShopEditProfileHeader extends StatelessWidget {
   final String? profileImageUrl;
   final VoidCallback? onPickImage;
@@ -36,6 +37,7 @@ class ShopEditProfileHeader extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.grey.shade200, width: 2),
                   ),
+                  // Shop Profile Image
                   child: CircleAvatar(
                     radius: 54.r,
                     backgroundColor: const Color(0xFF1E2E2D),
@@ -86,6 +88,7 @@ class ShopEditProfileHeader extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Change Profile Image
                 GestureDetector(
                   onTap: onPickImage,
                   child: Text(
@@ -107,7 +110,7 @@ class ShopEditProfileHeader extends StatelessWidget {
                   ),
 
                   SizedBox(width: 8.w),
-
+                  // Remove Profile Image
                   GestureDetector(
                     onTap: onRemoveImage,
                     child: Text(

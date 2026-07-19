@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// FAQ Expansion Tile
 class FAQExpansionTile extends StatelessWidget {
   final String question;
   final String answer;
@@ -23,6 +24,7 @@ class FAQExpansionTile extends StatelessWidget {
         border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
       ),
       child: ExpansionTile(
+        // Expansion FAQ Question
         title: Text(
           question,
           style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -37,6 +39,7 @@ class FAQExpansionTile extends StatelessWidget {
         childrenPadding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
         expandedAlignment: Alignment.topLeft,
         children: [
+          // Expansion Answer
           Text(
             answer,
             style: ShopAppTextStyles.bodyMedium.copyWith(

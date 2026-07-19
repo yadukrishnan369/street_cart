@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Shop Login Header
 class ShopLoginHeader extends StatelessWidget {
   const ShopLoginHeader({super.key});
 
@@ -12,6 +13,7 @@ class ShopLoginHeader extends StatelessWidget {
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24.r),
+        // Decoration Image
         image: const DecorationImage(
           image: AssetImage('assets/images/shop_login_header.png'),
           fit: BoxFit.cover,

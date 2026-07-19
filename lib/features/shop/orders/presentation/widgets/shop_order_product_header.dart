@@ -7,6 +7,7 @@ import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
+// Shop Orders Product Header
 class ShopOrderProductHeader extends StatelessWidget {
   final OrderItemModel item;
 
@@ -31,6 +32,7 @@ class ShopOrderProductHeader extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
+              // Navigate to Image Preview Page
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -43,6 +45,7 @@ class ShopOrderProductHeader extends StatelessWidget {
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.r),
+              // Product Image
               child: CachedNetworkImage(
                 imageUrl: item.productImage,
                 width: 260.w,
@@ -62,6 +65,7 @@ class ShopOrderProductHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // Product name
           Text(
             item.productName,
             style: TextStyle(
@@ -72,6 +76,7 @@ class ShopOrderProductHeader extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 8.h),
+          // Order Price
           Text(
             '₹${PriceUtils.formatPrice(item.price)}',
             style: TextStyle(

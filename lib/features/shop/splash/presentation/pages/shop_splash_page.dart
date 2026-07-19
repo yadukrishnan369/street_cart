@@ -15,6 +15,7 @@ import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_b
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_event.dart';
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_state.dart';
 
+// Shop Splash Page
 class ShopSplashPage extends StatefulWidget {
   const ShopSplashPage({super.key});
 
@@ -54,6 +55,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
           if (state is ShopSplashLoaded) {
             switch (state.status) {
               case ShopAppStatus.firstTime:
+                // Navigate to Shop Onboarding Page
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -62,6 +64,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 );
                 break;
               case ShopAppStatus.notLoggedIn:
+                // Navigate to Shop Login Page
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -70,6 +73,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 );
                 break;
               case ShopAppStatus.profilePending:
+                // Navigate to Shop Profile Setup Page
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -78,6 +82,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 );
                 break;
               case ShopAppStatus.reviewPending:
+                // Navigate to Account Review Page
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -86,6 +91,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 );
                 break;
               case ShopAppStatus.approved:
+                // Navigate to Shop Home Page
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const ShopHomePage()),
@@ -110,6 +116,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                         borderRadius: BorderRadius.circular(48.r),
                       ),
                       child: Center(
+                        // App Logo
                         child: AppLogo(
                           size: 100,
                           backgroundColor: ShopAppColors.primary,
@@ -118,6 +125,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                       ),
                     ),
                     SizedBox(height: 48.h),
+                    // App name and Titles
                     Text(
                       'Street Cart',
                       style: ShopAppTextStyles.heading1.copyWith(
@@ -142,6 +150,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                       width: 250.w,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.r),
+                        // Linear Progress Line to 100
                         child: LinearProgressIndicator(
                           minHeight: 6.h,
                           backgroundColor: ShopAppColors.primary.withOpacity(
@@ -154,6 +163,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                       ),
                     ),
                     SizedBox(height: 16.h),
+                    // Footer Content
                     Text(
                       'Connecting to local marketplace...',
                       style: ShopAppTextStyles.bodySmall.copyWith(

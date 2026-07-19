@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Shop Profile Section Block
 class ShopProfileSectionBlock extends StatelessWidget {
   final String title;
   final Widget child;
@@ -22,6 +23,7 @@ class ShopProfileSectionBlock extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             title,
             style: ShopAppTextStyles.bodySmall.copyWith(
@@ -39,6 +41,7 @@ class ShopProfileSectionBlock extends StatelessWidget {
   }
 }
 
+// Shop Profile Grid Item
 class ShopProfileGridItem extends StatelessWidget {
   final String label;
   final String value;
@@ -56,6 +59,7 @@ class ShopProfileGridItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Label
         Text(
           label,
           style: ShopAppTextStyles.bodySmall.copyWith(

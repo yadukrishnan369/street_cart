@@ -154,7 +154,6 @@ import 'package:street_cart/features/shop/auth/domain/usecases/check_shop_email_
 import 'package:street_cart/features/shop/auth/domain/usecases/finalize_shop_sign_up.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_business_categories.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_product_categories.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_shop_payment_settings.dart';
 import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource_impl.dart';
@@ -502,9 +501,9 @@ Future<void> _initShopAuth() async {
       checkShopEmailVerification: sl(),
       finalizeShopSignUp: sl(),
       deleteShopAuthAccount: sl(),
+      getBusinessCategories: sl(),
     ),
   );
-  sl.registerFactory(() => ShopCategoriesCubit(getBusinessCategories: sl()));
 }
 
 // ================= CORE =================

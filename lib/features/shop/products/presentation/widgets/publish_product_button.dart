@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Publish Product Button
 class PublishProductButton extends StatelessWidget {
   final bool isPublishing;
   final bool isEdit;
@@ -30,6 +31,7 @@ class PublishProductButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
+        // Showing Loading Progress while Uploading
         child: isPublishing
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,

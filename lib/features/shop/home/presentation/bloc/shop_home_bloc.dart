@@ -15,6 +15,7 @@ class ShopHomeBloc extends Bloc<ShopHomeEvent, ShopHomeState> {
     required this.completeFirstHomeVisit,
     required this.getShopDashboardOrders,
   }) : super(ShopHomeInitial()) {
+    // Checks if the Shop is visiting first time
     on<CheckFirstHomeVisitEvent>((event, emit) async {
       emit(ShopHomeLoading());
       try {
@@ -25,6 +26,7 @@ class ShopHomeBloc extends Bloc<ShopHomeEvent, ShopHomeState> {
       }
     });
 
+    // Marks the first visit flag as completed
     on<CompleteFirstHomeVisitEvent>((event, emit) async {
       emit(ShopHomeLoading());
       try {
@@ -35,6 +37,7 @@ class ShopHomeBloc extends Bloc<ShopHomeEvent, ShopHomeState> {
       }
     });
 
+    // Fetch list of orders
     on<FetchShopHomeDataEvent>((event, emit) async {
       if (state is! ShopHomeDataLoaded) {
         emit(ShopHomeLoading());

@@ -6,6 +6,7 @@ import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/core/utils/validators.dart';
 import 'edit_profile_header.dart';
 
+// Edit Step1 Info
 class EditStep1Info extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController ownerNameController;
@@ -41,6 +42,7 @@ class EditStep1Info extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Edit Shop Profile Header Section
           ShopEditProfileHeader(
             profileImageUrl: profileImageUrl,
             onPickImage: onPickImage,
@@ -48,11 +50,16 @@ class EditStep1Info extends StatelessWidget {
             isUploading: isUploadingImage,
           ),
           SizedBox(height: 32.h),
+          // Owner Name Field
           CustomTextField(
             label: "Shop Owner Name",
             controller: ownerNameController,
             hintText: 'Enter owner name',
             validator: Validators.validateName,
+            prefixIcon: const Icon(
+              Icons.person_2_outlined,
+              color: ShopAppColors.primary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
             hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -63,11 +70,16 @@ class EditStep1Info extends StatelessWidget {
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 20.h),
+          // Shop Name Field
           CustomTextField(
             label: "Shop Name",
             controller: shopNameController,
             hintText: 'Enter shop name',
             validator: Validators.validateShopName,
+            prefixIcon: const Icon(
+              Icons.storefront,
+              color: ShopAppColors.primary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
             hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -80,6 +92,7 @@ class EditStep1Info extends StatelessWidget {
           SizedBox(height: 20.h),
           Padding(
             padding: EdgeInsets.only(bottom: 8.h),
+            // Select Business Category Field
             child: Text(
               'Business Category',
               style: ShopAppTextStyles.bodyMediumBold,
@@ -87,11 +100,15 @@ class EditStep1Info extends StatelessWidget {
           ),
           DropdownButtonFormField<String>(
             isExpanded: true,
-            value: selectedCategory,
+            initialValue: selectedCategory,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
               fillColor: ShopAppColors.surface,
               filled: true,
+              prefixIcon: const Icon(
+                Icons.category_outlined,
+                color: ShopAppColors.primary,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: const BorderSide(color: ShopAppColors.border),
@@ -118,12 +135,17 @@ class EditStep1Info extends StatelessWidget {
             onChanged: onCategoryChanged,
           ),
           SizedBox(height: 20.h),
+          // Shop Description Field
           CustomTextField(
             label: "Shop Description",
             controller: descriptionController,
             hintText: 'Describe your business',
             maxLines: 4,
             validator: Validators.validateDescription,
+            prefixIcon: const Icon(
+              Icons.description_outlined,
+              color: ShopAppColors.primary,
+            ),
             labelStyle: ShopAppTextStyles.bodyMediumBold,
             textStyle: ShopAppTextStyles.bodyMedium,
             hintStyle: ShopAppTextStyles.bodyMedium.copyWith(

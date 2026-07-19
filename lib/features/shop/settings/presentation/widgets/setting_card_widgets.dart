@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Setting Section Card
 class SettingSectionCard extends StatelessWidget {
   final List<Widget> children;
 
@@ -21,6 +22,7 @@ class SettingSectionCard extends StatelessWidget {
   }
 }
 
+// Setting Row Item
 class SettingRowItem extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -64,6 +66,7 @@ class SettingRowItem extends StatelessWidget {
             ),
             SizedBox(width: 16.w),
             Expanded(
+              // Title
               child: Text(
                 title,
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -80,6 +83,7 @@ class SettingRowItem extends StatelessWidget {
   }
 }
 
+// Setting Row Divider
 class SettingRowDivider extends StatelessWidget {
   const SettingRowDivider({super.key});
 
@@ -94,6 +98,7 @@ class SettingRowDivider extends StatelessWidget {
   }
 }
 
+// Setting Section Header
 class SettingSectionHeader extends StatelessWidget {
   final String title;
 
@@ -103,6 +108,7 @@ class SettingSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h, left: 4.w),
+      // Title
       child: Text(
         title,
         style: ShopAppTextStyles.bodySmall.copyWith(
@@ -116,6 +122,7 @@ class SettingSectionHeader extends StatelessWidget {
   }
 }
 
+// Setting Custom Switch
 class SettingCustomSwitch extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -132,6 +139,7 @@ class SettingCustomSwitch extends StatelessWidget {
       height: 24.h,
       child: Transform.scale(
         scale: 0.75,
+        // Toggle Switch
         child: Switch(
           value: value,
           onChanged: onChanged,

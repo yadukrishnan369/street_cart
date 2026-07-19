@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Shop Products Shimmer
 class ShopProductsShimmer extends StatelessWidget {
   final int itemCount;
 
@@ -33,7 +34,7 @@ class ShopProductsShimmer extends StatelessWidget {
             highlightColor: Colors.grey[100]!,
             child: Row(
               children: [
-                // Product Image Square
+                // Product Image
                 Container(
                   width: 70.w,
                   height: 70.w,
@@ -47,7 +48,7 @@ class ShopProductsShimmer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Product Title block
+                      // Product Title
                       Container(
                         width: 150.w,
                         height: 14.h,
@@ -57,7 +58,7 @@ class ShopProductsShimmer extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      // Product Price block
+                      // Product Price
                       Container(
                         width: 60.w,
                         height: 16.h,

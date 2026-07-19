@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Profile Completion Modal
 class ProfileCompletionModal extends StatelessWidget {
   final VoidCallback onCompleteNow;
   final VoidCallback onMaybeLater;
@@ -41,6 +42,7 @@ class ProfileCompletionModal extends StatelessWidget {
                 color: ShopAppColors.primary.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
+              // Icon
               child: Icon(
                 Icons.storefront_outlined,
                 size: 48.sp,
@@ -48,18 +50,21 @@ class ProfileCompletionModal extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
+            // Title
             Text(
               'Complete Your Profile',
               style: ShopAppTextStyles.heading3,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 12.h),
+            // Subtitle
             Text(
               'Your shop is almost ready! Finish setting up your business profile to start receiving orders.',
               style: ShopAppTextStyles.bodyMedium,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 32.h),
+            // Button for Complete Profile
             PrimaryButton(
               text: 'Complete Setup Now',
               backgroundColor: ShopAppColors.primary,

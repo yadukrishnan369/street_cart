@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
+import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_state.dart';
-import 'package:street_cart/features/shop/profile/presentation/bloc/edit_shop_profile_ui_cubit.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/edit_step1_info.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/edit_step2_address.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/edit_step3_verification.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_categories_cubit.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/utils/edit_shop_profile_helper.dart';
 import 'package:street_cart/core/constants/profile_constants.dart';
 
+// Edit Shop Profile Form Steps
 class EditShopProfileFormSteps extends StatelessWidget {
   final ShopProfileModel profile;
-  final EditShopProfileUiState uiState;
+  final ShopProfileState uiState;
   final GlobalKey<FormState> formKeyStep1;
   final GlobalKey<FormState> formKeyStep2;
   final GlobalKey<FormState> formKeyStep3;
@@ -50,24 +51,21 @@ class EditShopProfileFormSteps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (uiState.currentStep == 1) {
-      return BlocBuilder<ShopCategoriesCubit, ShopCategoriesState>(
+      return BlocBuilder<ShopAuthBloc, ShopAuthState>(
         builder: (context, state) {
-          List<String> categories = [];
-          if (state is ShopCategoriesLoaded) {
-            categories = state.categories;
-          }
+          final categories = state.categories;
 
           if (categories.isNotEmpty &&
               (uiState.selectedCategory == null ||
                   uiState.selectedCategory!.isEmpty ||
                   !categories.contains(uiState.selectedCategory))) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.read<EditShopProfileUiCubit>().updateCategory(
-                categories.first,
+              context.read<ShopProfileBloc>().add(
+                UpdateCategoryEvent(categories.first),
               );
             });
           }
-
+          // Edit Step 1 Section
           return EditStep1Info(
             formKey: formKeyStep1,
             ownerNameController: ownerNameController,
@@ -84,7 +82,7 @@ class EditShopProfileFormSteps extends StatelessWidget {
                 : (profile.category.isNotEmpty ? [profile.category] : []),
             onCategoryChanged: (val) {
               if (val != null) {
-                context.read<EditShopProfileUiCubit>().updateCategory(val);
+                context.read<ShopProfileBloc>().add(UpdateCategoryEvent(val));
               }
             },
           );
@@ -96,11 +94,11 @@ class EditShopProfileFormSteps extends StatelessWidget {
           bool enableCod = true;
           bool enableOnline = true;
 
-          if (state is ShopPaymentSettingsLoaded) {
-            enableCod = state.settings['enable_cod'] ?? true;
-            enableOnline = state.settings['enable_online'] ?? true;
+          if (state.status == ShopProfileStatus.paymentSettingsLoaded) {
+            enableCod = state.paymentSettings?['enable_cod'] ?? true;
+            enableOnline = state.paymentSettings?['enable_online'] ?? true;
           }
-
+          // Edit Step 2 Section
           return EditStep2Address(
             formKey: formKeyStep2,
             fullAddressController: fullAddressController,
@@ -110,21 +108,22 @@ class EditShopProfileFormSteps extends StatelessWidget {
             selectedDistrict: uiState.selectedDistrict,
             districts: ProfileConstants.districts,
             onDistrictChanged: (val) =>
-                context.read<EditShopProfileUiCubit>().updateDistrict(val),
+                context.read<ShopProfileBloc>().add(UpdateDistrictEvent(val)),
             selectedState: uiState.selectedState,
             states: ProfileConstants.states,
             onStateChanged: (val) =>
-                context.read<EditShopProfileUiCubit>().updateState(val),
+                context.read<ShopProfileBloc>().add(UpdateStateEvent(val)),
             selectedPaymentMethods: uiState.selectedPaymentMethods,
             enableCod: enableCod,
             enableOnline: enableOnline,
             onPaymentMethodChanged: (method, isSelected) => context
-                .read<EditShopProfileUiCubit>()
-                .togglePaymentMethod(method, isSelected),
+                .read<ShopProfileBloc>()
+                .add(TogglePaymentMethodEvent(method, isSelected)),
           );
         },
       );
     } else {
+      // Edit Step 3 Section
       return EditStep3Verification(
         formKey: formKeyStep3,
         emailController: emailController,
@@ -136,10 +135,12 @@ class EditShopProfileFormSteps extends StatelessWidget {
         isUploadingOwnerId: uiState.isUploadingOwnerId,
         onPickLicense: () => EditShopProfileHelper.pickLicense(context),
         onPickOwnerId: () => EditShopProfileHelper.pickOwnerId(context),
-        onClearLicense: () =>
-            context.read<EditShopProfileUiCubit>().updateBusinessLicenseUrl(''),
-        onClearOwnerId: () =>
-            context.read<EditShopProfileUiCubit>().updateOwnerIdUrl(''),
+        onClearLicense: () => context.read<ShopProfileBloc>().add(
+          const UpdateBusinessLicenseUrlEvent(''),
+        ),
+        onClearOwnerId: () => context.read<ShopProfileBloc>().add(
+          const UpdateOwnerIdUrlEvent(''),
+        ),
       );
     }
   }

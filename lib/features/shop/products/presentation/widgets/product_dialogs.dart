@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 
+// Product Dialogs
 class ProductDialogs {
   static void showAddSizeModal({
     required BuildContext context,

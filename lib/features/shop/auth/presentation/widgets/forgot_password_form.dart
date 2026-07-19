@@ -6,6 +6,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Forgot Password Form
 class ShopForgotPasswordForm extends StatefulWidget {
   final bool isLoading;
   final void Function(String email) onSendResetLink;
@@ -37,6 +38,7 @@ class _ShopForgotPasswordFormState extends State<ShopForgotPasswordForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Email Field
           CustomTextField(
             label: "Business Email",
             hintText: "example@business.com",
@@ -58,6 +60,7 @@ class _ShopForgotPasswordFormState extends State<ShopForgotPasswordForm> {
             ),
           ),
           32.verticalSpace,
+          // Button for send Reset Link
           PrimaryButton(
             text: "Send Reset Link",
             isLoading: widget.isLoading,

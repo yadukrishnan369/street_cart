@@ -5,11 +5,11 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
-import 'package:street_cart/features/shop/auth/presentation/bloc/shop_signup_ui_cubit.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Shop Signup Form
 class ShopSignupForm extends StatelessWidget {
   final TextEditingController ownerNameController;
   final TextEditingController shopNameController;
@@ -30,14 +30,15 @@ class ShopSignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShopSignupUiCubit, ShopSignupUiState>(
-      builder: (context, uiState) {
+    return BlocBuilder<ShopAuthBloc, ShopAuthState>(
+      builder: (context, state) {
         return Form(
           key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 24.h),
+              // Page Text contents
               Text(
                 'Create your seller account',
                 style: ShopAppTextStyles.heading1,
@@ -48,6 +49,7 @@ class ShopSignupForm extends StatelessWidget {
                 style: ShopAppTextStyles.bodyMedium,
               ),
               SizedBox(height: 32.h),
+              // Owner name Field
               CustomTextField(
                 label: "Owner Full Name",
                 controller: ownerNameController,
@@ -68,6 +70,7 @@ class ShopSignupForm extends StatelessWidget {
                 validator: Validators.validateName,
               ),
               SizedBox(height: 20.h),
+              // Shop name Field
               CustomTextField(
                 label: "Shop Name",
                 controller: shopNameController,
@@ -88,6 +91,7 @@ class ShopSignupForm extends StatelessWidget {
                 validator: Validators.validateShopName,
               ),
               SizedBox(height: 20.h),
+              // Business email Field
               CustomTextField(
                 label: "Business Email",
                 controller: emailController,
@@ -109,11 +113,12 @@ class ShopSignupForm extends StatelessWidget {
                 validator: Validators.validateEmail,
               ),
               SizedBox(height: 20.h),
+              // Password Field
               CustomTextField(
                 label: "Password",
                 controller: passwordController,
                 hintText: 'Min. 8 characters',
-                isPassword: !uiState.isPasswordVisible,
+                isPassword: !state.isPasswordVisible,
                 labelStyle: ShopAppTextStyles.bodyMediumBold,
                 textStyle: ShopAppTextStyles.bodyMedium,
                 hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -129,24 +134,25 @@ class ShopSignupForm extends StatelessWidget {
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    uiState.isPasswordVisible
+                    state.isPasswordVisible
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                     color: ShopAppColors.textSecondary,
                     size: 20.sp,
                   ),
-                  onPressed: () => context
-                      .read<ShopSignupUiCubit>()
-                      .togglePasswordVisibility(),
+                  onPressed: () => context.read<ShopAuthBloc>().add(
+                    ShopTogglePasswordVisibility(),
+                  ),
                 ),
                 validator: Validators.validateShopPassword,
               ),
               SizedBox(height: 20.h),
+              // Confirm Password Field
               CustomTextField(
                 label: "Confirm Password",
                 controller: confirmPasswordController,
                 hintText: 'Repeat your password',
-                isPassword: !uiState.isConfirmPasswordVisible,
+                isPassword: !state.isConfirmPasswordVisible,
                 labelStyle: ShopAppTextStyles.bodyMediumBold,
                 textStyle: ShopAppTextStyles.bodyMedium,
                 hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
@@ -162,15 +168,15 @@ class ShopSignupForm extends StatelessWidget {
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    uiState.isConfirmPasswordVisible
+                    state.isConfirmPasswordVisible
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                     color: ShopAppColors.textSecondary,
                     size: 20.sp,
                   ),
-                  onPressed: () => context
-                      .read<ShopSignupUiCubit>()
-                      .toggleConfirmPasswordVisibility(),
+                  onPressed: () => context.read<ShopAuthBloc>().add(
+                    ShopToggleConfirmPasswordVisibility(),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty)
@@ -181,29 +187,27 @@ class ShopSignupForm extends StatelessWidget {
                 },
               ),
               SizedBox(height: 48.h),
-              BlocBuilder<ShopAuthBloc, ShopAuthState>(
-                builder: (context, state) {
-                  return PrimaryButton(
-                    text: 'Create Account',
-                    isLoading: state is ShopAuthLoading,
-                    backgroundColor: ShopAppColors.primary,
-                    textStyle: ShopAppTextStyles.buttonText,
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<ShopAuthBloc>().add(
-                          ShopSignupStarted(
-                            email: emailController.text.trim(),
-                            password: passwordController.text,
-                            ownerName: ownerNameController.text.trim(),
-                            shopName: shopNameController.text.trim(),
-                          ),
-                        );
-                      }
-                    },
-                  );
+              // Signup Button
+              PrimaryButton(
+                text: 'Create Account',
+                isLoading: state.status == ShopAuthStatus.loading,
+                backgroundColor: ShopAppColors.primary,
+                textStyle: ShopAppTextStyles.buttonText,
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    context.read<ShopAuthBloc>().add(
+                      ShopSignupStarted(
+                        email: emailController.text.trim(),
+                        password: passwordController.text,
+                        ownerName: ownerNameController.text.trim(),
+                        shopName: shopNameController.text.trim(),
+                      ),
+                    );
+                  }
                 },
               ),
               SizedBox(height: 32.h),
+              // If already have an account, for navigate Login Page
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

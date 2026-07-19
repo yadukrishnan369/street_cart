@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Home Quick Actions
 class QuickActions extends StatelessWidget {
   final VoidCallback? onAddProductTap;
   final VoidCallback? onEditProfileTap;
@@ -25,18 +26,21 @@ class QuickActions extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            // Add Product
             _buildActionCard(
               'Add Product',
               Icons.inventory_2_outlined,
               true,
               onTap: onAddProductTap,
             ),
+            // View Order
             _buildActionCard(
               'View Orders',
               Icons.widgets_outlined,
               false,
               onTap: onViewOrdersTap,
             ),
+            // Edit Profile
             _buildActionCard(
               'Edit Profile',
               Icons.edit_square,

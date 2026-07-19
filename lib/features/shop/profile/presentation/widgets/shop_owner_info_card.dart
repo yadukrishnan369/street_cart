@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'shop_profile_section_block.dart';
 
+// Shop Owner Info Card
 class ShopOwnerInfoCard extends StatelessWidget {
   final ShopProfileModel profile;
 
@@ -12,6 +13,7 @@ class ShopOwnerInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShopProfileSectionBlock(
+      // Title
       title: 'OWNER INFO',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,6 +21,7 @@ class ShopOwnerInfoCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
+                // Shop Owner Name
                 child: ShopProfileGridItem(
                   label: 'Shop Owner',
                   value: profile.ownerName.isNotEmpty
@@ -27,6 +30,7 @@ class ShopOwnerInfoCard extends StatelessWidget {
                 ),
               ),
               Expanded(
+                // Shop Phone Number
                 child: ShopProfileGridItem(
                   label: 'Business Phone',
                   value: profile.phone.isNotEmpty
@@ -37,6 +41,7 @@ class ShopOwnerInfoCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
+          // Shop Email
           ShopProfileGridItem(
             label: 'Business Email',
             value: profile.email.isNotEmpty ? profile.email : 'Not provided',

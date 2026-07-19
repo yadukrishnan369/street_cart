@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Product Size Selection
 class ProductSizeSelection extends StatelessWidget {
   final String selectedSizeStandard;
   final List<String> sizeStandards;
@@ -27,6 +28,7 @@ class ProductSizeSelection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text(
           'Size Standard',
           style: TextStyle(
@@ -36,6 +38,7 @@ class ProductSizeSelection extends StatelessWidget {
           ),
         ),
         8.verticalSpace,
+        // Dropdown for Select Sizes
         DropdownButtonFormField<String>(
           value: selectedSizeStandard,
           isExpanded: true,

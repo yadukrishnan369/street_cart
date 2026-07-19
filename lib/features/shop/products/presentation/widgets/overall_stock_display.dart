@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Overall Stock Display
 class OverallStockDisplay extends StatelessWidget {
   final int totalStock;
 
@@ -53,6 +54,7 @@ class OverallStockDisplay extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   'Overall Product Stock',
                   style: TextStyle(
@@ -62,6 +64,7 @@ class OverallStockDisplay extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 2.h),
+                // Total Stock Count
                 Text(
                   '$totalStock items total',
                   style: TextStyle(

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Image Picker Area
 class ImagePickerArea extends StatelessWidget {
   final List<dynamic> images;
   final bool isLoading;
@@ -39,6 +40,7 @@ class ImagePickerArea extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Loading Indicator
                 isLoading
                     ? SizedBox(
                         width: 18.sp,
@@ -72,6 +74,7 @@ class ImagePickerArea extends StatelessWidget {
           SizedBox(height: 12.h),
           SizedBox(
             height: 80.h,
+            // List of Product Images
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: images.length,

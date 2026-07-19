@@ -7,24 +7,11 @@ import 'package:street_cart/features/shop/support/presentation/widgets/help_supp
 import 'package:street_cart/features/shop/support/presentation/widgets/help_topic_card.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/help_expandable_category_row.dart';
 import 'package:street_cart/features/shop/support/presentation/pages/faq_page.dart';
+import 'package:street_cart/features/shop/support/presentation/utils/shop_support_helper.dart';
 
+// Help Support Page
 class HelpSupportPage extends StatelessWidget {
   const HelpSupportPage({super.key});
-
-  IconData _getCategoryIcon(String title) {
-    switch (title) {
-      case 'Account & Security':
-        return Icons.account_circle_outlined;
-      case 'Shop Customization':
-        return Icons.storefront_outlined;
-      case 'Shipping & Delivery':
-        return Icons.local_shipping_outlined;
-      case 'Marketing & Sales':
-        return Icons.campaign_outlined;
-      default:
-        return Icons.help_outline;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +38,7 @@ class HelpSupportPage extends StatelessWidget {
             ),
           ),
         ),
+        // Page Header
         title: Text(
           'Help & Support',
           style: ShopAppTextStyles.heading4.copyWith(
@@ -65,6 +53,7 @@ class HelpSupportPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Page Title
             Text(
               'Common Topics',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -76,10 +65,12 @@ class HelpSupportPage extends StatelessWidget {
             Row(
               children: [
                 Expanded(
+                  // Help Topic Card
                   child: HelpTopicCard(
                     icon: Icons.local_mall_outlined,
                     title: 'Orders',
                     onTap: () {
+                      // Navigate to FAQ Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const FAQPage()),
@@ -89,10 +80,12 @@ class HelpSupportPage extends StatelessWidget {
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
+                  // Help Topic Card
                   child: HelpTopicCard(
                     icon: Icons.inventory_2_outlined,
                     title: 'Products',
                     onTap: () {
+                      // Navigate to FAQ Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const FAQPage()),
@@ -102,10 +95,12 @@ class HelpSupportPage extends StatelessWidget {
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
+                  // Help Topic Card
                   child: HelpTopicCard(
                     icon: Icons.payments_outlined,
                     title: 'Payments',
                     onTap: () {
+                      // Navigate to FAQ Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const FAQPage()),
@@ -128,8 +123,8 @@ class HelpSupportPage extends StatelessWidget {
               final String title = category['title'];
               final String subtitle = category['subtitle'];
               final List items = category['items'];
-              final IconData icon = _getCategoryIcon(title);
-
+              final IconData icon = ShopSupportHelper.getCategoryIcon(title);
+              // Help Expandable Category
               return HelpExpandableCategoryRow(
                 icon: icon,
                 title: title,
@@ -140,6 +135,7 @@ class HelpSupportPage extends StatelessWidget {
               );
             }),
             SizedBox(height: 20.h),
+            // Help Support Contact Card
             const HelpSupportContactCard(),
             SizedBox(height: 20.h),
           ],

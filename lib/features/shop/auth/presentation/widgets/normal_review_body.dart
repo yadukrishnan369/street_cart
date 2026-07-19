@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 
+// Normal Review Body
 class NormalReviewBody extends StatelessWidget {
   final bool isApproved;
 
@@ -20,6 +21,7 @@ class NormalReviewBody extends StatelessWidget {
             margin: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30.r),
+              // Page Decoration Shop Image
               image: const DecorationImage(
                 image: AssetImage('assets/images/shop_review_waiting.png'),
                 fit: BoxFit.cover,
@@ -60,6 +62,7 @@ class NormalReviewBody extends StatelessWidget {
                     bottom: 20.h,
                     left: 20.w,
                     right: 20.w,
+                    // Shop Approval State Content
                     child: Text(
                       'Your shop account is ready!\n(Lets Explore Streetcart)',
                       textAlign: TextAlign.center,
@@ -77,6 +80,7 @@ class NormalReviewBody extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 12.h),
+                // Approved/ Waiting Label
                 Text(
                   isApproved ? "You're All Set!" : 'Account Under Review',
                   style: ShopAppTextStyles.heading1,
@@ -100,6 +104,7 @@ class NormalReviewBody extends StatelessWidget {
                           color: ShopAppColors.primary.withAlpha(20),
                           borderRadius: BorderRadius.circular(50.r),
                         ),
+                        // Icons
                         child: Icon(
                           isApproved
                               ? Icons.check_circle_outline
@@ -113,6 +118,7 @@ class NormalReviewBody extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Waiting/Approved State contents
                             Text(
                               isApproved
                                   ? 'Account Approved'
@@ -133,6 +139,7 @@ class NormalReviewBody extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40.h),
+                // Button for Go to DashBoard
                 PrimaryButton(
                   text: 'Go to Dashboard',
                   backgroundColor: isApproved
@@ -150,6 +157,7 @@ class NormalReviewBody extends StatelessWidget {
                         ),
                   onPressed: isApproved
                       ? () {
+                          // Navigation for Shop home page
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

@@ -38,7 +38,7 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
        _getShopProductConfig = getShopProductConfig,
        _saveShopProductConfig = saveShopProductConfig,
        _getProductCategories = getProductCategories,
-       super(ShopProductsInitial()) {
+       super(const ShopProductsState()) {
     on<LoadShopProductsEvent>(_onLoadShopProducts);
     on<ShopProductsUpdatedEvent>(_onShopProductsUpdated);
     on<AddProductEvent>(_onAddProduct);
@@ -50,13 +50,80 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     on<AddCustomColorEvent>(_onAddCustomColor);
     on<LoadProductConfigEvent>(_onLoadProductConfig);
     on<LoadProductCategoriesEvent>(_onLoadProductCategories);
-  }
 
+    // Products UI Search
+    on<ToggleSearchEvent>((event, emit) {
+      emit(state.copyWith(isSearching: event.isSearching));
+    });
+
+    // Product Detail UI selectors
+    on<InitProductDetailEvent>((event, emit) {
+      final p = event.product;
+      emit(
+        state.copyWith(
+          detailProduct: p,
+          selectedColor: p.allColors.isNotEmpty ? p.allColors.first : null,
+          selectedSize: p.allSizes.isNotEmpty ? p.allSizes.first : null,
+          currentImageIndex: 0,
+        ),
+      );
+    });
+
+    on<SelectColorEvent>((event, emit) {
+      if (event.color == null) {
+        emit(state.copyWith(clearColor: true, currentImageIndex: 0));
+      } else {
+        emit(state.copyWith(selectedColor: event.color, currentImageIndex: 0));
+      }
+    });
+
+    on<SelectSizeEvent>((event, emit) {
+      if (event.size == null) {
+        emit(state.copyWith(clearSize: true));
+      } else {
+        emit(state.copyWith(selectedSize: event.size));
+      }
+    });
+
+    on<SelectImageIndexEvent>((event, emit) {
+      emit(state.copyWith(currentImageIndex: event.index));
+    });
+
+    // Bottom sheet category filter selections
+    on<InitFilterSelectionEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          tempSelectedCategories: List<String>.from(state.selectedCategories),
+        ),
+      );
+    });
+
+    on<ToggleCategoryFilterEvent>((event, emit) {
+      var list = List<String>.from(state.tempSelectedCategories);
+      if (event.category == 'All') {
+        list = ['All'];
+      } else {
+        list.remove('All');
+        if (event.isSelected) {
+          if (!list.contains(event.category)) {
+            list.add(event.category);
+          }
+        } else {
+          list.remove(event.category);
+        }
+        if (list.isEmpty) {
+          list.add('All');
+        }
+      }
+      emit(state.copyWith(tempSelectedCategories: list));
+    });
+  }
+  // Load Shop Products
   Future<void> _onLoadShopProducts(
     LoadShopProductsEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
-    emit(ShopProductsLoading());
+    emit(state.copyWith(status: ShopProductsStatus.loading));
     await _productsSubscription?.cancel();
 
     try {
@@ -69,206 +136,237 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     );
   }
 
+  // Shop Products Updated
   void _onShopProductsUpdated(
     ShopProductsUpdatedEvent event,
     Emitter<ShopProductsState> emit,
   ) {
-    final currentSearch = (state is ShopProductsLoaded)
-        ? (state as ShopProductsLoaded).searchQuery
-        : '';
-    final currentCategories = (state is ShopProductsLoaded)
-        ? (state as ShopProductsLoaded).selectedCategories
-        : const ['All'];
-
     final filtered = _filterAndSearchList(
       event.products,
-      currentSearch,
-      currentCategories,
+      state.searchQuery,
+      state.selectedCategories,
     );
 
+    ProductModel? updatedDetailProduct;
+    if (state.detailProduct != null) {
+      final matchIdx = event.products.indexWhere(
+        (p) => p.id == state.detailProduct!.id,
+      );
+      if (matchIdx != -1) {
+        updatedDetailProduct = event.products[matchIdx];
+      }
+    }
+
     emit(
-      ShopProductsLoaded(
+      state.copyWith(
+        status: ShopProductsStatus.loaded,
         allProducts: event.products,
         filteredProducts: filtered,
-        searchQuery: currentSearch,
-        selectedCategories: currentCategories,
         customConfig: _customConfig,
+        detailProduct: updatedDetailProduct,
       ),
     );
   }
 
+  // Add Product
   Future<void> _onAddProduct(
     AddProductEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
     try {
       await _addProduct(event.product, event.variantDrafts);
-      final latestState = state;
       emit(
-        const ShopProductsOperationSuccess('Product published successfully!'),
+        state.copyWith(
+          status: ShopProductsStatus.operationSuccess,
+          successMessage: 'Product published successfully!',
+        ),
       );
-      if (latestState is ShopProductsLoaded) emit(latestState);
     } catch (e) {
-      final latestState = state;
-      emit(ShopProductsError(e.toString()));
-      if (latestState is ShopProductsLoaded) emit(latestState);
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
+  // Update Product
   Future<void> _onUpdateProduct(
     UpdateProductEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
     try {
       await _updateProduct(event.product, event.variantDrafts);
-      final latestState = state;
-      emit(const ShopProductsOperationSuccess('Product updated successfully!'));
-      if (latestState is ShopProductsLoaded) emit(latestState);
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.operationSuccess,
+          successMessage: 'Product updated successfully!',
+        ),
+      );
     } catch (e) {
-      final latestState = state;
-      emit(ShopProductsError(e.toString()));
-      if (latestState is ShopProductsLoaded) emit(latestState);
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
+  // Delete Product
   Future<void> _onDeleteProduct(
     DeleteProductEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
     try {
       await _deleteProduct(event.shopId, event.productId);
-      final latestState = state;
-      emit(const ShopProductsOperationSuccess('Product deleted successfully!'));
-      if (latestState is ShopProductsLoaded) emit(latestState);
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.operationSuccess,
+          successMessage: 'Product deleted successfully!',
+        ),
+      );
     } catch (e) {
-      final latestState = state;
-      emit(ShopProductsError(e.toString()));
-      if (latestState is ShopProductsLoaded) emit(latestState);
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
+  // Search Products
   void _onSearchProducts(
     SearchProductsEvent event,
     Emitter<ShopProductsState> emit,
   ) {
-    if (state is ShopProductsLoaded) {
-      final s = state as ShopProductsLoaded;
-      emit(
-        s.copyWith(
-          searchQuery: event.query,
-          filteredProducts: _filterAndSearchList(
-            s.allProducts,
-            event.query,
-            s.selectedCategories,
-          ),
+    emit(
+      state.copyWith(
+        searchQuery: event.query,
+        filteredProducts: _filterAndSearchList(
+          state.allProducts,
+          event.query,
+          state.selectedCategories,
         ),
-      );
-    }
+      ),
+    );
   }
 
+  // Filter Products By Category
   void _onFilterProductsByCategory(
     FilterProductsByCategoryEvent event,
     Emitter<ShopProductsState> emit,
   ) {
-    if (state is ShopProductsLoaded) {
-      final s = state as ShopProductsLoaded;
+    emit(
+      state.copyWith(
+        selectedCategories: event.categories,
+        filteredProducts: _filterAndSearchList(
+          state.allProducts,
+          state.searchQuery,
+          event.categories,
+        ),
+      ),
+    );
+  }
+
+  // Add Custom Size
+  Future<void> _onAddCustomSize(
+    AddCustomSizeEvent event,
+    Emitter<ShopProductsState> emit,
+  ) async {
+    final Map<String, dynamic> config = Map.from(_customConfig);
+    final Map<String, dynamic> sizes = Map.from(config['sizes'] ?? {});
+    final List<String> currentSizes = List<String>.from(
+      sizes[event.sizeStandard] ?? [],
+    );
+
+    if (!currentSizes.contains(event.newSize)) {
+      currentSizes.add(event.newSize);
+    }
+    sizes[event.sizeStandard] = currentSizes;
+    config['sizes'] = sizes;
+
+    try {
+      await _saveShopProductConfig(event.shopId, config);
+      _customConfig = config;
+      emit(state.copyWith(customConfig: config));
+    } catch (e) {
       emit(
-        s.copyWith(
-          selectedCategories: event.categories,
-          filteredProducts: _filterAndSearchList(
-            s.allProducts,
-            s.searchQuery,
-            event.categories,
-          ),
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: e.toString(),
         ),
       );
     }
   }
 
-  Future<void> _onAddCustomSize(
-    AddCustomSizeEvent event,
-    Emitter<ShopProductsState> emit,
-  ) async {
-    if (state is ShopProductsLoaded) {
-      final s = state as ShopProductsLoaded;
-      final Map<String, dynamic> config = Map.from(_customConfig);
-      final Map<String, dynamic> sizes = Map.from(config['sizes'] ?? {});
-      final List<String> currentSizes = List<String>.from(
-        sizes[event.sizeStandard] ?? [],
-      );
-
-      if (!currentSizes.contains(event.newSize)) {
-        currentSizes.add(event.newSize);
-      }
-      sizes[event.sizeStandard] = currentSizes;
-      config['sizes'] = sizes;
-
-      try {
-        await _saveShopProductConfig(event.shopId, config);
-        _customConfig = config;
-        emit(s.copyWith(customConfig: config));
-      } catch (e) {
-        emit(ShopProductsError(e.toString()));
-        emit(s);
-      }
-    }
-  }
-
+  // Add Custom Color
   Future<void> _onAddCustomColor(
     AddCustomColorEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
-    if (state is ShopProductsLoaded) {
-      final s = state as ShopProductsLoaded;
-      final Map<String, dynamic> config = Map.from(_customConfig);
-      final List<String> currentColors = List<String>.from(
-        config['colors'] ?? [],
+    final Map<String, dynamic> config = Map.from(_customConfig);
+    final List<String> currentColors = List<String>.from(
+      config['colors'] ?? [],
+    );
+
+    if (!currentColors.contains(event.newColorHex)) {
+      currentColors.add(event.newColorHex);
+    }
+    config['colors'] = currentColors;
+
+    try {
+      await _saveShopProductConfig(event.shopId, config);
+      _customConfig = config;
+      emit(state.copyWith(customConfig: config));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: e.toString(),
+        ),
       );
-
-      if (!currentColors.contains(event.newColorHex)) {
-        currentColors.add(event.newColorHex);
-      }
-      config['colors'] = currentColors;
-
-      try {
-        await _saveShopProductConfig(event.shopId, config);
-        _customConfig = config;
-        emit(s.copyWith(customConfig: config));
-      } catch (e) {
-        emit(ShopProductsError(e.toString()));
-        emit(s);
-      }
     }
   }
 
+  // Load Product Config
   Future<void> _onLoadProductConfig(
     LoadProductConfigEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
-    if (state is ShopProductsLoaded) {
-      final s = state as ShopProductsLoaded;
-      try {
-        _customConfig = await _getShopProductConfig(event.shopId);
-        emit(s.copyWith(customConfig: _customConfig));
-      } catch (_) {}
-    }
+    try {
+      _customConfig = await _getShopProductConfig(event.shopId);
+      emit(state.copyWith(customConfig: _customConfig));
+    } catch (_) {}
   }
 
+  // Load Product Config
   Future<void> _onLoadProductCategories(
     LoadProductCategoriesEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
-    emit(ShopProductCategoriesLoading());
+    emit(state.copyWith(status: ShopProductsStatus.categoriesLoading));
     try {
-      final categories = await _getProductCategories();
-      emit(ShopProductCategoriesLoaded(categories));
+      final loadedCategories = await _getProductCategories();
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.categoriesLoaded,
+          categories: loadedCategories,
+        ),
+      );
     } catch (e) {
       emit(
-        ShopProductCategoriesError(e.toString().replaceAll('Exception: ', '')),
+        state.copyWith(
+          status: ShopProductsStatus.categoriesError,
+          errorMessage: e.toString().replaceAll('Exception: ', ''),
+        ),
       );
     }
   }
 
+  // Filter And Search List
   List<ProductModel> _filterAndSearchList(
     List<ProductModel> list,
     String query,

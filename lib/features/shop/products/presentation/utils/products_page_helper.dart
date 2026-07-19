@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/constants/admin_constants.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
+import 'package:street_cart/core/utils/image_picker_helper.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_event.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_state.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_state.dart';
@@ -13,14 +15,17 @@ import 'package:street_cart/features/shop/products/presentation/widgets/category
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
 class ProductsPageHelper {
+  // Get Active Products
   static List<ProductModel> getActiveProducts(List<ProductModel> products) {
     return products.where((p) => p.stockQuantity > 0).toList();
   }
 
+  // Get Out Of Stock Products
   static List<ProductModel> getOutOfStockProducts(List<ProductModel> products) {
     return products.where((p) => p.stockQuantity <= 0).toList();
   }
 
+  // Extract Categories
   static List<String> extractCategories(List<ProductModel> products) {
     final productCats = products
         .map((p) => p.category)
@@ -30,6 +35,7 @@ class ProductsPageHelper {
     return ['All', ...productCats];
   }
 
+  // Show Category Filter Page
   static void showCategoryFilter(
     BuildContext context,
     ShopProductsBloc productsBloc,
@@ -52,6 +58,7 @@ class ProductsPageHelper {
     );
   }
 
+  // Confirmation for Product Delete
   static void confirmDelete({
     required BuildContext context,
     required String shopId,
@@ -68,7 +75,7 @@ class ProductsPageHelper {
         confirmColor: ShopAppColors.error,
         onConfirm: () {
           Navigator.pop(dialogContext);
-          // Double confirmation as requested
+          // Double confirmation
           showDialog(
             context: context,
             builder: (doubleConfirmContext) => ConfirmationModal(
@@ -90,6 +97,7 @@ class ProductsPageHelper {
     );
   }
 
+  // Calculate Stock Quantity
   static int calculateDisplayStock(
     ProductModel product,
     String? selectedColor,
@@ -116,6 +124,7 @@ class ProductsPageHelper {
     return product.stockQuantity;
   }
 
+  // Get Display Images
   static List<String> getDisplayImages(
     ProductModel product,
     String? selectedColor,
@@ -126,6 +135,7 @@ class ProductsPageHelper {
     return product.displayImages;
   }
 
+  // Get Updated Product
   static ProductModel? getUpdatedProduct(
     List<ProductModel> products,
     String productId,
@@ -134,12 +144,13 @@ class ProductsPageHelper {
     return updatedList.isNotEmpty ? updatedList.first : null;
   }
 
+  // Get Add Edit Categories
   static List<String> getAddEditCategories(
     ShopProductsState productsState,
     ProductModel? product,
   ) {
     Map<String, dynamic> customConfig = {};
-    if (productsState is ShopProductsLoaded) {
+    if (productsState.status == ShopProductsStatus.loaded) {
       customConfig = productsState.customConfig;
     }
     List<String> dynamicCategories = [];
@@ -157,12 +168,13 @@ class ProductsPageHelper {
     return dynamicCategories;
   }
 
+  // Initialize Add Edit Product Defaults
   static void initAddEditDefaults({
     required AddEditProductBloc bloc,
     required ShopProductsState productsState,
     required ProductModel? product,
   }) {
-    if (product == null && productsState is ShopProductsLoaded) {
+    if (product == null && productsState.status == ShopProductsStatus.loaded) {
       final customConfig = productsState.customConfig;
       if (bloc.state.category.isEmpty) {
         final sizeGroupsList = customConfig['size_groups'] as List<dynamic>?;
@@ -186,6 +198,7 @@ class ProductsPageHelper {
     }
   }
 
+  // Publish Product
   static void publishProduct({
     required AddEditProductBloc bloc,
     required GlobalKey<FormState> formKey,
@@ -224,5 +237,125 @@ class ProductsPageHelper {
     } else {
       productsBloc.add(UpdateProductEvent(productModel, variantDrafts));
     }
+  }
+
+  // Pick Variant Images
+  static Future<void> pickVariantImages(BuildContext context) async {
+    final bloc = context.read<AddEditProductBloc>();
+    bloc.add(const SetPickingImagesEvent(true));
+    try {
+      final files = await ImagePickerHelper.pickMultiImage(limit: 8);
+      if (files.isNotEmpty) {
+        bloc.add(UpdateDraftImagesEvent(List<dynamic>.from(files)));
+      }
+    } catch (_) {
+    } finally {
+      bloc.add(const SetPickingImagesEvent(false));
+    }
+  }
+
+  // Save Variant
+  static void saveVariant({
+    required BuildContext context,
+    required AddEditProductState state,
+    required ValueChanged<VariantDraft> onSave,
+  }) {
+    final bloc = context.read<AddEditProductBloc>();
+    bloc.add(const SetVariantErrorEvent(null));
+
+    final draft = state.editingVariant;
+    if (draft == null) return;
+
+    if (draft.colorName.isEmpty) {
+      bloc.add(const SetVariantErrorEvent('Please select a color.'));
+      return;
+    }
+    if (draft.images.isEmpty) {
+      bloc.add(
+        const SetVariantErrorEvent('Add at least one image for this variant.'),
+      );
+      return;
+    }
+
+    final sizesMap = draft.sizes;
+    if (sizesMap.isEmpty || sizesMap.values.every((qty) => qty == 0)) {
+      bloc.add(
+        const SetVariantErrorEvent(
+          'Please enter a stock quantity for at least one size.',
+        ),
+      );
+      return;
+    }
+
+    onSave(draft);
+    Navigator.pop(context);
+  }
+
+  // Get Available Colors
+  static Map<String, String> getAvailableColors(
+    Map<String, dynamic> customConfig,
+  ) {
+    final Map<String, String> colors = {};
+    if (customConfig['colors'] != null) {
+      for (final c in customConfig['colors'] as List<dynamic>) {
+        final Map<String, dynamic> colorMap = Map<String, dynamic>.from(
+          c as Map,
+        );
+        final name = colorMap['name']?.toString() ?? '';
+        final hex = colorMap['hex_code']?.toString() ?? '';
+        if (name.isNotEmpty) {
+          colors[name] = hex;
+        }
+      }
+    }
+    if (colors.isEmpty) {
+      for (final name in AdminConstants.defaultProductColors) {
+        colors[name] = '';
+      }
+    }
+    return colors;
+  }
+
+  // Get Available Sizes
+  static List<String> getAvailableSizes(
+    Map<String, dynamic> customConfig,
+    String sizeStandard,
+  ) {
+    if (customConfig['size_groups'] != null) {
+      for (final g in customConfig['size_groups'] as List<dynamic>) {
+        final Map<String, dynamic> groupMap = Map<String, dynamic>.from(
+          g as Map,
+        );
+        if (groupMap['name']?.toString() == sizeStandard) {
+          final rawSizes = groupMap['sizes'] as List<dynamic>?;
+          if (rawSizes != null) {
+            return rawSizes.map((e) => e.toString()).toList();
+          }
+        }
+      }
+    }
+    return List<String>.from(
+      AdminConstants.defaultProductSizes[sizeStandard] ?? [],
+    );
+  }
+
+  // Get Size Standards
+  static List<String> getSizeStandards(Map<String, dynamic> customConfig) {
+    final list = <String>[];
+    if (customConfig['size_groups'] != null) {
+      for (final g in customConfig['size_groups'] as List<dynamic>) {
+        final Map<String, dynamic> groupMap = Map<String, dynamic>.from(
+          g as Map,
+        );
+        final name = groupMap['name']?.toString() ?? '';
+        if (name.isNotEmpty && !list.contains(name)) {
+          list.add(name);
+        }
+      }
+    }
+    if (list.isEmpty) {
+      list.addAll(AdminConstants.defaultSizeStandards);
+    }
+    return list;
   }
 }

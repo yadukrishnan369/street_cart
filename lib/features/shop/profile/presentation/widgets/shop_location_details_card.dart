@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'shop_profile_section_block.dart';
 
+// Shop Location Details Card
 class ShopLocationDetailsCard extends StatelessWidget {
   final ShopProfileModel profile;
 
@@ -11,10 +12,12 @@ class ShopLocationDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShopProfileSectionBlock(
+      // Title
       title: 'LOCATION',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Shop Full Address
           ShopProfileGridItem(
             label: 'Full Address',
             value: profile.fullAddress.isNotEmpty
@@ -25,6 +28,7 @@ class ShopLocationDetailsCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
+                // Shop Landmark
                 child: ShopProfileGridItem(
                   label: 'Landmark',
                   value: profile.landmark.isNotEmpty
@@ -33,6 +37,7 @@ class ShopLocationDetailsCard extends StatelessWidget {
                 ),
               ),
               Expanded(
+                // Shop City
                 child: ShopProfileGridItem(
                   label: 'City',
                   value: profile.city.isNotEmpty
@@ -46,6 +51,7 @@ class ShopLocationDetailsCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
+                // Shop District
                 child: ShopProfileGridItem(
                   label: 'District',
                   value: profile.district.isNotEmpty
@@ -54,6 +60,7 @@ class ShopLocationDetailsCard extends StatelessWidget {
                 ),
               ),
               Expanded(
+                // Shop State
                 child: ShopProfileGridItem(
                   label: 'State',
                   value: profile.state.isNotEmpty
@@ -64,6 +71,7 @@ class ShopLocationDetailsCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
+          // Shop PIN Code
           ShopProfileGridItem(
             label: 'Pincode',
             value: profile.pincode.isNotEmpty

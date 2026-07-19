@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/constants/admin_constants.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
-import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_ui_cubit.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_event.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_state.dart';
@@ -14,7 +13,9 @@ import 'package:street_cart/features/shop/products/presentation/widgets/add_edit
 import 'package:street_cart/features/shop/products/presentation/widgets/add_variant_button.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/overall_stock_display.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/publish_product_button.dart';
+import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 
+// Add Edit Product Form Content
 class AddEditProductFormContent extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController nameController;
@@ -39,69 +40,6 @@ class AddEditProductFormContent extends StatelessWidget {
     required this.onPublish,
   });
 
-  // Available colors from config + defaults
-  Map<String, String> _availableColors() {
-    final Map<String, String> colors = {};
-    if (customConfig['colors'] != null) {
-      for (final c in customConfig['colors'] as List<dynamic>) {
-        final Map<String, dynamic> colorMap = Map<String, dynamic>.from(
-          c as Map,
-        );
-        final name = colorMap['name']?.toString() ?? '';
-        final hex = colorMap['hex_code']?.toString() ?? '';
-        if (name.isNotEmpty) {
-          colors[name] = hex;
-        }
-      }
-    }
-    if (colors.isEmpty) {
-      for (final name in AdminConstants.defaultProductColors) {
-        colors[name] = '';
-      }
-    }
-    return colors;
-  }
-
-  // Available sizes
-  List<String> _availableSizes(String sizeStandard) {
-    if (customConfig['size_groups'] != null) {
-      for (final g in customConfig['size_groups'] as List<dynamic>) {
-        final Map<String, dynamic> groupMap = Map<String, dynamic>.from(
-          g as Map,
-        );
-        if (groupMap['name']?.toString() == sizeStandard) {
-          final rawSizes = groupMap['sizes'] as List<dynamic>?;
-          if (rawSizes != null) {
-            return rawSizes.map((e) => e.toString()).toList();
-          }
-        }
-      }
-    }
-    return List<String>.from(
-      AdminConstants.defaultProductSizes[sizeStandard] ?? [],
-    );
-  }
-
-  // Size Standards list
-  List<String> _sizeStandards() {
-    final list = <String>[];
-    if (customConfig['size_groups'] != null) {
-      for (final g in customConfig['size_groups'] as List<dynamic>) {
-        final Map<String, dynamic> groupMap = Map<String, dynamic>.from(
-          g as Map,
-        );
-        final name = groupMap['name']?.toString() ?? '';
-        if (name.isNotEmpty && !list.contains(name)) {
-          list.add(name);
-        }
-      }
-    }
-    if (list.isEmpty) {
-      list.addAll(AdminConstants.defaultSizeStandards);
-    }
-    return list;
-  }
-
   // Open variant form sheet
   void _openVariantSheet(
     BuildContext context, {
@@ -111,7 +49,7 @@ class AddEditProductFormContent extends StatelessWidget {
     required List<String> usedColors,
   }) {
     final bloc = context.read<AddEditProductBloc>();
-    final allColors = _availableColors();
+    final allColors = ProductsPageHelper.getAvailableColors(customConfig);
 
     final Map<String, String> availableForSheet = {};
     allColors.forEach((name, hex) {
@@ -124,17 +62,23 @@ class AddEditProductFormContent extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => VariantFormSheet(
-        existingVariant: existing,
-        availableColors: availableForSheet,
-        availableSizes: _availableSizes(sizeStandard),
-        onSave: (draft) {
-          if (editIndex != null) {
-            bloc.add(UpdateVariantEvent(editIndex, draft));
-          } else {
-            bloc.add(AddVariantEvent(draft));
-          }
-        },
+      builder: (_) => BlocProvider.value(
+        value: bloc,
+        child: VariantFormSheet(
+          existingVariant: existing,
+          availableColors: availableForSheet,
+          availableSizes: ProductsPageHelper.getAvailableSizes(
+            customConfig,
+            sizeStandard,
+          ),
+          onSave: (draft) {
+            if (editIndex != null) {
+              bloc.add(UpdateVariantEvent(editIndex, draft));
+            } else {
+              bloc.add(AddVariantEvent(draft));
+            }
+          },
+        ),
       ),
     );
   }
@@ -152,37 +96,32 @@ class AddEditProductFormContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Basic Details
+                // Basic Details Form Section
                 ProductBasicDetailsForm(
                   nameController: nameController,
                   priceController: priceController,
                   offerPriceController: offerPriceController,
                   descController: descController,
-                  selectedCategory: state.category.isNotEmpty
-                      ? state.category
-                      : (categories.isNotEmpty ? categories.first : ''),
+                  selectedCategory: state.category,
                   categories: categories,
-                  selectedSizeStandard: state.sizeStandard.isNotEmpty
-                      ? state.sizeStandard
-                      : (_sizeStandards().isNotEmpty
-                            ? _sizeStandards().first
-                            : ''),
-                  sizeStandards: _sizeStandards(),
+                  selectedSizeStandard: state.sizeStandard,
+                  sizeStandards: ProductsPageHelper.getSizeStandards(
+                    customConfig,
+                  ),
                   onCategoryChanged: (val) {
                     if (val != null) {
-                      context.read<AddEditProductUiCubit>().updateCategory(val);
                       bloc.add(UpdateCategoryEvent(val));
                     }
                   },
                   onSizeStandardChanged: (val) {
                     if (val != null) {
-                      context.read<AddEditProductUiCubit>().updateSizeStandard(
-                        val,
-                      );
                       bloc.add(
                         UpdateSizeStandardEvent(
                           sizeStandard: val,
-                          newSizeKeys: _availableSizes(val),
+                          newSizeKeys: ProductsPageHelper.getAvailableSizes(
+                            customConfig,
+                            val,
+                          ),
                         ),
                       );
                     }
@@ -190,7 +129,7 @@ class AddEditProductFormContent extends StatelessWidget {
                 ),
                 SizedBox(height: 32.h),
 
-                // Product Variants
+                // Colors & Stock Section
                 const AddEditProductSectionHeader(
                   icon: Icons.palette_outlined,
                   title: 'Product Variants',
@@ -233,7 +172,7 @@ class AddEditProductFormContent extends StatelessWidget {
                 ),
                 SizedBox(height: 24.h),
 
-                // Overall Stock auto-calculated
+                // Overall Stock Quantity
                 if (state.hasVariants) ...[
                   OverallStockDisplay(totalStock: state.totalStock),
                   SizedBox(height: 24.h),

@@ -11,16 +11,21 @@ class ShopLocationBloc extends Bloc<ShopLocationEvent, ShopLocationState> {
     required this.requestLocationAndSave,
     required this.skipLocation,
   }) : super(ShopLocationInitial()) {
+    // Location Request
     on<RequestShopLocationEvent>((event, emit) async {
+      // Loading State
       emit(ShopLocationLoading());
       try {
         final success = await requestLocationAndSave();
+        // Location Enable Success State
         emit(ShopLocationSuccess(success));
       } catch (e) {
+        // Location Failure
         emit(ShopLocationFailure(e.toString()));
       }
     });
 
+    // Skip Location
     on<SkipShopLocationEvent>((event, emit) async {
       emit(ShopLocationLoading());
       try {

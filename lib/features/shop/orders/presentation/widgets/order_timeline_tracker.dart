@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/orders/data/models/order_model.dar
 
 enum TimelineStepState { completed, active, inactive }
 
+// Order Timeline Tracker
 class OrderTimelineTracker extends StatelessWidget {
   final OrderModel order;
 
@@ -17,7 +18,7 @@ class OrderTimelineTracker extends StatelessWidget {
     final bool isDone =
         status == 'delivered' || status == 'cancelled' || status == 'returned';
 
-    // timestamps of steps and null means the step hasn't happened yet
+    // timestamps of steps and null means the step not happened yet
     final String placedTime = DateFormatter.formatToOrderDateTime(
       order.createdAt,
     );
@@ -36,6 +37,7 @@ class OrderTimelineTracker extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          // Tracker Title
           child: Text(
             isDone ? 'ORDER TIMELINE' : 'DELIVERY PROGRESS',
             style: TextStyle(
@@ -57,12 +59,14 @@ class OrderTimelineTracker extends StatelessWidget {
           ),
           child: Column(
             children: [
+              // Order Placed Step
               _buildTimelineStep(
                 title: 'Order Placed',
                 subtitle: placedTime,
                 state: TimelineStepState.completed,
                 isLast: false,
               ),
+              // Order Confirmed Step
               _buildTimelineStep(
                 title: 'Order Confirmed',
                 subtitle: confirmedTime.isNotEmpty
@@ -77,6 +81,7 @@ class OrderTimelineTracker extends StatelessWidget {
                     : TimelineStepState.inactive,
                 isLast: false,
               ),
+              // Order Packed/Shipped Step
               _buildTimelineStep(
                 title: 'Packed & Shipped',
                 subtitle: shippedTime.isNotEmpty
@@ -91,6 +96,7 @@ class OrderTimelineTracker extends StatelessWidget {
                     : TimelineStepState.inactive,
                 isLast: false,
               ),
+              // Order Deliverd Step
               _buildTimelineStep(
                 title: 'Delivered',
                 subtitle: deliveredTime.isNotEmpty
@@ -140,7 +146,7 @@ class OrderTimelineTracker extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Indicator column
+          // Indicator
           Column(
             children: [
               Container(
@@ -171,7 +177,7 @@ class OrderTimelineTracker extends StatelessWidget {
           ),
           SizedBox(width: 16.w),
 
-          // Details column
+          // Details
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: 24.h),
@@ -179,6 +185,7 @@ class OrderTimelineTracker extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  // Title
                   Text(
                     title,
                     style: TextStyle(
@@ -193,6 +200,7 @@ class OrderTimelineTracker extends StatelessWidget {
                   ),
                   if (subtitle.isNotEmpty) ...[
                     SizedBox(height: 4.h),
+                    // Subtitle
                     Text(
                       subtitle,
                       style: TextStyle(

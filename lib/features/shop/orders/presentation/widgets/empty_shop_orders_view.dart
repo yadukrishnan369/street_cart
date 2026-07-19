@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Empty Shop Orders View
 class EmptyShopOrdersView extends StatelessWidget {
   final VoidCallback onRefresh;
   final int tabIndex;
@@ -68,7 +69,7 @@ class EmptyShopOrdersView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Shop Icon Wrapper
+                // Shop Icon
                 Container(
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
@@ -78,6 +79,7 @@ class EmptyShopOrdersView extends StatelessWidget {
                   child: Icon(icon, size: 64.sp, color: ShopAppColors.primary),
                 ),
                 SizedBox(height: 24.h),
+                // Title
                 Text(
                   title,
                   style: TextStyle(
@@ -88,6 +90,7 @@ class EmptyShopOrdersView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
+                // Description
                 Text(
                   description,
                   textAlign: TextAlign.center,

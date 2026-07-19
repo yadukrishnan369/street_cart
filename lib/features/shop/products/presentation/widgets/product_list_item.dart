@@ -10,6 +10,7 @@ import 'package:street_cart/features/shop/products/presentation/pages/add_edit_p
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
+// Product List Item
 class ProductListItem extends StatelessWidget {
   final ProductModel product;
   final String shopId;
@@ -31,6 +32,7 @@ class ProductListItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        // Navigate to Product Detail Page
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -66,6 +68,7 @@ class ProductListItem extends StatelessWidget {
                   width: 70.w,
                   height: 70.w,
                   color: Colors.grey[100],
+                  // Product Image
                   child: product.images.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: product.images[0],
@@ -83,6 +86,7 @@ class ProductListItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Product Name
                     Text(
                       product.name,
                       style: ShopAppTextStyles.bodyMediumBold,
@@ -90,6 +94,7 @@ class ProductListItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4.h),
+                    // Product Price
                     Text(
                       '₹${PriceUtils.formatPrice(product.offerPrice ?? product.originalPrice)}',
                       style: TextStyle(
@@ -99,6 +104,7 @@ class ProductListItem extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8.h),
+                    // Product Status Badge
                     Row(
                       children: [
                         Container(
@@ -148,6 +154,7 @@ class ProductListItem extends StatelessWidget {
                 icon: Icon(Icons.more_vert, color: ShopAppColors.textSecondary),
                 onSelected: (val) {
                   if (val == 'edit') {
+                    // Navigate to Add Edit Product Page
                     Navigator.push(
                       context,
                       MaterialPageRoute(

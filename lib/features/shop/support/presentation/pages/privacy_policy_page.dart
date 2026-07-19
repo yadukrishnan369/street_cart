@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/features/shop/support/presentation/widgets/data_collection_card.dart';
 
+// Privacy Policy Page
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
 
@@ -31,6 +33,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
           ),
         ),
+        // Page Header
         title: Text(
           'Privacy Policy',
           style: ShopAppTextStyles.heading4.copyWith(
@@ -45,7 +48,7 @@ class PrivacyPolicyPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Verified badge
+            // Verified Badge Header Section
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
@@ -73,7 +76,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            // Page Main Title
+            // Page Titles
             Text(
               'Shop Owner Privacy Policy',
               style: ShopAppTextStyles.heading2.copyWith(
@@ -91,7 +94,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // Introduction section
+            // Section 1 - Introduction
             Text(
               'Introduction',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -110,61 +113,11 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // Data Collection container card
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20.w),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 240, 241, 241),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.storage_outlined,
-                        color: ShopAppColors.primary,
-                        size: 20.sp,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        '1. Data Collection',
-                        style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                          color: ShopAppColors.primary,
-                          fontSize: 15.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    'We collect information necessary to operate your digital storefront, including:',
-                    style: ShopAppTextStyles.bodyMedium.copyWith(
-                      color: ShopAppColors.textSecondary,
-                      fontSize: 13.sp,
-                      height: 1.4,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildBulletItem(
-                    'Business registration details and legal name.',
-                  ),
-                  _buildBulletItem(
-                    'Contact information (email, phone, business address).',
-                  ),
-                  _buildBulletItem(
-                    'Payment processing information via secure providers.',
-                  ),
-                  _buildBulletItem('Inventory and sales transaction data.'),
-                ],
-              ),
-            ),
+            // Section 2 - Data Collection Container Card
+            const DataCollectionCard(),
             SizedBox(height: 24.h),
 
-            // Use of Information
+            // Section 3 - Use of Information
             Text(
               '2. Use of Information',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -183,7 +136,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            // Security Measures
+            // Section 4 - Security Measures
             Text(
               '3. Security Measures',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -203,37 +156,6 @@ class PrivacyPolicyPage extends StatelessWidget {
             SizedBox(height: 32.h),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBulletItem(String text) {
-    return Padding(
-      padding: EdgeInsets.only(left: 12.w, bottom: 8.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 6.h),
-            width: 5.r,
-            height: 5.r,
-            decoration: const BoxDecoration(
-              color: ShopAppColors.textSecondary,
-              shape: BoxShape.circle,
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Text(
-              text,
-              style: ShopAppTextStyles.bodyMedium.copyWith(
-                color: ShopAppColors.textSecondary,
-                fontSize: 13.sp,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

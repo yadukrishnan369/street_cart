@@ -1,46 +1,130 @@
 part of 'shop_auth_bloc.dart';
 
-abstract class ShopAuthState extends Equatable {
-  const ShopAuthState();
-  @override
-  List<Object?> get props => [];
+enum ShopAuthStatus {
+  initial,
+  loading,
+  authenticated,
+  failure,
+  verificationWaiting,
+  verificationSuccess,
+  passwordResetSuccess,
 }
 
-class ShopAuthInitial extends ShopAuthState {}
+class ShopAuthState extends Equatable {
+  final ShopAuthStatus status;
+  final String? errorMessage;
 
-class ShopAuthLoading extends ShopAuthState {}
+  // Login & Signup state
+  final bool isPasswordVisible;
+  final bool isConfirmPasswordVisible;
+  final bool isVerificationSheetShowing;
 
-class ShopAuthSuccess extends ShopAuthState {}
+  // Profile Setup state
+  final String? selectedCategory;
+  final File? businessLicense;
+  final File? ownerId;
+  final bool isProfileSetupNavigated;
 
-class ShopAuthFailure extends ShopAuthState {
-  final String message;
-  const ShopAuthFailure(this.message);
-}
+  // Business categories list
+  final List<String> categories;
+  final bool categoriesLoading;
+  final String? categoriesError;
 
-class ShopStatusLoaded extends ShopAuthState {
-  final ShopProfileModel? shop;
-  const ShopStatusLoaded(this.shop);
-  @override
-  List<Object?> get props => [shop];
-}
-
-class ShopAuthVerificationWaiting extends ShopAuthState {
-  final String ownerName;
-  final String shopName;
-  final String email;
+  // Verification countdown
+  final int secondsRemaining;
   final bool isResend;
+  final String? ownerName;
+  final String? shopName;
+  final String? email;
 
-  const ShopAuthVerificationWaiting({
-    required this.ownerName,
-    required this.shopName,
-    required this.email,
+  // Authenticated Shop Info
+  final ShopProfileModel? shop;
+
+  const ShopAuthState({
+    this.status = ShopAuthStatus.initial,
+    this.errorMessage,
+    this.isPasswordVisible = false,
+    this.isConfirmPasswordVisible = false,
+    this.isVerificationSheetShowing = false,
+    this.selectedCategory,
+    this.businessLicense,
+    this.ownerId,
+    this.isProfileSetupNavigated = false,
+    this.categories = const [],
+    this.categoriesLoading = false,
+    this.categoriesError,
+    this.secondsRemaining = 80,
     this.isResend = false,
+    this.ownerName,
+    this.shopName,
+    this.email,
+    this.shop,
   });
 
+  ShopAuthState copyWith({
+    ShopAuthStatus? status,
+    String? errorMessage,
+    bool? isPasswordVisible,
+    bool? isConfirmPasswordVisible,
+    bool? isVerificationSheetShowing,
+    String? selectedCategory,
+    File? businessLicense,
+    File? ownerId,
+    bool? isProfileSetupNavigated,
+    List<String>? categories,
+    bool? categoriesLoading,
+    String? categoriesError,
+    int? secondsRemaining,
+    bool? isResend,
+    String? ownerName,
+    String? shopName,
+    String? email,
+    ShopProfileModel? shop,
+  }) {
+    return ShopAuthState(
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      isConfirmPasswordVisible:
+          isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
+      isVerificationSheetShowing:
+          isVerificationSheetShowing ?? this.isVerificationSheetShowing,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      businessLicense: businessLicense ?? this.businessLicense,
+      ownerId: ownerId ?? this.ownerId,
+      isProfileSetupNavigated:
+          isProfileSetupNavigated ?? this.isProfileSetupNavigated,
+      categories: categories ?? this.categories,
+      categoriesLoading: categoriesLoading ?? this.categoriesLoading,
+      categoriesError: categoriesError ?? this.categoriesError,
+      secondsRemaining: secondsRemaining ?? this.secondsRemaining,
+      isResend: isResend ?? this.isResend,
+      ownerName: ownerName ?? this.ownerName,
+      shopName: shopName ?? this.shopName,
+      email: email ?? this.email,
+      shop: shop ?? this.shop,
+    );
+  }
+
   @override
-  List<Object?> get props => [ownerName, shopName, email, isResend];
+  List<Object?> get props => [
+    status,
+    errorMessage,
+    isPasswordVisible,
+    isConfirmPasswordVisible,
+    isVerificationSheetShowing,
+    selectedCategory,
+    businessLicense,
+    ownerId,
+    isProfileSetupNavigated,
+    categories,
+    categoriesLoading,
+    categoriesError,
+    secondsRemaining,
+    isResend,
+    ownerName,
+    shopName,
+    email,
+    shop,
+  ];
 }
-
-class ShopAuthVerificationSuccess extends ShopAuthState {}
-
-class ShopAuthPasswordResetSuccess extends ShopAuthState {}

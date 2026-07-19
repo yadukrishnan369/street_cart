@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Green Border Thumb Shape
 class GreenBorderThumbShape extends SliderComponentShape {
   final double thumbRadius;
 

@@ -13,8 +13,65 @@ import 'package:street_cart/features/shop/products/presentation/pages/add_edit_p
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_orders_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
+import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
 
 class ShopHomeHelper {
+  // Filter Specific Shop Orders
+  static List<OrderModel> getDisplayOrders({
+    required List<OrderModel> allOrders,
+    required String shopId,
+    int limit = 4,
+  }) {
+    final filtered = allOrders.where((o) {
+      final hasShopItem = o.items.any((i) => i.shopId == shopId);
+      final isNew =
+          ShopOrderStatus.fromString(o.status) == ShopOrderStatus.placed;
+      return hasShopItem && isNew;
+    }).toList();
+
+    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return filtered.take(limit).toList();
+  }
+
+  // Get the specific Order items datas
+  static Map<String, dynamic> getOrderItemUIData({
+    required OrderModel order,
+    required String shopId,
+  }) {
+    final shopItems = order.items.where((i) => i.shopId == shopId).toList();
+    if (shopItems.isEmpty) return const {};
+
+    final firstItem = shopItems.first;
+    final totalAmount = shopItems.fold<double>(
+      0.0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
+
+    final paymentMethodLabel = ShopOrdersHelper.getDisplayPaymentMethod(
+      order.paymentMethod,
+    );
+    final bool isCOD = paymentMethodLabel == 'COD';
+    final badgeColor = isCOD
+        ? const Color(0xFF0F766E)
+        : const Color(0xFF5E5CE6);
+
+    final String displayName = shopItems.length > 1
+        ? '${firstItem.productName} + ${shopItems.length - 1} more'
+        : firstItem.productName;
+
+    return {
+      'shopItems': shopItems,
+      'totalAmount': totalAmount,
+      'paymentMethodLabel': paymentMethodLabel,
+      'badgeColor': badgeColor,
+      'displayName': displayName,
+      'productImage': firstItem.productImage,
+    };
+  }
+
+  // Show Profile Completion Modal
   static void showProfileCompletionDialog(
     BuildContext context,
     ShopProfileModel? profile,
@@ -47,6 +104,7 @@ class ShopHomeHelper {
     );
   }
 
+  // Show Logout Confimation
   static void showLogoutConfirmation(BuildContext context) {
     showDialog(
       context: context,
@@ -64,6 +122,7 @@ class ShopHomeHelper {
     );
   }
 
+  // Navigate to Add Product page
   static void onAddProductTap(BuildContext context, String shopId) {
     final productsBloc = sl<ShopProductsBloc>();
     productsBloc.add(LoadProductConfigEvent(shopId));
@@ -76,6 +135,7 @@ class ShopHomeHelper {
     );
   }
 
+  // Navigate to Edit Profile Page
   static void onEditProfileTap(BuildContext context, ShopProfileModel profile) {
     Navigator.push(
       context,
@@ -88,6 +148,7 @@ class ShopHomeHelper {
     );
   }
 
+  // Navigate to Orders Page
   static void onViewOrdersTap(BuildContext context) {
     Navigator.push(
       context,

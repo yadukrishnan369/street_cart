@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Color Selector
 class ColorSelector extends StatelessWidget {
   final Map<String, String> availableColors;
   final String selectedColor;
@@ -18,7 +19,7 @@ class ColorSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     if (availableColors.isEmpty) {
       return Text(
-        'No colors available. Add colors in Product Configuration.',
+        'No colors available.',
         style: TextStyle(fontSize: 12.sp, color: ShopAppColors.textSecondary),
       );
     }
@@ -31,6 +32,7 @@ class ColorSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Colors List row 1
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -41,6 +43,7 @@ class ColorSelector extends StatelessWidget {
         ),
         if (row2Colors.isNotEmpty) ...[
           SizedBox(height: 10.h),
+          // Colors List row 2
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -104,6 +107,7 @@ class ColorSelector extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.w),
+            // Color Name
             Text(
               colorName,
               style: TextStyle(

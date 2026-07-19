@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_event.dart';
 
+// Product Search TextField
 class ProductSearchTextField extends StatelessWidget {
   final TextEditingController controller;
   final ShopProductsBloc productsBloc;

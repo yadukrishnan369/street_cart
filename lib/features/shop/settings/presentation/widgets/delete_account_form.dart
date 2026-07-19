@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/delete_account_ui_cubit.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_event.dart';
+import 'package:street_cart/features/shop/settings/presentation/utils/shop_settings_helper.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
-import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
+// Delete Account Form
 class DeleteAccountForm extends StatefulWidget {
   final bool isLoading;
 
@@ -29,44 +28,6 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
     super.dispose();
   }
 
-  void _confirmDelete() {
-    if (!_formKey.currentState!.validate()) return;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => ConfirmationModal(
-        title: 'Delete Account?',
-        content:
-            'Are you sure you want to permanently delete your merchant account? This action cannot be undone.',
-        confirmText: 'Yes, Delete',
-        confirmColor: ShopAppColors.error,
-        onConfirm: () {
-          Navigator.pop(dialogContext);
-          _confirmDeleteDouble();
-        },
-        onCancel: () => Navigator.pop(dialogContext),
-      ),
-    );
-  }
-
-  void _confirmDeleteDouble() {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => ConfirmationModal(
-        title: 'Permanently Erase Data?',
-        content:
-            'Warning: This action will permanently erase your store profile, active products, and past order records. Proceed?',
-        confirmText: 'Delete Permanently',
-        confirmColor: ShopAppColors.error,
-        onConfirm: () {
-          Navigator.pop(dialogContext);
-          _performDelete();
-        },
-        onCancel: () => Navigator.pop(dialogContext),
-      ),
-    );
-  }
-
   void _performDelete() {
     context.read<ShopSettingsBloc>().add(
       DeleteAccountRequested(password: _passwordController.text.trim()),
@@ -77,19 +38,19 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: BlocBuilder<DeleteAccountUiCubit, DeleteAccountUiState>(
+      child: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
         builder: (context, uiState) {
-          final cubit = context.read<DeleteAccountUiCubit>();
+          final bloc = context.read<ShopSettingsBloc>();
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Password input field
+              // Password Field
               CustomTextField(
                 label: 'Password',
                 controller: _passwordController,
                 hintText: 'Enter your password',
-                isPassword: uiState.obscurePassword,
+                isPassword: uiState.obscureDeletePassword,
                 labelStyle: ShopAppTextStyles.bodyMediumBold,
                 textStyle: ShopAppTextStyles.bodyMedium,
                 fillColor: const Color(0xFFF8F9FA),
@@ -97,13 +58,13 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                 focusedBorderColor: const Color(0xFFD32F2F),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    uiState.obscurePassword
+                    uiState.obscureDeletePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                     color: ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
-                  onPressed: cubit.toggleObscurePassword,
+                  onPressed: () => bloc.add(ToggleObscureDeletePasswordEvent()),
                 ),
                 validator: (val) {
                   if (val == null || val.isEmpty) {
@@ -149,7 +110,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
               ),
               SizedBox(height: 48.h),
 
-              // Action button
+              // Delete Action Button
               PrimaryButton(
                 text: 'Delete Account',
                 backgroundColor: const Color(0xFFD32F2F),
@@ -160,7 +121,14 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                   color: Colors.white,
                   size: 20.sp,
                 ),
-                onPressed: _confirmDelete,
+                onPressed: () {
+                  if (!_formKey.currentState!.validate()) return;
+                  // Confirmation for Delete Account
+                  ShopSettingsHelper.confirmDelete(
+                    context: context,
+                    onConfirm: _performDelete,
+                  );
+                },
               ),
             ],
           );

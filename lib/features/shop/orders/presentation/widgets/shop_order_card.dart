@@ -8,6 +8,7 @@ import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
+// Shop Order Card
 class ShopOrderCard extends StatelessWidget {
   final OrderModel order;
   final String shopId;
@@ -22,19 +23,15 @@ class ShopOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (order.items.isEmpty) return const SizedBox.shrink();
-
-    // Filter items in the order that belong to this shop
-    final shopItems = order.items
-        .where((item) => item.shopId == shopId)
-        .toList();
-    if (shopItems.isEmpty) return const SizedBox.shrink();
-
-    final firstItem = shopItems.first;
-    final totalAmount = shopItems.fold<double>(
-      0,
-      (sum, item) => sum + (item.price * item.quantity),
+    final cardData = ShopOrdersHelper.getShopOrderCardData(
+      order: order,
+      shopId: shopId,
     );
+    if (cardData.isEmpty) return const SizedBox.shrink();
+
+    final shopItems = cardData['shopItems'] as List<OrderItemModel>;
+    final firstItem = cardData['firstItem'] as OrderItemModel;
+    final totalAmount = cardData['totalAmount'] as double;
 
     final orderIdPrefix = ShopOrdersHelper.getOrderIdPrefix(order.id);
     final timeAgo = ShopOrdersHelper.getRelativeTimeAgo(order.createdAt);
@@ -100,6 +97,7 @@ class ShopOrderCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Order ID
                     Text(
                       'ORDER #$orderIdPrefix'.toUpperCase(),
                       style: TextStyle(
@@ -108,6 +106,7 @@ class ShopOrderCard extends StatelessWidget {
                         fontSize: 12.sp,
                       ),
                     ),
+                    // Time
                     Text(
                       timeAgo,
                       style: TextStyle(
@@ -118,6 +117,7 @@ class ShopOrderCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 6.h),
+                // Product name
                 Text(
                   shopItems.length > 1
                       ? '${firstItem.productName} + ${shopItems.length - 1} more'
@@ -131,6 +131,7 @@ class ShopOrderCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 2.h),
+                // Order Delivery Address
                 Text(
                   order.deliveryAddress.fullName,
                   style: TextStyle(color: Colors.grey[500], fontSize: 13.sp),
@@ -141,6 +142,7 @@ class ShopOrderCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Total Amount
                     Text(
                       '₹${PriceUtils.formatPrice(totalAmount)}',
                       style: TextStyle(
@@ -182,6 +184,7 @@ class ShopOrderCard extends StatelessWidget {
                                 color: badgeColor.withOpacity(0.15),
                               ),
                             ),
+                            // Selected Payment Method Label
                             child: Text(
                               paymentMethodLabel,
                               style: TextStyle(

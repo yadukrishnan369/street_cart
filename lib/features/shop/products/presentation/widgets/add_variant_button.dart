@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
+// Add Variant Button
 class AddVariantButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool hasVariants;
@@ -42,6 +43,7 @@ class AddVariantButton extends StatelessWidget {
               child: Icon(Icons.add, color: Colors.white, size: 14.sp),
             ),
             SizedBox(width: 10.w),
+            // Button Text
             Text(
               hasVariants ? 'Add Another Color Variant' : 'Add Color Variant',
               style: TextStyle(

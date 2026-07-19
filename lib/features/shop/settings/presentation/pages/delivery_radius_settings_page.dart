@@ -6,33 +6,53 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
-import 'package:street_cart/features/shop/settings/presentation/bloc/delivery_radius_ui_cubit.dart';
+import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/radius_map_preview.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/radius_slider_section.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/radius_info_box.dart';
+import 'package:street_cart/shared/widgets/primary_button.dart';
 
-class DeliveryRadiusSettingsPage extends StatelessWidget {
+// Delivery Radius Settings Page
+class DeliveryRadiusSettingsPage extends StatefulWidget {
   final ShopProfileModel profile;
   final ShopProfileBloc profileBloc;
+  final ShopSettingsBloc settingsBloc;
 
   const DeliveryRadiusSettingsPage({
     super.key,
     required this.profile,
     required this.profileBloc,
+    required this.settingsBloc,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final String shopName = profile.shopName.isNotEmpty
-        ? profile.shopName
-        : 'Malabar Fashion Store';
-    final String address = profile.fullAddress.isNotEmpty
-        ? profile.fullAddress
-        : 'SM Street';
+  State<DeliveryRadiusSettingsPage> createState() =>
+      _DeliveryRadiusSettingsPageState();
+}
 
-    return BlocProvider(
-      create: (_) => DeliveryRadiusUiCubit(profile.deliveryRadius),
-      child: BlocBuilder<DeliveryRadiusUiCubit, DeliveryRadiusUiState>(
+class _DeliveryRadiusSettingsPageState
+    extends State<DeliveryRadiusSettingsPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the current delivery radius
+    widget.settingsBloc.add(
+      UpdateDeliveryRadiusEvent(widget.profile.deliveryRadius),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final String shopName = widget.profile.shopName.isNotEmpty
+        ? widget.profile.shopName
+        : 'Store...';
+    final String address = widget.profile.fullAddress.isNotEmpty
+        ? widget.profile.fullAddress
+        : '...';
+
+    return BlocProvider.value(
+      value: widget.settingsBloc,
+      child: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
         builder: (context, uiState) {
           return Scaffold(
             backgroundColor: Colors.white,
@@ -45,18 +65,14 @@ class DeliveryRadiusSettingsPage extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   borderRadius: BorderRadius.circular(20.r),
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFE8F5E9),
-                      shape: BoxShape.circle,
-                    ),
                     child: const Icon(
                       Icons.arrow_back,
                       color: ShopAppColors.primary,
-                      size: 20,
                     ),
                   ),
                 ),
               ),
+              // Page Header
               title: Text(
                 'Delivery Settings',
                 style: ShopAppTextStyles.heading4.copyWith(
@@ -86,6 +102,7 @@ class DeliveryRadiusSettingsPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 2.h),
+                          // Shop Name and Address
                           Text(
                             '$shopName • $address',
                             style: ShopAppTextStyles.bodySmallBold.copyWith(
@@ -94,16 +111,19 @@ class DeliveryRadiusSettingsPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 16.h),
-                          RadiusMapPreview(radius: uiState.radius),
+                          // Radius Map Image Preview
+                          RadiusMapPreview(radius: uiState.deliveryRadius),
                           SizedBox(height: 28.h),
+                          // Radius Slider Section
                           RadiusSliderSection(
-                            radius: uiState.radius,
+                            radius: uiState.deliveryRadius,
                             onChanged: (val) => context
-                                .read<DeliveryRadiusUiCubit>()
-                                .updateRadius(val),
+                                .read<ShopSettingsBloc>()
+                                .add(UpdateDeliveryRadiusEvent(val)),
                           ),
                           SizedBox(height: 28.h),
-                          RadiusInfoBox(radius: uiState.radius),
+                          // Radius Info Box
+                          RadiusInfoBox(radius: uiState.deliveryRadius),
                         ],
                       ),
                     ),
@@ -113,33 +133,24 @@ class DeliveryRadiusSettingsPage extends StatelessWidget {
                       horizontal: 24.w,
                       vertical: 16.h,
                     ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 48.h,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          profileBloc.add(
-                            UpdateShopProfileDataEvent(
-                              profile.copyWith(deliveryRadius: uiState.radius),
-                            ),
-                          );
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ShopAppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.r),
-                          ),
-                          elevation: 1,
-                        ),
-                        child: Text(
-                          'Save Settings',
-                          style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                          ),
-                        ),
+                    // Button for Saving Delivery Radius
+                    child: PrimaryButton(
+                      text: 'Save Settings',
+                      backgroundColor: ShopAppColors.primary,
+                      textStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                        color: Colors.white,
+                        fontSize: 16.sp,
                       ),
+                      onPressed: () {
+                        widget.profileBloc.add(
+                          UpdateShopProfileDataEvent(
+                            widget.profile.copyWith(
+                              deliveryRadius: uiState.deliveryRadius,
+                            ),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                 ],

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 
+// Resubmission Guidence Card
 class ResubmissionGuidanceCard extends StatelessWidget {
   const ResubmissionGuidanceCard({super.key});
 
@@ -30,6 +31,7 @@ class ResubmissionGuidanceCard extends StatelessWidget {
                 size: 24.sp,
               ),
               SizedBox(width: 12.w),
+              // Page Title
               Text(
                 'Resubmission Guidance',
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
@@ -39,14 +41,17 @@ class ResubmissionGuidanceCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
+          // Info 1
           _buildGuidanceBullet(
             'Make sure the shop name matches your official documents or signboard.',
           ),
           SizedBox(height: 12.h),
+          // Info 2
           _buildGuidanceBullet(
             'Upload clear, high-resolution photos of government-issued owner ID and Business License.',
           ),
           SizedBox(height: 12.h),
+          // Info 3
           _buildGuidanceBullet(
             'Double-check your email and phone number for accuracy so we can contact you if needed.',
           ),
