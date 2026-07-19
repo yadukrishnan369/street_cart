@@ -18,6 +18,7 @@ import 'package:street_cart/features/shop/support/presentation/widgets/shop_supp
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/home/presentation/widgets/shimmer/shop_home_shimmer.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 // Shop Home Page
 class ShopHomePage extends StatefulWidget {
@@ -99,6 +100,12 @@ class _ShopHomePageState extends State<ShopHomePage> {
                     }
                   });
                 }
+              } else if (state is ShopHomeError) {
+                CustomSnackBar.show(
+                  context,
+                  message: state.message.replaceAll('Exception: ', ''),
+                  isError: true,
+                );
               }
             },
           ),
@@ -109,8 +116,8 @@ class _ShopHomePageState extends State<ShopHomePage> {
           appBar: const ShopHomeAppBar(),
           body: BlocBuilder<ShopHomeBloc, ShopHomeState>(
             builder: (context, state) {
-              if (state is! ShopHomeDataLoaded) {
-                // Shome Page Shimmer
+              if (state is ShopHomeLoading || state is ShopHomeInitial) {
+                // Shop Page Shimmer
                 return const ShopHomePageShimmer();
               }
               // Refresh Indicator

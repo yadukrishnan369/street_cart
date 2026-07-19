@@ -27,6 +27,14 @@ class ShopProductsUpdatedEvent extends ShopProductsEvent {
   List<Object?> get props => [products];
 }
 
+class ShopProductsErrorEvent extends ShopProductsEvent {
+  final String message;
+  const ShopProductsErrorEvent(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 // Add Product Event
 class AddProductEvent extends ShopProductsEvent {
   final ProductModel product;

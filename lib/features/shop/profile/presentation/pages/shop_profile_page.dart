@@ -22,6 +22,7 @@ import 'package:street_cart/features/shop/profile/presentation/widgets/shop_loca
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_verification_docs_card.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_profile_action_buttons.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shimmer/shop_profile_shimmer.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Shop Profile Page
 class ShopProfilePage extends StatelessWidget {
@@ -103,16 +104,14 @@ class ShopProfilePage extends StatelessWidget {
                       state.status == ShopProfileStatus.initial) {
                     return const ShopProfileShimmer();
                   } else if (state.status == ShopProfileStatus.error) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(24.w),
-                        child: Text(
-                          state.message ?? 'An error occurred',
-                          style: ShopAppTextStyles.bodyMedium.copyWith(
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ),
+                    // App Error View
+                    return AppErrorView(
+                      message: state.message ?? 'An error occurred',
+                      onRetry: () {
+                        context.read<ShopProfileBloc>().add(
+                          FetchShopProfileData(),
+                        );
+                      },
                     );
                   }
                   return const SizedBox();
@@ -122,9 +121,7 @@ class ShopProfilePage extends StatelessWidget {
                 // Refresh Indicator
                 return RefreshIndicator(
                   onRefresh: () async {
-                    context.read<ShopProfileBloc>().add(
-                      FetchShopProfileData(),
-                    );
+                    context.read<ShopProfileBloc>().add(FetchShopProfileData());
                   },
                   color: ShopAppColors.primary,
                   child: SingleChildScrollView(

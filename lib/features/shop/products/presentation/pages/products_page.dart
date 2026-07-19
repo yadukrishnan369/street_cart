@@ -17,6 +17,7 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/shimmer/shop_products_shimmer.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Products Page
 class ProductsPage extends StatefulWidget {
@@ -145,13 +146,22 @@ class _ProductsPageState extends State<ProductsPage>
                 buildWhen: (previous, current) =>
                     current.status == ShopProductsStatus.loaded ||
                     current.status == ShopProductsStatus.loading ||
-                    current.status == ShopProductsStatus.initial,
+                    current.status == ShopProductsStatus.initial ||
+                    current.status == ShopProductsStatus.error,
                 builder: (context, state) {
                   if (state.status == ShopProductsStatus.loading ||
                       state.status == ShopProductsStatus.initial) {
                     return const ShopProductsShimmer(itemCount: 5);
                   }
-
+                  if (state.status == ShopProductsStatus.error) {
+                    // App Error View
+                    return AppErrorView(
+                      message: state.errorMessage ?? 'An error occurred',
+                      onRetry: () {
+                        _productsBloc.add(LoadShopProductsEvent(_shopId));
+                      },
+                    );
+                  }
                   if (state.status == ShopProductsStatus.loaded) {
                     // Products Tab Bar View
                     return ProductsTabBarView(
@@ -161,7 +171,6 @@ class _ProductsPageState extends State<ProductsPage>
                       productsBloc: _productsBloc,
                     );
                   }
-
                   return const Center(child: Text('No products found.'));
                 },
               ),

@@ -11,8 +11,9 @@ import 'package:street_cart/features/shop/profile/presentation/widgets/edit_shop
 import 'package:street_cart/features/shop/profile/presentation/widgets/edit_shop_profile_submit_button.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
-// Edit ShopProfile Page
+// Edit Shop Profile Page
 class EditShopProfilePage extends StatefulWidget {
   final ShopProfileModel profile;
 
@@ -127,51 +128,64 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
             ),
             centerTitle: true,
           ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Edit Shop Profile Form Steps
-                EditShopProfileFormSteps(
-                  profile: widget.profile,
-                  uiState: uiState,
-                  formKeyStep1: _formKeyStep1,
-                  formKeyStep2: _formKeyStep2,
-                  formKeyStep3: _formKeyStep3,
-                  ownerNameController: _ownerNameController,
-                  shopNameController: _shopNameController,
-                  descriptionController: _descriptionController,
-                  fullAddressController: _fullAddressController,
-                  landmarkController: _landmarkController,
-                  cityController: _cityController,
-                  pincodeController: _pincodeController,
-                  emailController: _emailController,
-                  phoneController: _phoneController,
-                  gstController: _gstController,
+          body: uiState.status == ShopProfileStatus.paymentSettingsError
+              // App Error View
+              ? AppErrorView(
+                  message: uiState.message ?? 'Failed to load configuration.',
+                  onRetry: () {
+                    context.read<ShopProfileBloc>().add(
+                      FetchShopPaymentSettings(),
+                    );
+                  },
+                )
+              : SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 16.h,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Edit Shop Profile Form Steps
+                      EditShopProfileFormSteps(
+                        profile: widget.profile,
+                        uiState: uiState,
+                        formKeyStep1: _formKeyStep1,
+                        formKeyStep2: _formKeyStep2,
+                        formKeyStep3: _formKeyStep3,
+                        ownerNameController: _ownerNameController,
+                        shopNameController: _shopNameController,
+                        descriptionController: _descriptionController,
+                        fullAddressController: _fullAddressController,
+                        landmarkController: _landmarkController,
+                        cityController: _cityController,
+                        pincodeController: _pincodeController,
+                        emailController: _emailController,
+                        phoneController: _phoneController,
+                        gstController: _gstController,
+                      ),
+                      SizedBox(height: 40.h),
+                      // Submit Button
+                      EditShopProfileSubmitButton(
+                        profile: widget.profile,
+                        uiState: uiState,
+                        formKeyStep1: _formKeyStep1,
+                        formKeyStep2: _formKeyStep2,
+                        formKeyStep3: _formKeyStep3,
+                        ownerNameController: _ownerNameController,
+                        shopNameController: _shopNameController,
+                        descriptionController: _descriptionController,
+                        fullAddressController: _fullAddressController,
+                        landmarkController: _landmarkController,
+                        cityController: _cityController,
+                        pincodeController: _pincodeController,
+                        emailController: _emailController,
+                        phoneController: _phoneController,
+                        gstController: _gstController,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 40.h),
-                // Submit Button
-                EditShopProfileSubmitButton(
-                  profile: widget.profile,
-                  uiState: uiState,
-                  formKeyStep1: _formKeyStep1,
-                  formKeyStep2: _formKeyStep2,
-                  formKeyStep3: _formKeyStep3,
-                  ownerNameController: _ownerNameController,
-                  shopNameController: _shopNameController,
-                  descriptionController: _descriptionController,
-                  fullAddressController: _fullAddressController,
-                  landmarkController: _landmarkController,
-                  cityController: _cityController,
-                  pincodeController: _pincodeController,
-                  emailController: _emailController,
-                  phoneController: _phoneController,
-                  gstController: _gstController,
-                ),
-              ],
-            ),
-          ),
         );
       },
     );

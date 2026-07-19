@@ -736,7 +736,6 @@ void _initCustomerProducts() {
     () => CustomerProductsBloc(
       getCustomerProducts: sl(),
       sharedPreferences: sl(),
-      networkInfo: sl(),
     ),
   );
 
@@ -1196,7 +1195,7 @@ void _initShopOrders() {
     () => ShopOrdersRemoteDataSourceImpl(firestore: sl()),
   );
   sl.registerLazySingleton<IShopOrdersRepository>(
-    () => ShopOrdersRepositoryImpl(remoteDataSource: sl()),
+    () => ShopOrdersRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton(() => GetShopOrders(sl()));
   sl.registerLazySingleton(() => UpdateShopOrderStatus(sl()));

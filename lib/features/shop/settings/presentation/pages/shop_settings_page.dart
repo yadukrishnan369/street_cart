@@ -10,6 +10,8 @@ import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/shop_settings_sections.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 
 // Shop Settings Page
 class ShopSettingsPage extends StatelessWidget {
@@ -27,10 +29,43 @@ class ShopSettingsPage extends StatelessWidget {
             message: 'Settings updated successfully!',
           );
         } else if (state.status == ShopProfileStatus.error) {
-          CustomSnackBar.show(context, message: state.message ?? 'An error occurred', isError: true);
+          CustomSnackBar.show(
+            context,
+            message: state.message ?? 'An error occurred',
+            isError: true,
+          );
         }
       },
       builder: (context, profileState) {
+        if (profileState.status == ShopProfileStatus.error &&
+            profileState.profile == null) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF8F9FA),
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0.5,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: ShopAppColors.primary,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: const Text(
+                'Settings',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            // Showing Error View
+            body: AppErrorView(
+              message: profileState.message ?? 'Failed to load configuration.',
+              onRetry: () {
+                context.read<ShopProfileBloc>().add(FetchShopProfileData());
+              },
+            ),
+          );
+        }
+
         ShopProfileModel? profile;
         if (profileState.status == ShopProfileStatus.loaded) {
           profile = profileState.profile;

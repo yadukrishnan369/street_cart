@@ -20,6 +20,7 @@ import 'package:street_cart/features/customer/products/presentation/widgets/prod
 import 'package:street_cart/features/customer/products/presentation/widgets/product_detail_app_bar.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/stock_status_badge.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/features/customer/products/presentation/widgets/variant_warning_banner.dart';
 
 // Customer Product Detail Page
 class CustomerProductDetailPage extends StatelessWidget {
@@ -119,37 +120,8 @@ class CustomerProductDetailPage extends StatelessWidget {
                         SizedBox(height: 20.h),
                         // Variant Unavailable Warning Banner
                         if (state.variantWarningMessage != null) ...[
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 12.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.red[50]!,
-                              borderRadius: BorderRadius.circular(10.r),
-                              border: Border.all(color: Colors.red[200]!),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.warning_amber_rounded,
-                                  color: Colors.red[700]!,
-                                  size: 20.sp,
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    state.variantWarningMessage!,
-                                    style: TextStyle(
-                                      fontSize: 13.sp,
-                                      color: Colors.red[700]!,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          VariantWarningBanner(
+                            warningMessage: state.variantWarningMessage!,
                           ),
                           SizedBox(height: 16.h),
                         ],

@@ -41,6 +41,14 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
        super(const ShopProductsState()) {
     on<LoadShopProductsEvent>(_onLoadShopProducts);
     on<ShopProductsUpdatedEvent>(_onShopProductsUpdated);
+    on<ShopProductsErrorEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: event.message,
+        ),
+      );
+    });
     on<AddProductEvent>(_onAddProduct);
     on<UpdateProductEvent>(_onUpdateProduct);
     on<DeleteProductEvent>(_onDeleteProduct);
@@ -132,7 +140,7 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
 
     _productsSubscription = _getShopProducts(event.shopId).listen(
       (products) => add(ShopProductsUpdatedEvent(products)),
-      onError: (error) => add(const ShopProductsUpdatedEvent([])),
+      onError: (error) => add(ShopProductsErrorEvent(error.toString())),
     );
   }
 
@@ -336,10 +344,23 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     LoadProductConfigEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
+    emit(state.copyWith(status: ShopProductsStatus.loading));
     try {
       _customConfig = await _getShopProductConfig(event.shopId);
-      emit(state.copyWith(customConfig: _customConfig));
-    } catch (_) {}
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.loaded,
+          customConfig: _customConfig,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: ShopProductsStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   // Load Product Config

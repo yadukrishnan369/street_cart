@@ -12,12 +12,15 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
   ShopProductsRepositoryImpl({
     required IShopProductsRemoteDataSource remoteDataSource,
     required INetworkInfo networkInfo,
-  })  : _remoteDataSource = remoteDataSource,
-        _networkInfo = networkInfo;
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo;
 
   @override
-  Stream<List<ProductModel>> getShopProducts(String shopId) {
-    return _remoteDataSource.getShopProducts(shopId);
+  Stream<List<ProductModel>> getShopProducts(String shopId) async* {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    yield* _remoteDataSource.getShopProducts(shopId);
   }
 
   @override
@@ -26,7 +29,9 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
     List<VariantImageDraft> variantDrafts,
   ) async {
     if (!await _networkInfo.isConnected) {
-      throw NetworkException('No internet connection. Please check your network.');
+      throw NetworkException(
+        'No internet connection. Please check your network.',
+      );
     }
     await _remoteDataSource.addProduct(product, variantDrafts);
   }
@@ -37,7 +42,9 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
     List<VariantImageDraft> variantDrafts,
   ) async {
     if (!await _networkInfo.isConnected) {
-      throw NetworkException('No internet connection. Please check your network.');
+      throw NetworkException(
+        'No internet connection. Please check your network.',
+      );
     }
     await _remoteDataSource.updateProduct(product, variantDrafts);
   }
@@ -45,7 +52,9 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
   @override
   Future<void> deleteProduct(String shopId, String productId) async {
     if (!await _networkInfo.isConnected) {
-      throw NetworkException('No internet connection. Please check your network.');
+      throw NetworkException(
+        'No internet connection. Please check your network.',
+      );
     }
     await _remoteDataSource.deleteProduct(shopId, productId);
   }
@@ -53,16 +62,22 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
   @override
   Future<Map<String, dynamic>> getShopProductConfig(String shopId) async {
     if (!await _networkInfo.isConnected) {
-      throw NetworkException('No internet connection. Please check your network.');
+      throw NetworkException(
+        'No internet connection. Please check your network.',
+      );
     }
     return await _remoteDataSource.getShopProductConfig(shopId);
   }
 
   @override
   Future<void> saveShopProductConfig(
-      String shopId, Map<String, dynamic> config) async {
+    String shopId,
+    Map<String, dynamic> config,
+  ) async {
     if (!await _networkInfo.isConnected) {
-      throw NetworkException('No internet connection. Please check your network.');
+      throw NetworkException(
+        'No internet connection. Please check your network.',
+      );
     }
     await _remoteDataSource.saveShopProductConfig(shopId, config);
   }

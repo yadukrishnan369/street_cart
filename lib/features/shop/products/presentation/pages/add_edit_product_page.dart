@@ -11,6 +11,7 @@ import 'package:street_cart/features/shop/products/presentation/widgets/add_edit
 import 'package:street_cart/features/shop/products/presentation/widgets/add_edit_product_app_bar.dart';
 import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Add Edit Product Page
 class AddEditProductPage extends StatefulWidget {
@@ -124,6 +125,18 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
             builder: (context, productsState) {
               if (productsState.status == ShopProductsStatus.loading) {
                 return const Center(child: CircularProgressIndicator());
+              }
+
+              if (productsState.status == ShopProductsStatus.error) {
+                // App Error View
+                return AppErrorView(
+                  message: productsState.errorMessage ?? 'Failed to load.',
+                  onRetry: () {
+                    widget.productsBloc.add(
+                      LoadProductConfigEvent(widget.shopId),
+                    );
+                  },
+                );
               }
 
               Map<String, dynamic> customConfig = {};

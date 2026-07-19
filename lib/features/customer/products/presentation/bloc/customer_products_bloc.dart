@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:street_cart/core/network/network_info.dart';
 import 'package:street_cart/core/utils/logger.dart';
 import 'package:street_cart/features/customer/products/domain/usecases/get_customer_products.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
@@ -14,14 +13,11 @@ class CustomerProductsBloc
     extends Bloc<CustomerProductsEvent, CustomerProductsState> {
   final GetCustomerProducts getCustomerProducts;
   final SharedPreferences _sharedPreferences;
-  final INetworkInfo _networkInfo;
 
   CustomerProductsBloc({
     required this.getCustomerProducts,
     required SharedPreferences sharedPreferences,
-    required INetworkInfo networkInfo,
   }) : _sharedPreferences = sharedPreferences,
-       _networkInfo = networkInfo,
        super(CustomerProductsInitial()) {
     on<FetchCustomerProducts>(_onFetchCustomerProducts);
     on<UpdateFilters>(_onUpdateFilters);
@@ -131,14 +127,6 @@ class CustomerProductsBloc
     InitProductDetail event,
     Emitter<CustomerProductsState> emit,
   ) async {
-    if (!await _networkInfo.isConnected) {
-      emit(
-        CustomerProductsError(
-          message: 'Please check your internet connection.',
-        ),
-      );
-      return;
-    }
     final product = event.product;
     final colors = product.allColors;
     final sizes = product.allSizes;
