@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/debouncer.dart';
 import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_bloc.dart';
 import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_event.dart';
@@ -9,6 +8,7 @@ import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_st
 import 'package:street_cart/features/admin/shops/presentation/widgets/shop_metric_cards.dart';
 import 'package:street_cart/features/admin/shops/presentation/widgets/shimmer/admin_shop_page_shimmer.dart';
 import 'package:street_cart/features/admin/shops/presentation/widgets/shops_table_container.dart';
+import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 
@@ -59,35 +59,13 @@ class _AdminShopPageState extends State<AdminShopPage> {
                 _lastLoadedState = state;
               }
 
-              // Error states
+              // App Error View with retry
               if (_lastLoadedState == null) {
                 if (state is AdminShopError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Failed to load shops:\n${state.message}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AdminAppColors.errorColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.read<AdminShopBloc>().add(
-                              LoadAdminShop(page: 1, limit: _perPage),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AdminAppColors.primaryColor,
-                          ),
-                          child: const Text('Retry'),
-                        ),
-                      ],
+                  return AdminErrorView(
+                    message: state.message,
+                    onRetry: () => context.read<AdminShopBloc>().add(
+                      LoadAdminShop(page: 1, limit: _perPage),
                     ),
                   );
                 }

@@ -1,13 +1,25 @@
 import 'package:street_cart/core/constants/admin_constants.dart';
+import 'package:street_cart/core/network/network_info.dart';
+import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/features/admin/products/domain/repositories/admin_product_repository.dart';
 import 'package:street_cart/features/admin/products/data/datasources/admin_product_remote_datasource.dart';
 
 class AdminProductRepositoryImpl implements IAdminProductRepository {
   final IAdminProductRemoteDataSource _remoteDataSource;
+  final INetworkInfo _networkInfo;
 
   AdminProductRepositoryImpl({
     required IAdminProductRemoteDataSource remoteDataSource,
-  }) : _remoteDataSource = remoteDataSource;
+    required INetworkInfo networkInfo,
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo;
+
+  Future<void> _checkConnection() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+  }
+
   //  Get Products
   @override
   Future<AdminProductResponse> getProducts({
@@ -17,6 +29,7 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     String? statusFilter,
     String? categoryFilter,
   }) async {
+    await _checkConnection();
     final allProductsRaw = await _remoteDataSource.getAllProducts();
     final allShops = await _remoteDataSource.getAllShops();
 
@@ -138,6 +151,7 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
   // Get Product Detail
   @override
   Future<AdminProductItem> getProductDetails(String productId) async {
+    await _checkConnection();
     final product = await _remoteDataSource.getProductById(productId);
     final allShops = await _remoteDataSource.getAllShops();
     final shopNameMap = {for (var shop in allShops) shop.uid: shop.shopName};
@@ -168,12 +182,14 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
   // Disable Product
   @override
   Future<void> disableProduct(String productId, bool disable) async {
+    await _checkConnection();
     await _remoteDataSource.updateProductDisabledStatus(productId, disable);
   }
 
   // Delete Product
   @override
   Future<void> deleteProduct(String productId) async {
+    await _checkConnection();
     await _remoteDataSource.deleteProduct(productId);
   }
 }

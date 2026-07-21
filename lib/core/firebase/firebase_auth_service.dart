@@ -11,7 +11,7 @@ class FirebaseAuthService {
     required GoogleSignIn googleSignIn,
   }) : _auth = auth,
        _googleSignIn = googleSignIn;
-
+  // Sign Up With Email
   Future<UserCredential> signUpWithEmail({
     required String email,
     required String password,
@@ -24,10 +24,11 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // SignIn With Email
   Future<UserCredential> signInWithEmail({
     required String email,
     required String password,
@@ -40,10 +41,11 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // SignIn With Google
   Future<UserCredential?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -58,10 +60,11 @@ class FirebaseAuthService {
 
       return await _auth.signInWithCredential(credential);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // SignOut
   Future<void> signOut() async {
     try {
       try {
@@ -71,20 +74,22 @@ class FirebaseAuthService {
       }
       await _auth.signOut();
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Send Password Reset Email
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Confirm Password Reset
   Future<void> confirmPasswordReset({
     required String code,
     required String newPassword,
@@ -94,10 +99,11 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Change Password
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
@@ -118,10 +124,11 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Reauthenticate
   Future<void> reauthenticate(String password) async {
     final user = _auth.currentUser;
     if (user == null || user.email == null) {
@@ -137,10 +144,11 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Delete Auth Account
   Future<void> deleteAuthAccount() async {
     final user = _auth.currentUser;
     if (user == null) throw ServerException('No user logged in');
@@ -149,10 +157,11 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Get Current User ID
   String? getCurrentUserId() {
     return _auth.currentUser?.uid;
   }
@@ -164,16 +173,19 @@ class FirebaseAuthService {
     return user?.uid;
   }
 
+  // Get Current User Email
   String? getCurrentUserEmail() {
     return _auth.currentUser?.email;
   }
 
+  // Check, Email Password User
   bool isEmailPasswordUser() {
     final user = _auth.currentUser;
     if (user == null) return false;
     return user.providerData.any((p) => p.providerId == 'password');
   }
 
+  // Send Email Verification
   Future<void> sendEmailVerification() async {
     final user = _auth.currentUser;
     if (user == null) throw ServerException('No user logged in');
@@ -182,15 +194,17 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Check, is Email Verified
   bool isEmailVerified() {
     final user = _auth.currentUser;
     return user?.emailVerified ?? false;
   }
 
+  // Reload User
   Future<void> reloadUser() async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -199,30 +213,76 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      throw ServerException(e.toString());
+      throw _handleGenericException(e);
     }
   }
 
+  // Handle AuthException
   ServerException _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {
+      case 'network-request-failed':
+      case 'network-error':
+      case 'unavailable':
+        return ServerException(
+          'No internet connection. Please check your network and try again.',
+        );
       case 'email-already-in-use':
         return ServerException(
           'The email address is already in use by another account.',
         );
       case 'invalid-email':
-        return ServerException('The email address is invalid.');
+        return ServerException('Please enter a valid email address.');
       case 'weak-password':
         return ServerException('The password provided is too weak.');
       case 'user-not-found':
       case 'wrong-password':
       case 'invalid-credential':
-        return ServerException('Incorrect email or password.');
+        return ServerException('Incorrect email address or password.');
+      case 'user-disabled':
+        return ServerException(
+          'This account has been disabled. Please contact support.',
+        );
+      case 'too-many-requests':
+        return ServerException(
+          'Too many failed attempts. Please try again later.',
+        );
       case 'requires-recent-login':
         return ServerException(
           'For security reasons, you need to log in again before performing this action.',
         );
       default:
-        return ServerException(e.message ?? 'An unknown error occurred.');
+        final msg = e.message ?? '';
+        final lower = msg.toLowerCase();
+        if (lower.contains('network') ||
+            lower.contains('connection') ||
+            lower.contains('offline') ||
+            lower.contains('fetch')) {
+          return ServerException(
+            'No internet connection. Please check your network and try again.',
+          );
+        }
+        return ServerException(
+          msg.isNotEmpty ? msg : 'An unexpected authentication error occurred.',
+        );
     }
+  }
+
+  // Handle Generic Exception
+  ServerException _handleGenericException(Object e) {
+    final str = e.toString().toLowerCase();
+    if (str.contains('network') ||
+        str.contains('connection') ||
+        str.contains('offline') ||
+        str.contains('socketexception') ||
+        str.contains('xmlhttprequest') ||
+        str.contains('failed to fetch') ||
+        str.contains('host lookup')) {
+      return ServerException(
+        'No internet connection. Please check your network and try again.',
+      );
+    }
+    return ServerException(
+      e.toString().replaceAll(RegExp(r'^Exception:\s*'), ''),
+    );
   }
 }

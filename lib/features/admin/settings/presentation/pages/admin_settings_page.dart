@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_bloc.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_event.dart';
@@ -45,32 +46,12 @@ class AdminSettingsPage extends StatelessWidget {
               if (state is AdminSettingsLoading) {
                 return const AdminSettingsShimmer();
               }
-              // Error State
+              // App Error View with retry
               if (state is AdminSettingsLoadFailure) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Failed to load settings: ${state.message}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AdminAppColors.errorColor,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<AdminSettingsBloc>().add(
-                            LoadAdminSettings(),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AdminAppColors.primaryColor,
-                        ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
+                return AdminErrorView(
+                  message: state.message,
+                  onRetry: () => context.read<AdminSettingsBloc>().add(
+                    LoadAdminSettings(),
                   ),
                 );
               }

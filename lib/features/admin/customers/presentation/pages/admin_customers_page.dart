@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/debouncer.dart';
 import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_bloc.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_event.dart';
@@ -69,32 +69,11 @@ class _AdminCustomersPageState extends State<AdminCustomersPage> {
                 }
                 if (_lastLoadedState == null) {
                   if (state is AdminCustomersError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Failed to load customers:\n${state.message}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AdminAppColors.errorColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<AdminCustomersBloc>().add(
-                                LoadAdminCustomers(page: 1, limit: _perPage),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AdminAppColors.primaryColor,
-                            ),
-                            child: const Text('Retry'),
-                          ),
-                        ],
+                    // App Error View with retry
+                    return AdminErrorView(
+                      message: state.message,
+                      onRetry: () => context.read<AdminCustomersBloc>().add(
+                        LoadAdminCustomers(page: 1, limit: _perPage),
                       ),
                     );
                   }

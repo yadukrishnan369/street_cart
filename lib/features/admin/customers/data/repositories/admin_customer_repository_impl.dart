@@ -1,3 +1,5 @@
+import 'package:street_cart/core/network/network_info.dart';
+import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/admin/customers/domain/repositories/admin_customer_repository.dart';
 import 'package:street_cart/features/admin/customers/data/datasources/admin_customer_remote_datasource.dart';
@@ -5,10 +7,19 @@ import 'package:street_cart/features/admin/customers/data/models/customer_model.
 
 class AdminCustomerRepositoryImpl implements IAdminCustomerRepository {
   final IAdminCustomerRemoteDataSource _remoteDataSource;
+  final INetworkInfo _networkInfo;
 
   AdminCustomerRepositoryImpl({
     required IAdminCustomerRemoteDataSource remoteDataSource,
-  }) : _remoteDataSource = remoteDataSource;
+    required INetworkInfo networkInfo,
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo;
+
+  Future<void> _checkConnection() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+  }
 
   @override
   Future<AdminCustomerResponse> getCustomers({
@@ -17,6 +28,7 @@ class AdminCustomerRepositoryImpl implements IAdminCustomerRepository {
     String? searchQuery,
     String? statusFilter,
   }) async {
+    await _checkConnection();
     final allCustomers = await _remoteDataSource.getAllCustomers();
 
     final totalCustomers = allCustomers.length;
@@ -70,21 +82,25 @@ class AdminCustomerRepositoryImpl implements IAdminCustomerRepository {
     required String uid,
     required bool isBlocked,
   }) async {
+    await _checkConnection();
     await _remoteDataSource.updateCustomerBlockStatus(uid, isBlocked);
   }
 
   @override
   Future<CustomerModel> getCustomerById(String uid) async {
+    await _checkConnection();
     return await _remoteDataSource.getCustomerById(uid);
   }
 
   @override
   Future<List<AddressModel>> getCustomerAddresses(String uid) async {
+    await _checkConnection();
     return await _remoteDataSource.getCustomerAddresses(uid);
   }
 
   @override
   Future<void> deleteCustomer(String uid) async {
+    await _checkConnection();
     await _remoteDataSource.deleteCustomer(uid);
   }
 }

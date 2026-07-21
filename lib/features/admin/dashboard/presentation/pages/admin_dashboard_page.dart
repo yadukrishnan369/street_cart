@@ -9,7 +9,7 @@ import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_das
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_dashboard_event.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_dashboard_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
-import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/stat_card.dart';
@@ -136,30 +136,11 @@ class AdminDashboardPage extends StatelessWidget {
                 ),
               );
             } else if (state is AdminDashboardLoadFailure) {
-              // Error State
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Failed to load dashboard metrics:\n${state.message}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: AdminAppColors.errorColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<AdminDashboardBloc>().add(
-                          LoadDashboardDataRequested(),
-                        );
-                      },
-                      child: const Text('Retry'),
-                    ),
-                  ],
+              // App Error View with retry
+              return AdminErrorView(
+                message: state.message,
+                onRetry: () => context.read<AdminDashboardBloc>().add(
+                  LoadDashboardDataRequested(),
                 ),
               );
             }

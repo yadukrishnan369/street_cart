@@ -930,7 +930,7 @@ void _initAdminAuth() {
 
   // Repository
   sl.registerLazySingleton<IAdminAuthRepository>(
-    () => AdminAuthRepositoryImpl(remoteDataSource: sl()),
+    () => AdminAuthRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use cases
@@ -975,7 +975,8 @@ void _initAdminDashboard() {
 
   // Repository
   sl.registerLazySingleton<IAdminDashboardRepository>(
-    () => AdminDashboardRepositoryImpl(remoteDataSource: sl()),
+    () =>
+        AdminDashboardRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use Case
@@ -1014,7 +1015,8 @@ void _initAdminSettings() {
 
   // Repository
   sl.registerLazySingleton<IAdminSettingsRepository>(
-    () => AdminSettingsRepositoryImpl(remoteDataSource: sl()),
+    () =>
+        AdminSettingsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use cases
@@ -1055,7 +1057,7 @@ void _initAdminProfile() {
 
   // Repository
   sl.registerLazySingleton<IAdminProfileRepository>(
-    () => AdminProfileRepositoryImpl(remoteDataSource: sl()),
+    () => AdminProfileRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Usecase
@@ -1076,7 +1078,7 @@ void _initAdminShop() {
 
   // Repository
   sl.registerLazySingleton<IAdminShopRepository>(
-    () => AdminShopRepositoryImpl(remoteDataSource: sl()),
+    () => AdminShopRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use cases
@@ -1107,7 +1109,8 @@ void _initAdminCustomers() {
 
   // Repository
   sl.registerLazySingleton<IAdminCustomerRepository>(
-    () => AdminCustomerRepositoryImpl(remoteDataSource: sl()),
+    () =>
+        AdminCustomerRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use cases
@@ -1140,7 +1143,7 @@ void _initAdminProducts() {
 
   // Repository
   sl.registerLazySingleton<IAdminProductRepository>(
-    () => AdminProductRepositoryImpl(remoteDataSource: sl()),
+    () => AdminProductRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Use Case
@@ -1210,7 +1213,7 @@ void _initAdminOrders() {
     () => AdminOrdersRemoteDataSourceImpl(firestore: sl()),
   );
   sl.registerLazySingleton<IAdminOrdersRepository>(
-    () => AdminOrdersRepositoryImpl(remoteDataSource: sl()),
+    () => AdminOrdersRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton(() => GetAdminOrders(sl()));
   sl.registerFactory(() => AdminOrdersBloc(getAdminOrders: sl()));

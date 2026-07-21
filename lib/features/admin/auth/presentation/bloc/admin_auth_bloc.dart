@@ -59,7 +59,7 @@ class AdminAuthBloc extends Bloc<AdminAuthEvent, AdminAuthState> {
       } catch (e) {
         emit(
           AdminAuthFailure(
-            e.toString().replaceAll('Exception: ', ''),
+            _formatError(e),
             obscurePassword: state.obscurePassword,
             countdown: state.countdown,
             isResetLinkSent: state.isResetLinkSent,
@@ -158,7 +158,7 @@ class AdminAuthBloc extends Bloc<AdminAuthEvent, AdminAuthState> {
       } catch (e) {
         emit(
           AdminAuthFailure(
-            e.toString().replaceAll('Exception: ', ''),
+            _formatError(e),
             obscurePassword: state.obscurePassword,
             countdown: state.countdown,
             isResetLinkSent: state.isResetLinkSent,
@@ -191,7 +191,7 @@ class AdminAuthBloc extends Bloc<AdminAuthEvent, AdminAuthState> {
       } catch (e) {
         emit(
           AdminAuthFailure(
-            e.toString().replaceAll('Exception: ', ''),
+            _formatError(e),
             obscurePassword: state.obscurePassword,
             countdown: state.countdown,
             isResetLinkSent: state.isResetLinkSent,
@@ -249,6 +249,43 @@ class AdminAuthBloc extends Bloc<AdminAuthEvent, AdminAuthState> {
       _timer?.cancel();
       emit(state.copyWithResetTimer());
     });
+  }
+
+  String _formatError(dynamic e) {
+    final str = e.toString();
+    final lower = str.toLowerCase();
+
+    if (lower.contains('network') ||
+        lower.contains('connection') ||
+        lower.contains('offline') ||
+        lower.contains('internet') ||
+        lower.contains('timeout') ||
+        lower.contains('failed to fetch')) {
+      return 'No internet connection. Please check your network and try again.';
+    }
+
+    if (lower.contains('user-not-found') ||
+        lower.contains('wrong-password') ||
+        lower.contains('invalid-credential') ||
+        lower.contains('incorrect email or password')) {
+      return 'Incorrect email address or password.';
+    }
+
+    if (lower.contains('user-disabled')) {
+      return 'This account has been disabled. Please contact support.';
+    }
+
+    if (lower.contains('too-many-requests')) {
+      return 'Too many failed attempts. Please try again later.';
+    }
+
+    var clean = str
+        .replaceAll(RegExp(r'^Exception:\s*'), '')
+        .replaceAll(RegExp(r'\[firebase_auth/[^\]]+\]\s*'), '');
+
+    return clean.trim().isNotEmpty
+        ? clean.trim()
+        : 'An unexpected authentication error occurred.';
   }
 
   @override

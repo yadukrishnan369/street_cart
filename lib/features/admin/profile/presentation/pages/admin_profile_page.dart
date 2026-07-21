@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_bloc.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_event.dart';
@@ -12,6 +11,7 @@ import 'package:street_cart/features/admin/profile/presentation/widgets/admin_pr
 import 'package:street_cart/features/admin/profile/presentation/widgets/admin_profile_security.dart';
 import 'package:street_cart/features/admin/profile/presentation/widgets/admin_profile_logout.dart';
 import 'package:street_cart/features/admin/profile/presentation/widgets/edit_profile_overlay.dart';
+import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/admin/profile/presentation/utils/profile_helper.dart';
 import 'package:street_cart/features/admin/profile/presentation/widgets/admin_profile_bio_card.dart';
@@ -34,14 +34,11 @@ class AdminProfilePage extends StatelessWidget {
               ),
             );
           } else if (state is AdminProfileError) {
-            // Error State
-            return Center(
-              child: Text(
-                'Error loading profile: ${state.message}',
-                style: AdminAppTextStyles.bodyMedium.copyWith(
-                  color: AdminAppColors.errorColor,
-                ),
-              ),
+            // App Error View with retry
+            return AdminErrorView(
+              message: state.message,
+              onRetry: () =>
+                  context.read<AdminProfileBloc>().add(LoadAdminProfile()),
             );
           } else if (state is AdminProfileLoaded) {
             final profile = state.profile;

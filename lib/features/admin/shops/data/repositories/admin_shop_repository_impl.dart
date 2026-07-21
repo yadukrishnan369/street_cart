@@ -1,3 +1,5 @@
+import 'package:street_cart/core/network/network_info.dart';
+import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/features/admin/shops/data/datasources/i_admin_shop_remote_datasource.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
@@ -5,10 +7,19 @@ import 'package:street_cart/features/admin/shops/domain/repositories/admin_shop_
 
 class AdminShopRepositoryImpl implements IAdminShopRepository {
   final IAdminShopRemoteDataSource _remoteDataSource;
+  final INetworkInfo _networkInfo;
 
   AdminShopRepositoryImpl({
     required IAdminShopRemoteDataSource remoteDataSource,
-  }) : _remoteDataSource = remoteDataSource;
+    required INetworkInfo networkInfo,
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo;
+
+  Future<void> _checkConnection() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+  }
 
   @override
   Future<AdminShopResponse> getShops({
@@ -18,6 +29,7 @@ class AdminShopRepositoryImpl implements IAdminShopRepository {
     String? statusFilter,
     String? categoryFilter,
   }) async {
+    await _checkConnection();
     final allShops = await _remoteDataSource.getAllApprovedShops();
 
     final totalShops = allShops.length;
@@ -92,21 +104,25 @@ class AdminShopRepositoryImpl implements IAdminShopRepository {
     required String shopId,
     required bool isSuspended,
   }) async {
+    await _checkConnection();
     await _remoteDataSource.updateShopSuspensionStatus(shopId, isSuspended);
   }
 
   @override
   Future<ShopProfileModel> getShopById(String shopId) async {
+    await _checkConnection();
     return await _remoteDataSource.getShopById(shopId);
   }
 
   @override
   Future<void> deleteShop(String shopId) async {
+    await _checkConnection();
     await _remoteDataSource.deleteShop(shopId);
   }
 
   @override
   Future<List<ProductModel>> getShopProducts(String shopId) async {
+    await _checkConnection();
     return await _remoteDataSource.getProductsByShopId(shopId);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/debouncer.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/orders/presentation/bloc/admin_orders_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:street_cart/features/admin/orders/presentation/bloc/admin_orders
 import 'package:street_cart/features/admin/orders/presentation/widgets/orders_table_container.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/orders_tab_bar.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
+import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/shimmer/admin_orders_page_shimmer.dart';
 
@@ -58,35 +58,12 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
                 }
 
                 if (_lastLoadedState == null) {
-                  // Failure State
+                  // App Error View with retry
                   if (state is AdminOrdersFailure) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Failed to load orders:\n${state.message}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AdminAppColors.errorColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          // Button for Reload
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<AdminOrdersBloc>().add(
-                                LoadAdminOrders(),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AdminAppColors.primaryColor,
-                            ),
-                            child: const Text('Retry'),
-                          ),
-                        ],
+                    return AdminErrorView(
+                      message: state.message,
+                      onRetry: () => context.read<AdminOrdersBloc>().add(
+                        LoadAdminOrders(),
                       ),
                     );
                   }
