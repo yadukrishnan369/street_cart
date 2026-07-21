@@ -1,4 +1,5 @@
 class ProfileHelper {
+  // Get Name Initials
   static String getInitials(String name) {
     if (name.trim().isEmpty) return 'AD';
     final parts = name.trim().split(' ');

@@ -1,4 +1,4 @@
-import '../repositories/admin_customer_repository.dart';
+import 'package:street_cart/features/admin/customers/domain/repositories/admin_customer_repository.dart';
 
 class GetAdminCustomersParams {
   final int page;

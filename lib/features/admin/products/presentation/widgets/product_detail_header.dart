@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 
+// Product Detail Header
 class ProductDetailHeader extends StatelessWidget {
   final ProductModel product;
   final VoidCallback onToggleDisable;
@@ -44,7 +45,7 @@ class ProductDetailHeader extends StatelessWidget {
     final headerInfo = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Product thumbnail
+        // Product Image
         Container(
           width: 80.w,
           height: 80.h,
@@ -125,6 +126,7 @@ class ProductDetailHeader extends StatelessWidget {
                     color: const Color(0xFF6C6C80),
                   ),
                   SizedBox(width: 4.w),
+                  // Product Category
                   Text(
                     p.category,
                     style: TextStyle(
@@ -136,6 +138,7 @@ class ProductDetailHeader extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 6.h),
+              // Product ID
               Text(
                 'Product ID: #${p.id.substring(0, p.id.length > 8 ? 8 : p.id.length).toUpperCase()}',
                 style: TextStyle(

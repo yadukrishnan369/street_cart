@@ -16,6 +16,7 @@ import 'package:street_cart/features/admin/settings/presentation/widgets/notific
 import 'package:street_cart/features/admin/settings/presentation/widgets/shimmer/admin_settings_shimmer.dart';
 import 'package:street_cart/features/admin/settings/presentation/utils/settings_helper.dart';
 
+// Admin Settings Page
 class AdminSettingsPage extends StatelessWidget {
   const AdminSettingsPage({super.key});
 
@@ -44,7 +45,7 @@ class AdminSettingsPage extends StatelessWidget {
               if (state is AdminSettingsLoading) {
                 return const AdminSettingsShimmer();
               }
-
+              // Error State
               if (state is AdminSettingsLoadFailure) {
                 return Center(
                   child: Column(
@@ -86,6 +87,7 @@ class AdminSettingsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Platform Business Settings
                       PlatformBusinessSettings(
                         settings: currentSettings,
                         isInProgress: isInProgress,
@@ -96,17 +98,22 @@ class AdminSettingsPage extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Categories Card
                             const Expanded(child: CategoriesCard()),
                             SizedBox(width: 20.w),
+                            // Product Config Card
                             const Expanded(child: ProductConfigCard()),
                           ],
                         ),
                       ),
                       SizedBox(height: 24.h),
+                      // Security Access Card
                       SecurityAccessCard(isInProgress: isInProgress),
                       SizedBox(height: 24.h),
+                      // Appearance Card
                       const AppearanceCard(),
                       SizedBox(height: 24.h),
+                      // Notification Preferences Card
                       const NotificationPreferencesCard(),
                     ],
                   ),

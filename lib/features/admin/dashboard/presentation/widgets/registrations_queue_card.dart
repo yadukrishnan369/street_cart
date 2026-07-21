@@ -7,10 +7,10 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_bloc.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_event.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_state.dart';
-import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registrations_ui_cubit.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/registrations_table.dart';
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
 
+// Registrations Queue Card
 class RegistrationsQueueCard extends StatelessWidget {
   final AdminRegistrationsLoadSuccess state;
   final int currentPage;
@@ -30,51 +30,59 @@ class RegistrationsQueueCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1E1E2F).withOpacity(0.02),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(24.w),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Section Title
                 Text(
-                  'Application Pendings',
+                  'PENDING APPLICATIONS',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w800,
+                    letterSpacing: 0.8,
                     color: const Color(0xFF1E1E2F),
                   ),
                 ),
-                Text(
-                  'Showing ${state.totalCount} pending applications',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF8A8A9E),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F0FF),
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                  // Total Pending Count
+                  child: Text(
+                    '${state.totalCount} Pending',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AdminAppColors.primaryColor,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           if (state.registrations.isEmpty)
+            // Empty State
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 80.h),
+              padding: EdgeInsets.all(40.w),
               child: Center(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.storefront_outlined,
-                      color: AdminAppColors.primaryColor,
-                      size: 64.sp,
+                      Icons.folder_open_outlined,
+                      size: 48.sp,
+                      color: const Color(0xFFC4C4D4),
                     ),
                     SizedBox(height: 16.h),
                     Text(
@@ -90,6 +98,7 @@ class RegistrationsQueueCard extends StatelessWidget {
               ),
             )
           else ...[
+            // Registrations grid list
             RegistrationsTable(
               registrations: state.registrations,
               onReview: (reg) async {
@@ -97,7 +106,9 @@ class RegistrationsQueueCard extends StatelessWidget {
                   RoutePaths.registrationDetails.replaceAll(':id', reg.id),
                 );
                 if (refresh == true && context.mounted) {
-                  context.read<AdminRegistrationsUiCubit>().markChanges();
+                  context.read<AdminRegistrationsBloc>().add(
+                    const MarkRegistrationChangesRequested(),
+                  );
                   context.read<AdminRegistrationsBloc>().add(
                     LoadPendingRegistrationsRequested(
                       page: currentPage,
@@ -108,16 +119,14 @@ class RegistrationsQueueCard extends StatelessWidget {
               },
             ),
             SizedBox(height: 24.h),
+
+            // Pagination
             AdminPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,
               onPageChanged: (newPage) {
-                context.read<AdminRegistrationsUiCubit>().changePage(newPage);
                 context.read<AdminRegistrationsBloc>().add(
-                  LoadPendingRegistrationsRequested(
-                    page: newPage,
-                    limit: limit,
-                  ),
+                  ChangeRegistrationPageRequested(newPage),
                 );
               },
             ),

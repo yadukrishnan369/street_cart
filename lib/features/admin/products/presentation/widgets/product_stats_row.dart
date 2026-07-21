@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/products/domain/repositories/admin_product_repository.dart';
 
+// Product Stats Row
 class ProductStatsRow extends StatelessWidget {
   final AdminProductItem productItem;
 
@@ -13,6 +14,7 @@ class ProductStatsRow extends StatelessWidget {
     final p = productItem.product;
     return Row(
       children: [
+        // Price Section
         Expanded(
           child: _buildStatItemCard(
             label: 'PRICE',
@@ -27,6 +29,7 @@ class ProductStatsRow extends StatelessWidget {
         ),
         SizedBox(width: 16.w),
         Expanded(
+          // Stock Section
           child: _buildStatItemCard(
             label: 'STOCK',
             value: '${p.stockQuantity} Units',
@@ -38,6 +41,7 @@ class ProductStatsRow extends StatelessWidget {
         ),
         SizedBox(width: 16.w),
         Expanded(
+          // Category Section
           child: _buildStatItemCard(
             label: 'CATEGORY',
             value: p.category,
@@ -48,6 +52,7 @@ class ProductStatsRow extends StatelessWidget {
           ),
         ),
         SizedBox(width: 16.w),
+        // Sales Section
         Expanded(
           child: _buildStatItemCard(
             label: 'SALES',

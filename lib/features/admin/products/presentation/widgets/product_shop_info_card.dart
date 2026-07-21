@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Product Shop Info Card
 class ProductShopInfoCard extends StatelessWidget {
   final String shopId;
   final String shopName;
@@ -29,6 +30,7 @@ class ProductShopInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'Posted by Shop',
             style: TextStyle(
@@ -58,6 +60,7 @@ class ProductShopInfoCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Shop Name
                     Text(
                       shopName,
                       style: TextStyle(
@@ -67,6 +70,7 @@ class ProductShopInfoCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4.h),
+                    // Shop Location
                     Text(
                       shopLocation,
                       style: TextStyle(
@@ -82,6 +86,7 @@ class ProductShopInfoCard extends StatelessWidget {
           SizedBox(height: 24.h),
           SizedBox(
             width: double.infinity,
+            // Button for View Shop Profile
             child: ElevatedButton(
               onPressed: () {
                 context.push(RoutePaths.shopDetails.replaceAll(':id', shopId));

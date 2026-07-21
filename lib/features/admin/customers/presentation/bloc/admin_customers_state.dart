@@ -1,11 +1,14 @@
-import '../../data/models/customer_model.dart';
+import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
 
 abstract class AdminCustomersState {}
 
+// Admin Customers Initial State
 class AdminCustomersInitial extends AdminCustomersState {}
 
+// Admin Customers Loading State
 class AdminCustomersLoading extends AdminCustomersState {}
 
+// Admin Customers Loaded State
 class AdminCustomersLoaded extends AdminCustomersState {
   final List<CustomerModel> customers;
   final int totalMatchingCount;
@@ -30,12 +33,14 @@ class AdminCustomersLoaded extends AdminCustomersState {
   });
 }
 
+// Admin Customers Error State
 class AdminCustomersError extends AdminCustomersState {
   final String message;
 
   AdminCustomersError(this.message);
 }
 
+// Admin Customers Action Success State
 class AdminCustomersActionSuccess extends AdminCustomersState {
   final String message;
 

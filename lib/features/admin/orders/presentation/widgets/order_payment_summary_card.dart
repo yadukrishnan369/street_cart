@@ -5,6 +5,7 @@ import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
+// Order Payment Summary Card
 class OrderPaymentSummaryCard extends StatelessWidget {
   final OrderModel order;
 
@@ -44,6 +45,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(24.w),
+            // Title
             child: Text(
               'Payment Summary',
               style: TextStyle(
@@ -57,14 +59,17 @@ class OrderPaymentSummaryCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Column(
               children: [
+                // Sub Total Section
                 _buildSummaryRow('Subtotal', subtotalStr),
                 SizedBox(height: 12.h),
+                // Commision Percentage Section
                 _buildSummaryRow(
                   'Commission$commissionPercentStr',
                   commStr,
                   valueColor: const Color(0xFF137333),
                 ),
                 SizedBox(height: 12.h),
+                // After Deduction Amount
                 _buildSummaryRow('After Deduction', deductionStr),
                 SizedBox(height: 16.h),
                 const Divider(color: Color(0xFFE8E7ED), thickness: 1.2),
@@ -72,6 +77,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Grand Total
                     Text(
                       'Grand Total',
                       style: TextStyle(
@@ -117,6 +123,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                         size: 18.sp,
                       ),
                       SizedBox(width: 8.w),
+                      // Payment Method
                       Text(
                         'Payment Via ${order.paymentMethod.toUpperCase()}',
                         style: TextStyle(

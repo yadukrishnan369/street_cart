@@ -8,6 +8,7 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_prod
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:uuid/uuid.dart';
 
+// Size Group Dialogs
 class SizeGroupDialogs {
   // Add Group
   static void showAdd(BuildContext context) {
@@ -53,6 +54,7 @@ class SizeGroupDialogs {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
+        // Title
         title: Text(
           'Add Size to "${group.name}"',
           style: TextStyle(
@@ -61,6 +63,7 @@ class SizeGroupDialogs {
             color: const Color(0xFF1E1E2F),
           ),
         ),
+        // Textform Field for add Size
         content: SizedBox(
           width: 340.w,
           child: Form(
@@ -92,6 +95,7 @@ class SizeGroupDialogs {
               style: TextStyle(color: const Color(0xFF8A8A9E), fontSize: 14.sp),
             ),
           ),
+          // Button for Add Size
           ElevatedButton(
             onPressed: () {
               if (!formKey.currentState!.validate()) return;
@@ -127,6 +131,7 @@ class SizeGroupDialogs {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
+        // Title
         title: Text(
           existing == null ? 'Add Size Group' : 'Edit Size Group',
           style: TextStyle(
@@ -143,6 +148,7 @@ class SizeGroupDialogs {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   'Group Name',
                   style: TextStyle(
@@ -152,6 +158,7 @@ class SizeGroupDialogs {
                   ),
                 ),
                 SizedBox(height: 8.h),
+                // Textform Field for Group name
                 TextFormField(
                   controller: nameController,
                   autofocus: true,

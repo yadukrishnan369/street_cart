@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Config Tab Selector
 class ConfigTabSelector extends StatelessWidget {
   final bool isColorsTab;
   final ValueChanged<bool> onTabChanged;

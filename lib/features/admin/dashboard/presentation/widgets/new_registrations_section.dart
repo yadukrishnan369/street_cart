@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/admin/dashboard/data/models/new_registration_model.dart';
+import 'package:street_cart/features/admin/dashboard/presentation/utils/admin_dashboard_helper.dart';
 
+// New Registrations Section
 class NewRegistrationsSection extends StatelessWidget {
   final List<NewRegistrationModel> registrations;
   final VoidCallback? onSeeAll;
@@ -31,6 +32,7 @@ class NewRegistrationsSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Title
               Text(
                 'New Registrations',
                 style: TextStyle(
@@ -50,6 +52,7 @@ class NewRegistrationsSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20.h),
+          // Empty State View
           if (registrations.isEmpty)
             Container(
               width: double.infinity,
@@ -75,6 +78,7 @@ class NewRegistrationsSection extends StatelessWidget {
               ),
             )
           else ...[
+            // List of New Registration
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -114,6 +118,7 @@ class NewRegistrationsSection extends StatelessWidget {
                             Row(
                               children: [
                                 Flexible(
+                                  // Shop Name
                                   child: Text(
                                     reg.shopName,
                                     style: TextStyle(
@@ -154,23 +159,7 @@ class NewRegistrationsSection extends StatelessWidget {
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              () {
-                                final category = reg.address
-                                    .split('•')
-                                    .first
-                                    .trim();
-                                if (reg.createdAt != null) {
-                                  final datePart =
-                                      DateFormatter.formatToReadableDate(
-                                        reg.createdAt!,
-                                      ).split(',').first;
-                                  final timePart = DateFormatter.formatToTime(
-                                    reg.createdAt!,
-                                  );
-                                  return '$category • $datePart, $timePart';
-                                }
-                                return '$category • Recently';
-                              }(),
+                              AdminDashboardHelper.getRegistrationSubtitle(reg),
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: const Color(0xFF8A8A9E),
@@ -194,6 +183,7 @@ class NewRegistrationsSection extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Center(
+              // Button for See All Registration
               child: TextButton(
                 onPressed: onSeeAll,
                 child: Text(

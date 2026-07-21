@@ -4,25 +4,21 @@ import 'package:street_cart/features/admin/auth/domain/repositories/i_admin_auth
 class AdminAuthRepositoryImpl implements IAdminAuthRepository {
   final IAdminAuthRemoteDataSource remoteDataSource;
 
-  AdminAuthRepositoryImpl({
-    required this.remoteDataSource,
-  });
+  AdminAuthRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<bool> login({required String email, required String password}) async {
-    final uid = await remoteDataSource.login(
-      email: email,
-      password: password,
-    );
+    final uid = await remoteDataSource.login(email: email, password: password);
     if (uid != null) {
       final isSuper = await remoteDataSource.isSuperAdmin(uid);
       if (isSuper) {
         return true;
       }
 
-      // If checks fail, sign out immediately and throw access denied exception
       await remoteDataSource.logout();
-      throw Exception('Access denied. You do not have super admin permissions.');
+      throw Exception(
+        'Access denied. You do not have super admin permissions.',
+      );
     }
     return false;
   }

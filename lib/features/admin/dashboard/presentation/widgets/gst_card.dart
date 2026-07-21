@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Gst Card
 class GstCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -20,6 +21,7 @@ class GstCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'GST Number',
             style: TextStyle(
@@ -29,6 +31,7 @@ class GstCard extends StatelessWidget {
             ),
           ),
           Divider(height: 32.h, color: const Color(0xFFF0EFF5)),
+          // GST Number
           Text(
             shop.gstNumber.isNotEmpty ? shop.gstNumber : 'Not Provided',
             style: TextStyle(

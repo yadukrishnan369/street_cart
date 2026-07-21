@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
 
+// Product Config Card
 class ProductConfigCard extends StatelessWidget {
   const ProductConfigCard({super.key});
 
@@ -35,6 +36,7 @@ class ProductConfigCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   'Product Configuration',
                   style: TextStyle(

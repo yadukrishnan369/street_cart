@@ -18,6 +18,7 @@ import 'package:street_cart/features/admin/orders/presentation/widgets/profit_in
 import 'package:street_cart/features/admin/orders/presentation/widgets/admin_order_detail_header.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/shimmer/admin_order_detail_shimmer.dart';
 
+// Admin Order Detail Page
 class AdminOrderDetailPage extends StatelessWidget {
   final String orderId;
 
@@ -87,7 +88,7 @@ class AdminOrderDetailPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 16.h),
-                          // Header row
+                          // Admin Order Detail Header
                           AdminOrderDetailHeader(
                             order: order,
                             formattedId: formattedId,
@@ -105,10 +106,13 @@ class AdminOrderDetailPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      // Tracking Details Card
                                       TrackingDetailsCard(order: order),
                                       SizedBox(height: 24.h),
+                                      // Order Product Details Card
                                       OrderProductDetailsCard(order: order),
                                       SizedBox(height: 24.h),
+                                      // Order Payment Summary Card
                                       OrderPaymentSummaryCard(order: order),
                                     ],
                                   ),
@@ -120,6 +124,7 @@ class AdminOrderDetailPage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      // Customer Info Card
                                       CustomerInfoCard(
                                         order: order,
                                         customerName:
@@ -132,6 +137,7 @@ class AdminOrderDetailPage extends StatelessWidget {
                                             '',
                                       ),
                                       SizedBox(height: 24.h),
+                                      // Shop Info Cards
                                       ShopInfoCard(
                                         shopName: shopName,
                                         shop: shopProfile,
@@ -147,12 +153,16 @@ class AdminOrderDetailPage extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Tracking Details Card
                                 TrackingDetailsCard(order: order),
                                 SizedBox(height: 24.h),
+                                // Order Product Details Card
                                 OrderProductDetailsCard(order: order),
                                 SizedBox(height: 24.h),
+                                // Order Payment Summary Card
                                 OrderPaymentSummaryCard(order: order),
                                 SizedBox(height: 24.h),
+                                // Customer Info Card
                                 CustomerInfoCard(
                                   order: order,
                                   customerName:
@@ -163,11 +173,13 @@ class AdminOrderDetailPage extends StatelessWidget {
                                       '',
                                 ),
                                 SizedBox(height: 24.h),
+                                // Shop Info Card
                                 ShopInfoCard(
                                   shopName: shopName,
                                   shop: shopProfile,
                                 ),
                                 SizedBox(height: 24.h),
+                                // Profit Info Card
                                 ProfitInfoCard(order: order),
                               ],
                             ),

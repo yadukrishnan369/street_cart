@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/constants/admin_constants.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 
+// Admin Profile Bio Card
 class AdminProfileBioCard extends StatelessWidget {
   const AdminProfileBioCard({super.key});
 
@@ -19,6 +20,7 @@ class AdminProfileBioCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             AdminConstants.bioTitle,
             style: AdminAppTextStyles.heading3.copyWith(
@@ -27,6 +29,7 @@ class AdminProfileBioCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // Content
           Text(
             AdminConstants.bioContent,
             style: AdminAppTextStyles.bodyMedium.copyWith(

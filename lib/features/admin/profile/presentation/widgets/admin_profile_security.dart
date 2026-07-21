@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 
+// Admin Profile Security
 class AdminProfileSecurity extends StatelessWidget {
   final String lastLoginStr;
   final String lastLogoutStr;
@@ -34,6 +35,7 @@ class AdminProfileSecurity extends StatelessWidget {
                 color: AdminAppColors.primaryColor,
               ),
               SizedBox(width: 10.w),
+              // Title
               Text(
                 'Security & Access',
                 style: AdminAppTextStyles.heading3.copyWith(
@@ -47,6 +49,7 @@ class AdminProfileSecurity extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Admin Last Login Time
               Text(
                 'LAST LOGIN',
                 style: TextStyle(
@@ -72,6 +75,7 @@ class AdminProfileSecurity extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Admin Last Logout Time
               Text(
                 'LAST LOGOUT',
                 style: TextStyle(

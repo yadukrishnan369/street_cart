@@ -1,77 +1,51 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_detail_bloc.dart';
+import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_detail_event.dart';
+import 'package:street_cart/features/admin/shops/presentation/utils/shop_products_card_helper.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
 
-class AdminShopProductsCard extends StatefulWidget {
+// Admin Shop Products Card
+class AdminShopProductsCard extends StatelessWidget {
   final List<ProductModel> products;
   final String shopId;
+  final String selectedFilter;
+  final int currentPage;
 
   const AdminShopProductsCard({
     super.key,
     required this.products,
     required this.shopId,
+    required this.selectedFilter,
+    required this.currentPage,
   });
 
   @override
-  State<AdminShopProductsCard> createState() => _AdminShopProductsCardState();
-}
-
-class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
-  String _selectedFilter = 'All Products';
-  int _currentPage = 1;
-  static const int _itemsPerPage = 6;
-
-  @override
   Widget build(BuildContext context) {
-    // Extract available categories
-    final categories = widget.products.map((p) => p.category).toSet().toList();
-    categories.sort();
-
-    final filterOptions = [
-      'All Products',
-      'Active',
-      'Disabled',
-      'Out of Stock',
-      ...categories,
-    ];
-
-    // Reset/adjust selected filter if not available in current list
-    if (!filterOptions.contains(_selectedFilter)) {
-      _selectedFilter = 'All Products';
-    }
-
-    // Filter products
-    final filteredProducts = widget.products.where((p) {
-      if (_selectedFilter == 'All Products') {
-        return true;
-      } else if (_selectedFilter == 'Active') {
-        return !p.disabledByAdmin && p.isActive && p.stockQuantity > 0;
-      } else if (_selectedFilter == 'Disabled') {
-        return p.disabledByAdmin || (!p.isActive && p.stockQuantity > 0);
-      } else if (_selectedFilter == 'Out of Stock') {
-        return !p.disabledByAdmin && p.stockQuantity == 0;
-      } else {
-        return p.category == _selectedFilter;
-      }
-    }).toList();
-
-    // Paginate products
-    final totalPages = (filteredProducts.length / _itemsPerPage).ceil();
-    if (totalPages > 0 && _currentPage > totalPages) {
-      _currentPage = totalPages;
-    } else if (totalPages == 0) {
-      _currentPage = 1;
-    }
-
-    final startIndex = (_currentPage - 1) * _itemsPerPage;
-    final endIndex = startIndex + _itemsPerPage;
-    final paginatedProducts = filteredProducts.sublist(
-      startIndex,
-      endIndex > filteredProducts.length ? filteredProducts.length : endIndex,
+    final filterOptions = ShopProductsCardHelper.buildFilterOptions(products);
+    final activeFilter = ShopProductsCardHelper.resolveActiveFilter(
+      selectedFilter,
+      filterOptions,
+    );
+    final filteredProducts = ShopProductsCardHelper.applyFilter(
+      products,
+      activeFilter,
+    );
+    final totalPages = ShopProductsCardHelper.computeTotalPages(
+      filteredProducts,
+    );
+    final safePage = ShopProductsCardHelper.resolveSafePage(
+      currentPage,
+      totalPages,
+    );
+    final paginatedProducts = ShopProductsCardHelper.paginate(
+      filteredProducts,
+      safePage,
     );
 
     return Container(
@@ -90,7 +64,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // Header title and filter dropdown
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
             child: Row(
@@ -114,6 +88,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                     ),
                   ],
                 ),
+
                 // Filter dropdown
                 Container(
                   width: 150.w,
@@ -129,7 +104,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                   child: DropdownButton<String>(
                     isExpanded: true,
                     menuMaxHeight: 300.h,
-                    value: _selectedFilter,
+                    value: activeFilter,
                     underline: const SizedBox.shrink(),
                     icon: Icon(
                       Icons.filter_list,
@@ -168,10 +143,9 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                     }).toList(),
                     onChanged: (selectedOption) {
                       if (selectedOption != null) {
-                        setState(() {
-                          _selectedFilter = selectedOption;
-                          _currentPage = 1;
-                        });
+                        context.read<AdminShopDetailBloc>().add(
+                          ShopProductFilterChanged(selectedOption),
+                        );
                       }
                     },
                   ),
@@ -181,6 +155,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
           ),
           const Divider(height: 1, color: Color(0xFFE8E7ED)),
 
+          // Empty state
           if (filteredProducts.isEmpty)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 48.h),
@@ -194,7 +169,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      _selectedFilter == 'All Products'
+                      activeFilter == 'All Products'
                           ? 'No products listed yet'
                           : 'No matching products found',
                       style: TextStyle(
@@ -208,6 +183,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
               ),
             )
           else ...[
+            // Product table
             Table(
               columnWidths: const {
                 0: FlexColumnWidth(2.5),
@@ -226,6 +202,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                       bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
                     ),
                   ),
+                  // Table header titles
                   children: [
                     _headerCell('PRODUCT'),
                     _headerCell('CATEGORY'),
@@ -238,15 +215,17 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                 ...paginatedProducts.map((p) => _buildProductRow(context, p)),
               ],
             ),
+
+            // Pagination
             if (totalPages >= 1) ...[
               SizedBox(height: 24.h),
               AdminPagination(
-                currentPage: _currentPage,
+                currentPage: safePage,
                 totalPages: totalPages,
                 onPageChanged: (page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
+                  context.read<AdminShopDetailBloc>().add(
+                    ShopProductPageChanged(page),
+                  );
                 },
               ),
             ],
@@ -258,39 +237,11 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
   }
 
   TableRow _buildProductRow(BuildContext context, ProductModel p) {
+    final status = ShopProductsCardHelper.resolveStatus(p);
+    final priceText = ShopProductsCardHelper.formatPrice(p);
+    final stockText = ShopProductsCardHelper.formatStock(p);
+    final thumbnailUrl = ShopProductsCardHelper.getThumbnailUrl(p);
     final isOutOfStock = p.stockQuantity == 0;
-    final isDisabledByAdmin = p.disabledByAdmin;
-
-    String statusText;
-    Color statusDot;
-    Color statusColor;
-
-    if (isDisabledByAdmin) {
-      statusText = 'Disabled';
-      statusDot = AdminAppColors.errorColor;
-      statusColor = AdminAppColors.errorColor;
-    } else if (!p.isActive) {
-      statusText = 'Disabled';
-      statusDot = const Color(0xFF8A8A9E);
-      statusColor = const Color(0xFF8A8A9E);
-    } else if (isOutOfStock) {
-      statusText = 'Out of Stock';
-      statusDot = AdminAppColors.warningColor;
-      statusColor = AdminAppColors.warningColor;
-    } else {
-      statusText = 'Active';
-      statusDot = AdminAppColors.successColor;
-      statusColor = AdminAppColors.successColor;
-    }
-
-    final priceText = p.offerPrice != null
-        ? '₹${p.offerPrice!.toStringAsFixed(0)}'
-        : '₹${p.originalPrice.toStringAsFixed(0)}';
-
-    final stockText = isOutOfStock
-        ? 'Out of Stock'
-        : '${p.stockQuantity} in stock';
-    final thumbnailUrl = p.images.isNotEmpty ? p.images.first : '';
 
     return TableRow(
       decoration: const BoxDecoration(
@@ -299,7 +250,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
         ),
       ),
       children: [
-        // Product name + Image
+        // Product name and image
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
           child: Row(
@@ -390,7 +341,7 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
             ),
           ),
         ),
-        // Status dot + label
+        // Status dot and label
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Row(
@@ -400,22 +351,22 @@ class _AdminShopProductsCardState extends State<AdminShopProductsCard> {
                 height: 6.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: statusDot,
+                  color: status.dotColor,
                 ),
               ),
               SizedBox(width: 6.w),
               Text(
-                statusText,
+                status.label,
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
-                  color: statusColor,
+                  color: status.textColor,
                 ),
               ),
             ],
           ),
         ),
-        // View action
+        // View action button
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: TextButton(

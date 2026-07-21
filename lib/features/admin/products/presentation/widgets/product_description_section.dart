@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 
+// Product Description Section
 class ProductDescriptionSection extends StatelessWidget {
   final ProductModel product;
 
@@ -21,6 +22,7 @@ class ProductDescriptionSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Product Title
           Text(
             'Product Description',
             style: TextStyle(
@@ -30,6 +32,7 @@ class ProductDescriptionSection extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // Product Description
           Text(
             p.description.isNotEmpty
                 ? p.description

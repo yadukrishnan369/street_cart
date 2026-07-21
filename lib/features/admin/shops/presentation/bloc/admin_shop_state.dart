@@ -1,11 +1,15 @@
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Base class
 abstract class AdminShopState {}
 
+// Shop Initial State
 class AdminShopInitial extends AdminShopState {}
 
+// Shop Loading State
 class AdminShopLoading extends AdminShopState {}
 
+// Shop Loaded State
 class AdminShopLoaded extends AdminShopState {
   final List<ShopProfileModel> shops;
   final int totalMatchingCount;
@@ -13,7 +17,6 @@ class AdminShopLoaded extends AdminShopState {
   final int activeShops;
   final int suspendedShops;
   final List<String> availableCategories;
-
   final int currentPage;
   final int limit;
   final String searchQuery;
@@ -67,12 +70,14 @@ class AdminShopLoaded extends AdminShopState {
   }
 }
 
+// Shop Error State
 class AdminShopError extends AdminShopState {
   final String message;
 
   AdminShopError(this.message);
 }
 
+// Shop Action Success State
 class AdminShopActionSuccess extends AdminShopState {
   final String message;
 

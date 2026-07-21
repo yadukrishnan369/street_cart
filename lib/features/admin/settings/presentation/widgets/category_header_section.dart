@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Category Header Section
 class CategoryHeaderSection extends StatelessWidget {
   final bool isProductTab;
   final VoidCallback onAddPressed;
@@ -20,6 +21,7 @@ class CategoryHeaderSection extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Title
             Text(
               'Category Catalog',
               style: TextStyle(

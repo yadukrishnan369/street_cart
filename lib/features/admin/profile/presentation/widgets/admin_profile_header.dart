@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 import 'package:street_cart/features/admin/profile/data/models/admin_profile_model.dart';
 
+// Admin Profile Header
 class AdminProfileHeader extends StatelessWidget {
   final AdminProfileModel profile;
   final String initials;
@@ -83,6 +84,7 @@ class AdminProfileHeader extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
+                                    // Full Name
                                     Text(
                                       profile.fullName,
                                       style: AdminAppTextStyles.heading2
@@ -112,6 +114,7 @@ class AdminProfileHeader extends StatelessWidget {
                                             color: Colors.white,
                                           ),
                                           SizedBox(width: 4.w),
+                                          // Role
                                           Text(
                                             profile.role,
                                             style: TextStyle(
@@ -134,6 +137,7 @@ class AdminProfileHeader extends StatelessWidget {
                                       color: const Color(0xFF8A8A9E),
                                     ),
                                     SizedBox(width: 6.w),
+                                    // Email
                                     Text(
                                       profile.email,
                                       style: AdminAppTextStyles.bodySmall
@@ -149,6 +153,7 @@ class AdminProfileHeader extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(bottom: 8.h),
+                          // Button for Edit Profile
                           child: OutlinedButton(
                             onPressed: onEditProfilePressed,
                             style: OutlinedButton.styleFrom(
@@ -256,6 +261,7 @@ class AdminProfileHeader extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 16.h),
+                        // Button for Edit Profile
                         OutlinedButton(
                           onPressed: onEditProfilePressed,
                           style: OutlinedButton.styleFrom(

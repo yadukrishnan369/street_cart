@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Product Metric Cards
 class ProductMetricCards extends StatelessWidget {
   final int totalProducts;
   final int activeItems;
@@ -89,17 +90,14 @@ class ProductMetricCards extends StatelessWidget {
                       color: iconBgColor,
                       borderRadius: BorderRadius.circular(10.r),
                     ),
-                    child: Icon(
-                      icon,
-                      color: iconColor,
-                      size: 24.sp,
-                    ),
+                    child: Icon(icon, color: iconColor, size: 24.sp),
                   ),
                   SizedBox(width: 16.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Title
                       Text(
                         title,
                         style: TextStyle(
@@ -151,16 +149,13 @@ class ProductMetricCards extends StatelessWidget {
                     color: iconBgColor,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
-                  child: Icon(
-                    icon,
-                    color: iconColor,
-                    size: 20.sp,
-                  ),
+                  child: Icon(icon, color: iconColor, size: 20.sp),
                 ),
                 SizedBox(width: 16.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Title
                     Text(
                       title,
                       style: TextStyle(

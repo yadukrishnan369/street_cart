@@ -12,8 +12,9 @@ class AdminProductBloc extends Bloc<AdminProductEvent, AdminProductState> {
     on<LoadAdminProducts>(_onLoadAdminProducts);
     on<SearchQueryChanged>(_onSearchQueryChanged);
     on<FilterChanged>(_onFilterChanged);
+    on<PageChanged>(_onPageChanged);
   }
-
+  // Load Products
   Future<void> _onLoadAdminProducts(
     LoadAdminProducts event,
     Emitter<AdminProductState> emit,
@@ -61,6 +62,7 @@ class AdminProductBloc extends Bloc<AdminProductEvent, AdminProductState> {
     }
   }
 
+  // Search Query Changed
   Future<void> _onSearchQueryChanged(
     SearchQueryChanged event,
     Emitter<AdminProductState> emit,
@@ -100,6 +102,7 @@ class AdminProductBloc extends Bloc<AdminProductEvent, AdminProductState> {
     }
   }
 
+  // Filter Changed
   Future<void> _onFilterChanged(
     FilterChanged event,
     Emitter<AdminProductState> emit,
@@ -136,6 +139,13 @@ class AdminProductBloc extends Bloc<AdminProductEvent, AdminProductState> {
       } catch (e) {
         emit(AdminProductError(e.toString()));
       }
+    }
+  }
+
+  // Pagination handler
+  void _onPageChanged(PageChanged event, Emitter<AdminProductState> emit) {
+    if (state is AdminProductLoaded) {
+      emit((state as AdminProductLoaded).copyWith(currentPage: event.page));
     }
   }
 }

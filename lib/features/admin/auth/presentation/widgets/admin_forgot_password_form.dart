@@ -10,8 +10,8 @@ import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_sta
 import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
-import 'package:street_cart/features/admin/auth/presentation/bloc/admin_forgot_password_ui_cubit.dart';
 
+// Admin Forgot Password Form
 class AdminForgotPasswordForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -26,8 +26,10 @@ class AdminForgotPasswordForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AdminForgotPasswordUiCubit, AdminForgotPasswordUiState>(
-      builder: (context, uiState) {
+    return BlocBuilder<AdminAuthBloc, AdminAuthState>(
+      builder: (context, state) {
+        final isLoading = state is AdminAuthLoading;
+
         return Form(
           key: formKey,
           child: Column(
@@ -46,6 +48,7 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
+              // Title
               Text(
                 'Forgot Password?',
                 style: AdminAppTextStyles.heading3.copyWith(
@@ -55,6 +58,7 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h),
+              // Subtitle
               Text(
                 "Enter your email address and we'll send you a link to reset your password.",
                 textAlign: TextAlign.center,
@@ -65,6 +69,7 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 32.h),
+              // Email Field
               CustomTextField(
                 label: 'Email Address',
                 controller: emailController,
@@ -83,26 +88,22 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 validator: Validators.validateEmail,
               ),
               SizedBox(height: 24.h),
-              BlocBuilder<AdminAuthBloc, AdminAuthState>(
-                builder: (context, state) {
-                  final isLoading = state is AdminAuthLoading;
-                  return PrimaryButton(
-                    text: uiState.isResetLinkSent
-                        ? 'Reset Link Sent'
-                        : 'Send Reset Link',
-                    isLoading: isLoading,
-                    backgroundColor: uiState.isResetLinkSent
-                        ? Colors.grey
-                        : AdminAppColors.primaryColor,
-                    textStyle: AdminAppTextStyles.buttonText,
-                    onPressed: uiState.isResetLinkSent ? null : onSendResetLink,
-                  );
-                },
+              // Button for Send Reset Link
+              PrimaryButton(
+                text: state.isResetLinkSent
+                    ? 'Reset Link Sent'
+                    : 'Send Reset Link',
+                isLoading: isLoading,
+                backgroundColor: state.isResetLinkSent
+                    ? Colors.grey
+                    : AdminAppColors.primaryColor,
+                textStyle: AdminAppTextStyles.buttonText,
+                onPressed: state.isResetLinkSent ? null : onSendResetLink,
               ),
-              if (uiState.isResetLinkSent) ...[
+              if (state.isResetLinkSent) ...[
                 SizedBox(height: 12.h),
                 Text(
-                  'Link expires in: ${uiState.countdown} seconds',
+                  'Link expires in: ${state.countdown} seconds',
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: AdminAppColors.errorColor,
@@ -111,6 +112,7 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 ),
               ],
               SizedBox(height: 24.h),
+              // Back to Login Page
               GestureDetector(
                 onTap: () => context.pop(),
                 child: Row(

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 
+// Customer Info Card
 class CustomerInfoCard extends StatelessWidget {
   final OrderModel order;
   final String customerName;
@@ -31,6 +32,7 @@ class CustomerInfoCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
+          // Navigate to Customer Detail Page
           context.push('/customers/${order.customerId}');
         },
         borderRadius: BorderRadius.circular(16.r),
@@ -47,6 +49,7 @@ class CustomerInfoCard extends StatelessWidget {
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
+                  // Title
                   Text(
                     'Customer Information',
                     style: TextStyle(
@@ -74,6 +77,7 @@ class CustomerInfoCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Customer Name
                         Text(
                           customerName,
                           maxLines: 1,

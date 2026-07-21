@@ -8,11 +8,15 @@ abstract class AdminRegistrationDetailsState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Registration Details Initial State
 class AdminRegistrationDetailsInitial extends AdminRegistrationDetailsState {}
 
+// Registration Details Loading State
 class AdminRegistrationDetailsLoading extends AdminRegistrationDetailsState {}
 
-class AdminRegistrationDetailsLoadSuccess extends AdminRegistrationDetailsState {
+// Registration Details Load Success State
+class AdminRegistrationDetailsLoadSuccess
+    extends AdminRegistrationDetailsState {
   final ShopProfileModel shop;
 
   const AdminRegistrationDetailsLoadSuccess(this.shop);
@@ -21,7 +25,9 @@ class AdminRegistrationDetailsLoadSuccess extends AdminRegistrationDetailsState 
   List<Object?> get props => [shop];
 }
 
-class AdminRegistrationDetailsLoadFailure extends AdminRegistrationDetailsState {
+// Registration Details Load Failure State
+class AdminRegistrationDetailsLoadFailure
+    extends AdminRegistrationDetailsState {
   final String message;
 
   const AdminRegistrationDetailsLoadFailure(this.message);
@@ -30,6 +36,7 @@ class AdminRegistrationDetailsLoadFailure extends AdminRegistrationDetailsState 
   List<Object?> get props => [message];
 }
 
+// Registration Action In Progress State
 class AdminRegistrationActionInProgress extends AdminRegistrationDetailsState {}
 
 class AdminRegistrationActionSuccess extends AdminRegistrationDetailsState {
@@ -42,6 +49,7 @@ class AdminRegistrationActionSuccess extends AdminRegistrationDetailsState {
   List<Object?> get props => [message, approved];
 }
 
+// Registration Action Failure State
 class AdminRegistrationActionFailure extends AdminRegistrationDetailsState {
   final String message;
 

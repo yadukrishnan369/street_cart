@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Orders Tab Bar
 class OrdersTabBar extends StatelessWidget {
   final int activeTab;
   final ValueChanged<int> onTabChanged;
@@ -18,6 +19,7 @@ class OrdersTabBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          // Tab Titles
           children: [
             _buildTab(context, label: 'All Orders', index: 0),
             _buildTab(context, label: 'Processing', index: 1),

@@ -9,11 +9,14 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
   AdminAuthRemoteDataSourceImpl({
     required FirebaseAuthService authService,
     required FirebaseFirestore firestore,
-  })  : _authService = authService,
-        _firestore = firestore;
-
+  }) : _authService = authService,
+       _firestore = firestore;
+  // Admin Login
   @override
-  Future<String?> login({required String email, required String password}) async {
+  Future<String?> login({
+    required String email,
+    required String password,
+  }) async {
     final userCredential = await _authService.signInWithEmail(
       email: email,
       password: password,
@@ -25,9 +28,10 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
     return uid;
   }
 
+  // Update Login Time of Admin
   Future<void> _updateLoginTimestamps(String uid) async {
     try {
-      // Check in 'users' collection first
+      // Check in users collection first
       final userDocRef = _firestore.collection('users').doc(uid);
       final userDoc = await userDocRef.get();
       if (userDoc.exists) {
@@ -39,7 +43,7 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
         });
       }
 
-      // Check in 'admins' collection
+      // Check in admins collection
       final adminDocRef = _firestore.collection('admins').doc(uid);
       final adminDoc = await adminDocRef.get();
       if (adminDoc.exists) {
@@ -55,19 +59,21 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
     }
   }
 
+  // Get Current User ID
   @override
   Future<String?> getCurrentUserId() async {
     return _authService.getCurrentUserIdAsync();
   }
 
+  // Get Current User Email
   @override
   Future<String?> getCurrentUserEmail() async {
     return _authService.getCurrentUserEmail();
   }
 
+  // Check in users collection for role super_admin or admin
   @override
   Future<bool> isSuperAdmin(String uid) async {
-    // Check in users collection for role super_admin or admin
     final userDoc = await _firestore.collection('users').doc(uid).get();
     if (userDoc.exists) {
       final data = userDoc.data();
@@ -91,6 +97,7 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
     return false;
   }
 
+  // Admin Logout
   @override
   Future<void> logout() async {
     final uid = await getCurrentUserId();
@@ -100,31 +107,28 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
     await _authService.signOut();
   }
 
+  // Update Logout Time
   Future<void> _updateLogoutTimestamp(String uid) async {
     try {
-      // Check in 'users' collection first
+      // Check in users collection first
       final userDocRef = _firestore.collection('users').doc(uid);
       final userDoc = await userDocRef.get();
       if (userDoc.exists) {
-        await userDocRef.update({
-          'last_logout': FieldValue.serverTimestamp(),
-        });
+        await userDocRef.update({'last_logout': FieldValue.serverTimestamp()});
       }
 
-      // Check in 'admins' collection
+      // Check in admins collection
       final adminDocRef = _firestore.collection('admins').doc(uid);
       final adminDoc = await adminDocRef.get();
       if (adminDoc.exists) {
-        await adminDocRef.update({
-          'last_logout': FieldValue.serverTimestamp(),
-        });
+        await adminDocRef.update({'last_logout': FieldValue.serverTimestamp()});
       }
     } catch (e) {
-      // Fail silently so it doesn't block logout flow
       print('Error updating logout timestamp: $e');
     }
   }
 
+  // Send Password Reset Email
   @override
   Future<void> sendPasswordResetEmail(String email) async {
     try {
@@ -133,7 +137,7 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
           .collection('users')
           .where('email', isEqualTo: email)
           .get();
-      
+
       bool isAdminUser = false;
       for (var doc in userQuery.docs) {
         final role = doc.data()['role'];
@@ -159,8 +163,9 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
       }
     } catch (e) {
       final errorStr = e.toString().toLowerCase();
-      if (errorStr.contains('permission-denied') || errorStr.contains('permission denied') || errorStr.contains('insufficient permission')) {
-        // If firestore rules block unauthenticated reads, fallback to direct firebase reset
+      if (errorStr.contains('permission-denied') ||
+          errorStr.contains('permission denied') ||
+          errorStr.contains('insufficient permission')) {
         await _authService.sendPasswordResetEmail(email);
         return;
       }
@@ -170,11 +175,15 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
     await _authService.sendPasswordResetEmail(email);
   }
 
+  // Confirm Password Reset
   @override
   Future<void> confirmPasswordReset({
     required String code,
     required String newPassword,
   }) async {
-    await _authService.confirmPasswordReset(code: code, newPassword: newPassword);
+    await _authService.confirmPasswordReset(
+      code: code,
+      newPassword: newPassword,
+    );
   }
 }

@@ -7,6 +7,7 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_prod
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_state.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/color_dialogs.dart';
 
+// Colors Tab
 class ColorsTab extends StatelessWidget {
   const ColorsTab({super.key});
 
@@ -85,6 +86,7 @@ class ColorsTab extends StatelessWidget {
     );
   }
 
+  // Empty State
   Widget _emptyState() {
     return Center(
       child: Padding(
@@ -192,6 +194,7 @@ class _ColorChip extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Color Name
               Text(
                 color.name,
                 style: TextStyle(
@@ -200,6 +203,7 @@ class _ColorChip extends StatelessWidget {
                   color: const Color(0xFF1E1E2F),
                 ),
               ),
+              // Color HEX Code
               Text(
                 color.hexCode.toUpperCase(),
                 style: TextStyle(

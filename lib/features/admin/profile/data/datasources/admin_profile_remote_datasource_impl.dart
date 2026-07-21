@@ -13,7 +13,7 @@ class AdminProfileRemoteDataSourceImpl
     required FirebaseFirestore firestore,
   }) : _auth = auth,
        _firestore = firestore;
-
+  // Get Admin Profile Data
   @override
   Future<AdminProfileModel> getProfileData() async {
     final user = _auth.currentUser;
@@ -116,6 +116,7 @@ class AdminProfileRemoteDataSourceImpl
     );
   }
 
+  // Update Admin Profile Name
   @override
   Future<void> updateProfileName(String fullName) async {
     final user = _auth.currentUser;

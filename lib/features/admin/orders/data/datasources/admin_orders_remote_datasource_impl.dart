@@ -8,7 +8,7 @@ class AdminOrdersRemoteDataSourceImpl implements IAdminOrdersRemoteDataSource {
 
   AdminOrdersRemoteDataSourceImpl({required FirebaseFirestore firestore})
     : _firestore = firestore;
-
+  // Watch and Fetch Orders
   @override
   Stream<List<OrderModel>> watchAllOrders() {
     return _firestore.collection('orders').snapshots().map((snapshot) {
@@ -22,6 +22,7 @@ class AdminOrdersRemoteDataSourceImpl implements IAdminOrdersRemoteDataSource {
     });
   }
 
+  // Fetch Shop Names
   @override
   Future<Map<String, String>> fetchShopNamesMap() async {
     try {
@@ -38,6 +39,7 @@ class AdminOrdersRemoteDataSourceImpl implements IAdminOrdersRemoteDataSource {
     }
   }
 
+  // Fetch Shop Profiles
   @override
   Future<Map<String, ShopProfileModel>> fetchShopProfilesMap() async {
     try {
@@ -52,6 +54,7 @@ class AdminOrdersRemoteDataSourceImpl implements IAdminOrdersRemoteDataSource {
     }
   }
 
+  // Fetch Customer Names
   @override
   Future<Map<String, String>> fetchCustomerNamesMap() async {
     try {
@@ -68,6 +71,7 @@ class AdminOrdersRemoteDataSourceImpl implements IAdminOrdersRemoteDataSource {
     }
   }
 
+  // Fetch Customer Emails
   @override
   Future<Map<String, String>> fetchCustomerEmailsMap() async {
     try {

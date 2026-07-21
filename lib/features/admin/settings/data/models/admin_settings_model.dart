@@ -18,11 +18,7 @@ class ColorModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'hex_code': hexCode,
-    };
+    return {'id': id, 'name': name, 'hex_code': hexCode};
   }
 
   ColorModel copyWith({String? id, String? name, String? hexCode}) {
@@ -55,11 +51,7 @@ class SizeGroupModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'sizes': sizes,
-    };
+    return {'id': id, 'name': name, 'sizes': sizes};
   }
 
   SizeGroupModel copyWith({String? id, String? name, List<String>? sizes}) {
@@ -86,13 +78,20 @@ class ProductConfigModel {
     return ProductConfigModel(
       colors: rawColors != null
           ? rawColors
-              .map((e) => ColorModel.fromMap(Map<String, dynamic>.from(e as Map)))
-              .toList()
+                .map(
+                  (e) =>
+                      ColorModel.fromMap(Map<String, dynamic>.from(e as Map)),
+                )
+                .toList()
           : [],
       sizeGroups: rawGroups != null
           ? rawGroups
-              .map((e) => SizeGroupModel.fromMap(Map<String, dynamic>.from(e as Map)))
-              .toList()
+                .map(
+                  (e) => SizeGroupModel.fromMap(
+                    Map<String, dynamic>.from(e as Map),
+                  ),
+                )
+                .toList()
           : [],
     );
   }
@@ -137,8 +136,12 @@ class CategoryModel {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       isVisible: map['is_visible'] ?? true,
-      productCategories: rawProdCats != null ? rawProdCats.map((e) => e.toString()).toList() : [],
-      sizeGroups: rawSizeGroups != null ? rawSizeGroups.map((e) => e.toString()).toList() : [],
+      productCategories: rawProdCats != null
+          ? rawProdCats.map((e) => e.toString()).toList()
+          : [],
+      sizeGroups: rawSizeGroups != null
+          ? rawSizeGroups.map((e) => e.toString()).toList()
+          : [],
     );
   }
 
@@ -190,18 +193,25 @@ class AdminSettingsModel {
 
     final List<CategoryModel> pCats = rawProductCats != null
         ? rawProductCats
-            .map((e) => CategoryModel.fromMap(Map<String, dynamic>.from(e as Map)))
-            .toList()
+              .map(
+                (e) =>
+                    CategoryModel.fromMap(Map<String, dynamic>.from(e as Map)),
+              )
+              .toList()
         : [];
 
     final List<CategoryModel> bCats = rawBusinessCats != null
         ? rawBusinessCats
-            .map((e) => CategoryModel.fromMap(Map<String, dynamic>.from(e as Map)))
-            .toList()
+              .map(
+                (e) =>
+                    CategoryModel.fromMap(Map<String, dynamic>.from(e as Map)),
+              )
+              .toList()
         : [];
 
     return AdminSettingsModel(
-      commissionPercentage: (map['commission_percentage'] as num?)?.toDouble() ?? 2.0,
+      commissionPercentage:
+          (map['commission_percentage'] as num?)?.toDouble() ?? 2.0,
       enableCod: map['enable_cod'] ?? true,
       enableOnline: map['enable_online'] ?? true,
       productCategories: pCats,

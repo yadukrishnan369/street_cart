@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/admin/dashboard/data/models/new_registration_model.dart';
 
+// Registrations Table
 class RegistrationsTable extends StatelessWidget {
   final List<NewRegistrationModel> registrations;
   final Function(NewRegistrationModel reg) onReview;
@@ -34,6 +35,7 @@ class RegistrationsTable extends StatelessWidget {
               bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
             ),
           ),
+          // Table Title
           children: [
             _buildTableHeaderCell('SHOP NAME'),
             _buildTableHeaderCell('CATEGORY'),
@@ -42,7 +44,6 @@ class RegistrationsTable extends StatelessWidget {
             _buildTableHeaderCell('ACTIONS'),
           ],
         ),
-        // Data Rows
         ...registrations.map((reg) => _buildTableRow(context, reg)),
       ],
     );
@@ -80,7 +81,7 @@ class RegistrationsTable extends StatelessWidget {
         ),
       ),
       children: [
-        // Brand Identity Cell
+        // Brand Identity
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
           child: Row(
@@ -102,6 +103,7 @@ class RegistrationsTable extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Shop Name
                     Text(
                       reg.shopName,
                       style: TextStyle(
@@ -113,6 +115,7 @@ class RegistrationsTable extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 2.h),
+                    // Registration ID
                     Text(
                       'ID: #${reg.id.substring(0, reg.id.length > 8 ? 8 : reg.id.length).toUpperCase()}',
                       style: TextStyle(
@@ -129,7 +132,7 @@ class RegistrationsTable extends StatelessWidget {
           ),
         ),
 
-        // Category Cell
+        // Category
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
@@ -144,7 +147,7 @@ class RegistrationsTable extends StatelessWidget {
           ),
         ),
 
-        // Registered Date Cell
+        // Registered Date
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Column(
@@ -174,7 +177,7 @@ class RegistrationsTable extends StatelessWidget {
           ),
         ),
 
-        // Status Badge Cell
+        // Status Badge
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Align(
@@ -182,16 +185,22 @@ class RegistrationsTable extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: reg.isReRegistered ? const Color(0xFFFFF3CD) : const Color(0xFFF4EBFF),
+                color: reg.isReRegistered
+                    ? const Color(0xFFFFF3CD)
+                    : const Color(0xFFF4EBFF),
                 borderRadius: BorderRadius.circular(100.r),
-                border: reg.isReRegistered ? Border.all(color: const Color(0xFFFFEBAA)) : null,
+                border: reg.isReRegistered
+                    ? Border.all(color: const Color(0xFFFFEBAA))
+                    : null,
               ),
               child: Text(
                 reg.isReRegistered ? 'Re-registered' : 'Pending Review',
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.bold,
-                  color: reg.isReRegistered ? const Color(0xFF856404) : AdminAppColors.primaryColor,
+                  color: reg.isReRegistered
+                      ? const Color(0xFF856404)
+                      : AdminAppColors.primaryColor,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -200,7 +209,7 @@ class RegistrationsTable extends StatelessWidget {
           ),
         ),
 
-        // Actions Button Cell
+        // Actions Button
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Align(

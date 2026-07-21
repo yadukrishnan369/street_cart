@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
-import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
-import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customer_detail_bloc.dart';
-import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customer_detail_event.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
+import 'package:street_cart/features/admin/customers/presentation/utils/admin_customers_helper.dart';
 
+// Admin Customer Detail Header Card
 class AdminCustomerDetailHeaderCard extends StatelessWidget {
   final CustomerModel customer;
 
@@ -16,19 +14,14 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initials = customer.fullName.isNotEmpty
-        ? customer.fullName
-              .trim()
-              .split(' ')
-              .map((e) => e[0])
-              .take(2)
-              .join()
-              .toUpperCase()
-        : 'AJ';
+    final initials = AdminCustomersHelper.getCustomerInitials(
+      customer.fullName,
+      defaultInitials: 'AJ',
+    );
 
     final joinedDate = customer.createdAt != null
         ? DateFormatter.formatToReadableDate(customer.createdAt!)
-        : 'Oct 12, 2023';
+        : 'Oct 12, 2026';
 
     final isBlocked = customer.isBlocked;
 
@@ -53,7 +46,7 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
           final headerInfo = Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Avatar
+              // Profile Avatar
               GestureDetector(
                 onTap: customer.profileImageUrl.isNotEmpty
                     ? () {
@@ -68,6 +61,7 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                         );
                       }
                     : null,
+                // Customer Profile Image
                 child: CircleAvatar(
                   radius: 40.r,
                   backgroundColor: const Color(0xFFF3E8FF),
@@ -88,7 +82,7 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
               ),
               SizedBox(width: 24.w),
 
-              // Textual info
+              // Customer Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,42 +90,39 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Flexible(
-                          child: Text(
-                            customer.fullName.isNotEmpty
-                                ? customer.fullName
-                                : 'Alex Johnson',
-                            style: TextStyle(
-                              fontSize: 22.sp,
-                              fontWeight: FontWeight.w800,
-                              color: AdminAppColors.textPrimary,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        // Customer Full Name
+                        Text(
+                          customer.fullName.isNotEmpty
+                              ? customer.fullName
+                              : 'Customer Name',
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF1E1E2F),
                           ),
                         ),
                         SizedBox(width: 12.w),
 
-                        // Status Badge
+                        // Block/Active Badge
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 10.w,
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: isBlocked
-                                ? const Color(0xFFFDE8E8)
-                                : const Color(0xFFDEF7EC),
+                            color: AdminCustomersHelper.getStatusBgColor(
+                              isBlocked,
+                            ),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
                           child: Text(
-                            isBlocked ? 'Blocked' : 'Active',
+                            AdminCustomersHelper.getStatusLabel(isBlocked),
                             style: TextStyle(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.bold,
-                              color: isBlocked
-                                  ? const Color(0xFF9B1C1C)
-                                  : const Color(0xFF03543F),
+                              color: AdminCustomersHelper.getStatusTextColor(
+                                isBlocked,
+                              ),
                             ),
                           ),
                         ),
@@ -149,8 +140,8 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                         Text(
                           'Joined: $joinedDate',
                           style: TextStyle(
-                            fontSize: 13.sp,
-                            color: const Color(0xFF6C6C80),
+                            fontSize: 12.sp,
+                            color: const Color(0xFF8A8A9E),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -163,22 +154,20 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
           );
 
           final actionButtons = Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              // Block/Unblock Button
-              OutlinedButton(
-                onPressed: () => _confirmBlockToggle(context),
-                style: OutlinedButton.styleFrom(
+              // Block/Unblock Action Button
+              ElevatedButton(
+                onPressed: () =>
+                    AdminCustomersHelper.confirmBlockToggle(context, customer),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isBlocked
+                      ? AdminAppColors.successColor
+                      : AdminAppColors.errorColor,
                   padding: EdgeInsets.symmetric(
                     horizontal: 20.w,
                     vertical: 16.h,
                   ),
-                  side: BorderSide(
-                    color: isBlocked
-                        ? AdminAppColors.successColor
-                        : AdminAppColors.errorColor,
-                    width: 1.5,
-                  ),
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
@@ -186,9 +175,7 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                 child: Text(
                   isBlocked ? 'Unblock Customer' : 'Block Customer',
                   style: TextStyle(
-                    color: isBlocked
-                        ? AdminAppColors.successColor
-                        : AdminAppColors.errorColor,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 13.sp,
                   ),
@@ -198,7 +185,8 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
 
               // Delete Button
               ElevatedButton(
-                onPressed: () => _confirmDelete(context),
+                onPressed: () =>
+                    AdminCustomersHelper.confirmDelete(context, customer),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AdminAppColors.errorColor,
                   padding: EdgeInsets.symmetric(
@@ -239,77 +227,6 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                     actionButtons,
                   ],
                 );
-        },
-      ),
-    );
-  }
-
-  void _confirmBlockToggle(BuildContext context) {
-    final isBlocked = customer.isBlocked;
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => CustomAlertDialog(
-        title: isBlocked ? 'Unblock Customer' : 'Block Customer',
-        content:
-            'Are you sure you want to ${isBlocked ? "unblock" : "block"} "${customer.fullName}"?',
-        secondaryActionLabel: 'Cancel',
-        primaryActionLabel: isBlocked ? 'Unblock' : 'Block',
-        icon: isBlocked ? Icons.check_circle_outline : Icons.block_outlined,
-        iconColor: isBlocked
-            ? AdminAppColors.successColor
-            : AdminAppColors.errorColor,
-        primaryActionColor: isBlocked
-            ? AdminAppColors.successColor
-            : AdminAppColors.errorColor,
-        onPrimaryAction: () {
-          Navigator.pop(dialogCtx);
-          context.read<AdminCustomerDetailBloc>().add(
-            ToggleBlockStatusRequested(
-              uid: customer.uid,
-              isBlocked: !isBlocked,
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => CustomAlertDialog(
-        title: 'Delete Customer',
-        content: 'Are you sure you want to delete "${customer.fullName}"?',
-        secondaryActionLabel: 'Cancel',
-        primaryActionLabel: 'Delete',
-        icon: Icons.delete_outline,
-        iconColor: AdminAppColors.errorColor,
-        primaryActionColor: AdminAppColors.errorColor,
-        onPrimaryAction: () {
-          Navigator.pop(dialogCtx);
-          _confirmDeleteSecondStep(context);
-        },
-      ),
-    );
-  }
-
-  void _confirmDeleteSecondStep(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => CustomAlertDialog(
-        title: 'Permanently Delete Customer',
-        content:
-            'This action is irreversible. All profile data for "${customer.fullName}" will be permanently deleted. Do you want to proceed?',
-        secondaryActionLabel: 'Cancel',
-        primaryActionLabel: 'Permanently Delete',
-        icon: Icons.warning_amber_outlined,
-        iconColor: AdminAppColors.errorColor,
-        primaryActionColor: AdminAppColors.errorColor,
-        onPrimaryAction: () {
-          Navigator.pop(dialogCtx);
-          context.read<AdminCustomerDetailBloc>().add(
-            DeleteCustomerRequested(customer.uid),
-          );
         },
       ),
     );

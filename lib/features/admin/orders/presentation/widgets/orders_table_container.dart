@@ -10,6 +10,7 @@ import 'package:street_cart/features/admin/orders/presentation/widgets/orders_ta
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
 import 'package:street_cart/shared/widgets/custom_admin_search_bar.dart';
 
+// Orders Table Container
 class OrdersTableContainer extends StatelessWidget {
   final List<OrderModel> orders;
   final Map<String, String> shopNames;
@@ -56,7 +57,7 @@ class OrdersTableContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row with Search bar
+          // Header with Search bar
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
             child: Row(
@@ -113,6 +114,7 @@ class OrdersTableContainer extends StatelessWidget {
               ),
             )
           else ...[
+            // Orders Table Section
             OrdersTable(
               orders: orders,
               shopNames: shopNames,
@@ -121,6 +123,7 @@ class OrdersTableContainer extends StatelessWidget {
               perPage: perPage,
             ),
             SizedBox(height: 24.h),
+            // Pagination
             AdminPagination(
               currentPage: currentPage,
               totalPages: totalPages,

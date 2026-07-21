@@ -22,8 +22,10 @@ class AdminCustomerDetailBloc
     on<LoadCustomerDetailRequested>(_onLoadCustomerDetail);
     on<ToggleBlockStatusRequested>(_onToggleBlockStatus);
     on<DeleteCustomerRequested>(_onDeleteCustomer);
+    on<ChangePastOrdersPageRequested>(_onChangePastOrdersPage);
   }
 
+  // Fetching customer profile details
   Future<void> _onLoadCustomerDetail(
     LoadCustomerDetailRequested event,
     Emitter<AdminCustomerDetailState> emit,
@@ -43,6 +45,7 @@ class AdminCustomerDetailBloc
     }
   }
 
+  // Updating the customer block/unblock status
   Future<void> _onToggleBlockStatus(
     ToggleBlockStatusRequested event,
     Emitter<AdminCustomerDetailState> emit,
@@ -62,7 +65,7 @@ class AdminCustomerDetailBloc
               : 'Customer unblocked successfully',
         ),
       );
-      // Reload
+      // Reload updated info
       final response = await _getCustomerDetails(event.uid);
       emit(
         AdminCustomerDetailLoaded(
@@ -76,6 +79,7 @@ class AdminCustomerDetailBloc
     }
   }
 
+  // Customer profile Delete
   Future<void> _onDeleteCustomer(
     DeleteCustomerRequested event,
     Emitter<AdminCustomerDetailState> emit,
@@ -86,6 +90,17 @@ class AdminCustomerDetailBloc
       emit(AdminCustomerDetailActionSuccess('Customer deleted successfully'));
     } catch (e) {
       emit(AdminCustomerDetailError(e.toString()));
+    }
+  }
+
+  // Changing the current page number
+  void _onChangePastOrdersPage(
+    ChangePastOrdersPageRequested event,
+    Emitter<AdminCustomerDetailState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is AdminCustomerDetailLoaded) {
+      emit(currentState.copyWith(currentPage: event.page));
     }
   }
 }

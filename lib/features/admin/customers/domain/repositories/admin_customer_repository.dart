@@ -1,5 +1,5 @@
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
-import '../../data/models/customer_model.dart';
+import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
 
 class AdminCustomerResponse {
   final List<CustomerModel> customers;

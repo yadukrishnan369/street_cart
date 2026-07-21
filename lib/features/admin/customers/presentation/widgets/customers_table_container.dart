@@ -10,13 +10,13 @@ import 'package:street_cart/features/admin/customers/presentation/bloc/admin_cus
 import 'customers_table.dart';
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
 
+// Customers Table Container
 class CustomersTableContainer extends StatelessWidget {
   final AdminCustomersLoaded state;
   final bool isWide;
   final bool isLoading;
   final TextEditingController searchController;
   final Debouncer debouncer;
-  final int currentPage;
   final int perPage;
   final ValueChanged<int> onPageChanged;
 
@@ -27,7 +27,6 @@ class CustomersTableContainer extends StatelessWidget {
     required this.isLoading,
     required this.searchController,
     required this.debouncer,
-    required this.currentPage,
     required this.perPage,
     required this.onPageChanged,
   });
@@ -50,7 +49,7 @@ class CustomersTableContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Controls Header
+          // Search Input field
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
             child: Row(
@@ -72,6 +71,7 @@ class CustomersTableContainer extends StatelessWidget {
             ),
           ),
 
+          // Linear progress bar for search/filter operations
           if (isLoading)
             const LinearProgressIndicator(
               color: AdminAppColors.primaryColor,
@@ -81,7 +81,7 @@ class CustomersTableContainer extends StatelessWidget {
           else
             const SizedBox(height: 2),
 
-          // Data Table
+          // Customer lists or empty view matching state
           if (state.customers.isEmpty)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 80.h),
@@ -107,9 +107,11 @@ class CustomersTableContainer extends StatelessWidget {
               ),
             )
           else ...[
+            // Main Data Table
             CustomersTable(customers: state.customers),
             SizedBox(height: 24.h),
 
+            // Pagination footer controls
             AdminPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,

@@ -1,5 +1,5 @@
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
-import '../repositories/i_admin_dashboard_repository.dart';
+import 'package:street_cart/features/admin/dashboard/domain/repositories/i_admin_dashboard_repository.dart';
 
 class GetShopDetails {
   final IAdminDashboardRepository repository;

@@ -26,8 +26,10 @@ class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
     on<OrdersUpdated>(_onOrdersUpdated);
     on<SearchQueryChanged>(_onSearchQueryChanged);
     on<FilterTabChanged>(_onFilterTabChanged);
+    on<PageChanged>(_onPageChanged);
+    on<PageReset>(_onPageReset);
   }
-
+  // Load Admin Orders
   Future<void> _onLoadAdminOrders(
     LoadAdminOrders event,
     Emitter<AdminOrdersState> emit,
@@ -55,6 +57,7 @@ class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
     }
   }
 
+  // Orders Updated
   void _onOrdersUpdated(OrdersUpdated event, Emitter<AdminOrdersState> emit) {
     _allOrders = event.orders;
     _shopNames = event.shopNames;
@@ -63,6 +66,7 @@ class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
     _emitFilteredState(emit);
   }
 
+  // Search Query Changed
   Future<void> _onSearchQueryChanged(
     SearchQueryChanged event,
     Emitter<AdminOrdersState> emit,
@@ -74,6 +78,7 @@ class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
     _emitFilteredState(emit);
   }
 
+  // Filter Tab Changed
   Future<void> _onFilterTabChanged(
     FilterTabChanged event,
     Emitter<AdminOrdersState> emit,
@@ -110,5 +115,18 @@ class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
   Future<void> close() {
     _subscription?.cancel();
     return super.close();
+  }
+
+  // Pagination event handlers
+  void _onPageChanged(PageChanged event, Emitter<AdminOrdersState> emit) {
+    if (state is AdminOrdersLoaded) {
+      emit((state as AdminOrdersLoaded).copyWith(currentPage: event.page));
+    }
+  }
+
+  void _onPageReset(PageReset event, Emitter<AdminOrdersState> emit) {
+    if (state is AdminOrdersLoaded) {
+      emit((state as AdminOrdersLoaded).copyWith(currentPage: 1));
+    }
   }
 }

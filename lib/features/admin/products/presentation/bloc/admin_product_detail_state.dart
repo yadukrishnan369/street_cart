@@ -8,12 +8,16 @@ abstract class AdminProductDetailState extends Equatable {
   List<Object?> get props => [];
 }
 
+// Product Detail Initial State
 class AdminProductDetailInitial extends AdminProductDetailState {}
 
+// Product Detail Loading State
 class AdminProductDetailLoading extends AdminProductDetailState {}
 
+// Product Detail Action InProgress State
 class AdminProductDetailActionInProgress extends AdminProductDetailState {}
 
+// Product Detail Loaded State
 class AdminProductDetailLoaded extends AdminProductDetailState {
   final AdminProductItem item;
 
@@ -23,6 +27,7 @@ class AdminProductDetailLoaded extends AdminProductDetailState {
   List<Object?> get props => [item];
 }
 
+// Product Detail Action Success State
 class AdminProductDetailActionSuccess extends AdminProductDetailState {
   final String message;
 
@@ -32,6 +37,7 @@ class AdminProductDetailActionSuccess extends AdminProductDetailState {
   List<Object?> get props => [message];
 }
 
+// Product Detail Error State
 class AdminProductDetailError extends AdminProductDetailState {
   final String message;
 

@@ -23,7 +23,7 @@ class AdminProductDetailBloc
     on<ToggleDisableProductRequested>(_onToggleDisableProductRequested);
     on<DeleteProductRequested>(_onDeleteProductRequested);
   }
-
+  // Load Product Detail
   Future<void> _onLoadProductDetailRequested(
     LoadProductDetailRequested event,
     Emitter<AdminProductDetailState> emit,
@@ -37,6 +37,7 @@ class AdminProductDetailBloc
     }
   }
 
+  // Toggle Disable Product
   Future<void> _onToggleDisableProductRequested(
     ToggleDisableProductRequested event,
     Emitter<AdminProductDetailState> emit,
@@ -61,6 +62,7 @@ class AdminProductDetailBloc
     }
   }
 
+  // Delete Product
   Future<void> _onDeleteProductRequested(
     DeleteProductRequested event,
     Emitter<AdminProductDetailState> emit,

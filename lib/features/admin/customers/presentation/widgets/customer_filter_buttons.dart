@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_bloc.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_event.dart';
-import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_ui_cubit.dart';
 
+// Customer Filter Buttons
 class CustomerFilterButtons extends StatelessWidget {
   final String currentFilter;
 
@@ -27,6 +27,7 @@ class CustomerFilterButtons extends StatelessWidget {
           padding: EdgeInsets.only(right: 12.w),
           child: ChoiceChip(
             label: Text(
+              // Filter Options
               labels[filter]!,
               style: TextStyle(
                 fontSize: 13.sp,
@@ -48,7 +49,6 @@ class CustomerFilterButtons extends StatelessWidget {
             ),
             onSelected: (val) {
               if (val) {
-                context.read<AdminCustomersUiCubit>().resetPage();
                 context.read<AdminCustomersBloc>().add(
                   FilterCustomersStatusChanged(filter),
                 );

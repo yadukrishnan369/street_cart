@@ -1,8 +1,8 @@
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
-import '../models/dashboard_stats_model.dart';
-import '../models/new_registration_model.dart';
-import '../../domain/repositories/i_admin_dashboard_repository.dart';
-import '../datasources/admin_dashboard_remote_datasource.dart';
+import 'package:street_cart/features/admin/dashboard/data/models/dashboard_stats_model.dart';
+import 'package:street_cart/features/admin/dashboard/data/models/new_registration_model.dart';
+import 'package:street_cart/features/admin/dashboard/domain/repositories/i_admin_dashboard_repository.dart';
+import 'package:street_cart/features/admin/dashboard/data/datasources/admin_dashboard_remote_datasource.dart';
 
 class AdminDashboardRepositoryImpl implements IAdminDashboardRepository {
   final IAdminDashboardRemoteDataSource remoteDataSource;
@@ -15,8 +15,14 @@ class AdminDashboardRepositoryImpl implements IAdminDashboardRepository {
   }
 
   @override
-  Future<List<NewRegistrationModel>> getPendingRegistrations({required int page, required int limit}) async {
-    return await remoteDataSource.getPendingRegistrations(page: page, limit: limit);
+  Future<List<NewRegistrationModel>> getPendingRegistrations({
+    required int page,
+    required int limit,
+  }) async {
+    return await remoteDataSource.getPendingRegistrations(
+      page: page,
+      limit: limit,
+    );
   }
 
   @override

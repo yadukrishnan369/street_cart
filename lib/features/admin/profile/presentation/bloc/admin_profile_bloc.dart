@@ -12,6 +12,7 @@ class AdminProfileBloc extends Bloc<AdminProfileEvent, AdminProfileState> {
     required this.getProfileData,
     required this.updateProfileName,
   }) : super(AdminProfileInitial()) {
+    // Load Admin Profile
     on<LoadAdminProfile>((event, emit) async {
       emit(AdminProfileLoading());
       try {
@@ -21,15 +22,31 @@ class AdminProfileBloc extends Bloc<AdminProfileEvent, AdminProfileState> {
         emit(AdminProfileError(e.toString()));
       }
     });
-
+    // Update Admin Profile
     on<UpdateAdminProfile>((event, emit) async {
+      final currentState = state;
       emit(AdminProfileLoading());
       try {
         await updateProfileName(event.fullName);
         final profile = await getProfileData();
         emit(AdminProfileLoaded(profile));
       } catch (e) {
+        if (currentState is AdminProfileLoaded) {
+          emit(currentState.copyWith());
+        }
         emit(AdminProfileError(e.toString()));
+      }
+    });
+    // Show Edit Overlay
+    on<ShowEditOverlay>((event, emit) {
+      if (state is AdminProfileLoaded) {
+        emit((state as AdminProfileLoaded).copyWith(isEditing: true));
+      }
+    });
+    // Hide Edit Overlay
+    on<HideEditOverlay>((event, emit) {
+      if (state is AdminProfileLoaded) {
+        emit((state as AdminProfileLoaded).copyWith(isEditing: false));
       }
     });
   }

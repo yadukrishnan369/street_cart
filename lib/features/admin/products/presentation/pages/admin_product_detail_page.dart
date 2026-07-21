@@ -17,6 +17,7 @@ import 'package:street_cart/features/admin/products/presentation/widgets/shimmer
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/admin/products/presentation/utils/admin_product_detail_helper.dart';
 
+// Admin Product Detail Page
 class AdminProductDetailPage extends StatelessWidget {
   final String productId;
 
@@ -49,6 +50,7 @@ class AdminProductDetailPage extends StatelessWidget {
             builder: (context, state) {
               if (state is AdminProductDetailLoading ||
                   state is AdminProductDetailActionInProgress) {
+                // Admin Product Detail Shimmer
                 return const AdminProductDetailShimmer();
               } else if (state is AdminProductDetailLoaded) {
                 final item = state.item;
@@ -68,6 +70,7 @@ class AdminProductDetailPage extends StatelessWidget {
                         children: [
                           _buildBackRow(context),
                           SizedBox(height: 24.h),
+                          // Product Detail Header
                           ProductDetailHeader(
                             product: p,
                             onToggleDisable: () =>

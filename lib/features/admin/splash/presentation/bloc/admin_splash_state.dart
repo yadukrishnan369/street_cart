@@ -9,12 +9,30 @@ abstract class AdminSplashState extends Equatable {
 
 class AdminSplashInitial extends AdminSplashState {}
 
+// Animated progress loading text State
+class AdminSplashAnimating extends AdminSplashState {
+  final double progress;
+  final String loadingText;
+
+  const AdminSplashAnimating({
+    this.progress = 0.0,
+    this.loadingText = 'Initializing secure assets',
+  });
+
+  @override
+  List<Object?> get props => [progress, loadingText];
+}
+
+// Splash Loading State
 class AdminSplashLoading extends AdminSplashState {}
 
+// Splash Authenticated State
 class AdminSplashAuthenticated extends AdminSplashState {}
 
+// Splash Unauthenticated State
 class AdminSplashUnauthenticated extends AdminSplashState {}
 
+// Splash Error State
 class AdminSplashError extends AdminSplashState {
   final String message;
 

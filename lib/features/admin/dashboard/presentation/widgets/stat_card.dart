@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Stat Card
 class StatCard extends StatelessWidget {
   final String title;
   final String value;
@@ -39,6 +40,7 @@ class StatCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Title
               Text(
                 title,
                 style: TextStyle(
@@ -53,11 +55,7 @@ class StatCard extends StatelessWidget {
                   color: iconBgColor,
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 20.sp,
-                ),
+                child: Icon(icon, color: iconColor, size: 20.sp),
               ),
             ],
           ),

@@ -10,6 +10,7 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_prod
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:uuid/uuid.dart';
 
+// Color Dialogs
 class ColorDialogs {
   // Add Color
   static void showAdd(BuildContext context) {
@@ -96,7 +97,7 @@ class ColorDialogs {
                       ),
                       SizedBox(height: 16.h),
 
-                      // Hex code
+                      // HEX code
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

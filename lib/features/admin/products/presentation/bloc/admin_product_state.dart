@@ -2,10 +2,13 @@ import 'package:street_cart/features/admin/products/domain/repositories/admin_pr
 
 abstract class AdminProductState {}
 
+// Product Initial State
 class AdminProductInitial extends AdminProductState {}
 
+// Product Loading State
 class AdminProductLoading extends AdminProductState {}
 
+// Product Loaded State
 class AdminProductLoaded extends AdminProductState {
   final List<AdminProductItem> products;
   final int totalMatchingCount;
@@ -15,7 +18,6 @@ class AdminProductLoaded extends AdminProductState {
   final int disabledItems;
   final List<String> availableCategories;
 
-  // Keep state track
   final int currentPage;
   final int limit;
   final String searchQuery;
@@ -36,8 +38,39 @@ class AdminProductLoaded extends AdminProductState {
     required this.statusFilter,
     this.categoryFilter,
   });
+
+  AdminProductLoaded copyWith({
+    List<AdminProductItem>? products,
+    int? totalMatchingCount,
+    int? totalProducts,
+    int? activeItems,
+    int? outOfStock,
+    int? disabledItems,
+    List<String>? availableCategories,
+    int? currentPage,
+    int? limit,
+    String? searchQuery,
+    String? statusFilter,
+    String? categoryFilter,
+  }) {
+    return AdminProductLoaded(
+      products: products ?? this.products,
+      totalMatchingCount: totalMatchingCount ?? this.totalMatchingCount,
+      totalProducts: totalProducts ?? this.totalProducts,
+      activeItems: activeItems ?? this.activeItems,
+      outOfStock: outOfStock ?? this.outOfStock,
+      disabledItems: disabledItems ?? this.disabledItems,
+      availableCategories: availableCategories ?? this.availableCategories,
+      currentPage: currentPage ?? this.currentPage,
+      limit: limit ?? this.limit,
+      searchQuery: searchQuery ?? this.searchQuery,
+      statusFilter: statusFilter ?? this.statusFilter,
+      categoryFilter: categoryFilter ?? this.categoryFilter,
+    );
+  }
 }
 
+// Product Error State
 class AdminProductError extends AdminProductState {
   final String message;
 

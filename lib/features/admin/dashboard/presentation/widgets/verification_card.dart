@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/core/utils/url_launcher_helper.dart';
 
+// Verification Card
 class VerificationCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -30,6 +31,7 @@ class VerificationCard extends StatelessWidget {
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'Verification',
                 style: TextStyle(
@@ -41,7 +43,7 @@ class VerificationCard extends StatelessWidget {
             ],
           ),
           Divider(height: 32.h, color: const Color(0xFFF0EFF5)),
-          // License File Widget
+          // License Section
           _buildVerificationFileItem(
             context: context,
             title: 'Shop License',
@@ -52,7 +54,7 @@ class VerificationCard extends StatelessWidget {
             icon: Icons.description_outlined,
           ),
           SizedBox(height: 16.h),
-          // Owner Identity File Widget
+          // Owner Identity Section
           _buildVerificationFileItem(
             context: context,
             title: 'Owner Identity',
@@ -94,6 +96,7 @@ class VerificationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   title,
                   style: TextStyle(
@@ -103,6 +106,7 @@ class VerificationCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.h),
+                // Subtitle
                 Text(
                   subtitle,
                   style: TextStyle(
@@ -113,6 +117,7 @@ class VerificationCard extends StatelessWidget {
               ],
             ),
           ),
+          // Button for Preview
           TextButton(
             onPressed: () => UrlLauncherHelper.launchURL(context, fileUrl),
             child: Text(

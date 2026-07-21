@@ -1,7 +1,7 @@
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
-import '../../domain/repositories/admin_customer_repository.dart';
-import '../datasources/admin_customer_remote_datasource.dart';
-import '../models/customer_model.dart';
+import 'package:street_cart/features/admin/customers/domain/repositories/admin_customer_repository.dart';
+import 'package:street_cart/features/admin/customers/data/datasources/admin_customer_remote_datasource.dart';
+import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
 
 class AdminCustomerRepositoryImpl implements IAdminCustomerRepository {
   final IAdminCustomerRemoteDataSource _remoteDataSource;
@@ -29,9 +29,11 @@ class AdminCustomerRepositoryImpl implements IAdminCustomerRepository {
     if (searchQuery != null && searchQuery.trim().isNotEmpty) {
       final query = searchQuery.trim().toLowerCase();
       filteredCustomers = filteredCustomers
-          .where((c) =>
-              c.fullName.toLowerCase().contains(query) ||
-              c.email.toLowerCase().contains(query))
+          .where(
+            (c) =>
+                c.fullName.toLowerCase().contains(query) ||
+                c.email.toLowerCase().contains(query),
+          )
           .toList();
     }
 

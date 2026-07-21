@@ -1,38 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/features/admin/customers/presentation/utils/admin_customers_helper.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
+import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customer_detail_bloc.dart';
+import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customer_detail_event.dart';
 
-class AdminCustomerPastOrdersCard extends StatefulWidget {
+// Admin Customer Past Orders Card
+class AdminCustomerPastOrdersCard extends StatelessWidget {
   final List<OrderModel> orders;
+  final int currentPage;
 
-  const AdminCustomerPastOrdersCard({super.key, required this.orders});
+  const AdminCustomerPastOrdersCard({
+    super.key,
+    required this.orders,
+    required this.currentPage,
+  });
 
-  @override
-  State<AdminCustomerPastOrdersCard> createState() =>
-      _AdminCustomerPastOrdersCardState();
-}
-
-class _AdminCustomerPastOrdersCardState
-    extends State<AdminCustomerPastOrdersCard> {
-  int _currentPage = 1;
   static const int _perPage = 5;
 
   @override
   Widget build(BuildContext context) {
-    final totalPages = (widget.orders.length / _perPage).ceil().clamp(
-      1,
-      999999,
+    // Calculate total pages
+    final totalPages = AdminCustomersHelper.getTotalPages(
+      orders.length,
+      _perPage,
     );
-    final paginatedOrders = widget.orders
-        .skip((_currentPage - 1) * _perPage)
-        .take(_perPage)
-        .toList();
+
+    // Filter list for the active page
+    final paginatedOrders = AdminCustomersHelper.getPaginatedList(
+      orders,
+      currentPage,
+      _perPage,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -43,6 +49,7 @@ class _AdminCustomerPastOrdersCardState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header title
           Padding(
             padding: EdgeInsets.all(24.w),
             child: Text(
@@ -54,7 +61,7 @@ class _AdminCustomerPastOrdersCardState
               ),
             ),
           ),
-          if (widget.orders.isEmpty)
+          if (orders.isEmpty)
             Padding(
               padding: EdgeInsets.all(24.w),
               child: Center(
@@ -68,6 +75,7 @@ class _AdminCustomerPastOrdersCardState
               ),
             )
           else ...[
+            // Main order list table layout
             Table(
               columnWidths: const {
                 0: FlexColumnWidth(1.5), // ORDER ID
@@ -86,6 +94,7 @@ class _AdminCustomerPastOrdersCardState
                       bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
                     ),
                   ),
+                  // Table Title
                   children: [
                     _buildTableHeaderCell('ORDER ID'),
                     _buildTableHeaderCell('PRODUCTS'),
@@ -104,34 +113,19 @@ class _AdminCustomerPastOrdersCardState
                   final badgeText = AdminOrdersHelper.getStatusTextColor(
                     status,
                   );
-                  final displayId = AdminOrdersHelper.getDisplayOrderId(
-                    order.id,
-                  );
-                  final dateStr = DateFormatter.formatToReadableDate(
+
+                  final dateStr = DateFormatter.formatToDateTime(
                     order.createdAt,
                   );
-                  final amountStr =
-                      '₹${PriceUtils.formatPrice(order.totalAmount)}';
-
-                  // If there is more than 1 product, show the first name and the remaining count
-                  String productNamesDisplay = '';
-                  if (order.items.isNotEmpty) {
-                    final firstProduct = order.items.first.productName;
-                    if (order.items.length > 1) {
-                      productNamesDisplay =
-                          '$firstProduct + ${order.items.length - 1} more product';
-                    } else {
-                      productNamesDisplay = firstProduct;
-                    }
-                  } else {
-                    productNamesDisplay = 'No Products';
-                  }
+                  final amountStr = PriceUtils.formatPrice(order.totalAmount);
+                  final productNamesDisplay =
+                      AdminCustomersHelper.formatOrderItems(order.items);
 
                   return TableRow(
                     decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Color(0xFFF0EFF5),
+                          color: Color(0xFFE8E7ED),
                           width: 1.2,
                         ),
                       ),
@@ -144,7 +138,7 @@ class _AdminCustomerPastOrdersCardState
                           vertical: 16.h,
                         ),
                         child: Text(
-                          displayId,
+                          '#${order.id.substring(0, 8).toUpperCase()}',
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
@@ -152,7 +146,7 @@ class _AdminCustomerPastOrdersCardState
                           ),
                         ),
                       ),
-                      // Products
+                      // Products Names
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.w),
                         child: Text(
@@ -177,7 +171,7 @@ class _AdminCustomerPastOrdersCardState
                           ),
                         ),
                       ),
-                      // Amount
+                      // Total Amount
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.w),
                         child: Text(
@@ -189,7 +183,7 @@ class _AdminCustomerPastOrdersCardState
                           ),
                         ),
                       ),
-                      // Status
+                      // Badge Status
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.w),
                         child: Align(
@@ -214,12 +208,13 @@ class _AdminCustomerPastOrdersCardState
                           ),
                         ),
                       ),
-                      // Actions
+                      // Actions view Details button
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.w),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: TextButton(
+                            // Navigate to Order Details Page
                             onPressed: () {
                               context.push('/orders/${order.id}');
                             },
@@ -243,13 +238,14 @@ class _AdminCustomerPastOrdersCardState
               SizedBox(height: 16.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
+                // Admin Pagination
                 child: AdminPagination(
-                  currentPage: _currentPage,
+                  currentPage: currentPage,
                   totalPages: totalPages,
                   onPageChanged: (page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
+                    context.read<AdminCustomerDetailBloc>().add(
+                      ChangePastOrdersPageRequested(page),
+                    );
                   },
                 ),
               ),

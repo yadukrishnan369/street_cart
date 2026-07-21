@@ -5,6 +5,7 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/services/communication_service.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Admin Shop Business Details Card
 class AdminShopBusinessDetailsCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -22,6 +23,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Description Title
           Row(
             children: [
               Icon(
@@ -41,6 +43,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
             ],
           ),
           Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
+          // Shop Description
           Text(
             'DESCRIPTION',
             style: TextStyle(
@@ -62,6 +65,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24.h),
+          // Contact Info
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -79,6 +83,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 12.h),
+                    // Shop Email
                     Tooltip(
                       message: "Send a mail",
                       child: Row(
@@ -109,6 +114,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8.h),
+                    // Shop Phone Number
                     Row(
                       children: [
                         Icon(
@@ -127,6 +133,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 8.h),
+                    // Shop Owner Name
                     Row(
                       children: [
                         Icon(
@@ -148,6 +155,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
+              // Shop GST Number
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,6 +186,7 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 24.h),
+          // Shop Full Address
           Text(
             'FULL BUSINESS ADDRESS',
             style: TextStyle(

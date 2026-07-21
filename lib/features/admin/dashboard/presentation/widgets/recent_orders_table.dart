@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/dashboard/data/models/recent_order_model.dart';
+import 'package:street_cart/features/admin/dashboard/presentation/utils/admin_dashboard_helper.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
+// Recent Orders Table
 class RecentOrdersTable extends StatelessWidget {
   final List<RecentOrderModel> orders;
   final VoidCallback? onViewAll;
@@ -26,6 +28,7 @@ class RecentOrdersTable extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Title
               Text(
                 'Recent Orders',
                 style: TextStyle(
@@ -61,7 +64,7 @@ class RecentOrdersTable extends StatelessWidget {
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
-                  // Table Header Row
+                  // Table Header
                   TableRow(
                     decoration: const BoxDecoration(
                       border: Border(
@@ -79,13 +82,11 @@ class RecentOrdersTable extends StatelessWidget {
                       _buildHeaderCell('ACTIONS'),
                     ],
                   ),
-                  // Table Data Rows
                   ...orders.map((order) {
                     // order ID
-                    final displayId = order.id.length >= 4
-                        ? '#ORD-${order.id.substring(order.id.length - 4)}'
-                              .toUpperCase()
-                        : order.id.toUpperCase();
+                    final displayId = AdminDashboardHelper.formatOrderId(
+                      order.id,
+                    );
 
                     return TableRow(
                       decoration: const BoxDecoration(
@@ -115,6 +116,7 @@ class RecentOrdersTable extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: TextButton(
+                              // Navigate to Order Details Page
                               onPressed: () {
                                 context.push('/orders/${order.id}');
                               },

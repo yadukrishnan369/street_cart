@@ -7,7 +7,9 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_bloc.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_event.dart';
+import 'package:street_cart/features/admin/customers/presentation/utils/admin_customers_helper.dart';
 
+// Customers Table
 class CustomersTable extends StatelessWidget {
   final List<CustomerModel> customers;
 
@@ -32,6 +34,7 @@ class CustomersTable extends StatelessWidget {
               bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
             ),
           ),
+          // Table Headers
           children: [
             _buildTableHeaderCell('CUSTOMER NAME'),
             _buildTableHeaderCell('EMAIL'),
@@ -62,15 +65,7 @@ class CustomersTable extends StatelessWidget {
 
   TableRow _buildTableRow(BuildContext context, CustomerModel customer) {
     final isBlocked = customer.isBlocked;
-    final initials = customer.fullName.isNotEmpty
-        ? customer.fullName
-              .trim()
-              .split(' ')
-              .map((e) => e[0])
-              .take(2)
-              .join()
-              .toUpperCase()
-        : 'JD';
+    final initials = AdminCustomersHelper.getCustomerInitials(customer.fullName);
 
     return TableRow(
       decoration: const BoxDecoration(
@@ -79,7 +74,7 @@ class CustomersTable extends StatelessWidget {
         ),
       ),
       children: [
-        // Name & Avatar
+        // Name & Image
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
           child: Row(
@@ -103,6 +98,7 @@ class CustomersTable extends StatelessWidget {
               ),
               SizedBox(width: 12.w),
               Expanded(
+                // Customer Full Name
                 child: Text(
                   customer.fullName.isNotEmpty ? customer.fullName : 'Unknown',
                   style: TextStyle(
@@ -150,26 +146,22 @@ class CustomersTable extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: isBlocked
-                    ? const Color(0xFFFDE8E8)
-                    : const Color(0xFFDEF7EC),
+                color: AdminCustomersHelper.getStatusBgColor(isBlocked),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Text(
-                isBlocked ? 'Blocked' : 'Active',
+                AdminCustomersHelper.getStatusLabel(isBlocked),
                 style: TextStyle(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
-                  color: isBlocked
-                      ? const Color(0xFF9B1C1C)
-                      : const Color(0xFF03543F),
+                  color: AdminCustomersHelper.getStatusTextColor(isBlocked),
                 ),
               ),
             ),
           ),
         ),
 
-        // Action View button navigates to details
+        // Action View Button Navigates to Details Page
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Align(

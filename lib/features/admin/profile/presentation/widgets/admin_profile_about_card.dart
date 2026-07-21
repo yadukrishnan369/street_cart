@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/constants/admin_constants.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 
+// Admin Profile About Card
 class AdminProfileAboutCard extends StatelessWidget {
   const AdminProfileAboutCard({super.key});
 
@@ -19,6 +20,7 @@ class AdminProfileAboutCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // About Section Title
           Text(
             AdminConstants.aboutTitle,
             style: AdminAppTextStyles.heading3.copyWith(
@@ -27,6 +29,7 @@ class AdminProfileAboutCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
+          // About Content
           Text(
             AdminConstants.aboutContent,
             style: AdminAppTextStyles.bodyMedium.copyWith(

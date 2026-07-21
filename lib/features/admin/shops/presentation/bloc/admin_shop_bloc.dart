@@ -19,6 +19,7 @@ class AdminShopBloc extends Bloc<AdminShopEvent, AdminShopState> {
     on<ToggleSuspensionRequested>(_onToggleSuspension);
   }
 
+  // Fetches the Shops
   Future<void> _onLoadAdminShop(
     LoadAdminShop event,
     Emitter<AdminShopState> emit,
@@ -67,6 +68,7 @@ class AdminShopBloc extends Bloc<AdminShopEvent, AdminShopState> {
     }
   }
 
+  // Re-fetches page using the new search query
   Future<void> _onSearchQueryChanged(
     SearchQueryChanged event,
     Emitter<AdminShopState> emit,
@@ -106,6 +108,7 @@ class AdminShopBloc extends Bloc<AdminShopEvent, AdminShopState> {
     }
   }
 
+  // Re-fetches page using filter
   Future<void> _onFilterChanged(
     FilterChanged event,
     Emitter<AdminShopState> emit,
@@ -145,6 +148,7 @@ class AdminShopBloc extends Bloc<AdminShopEvent, AdminShopState> {
     }
   }
 
+  // Toggles shop suspension status
   Future<void> _onToggleSuspension(
     ToggleSuspensionRequested event,
     Emitter<AdminShopState> emit,

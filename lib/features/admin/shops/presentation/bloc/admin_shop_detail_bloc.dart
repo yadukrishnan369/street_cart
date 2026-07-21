@@ -26,8 +26,11 @@ class AdminShopDetailBloc
     on<LoadShopDetailRequested>(_onLoadShopDetail);
     on<ToggleShopSuspensionRequested>(_onToggleShopSuspension);
     on<DeleteShopRequested>(_onDeleteShop);
+    on<ShopProductFilterChanged>(_onProductFilterChanged);
+    on<ShopProductPageChanged>(_onProductPageChanged);
   }
 
+  // Loads shop details and product list
   Future<void> _onLoadShopDetail(
     LoadShopDetailRequested event,
     Emitter<AdminShopDetailState> emit,
@@ -44,6 +47,7 @@ class AdminShopDetailBloc
     }
   }
 
+  // Toggles the shop suspension status
   Future<void> _onToggleShopSuspension(
     ToggleShopSuspensionRequested event,
     Emitter<AdminShopDetailState> emit,
@@ -56,6 +60,7 @@ class AdminShopDetailBloc
           isSuspended: event.isSuspended,
         ),
       );
+
       emit(
         AdminShopDetailActionSuccess(
           event.isSuspended
@@ -63,7 +68,8 @@ class AdminShopDetailBloc
               : 'Shop activated successfully',
         ),
       );
-      // Reload shop details + products
+
+      // Reload shop details
       final results = await Future.wait([
         _getAdminShopDetails(event.shopId),
         _shopRepository.getShopProducts(event.shopId),
@@ -74,6 +80,7 @@ class AdminShopDetailBloc
     }
   }
 
+  // Permanently deletes the shop
   Future<void> _onDeleteShop(
     DeleteShopRequested event,
     Emitter<AdminShopDetailState> emit,
@@ -84,6 +91,31 @@ class AdminShopDetailBloc
       emit(AdminShopDetailActionSuccess('Shop deleted successfully'));
     } catch (e) {
       emit(AdminShopDetailError(e.toString()));
+    }
+  }
+
+  // Updates the product filter label
+  void _onProductFilterChanged(
+    ShopProductFilterChanged event,
+    Emitter<AdminShopDetailState> emit,
+  ) {
+    if (state is AdminShopDetailLoaded) {
+      emit(
+        (state as AdminShopDetailLoaded).copyWith(
+          productFilter: event.filter,
+          productPage: 1,
+        ),
+      );
+    }
+  }
+
+  // Updates the current product page
+  void _onProductPageChanged(
+    ShopProductPageChanged event,
+    Emitter<AdminShopDetailState> emit,
+  ) {
+    if (state is AdminShopDetailLoaded) {
+      emit((state as AdminShopDetailLoaded).copyWith(productPage: event.page));
     }
   }
 }

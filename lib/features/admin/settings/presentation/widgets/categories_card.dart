@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
 
+// Categories Card
 class CategoriesCard extends StatelessWidget {
   const CategoriesCard({super.key});
 
@@ -35,6 +36,7 @@ class CategoriesCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   'Categories',
                   style: TextStyle(
@@ -44,6 +46,7 @@ class CategoriesCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4.h),
+                // Subtitle
                 Text(
                   'Organize your product categories.',
                   style: TextStyle(

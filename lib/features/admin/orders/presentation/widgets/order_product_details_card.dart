@@ -7,6 +7,7 @@ import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
+// Order Product Details Card
 class OrderProductDetailsCard extends StatelessWidget {
   final OrderModel order;
 
@@ -25,6 +26,7 @@ class OrderProductDetailsCard extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(24.w),
+            // Title
             child: Text(
               'Product Details',
               style: TextStyle(
@@ -51,6 +53,7 @@ class OrderProductDetailsCard extends StatelessWidget {
                     bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1),
                   ),
                 ),
+                // Table Titles
                 children: [
                   _buildHeaderCell('PRODUCT'),
                   _buildHeaderCell('QUANTITY'),
@@ -120,6 +123,7 @@ class OrderProductDetailsCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Product Name
                       Text(
                         item.productName,
                         maxLines: 1,

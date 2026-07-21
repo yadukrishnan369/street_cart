@@ -6,12 +6,13 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
+import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_state.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
-import 'package:street_cart/features/admin/auth/presentation/bloc/admin_login_ui_cubit.dart';
 
+// Admin Login Form
 class AdminLoginForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -28,8 +29,10 @@ class AdminLoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AdminLoginUiCubit, AdminLoginUiState>(
-      builder: (context, uiState) {
+    return BlocBuilder<AdminAuthBloc, AdminAuthState>(
+      builder: (context, state) {
+        final isLoading = state is AdminAuthLoading;
+
         return Form(
           key: formKey,
           child: Column(
@@ -48,6 +51,7 @@ class AdminLoginForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
+              // Title
               Text(
                 'Admin Portal',
                 style: AdminAppTextStyles.heading2.copyWith(
@@ -56,6 +60,7 @@ class AdminLoginForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8.h),
+              // Subtitle
               Text(
                 'Enter your credentials to manage your Street Cart marketplace',
                 textAlign: TextAlign.center,
@@ -65,6 +70,7 @@ class AdminLoginForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 32.h),
+              // Admin Email Field
               CustomTextField(
                 label: 'Email Address',
                 controller: emailController,
@@ -82,16 +88,18 @@ class AdminLoginForm extends StatelessWidget {
                 validator: Validators.validateEmail,
               ),
               SizedBox(height: 20.h),
+              // Admin Password Field
               CustomTextField(
                 label: 'Password',
                 controller: passwordController,
                 hintText: '••••••••',
-                isPassword: uiState.obscurePassword,
+                isPassword: state.obscurePassword,
                 labelStyle: AdminAppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AdminAppColors.textPrimary,
                 ),
                 labelTrailing: InkWell(
+                  // Navigate to Forgot Password Page
                   onTap: () {
                     context.push(RoutePaths.forgotPassword);
                   },
@@ -116,30 +124,28 @@ class AdminLoginForm extends StatelessWidget {
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    uiState.obscurePassword
+                    state.obscurePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                     color: AdminAppColors.textSecondary,
                     size: 20.sp,
                   ),
                   onPressed: () {
-                    context.read<AdminLoginUiCubit>().toggleObscurePassword();
+                    context.read<AdminAuthBloc>().add(
+                      ToggleObscurePasswordEvent(),
+                    );
                   },
                 ),
                 validator: Validators.validateAdminPassword,
               ),
               SizedBox(height: 32.h),
-              BlocBuilder<AdminAuthBloc, AdminAuthState>(
-                builder: (context, state) {
-                  final isLoading = state is AdminAuthLoading;
-                  return PrimaryButton(
-                    text: 'Login to Dashboard',
-                    isLoading: isLoading,
-                    backgroundColor: AdminAppColors.primaryColor,
-                    textStyle: AdminAppTextStyles.buttonText,
-                    onPressed: onLogin,
-                  );
-                },
+              // Button for Login
+              PrimaryButton(
+                text: 'Login to Dashboard',
+                isLoading: isLoading,
+                backgroundColor: AdminAppColors.primaryColor,
+                textStyle: AdminAppTextStyles.buttonText,
+                onPressed: onLogin,
               ),
               SizedBox(height: 24.h),
               Row(
@@ -151,6 +157,7 @@ class AdminLoginForm extends StatelessWidget {
                     color: AdminAppColors.textSecondary,
                   ),
                   SizedBox(width: 6.w),
+                  // Footer Content
                   Text(
                     'SECURE ADMIN ACCESS ONLY',
                     style: AdminAppTextStyles.caption.copyWith(

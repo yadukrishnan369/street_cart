@@ -11,7 +11,7 @@ class AdminDashboardRemoteDataSourceImpl
 
   AdminDashboardRemoteDataSourceImpl({required FirebaseFirestore firestore})
     : _firestore = firestore;
-
+  // Get Dashboard Stats Data
   @override
   Future<DashboardStatsModel> getDashboardStats() async {
     try {
@@ -19,17 +19,20 @@ class AdminDashboardRemoteDataSourceImpl
       int customersCount = 0;
       const double revenue = 582000.0;
 
+      // Fetch approved shops count
       final shopsSnap = await _firestore
           .collection('shops')
           .where('is_approved', isEqualTo: true)
           .get();
       shopsCount = shopsSnap.docs.length;
 
+      // Fetch unblocked customers count
       final customersSnap = await _firestore.collection('customers').get();
       customersCount = customersSnap.docs
           .where((doc) => doc.data()['is_blocked'] != true)
           .length;
 
+      // Fetch first few pending registrations
       List<NewRegistrationModel> newRegistrations = [];
       final pendingQuery = await _firestore
           .collection('shops')
@@ -65,7 +68,7 @@ class AdminDashboardRemoteDataSourceImpl
           return b.createdAt!.compareTo(a.createdAt!);
         });
 
-        // Limit to only last 3 registrations
+        // Limit to First 3 registrations
         if (newRegistrations.length > 3) {
           newRegistrations = newRegistrations.sublist(0, 3);
         }
@@ -75,7 +78,6 @@ class AdminDashboardRemoteDataSourceImpl
       final ordersSnap = await _firestore.collection('orders').get();
       final totalOrdersCount = ordersSnap.docs.length;
 
-      // raw order details sorted by created_at descending
       final allOrders = ordersSnap.docs.map((doc) {
         final data = doc.data();
         DateTime parsedDate = DateTime.now();
@@ -151,6 +153,7 @@ class AdminDashboardRemoteDataSourceImpl
     }
   }
 
+  // Calculates readable time difference
   String _calculateTimeAgo(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
     if (difference.inDays >= 30) {
@@ -168,6 +171,7 @@ class AdminDashboardRemoteDataSourceImpl
     }
   }
 
+  // Get Pending Registrations
   @override
   Future<List<NewRegistrationModel>> getPendingRegistrations({
     required int page,
@@ -226,6 +230,7 @@ class AdminDashboardRemoteDataSourceImpl
     }
   }
 
+  // Get Pending Registrations Count
   @override
   Future<int> getPendingRegistrationsCount() async {
     try {
@@ -242,6 +247,7 @@ class AdminDashboardRemoteDataSourceImpl
     }
   }
 
+  // Get Shop Details
   @override
   Future<ShopProfileModel> getShopDetails(String shopId) async {
     try {
@@ -255,6 +261,7 @@ class AdminDashboardRemoteDataSourceImpl
     }
   }
 
+  // Approve Shop
   @override
   Future<void> approveShop(String shopId) async {
     try {
@@ -266,6 +273,7 @@ class AdminDashboardRemoteDataSourceImpl
     }
   }
 
+  // Reject Shop
   @override
   Future<void> rejectShop(String shopId, String rejectionReason) async {
     try {

@@ -15,6 +15,7 @@ import 'package:street_cart/features/admin/shops/presentation/widgets/admin_shop
 import 'package:street_cart/features/admin/shops/presentation/widgets/shimmer/admin_shop_detail_shimmer.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Admin Shop Detail Page
 class AdminShopDetailPage extends StatelessWidget {
   final String shopId;
 
@@ -45,6 +46,7 @@ class AdminShopDetailPage extends StatelessWidget {
             builder: (context, state) {
               if (state is AdminShopDetailLoading ||
                   state is AdminShopDetailActionInProgress) {
+                // Admin Shop Detail Shimmer
                 return const AdminShopDetailShimmer();
               } else if (state is AdminShopDetailLoaded) {
                 final shop = state.shop;
@@ -67,6 +69,7 @@ class AdminShopDetailPage extends StatelessWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Admin Shop Business Details Card
                                 Expanded(
                                   flex: 5,
                                   child: AdminShopBusinessDetailsCard(
@@ -74,6 +77,7 @@ class AdminShopDetailPage extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: 24.w),
+                                // Admin Shop Delivery Radius Card
                                 Expanded(
                                   flex: 3,
                                   child: AdminShopDeliveryRadiusCard(
@@ -81,6 +85,7 @@ class AdminShopDetailPage extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: 24.w),
+                                // Admin Shop Verification Card
                                 Expanded(
                                   flex: 3,
                                   child: AdminShopVerificationCard(shop: shop),
@@ -90,23 +95,30 @@ class AdminShopDetailPage extends StatelessWidget {
                           else
                             Column(
                               children: [
+                                // Admin Shop Business Details Card
                                 AdminShopBusinessDetailsCard(shop: shop),
                                 SizedBox(height: 24.h),
+                                // Admin Shop Delivery Radius Card
                                 AdminShopDeliveryRadiusCard(shop: shop),
                                 SizedBox(height: 24.h),
+                                // Admin Shop Verification Card
                                 AdminShopVerificationCard(shop: shop),
                               ],
                             ),
                           SizedBox(height: 32.h),
+                          // Admin Shop Products Card
                           AdminShopProductsCard(
                             products: state.products,
                             shopId: shop.uid,
+                            selectedFilter: state.productFilter,
+                            currentPage: state.productPage,
                           ),
                         ],
                       );
                     },
                   ),
                 );
+                // Error State
               } else if (state is AdminShopDetailError) {
                 return Center(
                   child: Column(

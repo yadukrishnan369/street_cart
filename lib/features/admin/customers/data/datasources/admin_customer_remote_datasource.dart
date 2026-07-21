@@ -4,9 +4,13 @@ import 'package:street_cart/features/admin/customers/data/models/customer_model.
 
 abstract class IAdminCustomerRemoteDataSource {
   Future<List<CustomerModel>> getAllCustomers();
+
   Future<void> updateCustomerBlockStatus(String uid, bool isBlocked);
+
   Future<CustomerModel> getCustomerById(String uid);
+
   Future<List<AddressModel>> getCustomerAddresses(String uid);
+
   Future<void> deleteCustomer(String uid);
 }
 
@@ -16,14 +20,15 @@ class AdminCustomerRemoteDataSourceImpl
 
   AdminCustomerRemoteDataSourceImpl({required FirebaseFirestore firestore})
     : _firestore = firestore;
-
+  // Get All Customers
   @override
   Future<List<CustomerModel>> getAllCustomers() async {
     try {
+      // Fetch all customer profile documents
       final customersSnap = await _firestore.collection('customers').get();
+      // Fetch orders to calculate count per customer
       final ordersSnap = await _firestore.collection('orders').get();
 
-      // Count orders per customer_id
       final Map<String, int> orderCounts = {};
       for (final orderDoc in ordersSnap.docs) {
         final customerId = orderDoc.data()['customer_id'] as String?;
@@ -45,6 +50,7 @@ class AdminCustomerRemoteDataSourceImpl
     }
   }
 
+  // Update Customer Block Status
   @override
   Future<void> updateCustomerBlockStatus(String uid, bool isBlocked) async {
     try {
@@ -56,6 +62,7 @@ class AdminCustomerRemoteDataSourceImpl
     }
   }
 
+  // Get Customer By Id
   @override
   Future<CustomerModel> getCustomerById(String uid) async {
     try {
@@ -64,7 +71,6 @@ class AdminCustomerRemoteDataSourceImpl
         throw Exception('Customer not found');
       }
 
-      // order count matching this customer_id
       final ordersSnap = await _firestore
           .collection('orders')
           .where('customer_id', isEqualTo: uid)
@@ -80,6 +86,7 @@ class AdminCustomerRemoteDataSourceImpl
     }
   }
 
+  // Get Customer Addresses
   @override
   Future<List<AddressModel>> getCustomerAddresses(String uid) async {
     try {
@@ -96,10 +103,10 @@ class AdminCustomerRemoteDataSourceImpl
     }
   }
 
+  // Delete Customer
   @override
   Future<void> deleteCustomer(String uid) async {
     try {
-      // Fetch all address documents under the customers addresses
       final addressesSnap = await _firestore
           .collection('customers')
           .doc(uid)
@@ -108,18 +115,17 @@ class AdminCustomerRemoteDataSourceImpl
 
       final batch = _firestore.batch();
 
-      //  Add deletion of all addresses in the subcollection to the batch
+      // Delete addresses in the subcollection
       for (var doc in addressesSnap.docs) {
         batch.delete(doc.reference);
       }
 
-      // Add deletion of the main customer document to the batch
+      // Delete the main customer profile document
       batch.delete(_firestore.collection('customers').doc(uid));
 
-      // Add deletion of the user reference document to the batch
+      // Delete users credentials collection document
       batch.delete(_firestore.collection('users').doc(uid));
 
-      // Commit the batch write
       await batch.commit();
     } catch (e) {
       throw Exception('Failed to delete customer: $e');

@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
+// Tracking Details Card
 class TrackingDetailsCard extends StatelessWidget {
   final OrderModel order;
 
@@ -31,6 +32,7 @@ class TrackingDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'Tracking Details',
             style: TextStyle(

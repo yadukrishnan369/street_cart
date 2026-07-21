@@ -7,6 +7,7 @@ import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
+// Orders Table
 class OrdersTable extends StatelessWidget {
   final List<OrderModel> orders;
   final Map<String, String> shopNames;
@@ -44,6 +45,7 @@ class OrdersTable extends StatelessWidget {
               bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
             ),
           ),
+          // Table Titles
           children: [
             _buildTableHeaderCell('ORDER ID'),
             _buildTableHeaderCell('PRODUCT'),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Shop Metric Cards
 class ShopMetricCards extends StatelessWidget {
   final int totalShops;
   final int activeShops;
@@ -62,6 +63,7 @@ class ShopMetricCards extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Title
                   Text(
                     title,
                     style: TextStyle(
@@ -103,6 +105,7 @@ class ShopMetricCards extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Title
                 Text(
                   title,
                   style: TextStyle(

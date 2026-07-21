@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
+import 'package:street_cart/features/admin/dashboard/presentation/utils/admin_dashboard_helper.dart';
 
+// Shop Details Header Card
 class ShopDetailsHeaderCard extends StatelessWidget {
   final ShopProfileModel shop;
   final VoidCallback onApprove;
@@ -18,11 +19,8 @@ class ShopDetailsHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final regId =
-        '#APP-${shop.createdAt != null ? shop.createdAt!.year : 2024}-${shop.uid.substring(0, shop.uid.length > 5 ? 5 : shop.uid.length).toUpperCase()}';
-    final submittedTime = shop.createdAt != null
-        ? DateFormatter.formatToDateTime(shop.createdAt!)
-        : 'Recently';
+    final regId = AdminDashboardHelper.getRegistrationId(shop);
+    final submittedTime = AdminDashboardHelper.getSubmittedTime(shop);
 
     final bool isApproved = shop.isApproved;
     final bool isSuspended = shop.isSuspended;
@@ -40,7 +38,7 @@ class ShopDetailsHeaderCard extends StatelessWidget {
           final headerContent = Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Shop Icon with badge
+              // Shop Icon
               Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -117,6 +115,7 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                     Row(
                       children: [
                         Flexible(
+                          // Shop Name
                           child: Text(
                             shop.shopName,
                             style: TextStyle(
@@ -136,6 +135,7 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                             color: const Color(0xFFF3E8FF),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
+                          // Registration ID
                           child: Text(
                             'REGISTRATION ID: $regId',
                             style: TextStyle(
@@ -178,6 +178,7 @@ class ShopDetailsHeaderCard extends StatelessWidget {
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Button for Reject Shop
                     OutlinedButton.icon(
                       onPressed: onReject,
                       icon: const Icon(
@@ -203,6 +204,7 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 16.w),
+                    // Button for Approve Shop
                     ElevatedButton.icon(
                       onPressed: onApprove,
                       icon: const Icon(

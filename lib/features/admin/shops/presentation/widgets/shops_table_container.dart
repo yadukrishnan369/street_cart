@@ -10,6 +10,7 @@ import 'package:street_cart/features/admin/shops/presentation/widgets/shops_tabl
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
 import 'package:street_cart/shared/widgets/custom_admin_search_bar.dart';
 
+// Shops Table Container
 class ShopsTableContainer extends StatelessWidget {
   final AdminShopLoaded state;
   final bool isWide;
@@ -50,7 +51,7 @@ class ShopsTableContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Controls Header Search bar + Filter Dropdown
+          // Header Search bar and Filter Dropdown
           Padding(
             padding: EdgeInsets.only(
               left: 24.w,
@@ -206,13 +207,14 @@ class ShopsTableContainer extends StatelessWidget {
               ),
             )
           else ...[
+            // Shop Table
             ShopsTable(
               shops: state.shops,
               currentPage: currentPage,
               perPage: perPage,
             ),
             SizedBox(height: 24.h),
-
+            // Pagination
             AdminPagination(
               currentPage: state.currentPage,
               totalPages: state.totalPages,

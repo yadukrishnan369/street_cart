@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Shop Info Card
 class ShopInfoCard extends StatelessWidget {
   final ShopProfileModel? shop;
   final String shopName;
@@ -12,13 +14,10 @@ class ShopInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initials = shopName.length >= 2
-        ? shopName.substring(0, 2).toUpperCase()
-        : 'SH';
-    final address = shop != null
-        ? '${shop!.fullAddress}, ${shop!.city}'
-        : 'Address unavailable';
-    final phone = shop?.phone ?? 'N/A';
+    // Shop info card data
+    final initials = AdminOrdersHelper.getShopInitials(shopName);
+    final address = AdminOrdersHelper.getShopAddress(shop);
+    final phone = AdminOrdersHelper.getShopPhone(shop);
 
     return Container(
       decoration: BoxDecoration(
@@ -28,6 +27,7 @@ class ShopInfoCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
+          // Navigate to Shop Details Page
           if (shop?.uid != null) {
             context.push('/shops/${shop!.uid}');
           }
@@ -46,6 +46,7 @@ class ShopInfoCard extends StatelessWidget {
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
+                  // Title
                   Text(
                     'Shop Information',
                     style: TextStyle(
@@ -81,6 +82,7 @@ class ShopInfoCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Shop Name
                         Text(
                           shopName,
                           maxLines: 1,
@@ -92,6 +94,7 @@ class ShopInfoCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 2.h),
+                        // Status Label
                         Text(
                           shop?.isSuspended == true
                               ? 'Suspended'

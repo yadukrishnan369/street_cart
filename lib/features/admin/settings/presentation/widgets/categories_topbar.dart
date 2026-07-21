@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Categories Top bar
 class CategoriesTopbar extends StatelessWidget {
   const CategoriesTopbar({super.key});
 
@@ -28,6 +29,7 @@ class CategoriesTopbar extends StatelessWidget {
                 color: AdminAppColors.primaryColor,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'Categories',
                 style: TextStyle(

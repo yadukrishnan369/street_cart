@@ -8,6 +8,7 @@ import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_bl
 import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_event.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Shops Table
 class ShopsTable extends StatelessWidget {
   final List<ShopProfileModel> shops;
   final int currentPage;
@@ -22,6 +23,7 @@ class ShopsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Shops Table
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(2.0),
@@ -40,6 +42,7 @@ class ShopsTable extends StatelessWidget {
               bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
             ),
           ),
+          // Table Title
           children: [
             _buildTableHeaderCell('SHOP NAME'),
             _buildTableHeaderCell('CATEGORY'),
@@ -100,6 +103,7 @@ class ShopsTable extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Shop Name
                     Text(
                       shop.shopName,
                       style: TextStyle(
@@ -111,6 +115,7 @@ class ShopsTable extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 2.h),
+                    // Shop ID
                     Text(
                       'ID: #${shop.uid.substring(0, shop.uid.length > 8 ? 8 : shop.uid.length).toUpperCase()}',
                       style: TextStyle(
@@ -124,6 +129,7 @@ class ShopsTable extends StatelessWidget {
             ],
           ),
         ),
+        // Shop Category
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
@@ -135,6 +141,7 @@ class ShopsTable extends StatelessWidget {
             ),
           ),
         ),
+        // Shop Address
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
@@ -153,6 +160,7 @@ class ShopsTable extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        // Shop Delivery Radius KM
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
@@ -164,6 +172,7 @@ class ShopsTable extends StatelessWidget {
             ),
           ),
         ),
+        // Status Label
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Align(
@@ -194,6 +203,7 @@ class ShopsTable extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: TextButton(
+              // Navigate to Shop Details Page
               onPressed: () async {
                 final refresh = await context.push(
                   RoutePaths.shopDetails.replaceAll(':id', shop.uid),

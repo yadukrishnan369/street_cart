@@ -8,6 +8,7 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_sett
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_event.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/category_config_dialog.dart';
 
+// Category Dialogs
 class CategoryDialogs {
   static void showAdd({
     required BuildContext context,

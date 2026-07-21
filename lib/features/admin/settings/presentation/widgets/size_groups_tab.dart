@@ -8,6 +8,7 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_prod
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_state.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/size_group_dialogs.dart';
 
+// Size Groups Tab
 class SizeGroupsTab extends StatelessWidget {
   const SizeGroupsTab({super.key});
 
@@ -88,6 +89,7 @@ class SizeGroupsTab extends StatelessWidget {
     );
   }
 
+  // Empty State
   Widget _emptyState() {
     return Center(
       child: Padding(

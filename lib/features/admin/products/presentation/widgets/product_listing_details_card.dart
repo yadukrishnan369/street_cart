@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 
+// Product Listing Details Card
 class ProductListingDetailsCard extends StatelessWidget {
   final ProductModel product;
   final double commissionRate;
@@ -31,6 +32,7 @@ class ProductListingDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'Listing Details',
             style: TextStyle(

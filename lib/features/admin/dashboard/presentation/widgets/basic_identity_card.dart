@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Basic Identity Card
 class BasicIdentityCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -29,6 +30,7 @@ class BasicIdentityCard extends StatelessWidget {
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'Basic Identity',
                 style: TextStyle(
@@ -43,6 +45,7 @@ class BasicIdentityCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Shop Name
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,6 +72,7 @@ class BasicIdentityCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
+              // Shop Category
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,6 +114,7 @@ class BasicIdentityCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 24.h),
+          // Description
           Text(
             'BUSINESS DESCRIPTION',
             style: TextStyle(

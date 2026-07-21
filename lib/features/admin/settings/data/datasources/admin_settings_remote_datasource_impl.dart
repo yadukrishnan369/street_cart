@@ -13,7 +13,7 @@ class AdminSettingsRemoteDataSourceImpl
     required FirebaseAuthService authService,
   }) : _firestore = firestore,
        _authService = authService;
-
+  // Get Settings Data
   @override
   Future<AdminSettingsModel> getSettings() async {
     final Map<String, dynamic> data = {};
@@ -24,7 +24,7 @@ class AdminSettingsRemoteDataSourceImpl
         data.addAll(doc.data()!);
       }
     } catch (e) {
-      // Gracefully log or handle settings doc read failure
+      // Gracefully handle failure
     }
 
     try {
@@ -36,7 +36,7 @@ class AdminSettingsRemoteDataSourceImpl
         data.addAll(catDoc.data()!);
       }
     } catch (e) {
-      // Gracefully log or ignore categories doc
+      // Gracefully handle failure
     }
 
     try {
@@ -57,6 +57,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Save Platform Commission
   @override
   Future<void> savePlatformCommission(double percentage) async {
     try {
@@ -68,6 +69,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Save Payment Controls
   @override
   Future<void> savePaymentControls({
     required bool enableCod,
@@ -83,6 +85,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Change Admin Password
   @override
   Future<void> changeAdminPassword({
     required String currentPassword,
@@ -104,6 +107,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Save Categories
   @override
   Future<void> saveCategories({
     required List<CategoryModel> productCategories,
@@ -121,6 +125,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Get Product Config
   @override
   Future<ProductConfigModel> getProductConfig() async {
     try {
@@ -137,6 +142,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Save Colors
   @override
   Future<void> saveColors(List<ColorModel> colors) async {
     try {
@@ -148,6 +154,7 @@ class AdminSettingsRemoteDataSourceImpl
     }
   }
 
+  // Save Size Groups
   @override
   Future<void> saveSizeGroups(List<SizeGroupModel> sizeGroups) async {
     try {

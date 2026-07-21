@@ -1,13 +1,10 @@
-import '../repositories/admin_customer_repository.dart';
+import 'package:street_cart/features/admin/customers/domain/repositories/admin_customer_repository.dart';
 
 class ToggleCustomerBlockStatusParams {
   final String uid;
   final bool isBlocked;
 
-  ToggleCustomerBlockStatusParams({
-    required this.uid,
-    required this.isBlocked,
-  });
+  ToggleCustomerBlockStatusParams({required this.uid, required this.isBlocked});
 }
 
 class ToggleCustomerBlockStatus {

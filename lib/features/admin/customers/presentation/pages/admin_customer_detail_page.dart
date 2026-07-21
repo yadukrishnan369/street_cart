@@ -14,6 +14,7 @@ import 'package:street_cart/features/admin/customers/presentation/widgets/admin_
 import 'package:street_cart/features/admin/customers/presentation/widgets/admin_customer_past_orders_card.dart';
 import 'package:street_cart/features/admin/customers/presentation/widgets/shimmer/admin_customer_detail_shimmer.dart';
 
+// Admin Customer Detail Page
 class AdminCustomerDetailPage extends StatelessWidget {
   final String customerId;
 
@@ -47,6 +48,7 @@ class AdminCustomerDetailPage extends StatelessWidget {
                 builder: (context, state) {
                   if (state is AdminCustomerDetailLoading ||
                       state is AdminCustomerDetailActionInProgress) {
+                    // Loading Shimmer
                     return const AdminCustomerDetailShimmer();
                   } else if (state is AdminCustomerDetailLoaded) {
                     final customer = state.customer;
@@ -64,6 +66,7 @@ class AdminCustomerDetailPage extends StatelessWidget {
                             children: [
                               _buildBackRow(context),
                               SizedBox(height: 16.h),
+                              // Admin Customer Detail Header Card
                               AdminCustomerDetailHeaderCard(customer: customer),
                               SizedBox(height: 32.h),
                               if (isWide)
@@ -72,6 +75,7 @@ class AdminCustomerDetailPage extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       flex: 5,
+                                      // Admin Customer Contact Info Card
                                       child: AdminCustomerContactInfoCard(
                                         customer: customer,
                                         addresses: addresses,
@@ -80,6 +84,7 @@ class AdminCustomerDetailPage extends StatelessWidget {
                                     SizedBox(width: 24.w),
                                     Expanded(
                                       flex: 5,
+                                      // Admin Customer Stats Card
                                       child: AdminCustomerStatsCard(
                                         orders: state.orders,
                                       ),
@@ -89,24 +94,31 @@ class AdminCustomerDetailPage extends StatelessWidget {
                               else
                                 Column(
                                   children: [
+                                    // Admin Customer Contact Info Card
                                     AdminCustomerContactInfoCard(
                                       customer: customer,
                                       addresses: addresses,
                                     ),
                                     SizedBox(height: 24.h),
+                                    // Admin Customer Stats Card
                                     AdminCustomerStatsCard(
                                       orders: state.orders,
                                     ),
                                   ],
                                 ),
                               SizedBox(height: 32.h),
-                              AdminCustomerPastOrdersCard(orders: state.orders),
+                              // Admin Customer Past Orders Card
+                              AdminCustomerPastOrdersCard(
+                                orders: state.orders,
+                                currentPage: state.currentPage,
+                              ),
                             ],
                           );
                         },
                       ),
                     );
                   } else if (state is AdminCustomerDetailError) {
+                    // Error State
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -6,6 +6,7 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Contact Details Card
 class ContactDetailsCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -32,6 +33,7 @@ class ContactDetailsCard extends StatelessWidget {
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'Contact Details',
                 style: TextStyle(

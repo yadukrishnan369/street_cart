@@ -8,7 +8,7 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
   AdminProductRepositoryImpl({
     required IAdminProductRemoteDataSource remoteDataSource,
   }) : _remoteDataSource = remoteDataSource;
-
+  //  Get Products
   @override
   Future<AdminProductResponse> getProducts({
     required int page,
@@ -135,6 +135,7 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     );
   }
 
+  // Get Product Detail
   @override
   Future<AdminProductItem> getProductDetails(String productId) async {
     final product = await _remoteDataSource.getProductById(productId);
@@ -164,11 +165,13 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     );
   }
 
+  // Disable Product
   @override
   Future<void> disableProduct(String productId, bool disable) async {
     await _remoteDataSource.updateProductDisabledStatus(productId, disable);
   }
 
+  // Delete Product
   @override
   Future<void> deleteProduct(String productId) async {
     await _remoteDataSource.deleteProduct(productId);

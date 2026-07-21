@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
+// Edit Profile Overlay
 class EditProfileOverlay extends StatefulWidget {
   final String currentName;
   final String email;
@@ -179,6 +180,7 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                           ],
                         ),
                         SizedBox(height: 8.h),
+                        // Email Field
                         TextFormField(
                           initialValue: widget.email,
                           enabled: false,
@@ -230,6 +232,7 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                               ),
                             ),
                             SizedBox(width: 12.w),
+                            // Button for Save
                             ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {

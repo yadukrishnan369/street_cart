@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_bloc.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_event.dart';
 
+// Products Table
 class ProductsTable extends StatelessWidget {
   final List<AdminProductItem> products;
   final int currentPage;
@@ -41,6 +42,7 @@ class ProductsTable extends StatelessWidget {
               bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
             ),
           ),
+          // Table Titles
           children: [
             _buildTableHeaderCell('PRODUCT NAME'),
             _buildTableHeaderCell('SHOP NAME'),
@@ -117,6 +119,7 @@ class ProductsTable extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
+                  // Product Images
                   child: p.images.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: p.images.first,
@@ -149,6 +152,7 @@ class ProductsTable extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Product Name
                     Text(
                       p.name,
                       style: TextStyle(
@@ -160,6 +164,7 @@ class ProductsTable extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 2.h),
+                    // Product ID
                     Text(
                       'ID: #${p.id.substring(0, p.id.length > 8 ? 8 : p.id.length).toUpperCase()}',
                       style: TextStyle(

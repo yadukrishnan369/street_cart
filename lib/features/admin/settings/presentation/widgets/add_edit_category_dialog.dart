@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Add Edit Category Dialog
 class AddEditCategoryDialog extends StatefulWidget {
   final String title;
   final String description;
@@ -25,7 +26,8 @@ class AddEditCategoryDialog extends StatefulWidget {
 class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? _validationError;
+
+  final _validationError = ValueNotifier<String?>(null);
 
   @override
   void initState() {
@@ -38,19 +40,19 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
   @override
   void dispose() {
     _controller.dispose();
+    _validationError.dispose();
     super.dispose();
   }
 
   void _validateAndSubmit() {
     final name = _controller.text.trim();
+
     if (name.isEmpty) {
-      setState(() {
-        _validationError = 'Category Name cannot be empty';
-      });
+      _validationError.value = 'Category Name cannot be empty';
       return;
     }
 
-    // Duplicate Check - check excluding current name if editing
+    // Duplicate check
     final isDuplicate = widget.existingNames.any((existingName) {
       if (widget.initialName != null &&
           existingName.toLowerCase() == widget.initialName!.toLowerCase()) {
@@ -60,16 +62,11 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
     });
 
     if (isDuplicate) {
-      setState(() {
-        _validationError = 'Category already exists.';
-      });
+      _validationError.value = 'Category already exists.';
       return;
     }
 
-    setState(() {
-      _validationError = null;
-    });
-
+    _validationError.value = null;
     Navigator.pop(context);
     widget.onConfirm(name);
   }
@@ -88,13 +85,13 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Icon & Title Row
+              // Icon and Title
               Row(
                 children: [
                   Container(
                     padding: EdgeInsets.all(8.w),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF4EBFF),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF4EBFF),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -105,6 +102,7 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
+                    // Title
                     child: Text(
                       widget.title,
                       style: TextStyle(
@@ -118,7 +116,7 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
               ),
               SizedBox(height: 16.h),
 
-              // Description Text Message
+              // Description
               Text(
                 widget.description,
                 style: TextStyle(
@@ -162,26 +160,31 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                 ),
-                onChanged: (val) {
-                  if (_validationError != null) {
-                    setState(() {
-                      _validationError = null;
-                    });
+                onChanged: (_) {
+                  if (_validationError.value != null) {
+                    _validationError.value = null;
                   }
                 },
                 onFieldSubmitted: (_) => _validateAndSubmit(),
               ),
-              if (_validationError != null) ...[
-                SizedBox(height: 8.h),
-                Text(
-                  _validationError!,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AdminAppColors.errorColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+
+              ValueListenableBuilder<String?>(
+                valueListenable: _validationError,
+                builder: (_, error, __) {
+                  if (error == null) return const SizedBox.shrink();
+                  return Padding(
+                    padding: EdgeInsets.only(top: 8.h),
+                    child: Text(
+                      error,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AdminAppColors.errorColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                },
+              ),
               SizedBox(height: 24.h),
 
               // Action Buttons

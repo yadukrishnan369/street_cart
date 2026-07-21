@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Category Tab Selector
 class CategoryTabSelector extends StatelessWidget {
   final bool isProductTab;
   final Function(bool) onTabChanged;
@@ -32,6 +33,7 @@ class CategoryTabSelector extends StatelessWidget {
             width: 1.5,
           ),
         ),
+        // Label
         child: Text(
           label,
           style: TextStyle(

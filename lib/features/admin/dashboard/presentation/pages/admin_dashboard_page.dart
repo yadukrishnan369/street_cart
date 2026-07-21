@@ -17,6 +17,7 @@ import 'package:street_cart/features/admin/dashboard/presentation/widgets/new_re
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/shimmer/admin_dashboard_shimmer.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/recent_orders_table.dart';
 
+// Admin Dashboard Page
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
 
@@ -41,6 +42,7 @@ class AdminDashboardPage extends StatelessWidget {
         child: BlocBuilder<AdminDashboardBloc, AdminDashboardState>(
           builder: (context, state) {
             if (state is AdminDashboardLoading) {
+              // Admin Dashboard Shimmer
               return const AdminDashboardShimmer();
             } else if (state is AdminDashboardLoadSuccess) {
               final stats = state.stats;
@@ -62,6 +64,7 @@ class AdminDashboardPage extends StatelessWidget {
                           crossAxisSpacing: 20.w,
                           mainAxisSpacing: 20.h,
                           childAspectRatio: isWide ? 1.6 : 2.0,
+                          // Stats Cards
                           children: [
                             StatCard(
                               title: 'Total Shops',
@@ -103,9 +106,11 @@ class AdminDashboardPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 32.h),
+                    // New Registrations Section
                     NewRegistrationsSection(
                       registrations: stats.newRegistrations,
                       onSeeAll: () {
+                        // Navigate to Registration Page
                         context.push(RoutePaths.registrations);
                       },
                       onApprove: (id) async {
@@ -120,6 +125,7 @@ class AdminDashboardPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 32.h),
+                    // Recent Orders Table
                     RecentOrdersTable(
                       orders: stats.recentOrders,
                       onViewAll: () {
@@ -130,6 +136,7 @@ class AdminDashboardPage extends StatelessWidget {
                 ),
               );
             } else if (state is AdminDashboardLoadFailure) {
+              // Error State
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

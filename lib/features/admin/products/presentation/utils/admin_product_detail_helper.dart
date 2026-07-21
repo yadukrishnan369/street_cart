@@ -6,6 +6,7 @@ import 'package:street_cart/features/admin/products/presentation/bloc/admin_prod
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
 class AdminProductDetailHelper {
+  // Confirmation for Disable/Enable Product
   static void confirmDisable(
     BuildContext context,
     String productId,
@@ -54,6 +55,7 @@ class AdminProductDetailHelper {
     );
   }
 
+  // Confirm Delete of Product
   static void confirmDelete(BuildContext context, String productId) {
     final bloc = context.read<AdminProductDetailBloc>();
     showDialog(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
+// Admin Product Config Shimmer
 class AdminProductConfigShimmer extends StatelessWidget {
   const AdminProductConfigShimmer({super.key});
 

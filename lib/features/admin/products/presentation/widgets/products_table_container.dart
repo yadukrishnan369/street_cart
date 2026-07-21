@@ -10,6 +10,7 @@ import 'package:street_cart/features/admin/products/presentation/widgets/product
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
 import 'package:street_cart/shared/widgets/custom_admin_search_bar.dart';
 
+// Products Table Container
 class ProductsTableContainer extends StatelessWidget {
   final AdminProductLoaded state;
   final bool isWide;
@@ -54,7 +55,7 @@ class ProductsTableContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row with Search and Filters
+          // Header with Search and Filters
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
             child: Row(
@@ -209,13 +210,14 @@ class ProductsTableContainer extends StatelessWidget {
               ),
             )
           else ...[
+            // Products Table
             ProductsTable(
               products: state.products,
               currentPage: currentPage,
               perPage: perPage,
             ),
             SizedBox(height: 24.h),
-
+            // Pagination
             AdminPagination(
               currentPage: currentPage,
               totalPages: (state.totalMatchingCount / perPage).ceil(),

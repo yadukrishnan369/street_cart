@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 
+// Admin Profile Metrics
 class AdminProfileMetrics extends StatelessWidget {
   final int approvedShopsCount;
   final int ordersTrackedCount;
@@ -34,6 +35,7 @@ class AdminProfileMetrics extends StatelessWidget {
                 color: AdminAppColors.primaryColor,
               ),
               SizedBox(width: 10.w),
+              // Title
               Text(
                 'Personal Performance Metrics',
                 style: AdminAppTextStyles.heading3.copyWith(
@@ -47,6 +49,7 @@ class AdminProfileMetrics extends StatelessWidget {
           Row(
             children: [
               Expanded(
+                // Total Shop Approved Card
                 child: _buildMetricTile(
                   icon: Icons.check_circle_outline,
                   value: approvedShopsCount.toString(),
@@ -56,6 +59,7 @@ class AdminProfileMetrics extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
+              // Total Review Card
               Expanded(
                 child: _buildMetricTile(
                   icon: Icons.rate_review_outlined,
@@ -66,6 +70,7 @@ class AdminProfileMetrics extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
+              // Total Order Tracked Card
               Expanded(
                 child: _buildMetricTile(
                   icon: Icons.inventory_2_outlined,

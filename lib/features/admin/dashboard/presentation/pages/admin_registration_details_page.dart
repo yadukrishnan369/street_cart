@@ -12,12 +12,11 @@ import 'package:street_cart/features/admin/dashboard/presentation/widgets/verifi
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registration_details_bloc.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registration_details_event.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/bloc/admin_registration_details_state.dart';
-import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
+import 'package:street_cart/features/admin/dashboard/presentation/utils/admin_dashboard_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
-import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
-import 'package:street_cart/features/admin/dashboard/presentation/widgets/rejection_reason_modal.dart';
 import 'package:street_cart/features/admin/dashboard/presentation/widgets/shimmer/admin_registration_details_shimmer.dart';
 
+// Admin Registration Details Page
 class AdminRegistrationDetailsPage extends StatelessWidget {
   final String shopId;
 
@@ -50,6 +49,7 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                     builder: (context, state) {
                       if (state is AdminRegistrationDetailsLoading ||
                           state is AdminRegistrationActionInProgress) {
+                        // Admin Registration Details Shimmer
                         return const AdminRegistrationDetailsShimmer();
                       } else if (state is AdminRegistrationDetailsLoadSuccess) {
                         final shop = state.shop;
@@ -66,12 +66,19 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                                 children: [
                                   _buildBackRow(context),
                                   SizedBox(height: 16.h),
+                                  // Shop Details Header Card
                                   ShopDetailsHeaderCard(
                                     shop: shop,
                                     onApprove: () =>
-                                        _showApproveConfirmation(context, shop),
+                                        AdminDashboardHelper.showApproveConfirmation(
+                                          context,
+                                          shop,
+                                        ),
                                     onReject: () =>
-                                        _showRejectConfirmation(context, shop),
+                                        AdminDashboardHelper.showRejectConfirmation(
+                                          context,
+                                          shop,
+                                        ),
                                   ),
                                   SizedBox(height: 32.h),
                                   if (isWide)
@@ -83,8 +90,10 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                                           flex: 3,
                                           child: Column(
                                             children: [
+                                              // Basic Identity Card
                                               BasicIdentityCard(shop: shop),
                                               SizedBox(height: 32.h),
+                                              // Verification Card
                                               VerificationCard(shop: shop),
                                             ],
                                           ),
@@ -94,6 +103,7 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                                           flex: 2,
                                           child: Column(
                                             children: [
+                                              // Contact Details Card
                                               ContactDetailsCard(shop: shop),
                                               SizedBox(height: 32.h),
                                               GstCard(shop: shop),
@@ -105,12 +115,16 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                                   else
                                     Column(
                                       children: [
+                                        // Basic Identity Card
                                         BasicIdentityCard(shop: shop),
                                         SizedBox(height: 32.h),
+                                        // Contact Details Card
                                         ContactDetailsCard(shop: shop),
                                         SizedBox(height: 32.h),
+                                        // Gst Card
                                         GstCard(shop: shop),
                                         SizedBox(height: 32.h),
+                                        // Verification Card
                                         VerificationCard(shop: shop),
                                       ],
                                     ),
@@ -120,6 +134,7 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                           ),
                         );
                       } else if (state is AdminRegistrationDetailsLoadFailure) {
+                        // Error State
                         return Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -134,6 +149,7 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 16.h),
+                              // Button for Reload
                               ElevatedButton(
                                 onPressed: () {
                                   context
@@ -180,42 +196,6 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showApproveConfirmation(BuildContext context, ShopProfileModel shop) {
-    final bloc = context.read<AdminRegistrationDetailsBloc>();
-    showDialog(
-      context: context,
-      builder: (dialogCtx) => CustomAlertDialog(
-        title: 'Approve Application',
-        content:
-            'Are you sure you want to approve "${shop.shopName}"? They will be allowed to access their Shop portal immediately.',
-        secondaryActionLabel: 'Cancel',
-        primaryActionLabel: 'Approve',
-        icon: Icons.check_circle_outline,
-        iconColor: AdminAppColors.primaryColor,
-        primaryActionColor: AdminAppColors.primaryColor,
-        onPrimaryAction: () {
-          Navigator.pop(dialogCtx);
-          bloc.add(ApproveShopRequested(shop.uid));
-        },
-      ),
-    );
-  }
-
-  void _showRejectConfirmation(BuildContext context, ShopProfileModel shop) {
-    final bloc = context.read<AdminRegistrationDetailsBloc>();
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogCtx) => RejectionReasonModal(
-        onSubmit: (reason) {
-          bloc.add(
-            RejectShopRequested(shopId: shop.uid, rejectionReason: reason),
-          );
-        },
       ),
     );
   }

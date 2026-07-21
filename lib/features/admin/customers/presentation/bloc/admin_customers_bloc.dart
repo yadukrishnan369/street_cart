@@ -26,6 +26,7 @@ class AdminCustomersBloc
     on<ToggleCustomerBlockRequested>(_onToggleCustomerBlockRequested);
   }
 
+  // Fetching the list of customers
   Future<void> _onLoadAdminCustomers(
     LoadAdminCustomers event,
     Emitter<AdminCustomersState> emit,
@@ -63,6 +64,7 @@ class AdminCustomersBloc
     }
   }
 
+  // Refetches list of customer by search
   Future<void> _onSearchCustomersQueryChanged(
     SearchCustomersQueryChanged event,
     Emitter<AdminCustomersState> emit,
@@ -72,6 +74,7 @@ class AdminCustomersBloc
     add(LoadAdminCustomers(page: _currentPage, limit: _limit));
   }
 
+  // Refetches list of customer by Filter
   Future<void> _onFilterCustomersStatusChanged(
     FilterCustomersStatusChanged event,
     Emitter<AdminCustomersState> emit,
@@ -81,6 +84,7 @@ class AdminCustomersBloc
     add(LoadAdminCustomers(page: _currentPage, limit: _limit));
   }
 
+  // Updates a customer block state
   Future<void> _onToggleCustomerBlockRequested(
     ToggleCustomerBlockRequested event,
     Emitter<AdminCustomersState> emit,
@@ -100,7 +104,6 @@ class AdminCustomersBloc
               : 'Customer unblocked successfully',
         ),
       );
-      // Reload current page
       final response = await _getAdminCustomers(
         GetAdminCustomersParams(
           page: _currentPage,

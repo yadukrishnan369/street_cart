@@ -18,6 +18,7 @@ import 'package:street_cart/features/admin/settings/presentation/bloc/admin_prod
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_state.dart';
 import 'package:street_cart/features/admin/settings/presentation/widgets/categories_config_header.dart';
 
+// Admin Categories Page
 class AdminCategoriesPage extends StatelessWidget {
   const AdminCategoriesPage({super.key});
 

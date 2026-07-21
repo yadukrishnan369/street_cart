@@ -7,6 +7,7 @@ abstract class AdminProductDetailEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Product Detail Requested Event
 class LoadProductDetailRequested extends AdminProductDetailEvent {
   final String productId;
 
@@ -16,6 +17,7 @@ class LoadProductDetailRequested extends AdminProductDetailEvent {
   List<Object?> get props => [productId];
 }
 
+// Toggle Disable Product Requested Event
 class ToggleDisableProductRequested extends AdminProductDetailEvent {
   final String productId;
   final bool disable;
@@ -29,6 +31,7 @@ class ToggleDisableProductRequested extends AdminProductDetailEvent {
   List<Object?> get props => [productId, disable];
 }
 
+// Delete Product Requested Event
 class DeleteProductRequested extends AdminProductDetailEvent {
   final String productId;
 

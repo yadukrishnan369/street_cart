@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Appearance Card
 class AppearanceCard extends StatelessWidget {
   const AppearanceCard({super.key});
 
@@ -27,6 +28,7 @@ class AppearanceCard extends StatelessWidget {
                   size: 20.sp,
                 ),
                 SizedBox(width: 8.w),
+                // Title
                 Text(
                   'Appearance Settings',
                   style: TextStyle(

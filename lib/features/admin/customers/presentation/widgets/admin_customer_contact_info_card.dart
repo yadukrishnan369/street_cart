@@ -5,7 +5,9 @@ import 'package:street_cart/core/services/communication_service.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
+import 'package:street_cart/features/admin/customers/presentation/utils/admin_customers_helper.dart';
 
+// Admin Customer Contact Info Card
 class AdminCustomerContactInfoCard extends StatelessWidget {
   final CustomerModel customer;
   final List<AddressModel> addresses;
@@ -18,18 +20,10 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine primary address
-    String primaryAddressText = 'No address provided';
-    if (addresses.isNotEmpty) {
-      final defaultAddr = addresses.firstWhere(
-        (a) => a.isDefault,
-        orElse: () => addresses.first,
-      );
-      primaryAddressText =
-          '${defaultAddr.addressLine1}, ${defaultAddr.addressLine2}\n${defaultAddr.city} - ${defaultAddr.pincode}';
-    } else {
-      primaryAddressText = 'No address registered yet.';
-    }
+    // Primary address
+    final primaryAddressText = AdminCustomersHelper.getPrimaryAddressText(
+      addresses,
+    );
 
     return Container(
       padding: EdgeInsets.all(20.w),
@@ -49,6 +43,7 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
                 size: 18.sp,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'CONTACT INFORMATION',
                 style: TextStyle(

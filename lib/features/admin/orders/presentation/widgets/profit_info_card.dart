@@ -4,6 +4,7 @@ import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
+// Profit Info Card
 class ProfitInfoCard extends StatelessWidget {
   final OrderModel order;
 
@@ -36,6 +37,7 @@ class ProfitInfoCard extends StatelessWidget {
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'Profit Information',
                 style: TextStyle(
@@ -47,10 +49,13 @@ class ProfitInfoCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20.h),
+          // Total Amount Section
           _buildProfitItem('Total Amount', totalStr, isBoldValue: true),
           SizedBox(height: 16.h),
+          // Vendor Earning Section
           _buildProfitItem('Vendor Earnings', vendorStr, isBoldValue: true),
           SizedBox(height: 16.h),
+          // PlatForm Profit Section
           _buildProfitItem(
             'Street cart Profit',
             profitStr,

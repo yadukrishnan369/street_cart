@@ -7,6 +7,7 @@ import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_blo
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
+// Admin Profile Logout
 class AdminProfileLogout extends StatelessWidget {
   const AdminProfileLogout({super.key});
 
@@ -31,6 +32,7 @@ class AdminProfileLogout extends StatelessWidget {
                 color: AdminAppColors.errorColor,
               ),
               SizedBox(width: 10.w),
+              // Title
               Text(
                 'Account Actions',
                 style: AdminAppTextStyles.heading3.copyWith(
@@ -41,6 +43,7 @@ class AdminProfileLogout extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
+          // Subtitle
           Text(
             'Securely sign out of your administration portal session.',
             style: AdminAppTextStyles.bodySmall.copyWith(
@@ -50,6 +53,7 @@ class AdminProfileLogout extends StatelessWidget {
           SizedBox(height: 24.h),
           SizedBox(
             width: double.infinity,
+            // Logout Confimation Dialog
             child: ElevatedButton(
               onPressed: () {
                 showDialog(

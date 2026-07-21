@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Admin Shop Delivery Radius Card
 class AdminShopDeliveryRadiusCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -23,6 +24,7 @@ class AdminShopDeliveryRadiusCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Delivery Radius KM
               Row(
                 children: [
                   Icon(

@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/url_launcher_helper.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
+// Admin Shop Verification Card
 class AdminShopVerificationCard extends StatelessWidget {
   final ShopProfileModel shop;
 
@@ -29,6 +30,7 @@ class AdminShopVerificationCard extends StatelessWidget {
                 size: 18.sp,
               ),
               SizedBox(width: 8.w),
+              // Title
               Text(
                 'Verification',
                 style: TextStyle(
@@ -96,6 +98,7 @@ class AdminShopVerificationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   title,
                   style: TextStyle(
@@ -105,6 +108,7 @@ class AdminShopVerificationCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 2.h),
+                // Subtitle
                 Text(
                   subtitle,
                   style: TextStyle(
@@ -113,6 +117,7 @@ class AdminShopVerificationCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
+                // Document Preview
                 InkWell(
                   onTap: onTap,
                   child: Text(

@@ -1,4 +1,4 @@
-import '../repositories/i_admin_dashboard_repository.dart';
+import 'package:street_cart/features/admin/dashboard/domain/repositories/i_admin_dashboard_repository.dart';
 
 class RejectShop {
   final IAdminDashboardRepository repository;

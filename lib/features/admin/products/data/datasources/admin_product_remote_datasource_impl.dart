@@ -9,7 +9,7 @@ class AdminProductRemoteDataSourceImpl
 
   AdminProductRemoteDataSourceImpl({required FirebaseFirestore firestore})
     : _firestore = firestore;
-
+  // Get All Products
   @override
   Future<List<ProductModel>> getAllProducts() async {
     try {
@@ -22,6 +22,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Get All Shops
   @override
   Future<List<ShopProfileModel>> getAllShops() async {
     try {
@@ -34,6 +35,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Get Business Category Names
   @override
   Future<List<String>> getBusinessCategoryNames() async {
     try {
@@ -60,6 +62,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Get Product Category Names
   @override
   Future<List<String>> getProductCategoryNames() async {
     try {
@@ -87,6 +90,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Update Product Disabled Status
   @override
   Future<void> updateProductDisabledStatus(
     String productId,
@@ -101,6 +105,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Delete Product
   @override
   Future<void> deleteProduct(String productId) async {
     try {
@@ -110,6 +115,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Get Product By ID
   @override
   Future<ProductModel> getProductById(String productId) async {
     try {
@@ -123,6 +129,7 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Get Platform Commission
   @override
   Future<double> getPlatformCommission() async {
     try {
@@ -137,10 +144,10 @@ class AdminProductRemoteDataSourceImpl
     }
   }
 
+  // Get Product Order Count
   @override
   Future<int> getProductOrderCount(String productId) async {
     try {
-      // orders collection to count documents containing this productId in their items list
       final snap = await _firestore.collection('orders').get();
       int count = 0;
       for (final doc in snap.docs) {

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/settings/data/models/admin_settings_model.dart';
 
+// Category Item Widget
 class CategoryItemWidget extends StatelessWidget {
   final CategoryModel category;
   final Function(bool) onToggleVisibility;
@@ -32,6 +33,7 @@ class CategoryItemWidget extends StatelessWidget {
           Row(
             children: [
               Expanded(
+                // Category Name
                 child: Text(
                   category.name,
                   style: TextStyle(
@@ -61,6 +63,7 @@ class CategoryItemWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16.w),
+              // Button for Edit
               IconButton(
                 onPressed: onEdit,
                 icon: Icon(
@@ -69,6 +72,7 @@ class CategoryItemWidget extends StatelessWidget {
                   color: const Color(0xFF8A8A9E),
                 ),
               ),
+              // Button for Delete
               IconButton(
                 onPressed: onDelete,
                 icon: Icon(

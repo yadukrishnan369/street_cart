@@ -9,6 +9,7 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
   AdminShopRemoteDataSourceImpl({required FirebaseFirestore firestore})
     : _firestore = firestore;
 
+  // Delete the Shop Account
   @override
   Future<void> deleteShop(String shopId) async {
     try {
@@ -19,6 +20,7 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
     }
   }
 
+  // Fetch a single shop profile ID
   @override
   Future<ShopProfileModel> getShopById(String shopId) async {
     try {
@@ -32,6 +34,7 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
     }
   }
 
+  // Get all Approved Shops
   @override
   Future<List<ShopProfileModel>> getAllApprovedShops() async {
     try {
@@ -48,6 +51,7 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
     }
   }
 
+  // Update Shop Suspension Status
   @override
   Future<void> updateShopSuspensionStatus(
     String shopId,
@@ -62,6 +66,7 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
     }
   }
 
+  // Get the business category names
   @override
   Future<List<String>> getBusinessCategoryNames() async {
     try {
@@ -88,6 +93,7 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
     }
   }
 
+  // Fetch all Products belonging to the Shop
   @override
   Future<List<ProductModel>> getProductsByShopId(String shopId) async {
     try {
@@ -98,7 +104,8 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
       final products = snap.docs
           .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
           .toList();
-      // Sort by createdAt descending
+
+      // Sort newest first
       products.sort((a, b) {
         if (a.createdAt == null && b.createdAt == null) return 0;
         if (a.createdAt == null) return 1;

@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
+import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 
 class AdminOrdersHelper {
+  // get Display Order ID
   static String getDisplayOrderId(String id) {
     if (id.length <= 4) return '#ORD-$id'.toUpperCase();
     return '#ORD-${id.substring(id.length - 4)}'.toUpperCase();
   }
 
+  // Get Shop Name
   static String getShopName(OrderModel order, Map<String, String> shopNames) {
     if (order.items.isEmpty) return 'No Shop';
     final shopId = order.items.first.shopId;
     return shopNames[shopId] ?? 'Unknown Shop';
   }
 
+  // Get Total Pages
   static int getTotalPages(int totalItems, int perPage) {
     return (totalItems / perPage).ceil().clamp(1, double.infinity).toInt();
   }
 
+  // Get Paginated Orders
   static List<OrderModel> getPaginatedOrders({
     required List<OrderModel> orders,
     required int currentPage,
@@ -26,6 +31,7 @@ class AdminOrdersHelper {
     return orders.skip((currentPage - 1) * perPage).take(perPage).toList();
   }
 
+  // Get Payment Status
   static String getPaymentStatus(OrderModel order) {
     final method = order.paymentMethod.toLowerCase();
     if (method == 'cod' || method == 'cash on delivery') {
@@ -34,6 +40,7 @@ class AdminOrdersHelper {
     return 'PAID';
   }
 
+  // Calculate Subtotal
   static double calculateSubtotal(OrderModel order) {
     double subtotal = 0.0;
     for (final item in order.items) {
@@ -42,6 +49,7 @@ class AdminOrdersHelper {
     return subtotal;
   }
 
+  // Calculate Commission
   static double calculateCommission(OrderModel order) {
     // commission stored per item - set when order was placed
     double commission = 0.0;
@@ -51,6 +59,7 @@ class AdminOrdersHelper {
     return commission;
   }
 
+  // Calculate Commission Percentage
   static double calculateCommissionPercentage(OrderModel order) {
     double totalProductPriceAmount = 0.0;
     double totalCommissionAmount = 0.0;
@@ -64,6 +73,7 @@ class AdminOrdersHelper {
     return 0.0;
   }
 
+  // Calculate Vendor Earnings
   static double calculateVendorEarnings(OrderModel order) {
     double earnings = 0.0;
     for (final item in order.items) {
@@ -72,14 +82,17 @@ class AdminOrdersHelper {
     return earnings;
   }
 
+  // Calculate After Deduction
   static double calculateAfterDeduction(double subtotal, double commission) {
     return subtotal - commission;
   }
 
+  // Calculate Amount After Comm
   static double calculateAmountAfterComm(double total, double commission) {
     return total - commission;
   }
 
+  // Get Tracking Step Index
   static int getTrackingStepIndex(String status) {
     switch (status.toLowerCase()) {
       case 'processing':
@@ -96,6 +109,7 @@ class AdminOrdersHelper {
     }
   }
 
+  // Get Filtered Orders
   static List<OrderModel> getFilteredOrders({
     required List<OrderModel> orders,
     required Map<String, String> shopNames,
@@ -153,6 +167,7 @@ class AdminOrdersHelper {
     return filtered;
   }
 
+  // Get Status Bg Color
   static Color getStatusBgColor(String status) {
     switch (status.toLowerCase()) {
       case 'processing':
@@ -169,6 +184,7 @@ class AdminOrdersHelper {
     }
   }
 
+  // Get Status Text Color
   static Color getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
       case 'processing':
@@ -185,6 +201,7 @@ class AdminOrdersHelper {
     }
   }
 
+  // Get Status Label
   static String getStatusLabel(String status) {
     switch (status.toLowerCase()) {
       case 'processing':
@@ -199,5 +216,22 @@ class AdminOrdersHelper {
       default:
         return status.toUpperCase();
     }
+  }
+
+  // Get Shop Initials
+  static String getShopInitials(String shopName) {
+    return shopName.length >= 2 ? shopName.substring(0, 2).toUpperCase() : 'SH';
+  }
+
+  // Get Shop Address
+  static String getShopAddress(ShopProfileModel? shop) {
+    return shop != null
+        ? '${shop.fullAddress}, ${shop.city}'
+        : 'Address unavailable';
+  }
+
+  // Get Shop Phone
+  static String getShopPhone(ShopProfileModel? shop) {
+    return shop?.phone ?? 'N/A';
   }
 }

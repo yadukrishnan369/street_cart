@@ -7,6 +7,7 @@ abstract class AdminRegistrationDetailsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Load Shop Details Requested Event
 class LoadShopDetailsRequested extends AdminRegistrationDetailsEvent {
   final String shopId;
 
@@ -16,6 +17,7 @@ class LoadShopDetailsRequested extends AdminRegistrationDetailsEvent {
   List<Object?> get props => [shopId];
 }
 
+// Approve Shop Requested Event
 class ApproveShopRequested extends AdminRegistrationDetailsEvent {
   final String shopId;
 
@@ -25,11 +27,15 @@ class ApproveShopRequested extends AdminRegistrationDetailsEvent {
   List<Object?> get props => [shopId];
 }
 
+// Reject Shop Requested Event
 class RejectShopRequested extends AdminRegistrationDetailsEvent {
   final String shopId;
   final String rejectionReason;
 
-  const RejectShopRequested({required this.shopId, required this.rejectionReason});
+  const RejectShopRequested({
+    required this.shopId,
+    required this.rejectionReason,
+  });
 
   @override
   List<Object?> get props => [shopId, rejectionReason];

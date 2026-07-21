@@ -16,6 +16,7 @@ class AdminRegistrationDetailsBloc
     required this.approveShop,
     required this.rejectShop,
   }) : super(AdminRegistrationDetailsInitial()) {
+    // Load Shop Details
     on<LoadShopDetailsRequested>((event, emit) async {
       emit(AdminRegistrationDetailsLoading());
       try {
@@ -25,7 +26,7 @@ class AdminRegistrationDetailsBloc
         emit(AdminRegistrationDetailsLoadFailure(e.toString()));
       }
     });
-
+    // Approve Shop Requested
     on<ApproveShopRequested>((event, emit) async {
       emit(AdminRegistrationActionInProgress());
       try {
@@ -40,7 +41,7 @@ class AdminRegistrationDetailsBloc
         emit(AdminRegistrationActionFailure(e.toString()));
       }
     });
-
+    // Reject Shop Requested
     on<RejectShopRequested>((event, emit) async {
       emit(AdminRegistrationActionInProgress());
       try {

@@ -3,10 +3,13 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 
 abstract class AdminOrdersState {}
 
+// Orders Initial State
 class AdminOrdersInitial extends AdminOrdersState {}
 
+// Orders Loading State
 class AdminOrdersLoading extends AdminOrdersState {}
 
+// Orders Loaded State
 class AdminOrdersLoaded extends AdminOrdersState {
   final List<OrderModel> orders;
   final Map<String, String> shopNames;
@@ -15,6 +18,7 @@ class AdminOrdersLoaded extends AdminOrdersState {
   final Map<String, String> customerEmails;
   final String searchQuery;
   final int activeTab;
+  final int currentPage;
 
   AdminOrdersLoaded({
     required this.orders,
@@ -24,6 +28,7 @@ class AdminOrdersLoaded extends AdminOrdersState {
     this.customerEmails = const {},
     this.searchQuery = '',
     this.activeTab = 0,
+    this.currentPage = 1,
   });
 
   AdminOrdersLoaded copyWith({
@@ -34,6 +39,7 @@ class AdminOrdersLoaded extends AdminOrdersState {
     Map<String, String>? customerEmails,
     String? searchQuery,
     int? activeTab,
+    int? currentPage,
   }) {
     return AdminOrdersLoaded(
       orders: orders ?? this.orders,
@@ -43,10 +49,12 @@ class AdminOrdersLoaded extends AdminOrdersState {
       customerEmails: customerEmails ?? this.customerEmails,
       searchQuery: searchQuery ?? this.searchQuery,
       activeTab: activeTab ?? this.activeTab,
+      currentPage: currentPage ?? this.currentPage,
     );
   }
 }
 
+// Orders Failure State
 class AdminOrdersFailure extends AdminOrdersState {
   final String message;
   AdminOrdersFailure({required this.message});
