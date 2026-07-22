@@ -57,4 +57,26 @@ class OrdersRepositoryImpl implements IOrdersRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> submitReturnRequest({
+    required String orderId,
+    required String itemId,
+    required String reason,
+    required String details,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      await remoteDataSource.submitReturnRequest(
+        orderId: orderId,
+        itemId: itemId,
+        reason: reason,
+        details: details,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

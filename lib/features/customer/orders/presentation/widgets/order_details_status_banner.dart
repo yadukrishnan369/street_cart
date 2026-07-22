@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/orders/data/models/order_model.dar
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 
+// Order Details Status Banner
 class OrderDetailsStatusBanner extends StatelessWidget {
   final OrderModel order;
 
@@ -15,8 +16,49 @@ class OrderDetailsStatusBanner extends StatelessWidget {
     final status = CustomerOrderStatus.fromString(order.status);
     final isDelivered = OrdersHelper.isDelivered(status);
     final isCancelled = OrdersHelper.isCancelled(status);
-    final dateStr = OrdersHelper.formatDateShort(order.createdAt);
+    final createdDateStr = OrdersHelper.formatDateShort(order.createdAt);
+    final deliveredDateStr = order.deliveredAt != null
+        ? OrdersHelper.formatDateShort(order.deliveredAt!)
+        : createdDateStr;
     final activeColor = CustomerAppColors.primary;
+
+    // Return statuses
+    final returnStatus = (order.returnStatus ?? '').toLowerCase();
+    final hasReturnRequest = returnStatus.isNotEmpty;
+    final isReturnPicked =
+        returnStatus == 'returned' || returnStatus == 'return_picked';
+
+    // Show return banner if a return initiated
+    if (isDelivered && hasReturnRequest) {
+      if (isReturnPicked) {
+        final pickedDateStr = order.returnPickedAt != null
+            ? OrdersHelper.formatDateShort(order.returnPickedAt!)
+            : deliveredDateStr;
+        return _buildBanner(
+          color: const Color(0xFFE8F5E9),
+          borderColor: const Color(0xFFC8E6C9),
+          iconColor: CustomerAppColors.success,
+          icon: Icons.assignment_return_rounded,
+          title: 'Item Returned on $pickedDateStr',
+          subtitle: 'The item has been successfully picked up.',
+          textColor: CustomerAppColors.success,
+        );
+      } else {
+        // Return requested or confirmed with date
+        final returnedDateStr = order.returnedAt != null
+            ? OrdersHelper.formatDateShort(order.returnedAt!)
+            : deliveredDateStr;
+        return _buildBanner(
+          color: const Color(0xFFFFF3E0),
+          borderColor: const Color(0xFFFFE0B2),
+          iconColor: CustomerAppColors.error,
+          icon: Icons.assignment_return_outlined,
+          title: 'Return Requested on $returnedDateStr',
+          subtitle: 'Your return request is being processed.',
+          textColor: CustomerAppColors.error,
+        );
+      }
+    }
 
     if (isDelivered) {
       return Container(
@@ -42,8 +84,9 @@ class OrderDetailsStatusBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Delivered Date
                   Text(
-                    'Delivered on $dateStr',
+                    'Delivered on $deliveredDateStr',
                     style: TextStyle(
                       color: const Color(0xFF1E293B),
                       fontWeight: FontWeight.bold,
@@ -51,6 +94,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.h),
+                  // Customer Name
                   Text(
                     'Handed over to ${order.deliveryAddress.fullName}',
                     style: TextStyle(color: Colors.grey[600], fontSize: 12.sp),
@@ -85,8 +129,9 @@ class OrderDetailsStatusBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Cancelled Title
                   Text(
-                    'Cancelled on $dateStr',
+                    'Cancelled on $createdDateStr',
                     style: TextStyle(
                       color: CustomerAppColors.error,
                       fontWeight: FontWeight.bold,
@@ -109,10 +154,10 @@ class OrderDetailsStatusBanner extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: CustomerAppColors.primary.withOpacity(0.08),
+          color: CustomerAppColors.primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: CustomerAppColors.primary.withOpacity(0.15),
+            color: CustomerAppColors.primary.withValues(alpha: 0.15),
           ),
         ),
         child: Row(
@@ -134,6 +179,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Delivery Progress Title
                   Text(
                     'In Progress: ${OrdersHelper.getDisplayStatus(status)}',
                     style: TextStyle(
@@ -146,7 +192,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                   Text(
                     'Estimated delivery is pending updates.',
                     style: TextStyle(
-                      color: CustomerAppColors.primary.withOpacity(0.7),
+                      color: CustomerAppColors.primary.withValues(alpha: 0.7),
                       fontSize: 12.sp,
                     ),
                   ),
@@ -157,5 +203,60 @@ class OrderDetailsStatusBanner extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Widget _buildBanner({
+    required Color color,
+    required Color borderColor,
+    required Color iconColor,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color textColor,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: borderColor),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(color: iconColor, shape: BoxShape.circle),
+            child: Icon(icon, color: Colors.white, size: 20.sp),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                // Subtitle
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: textColor.withValues(alpha: 0.7),
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

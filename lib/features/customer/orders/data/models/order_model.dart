@@ -15,6 +15,13 @@ class OrderModel {
   final DateTime? processingAt;
   final DateTime? shippedAt;
   final DateTime? deliveredAt;
+  final String? returnStatus;
+  final String? returnReason;
+  final String? returnDetails;
+  final String? returnedItemId;
+  final DateTime? returnedAt;
+  final DateTime? returnConfirmedAt;
+  final DateTime? returnPickedAt;
 
   OrderModel({
     required this.id,
@@ -30,6 +37,13 @@ class OrderModel {
     this.processingAt,
     this.shippedAt,
     this.deliveredAt,
+    this.returnStatus,
+    this.returnReason,
+    this.returnDetails,
+    this.returnedItemId,
+    this.returnedAt,
+    this.returnConfirmedAt,
+    this.returnPickedAt,
   });
 
   // safely parse a Timestamp or String into DateTime
@@ -72,6 +86,13 @@ class OrderModel {
       processingAt: _parseTimestamp(map['processing_at']),
       shippedAt: _parseTimestamp(map['shipped_at']),
       deliveredAt: _parseTimestamp(map['delivered_at']),
+      returnStatus: map['return_status'],
+      returnReason: map['return_reason'],
+      returnDetails: map['return_details'],
+      returnedItemId: map['returned_item_id'],
+      returnedAt: _parseTimestamp(map['returned_at']),
+      returnConfirmedAt: _parseTimestamp(map['return_confirmed_at']),
+      returnPickedAt: _parseTimestamp(map['return_picked_at']),
     );
   }
 
@@ -91,6 +112,15 @@ class OrderModel {
         'processing_at': Timestamp.fromDate(processingAt!),
       if (shippedAt != null) 'shipped_at': Timestamp.fromDate(shippedAt!),
       if (deliveredAt != null) 'delivered_at': Timestamp.fromDate(deliveredAt!),
+      if (returnStatus != null) 'return_status': returnStatus,
+      if (returnReason != null) 'return_reason': returnReason,
+      if (returnDetails != null) 'return_details': returnDetails,
+      if (returnedItemId != null) 'returned_item_id': returnedItemId,
+      if (returnedAt != null) 'returned_at': Timestamp.fromDate(returnedAt!),
+      if (returnConfirmedAt != null)
+        'return_confirmed_at': Timestamp.fromDate(returnConfirmedAt!),
+      if (returnPickedAt != null)
+        'return_picked_at': Timestamp.fromDate(returnPickedAt!),
     };
   }
 
@@ -108,6 +138,13 @@ class OrderModel {
     DateTime? processingAt,
     DateTime? shippedAt,
     DateTime? deliveredAt,
+    String? returnStatus,
+    String? returnReason,
+    String? returnDetails,
+    String? returnedItemId,
+    DateTime? returnedAt,
+    DateTime? returnConfirmedAt,
+    DateTime? returnPickedAt,
   }) {
     return OrderModel(
       id: id ?? this.id,
@@ -123,6 +160,13 @@ class OrderModel {
       processingAt: processingAt ?? this.processingAt,
       shippedAt: shippedAt ?? this.shippedAt,
       deliveredAt: deliveredAt ?? this.deliveredAt,
+      returnStatus: returnStatus ?? this.returnStatus,
+      returnReason: returnReason ?? this.returnReason,
+      returnDetails: returnDetails ?? this.returnDetails,
+      returnedItemId: returnedItemId ?? this.returnedItemId,
+      returnedAt: returnedAt ?? this.returnedAt,
+      returnConfirmedAt: returnConfirmedAt ?? this.returnConfirmedAt,
+      returnPickedAt: returnPickedAt ?? this.returnPickedAt,
     );
   }
 }

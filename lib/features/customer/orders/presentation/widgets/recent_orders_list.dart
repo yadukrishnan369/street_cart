@@ -5,10 +5,10 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 import 'package:street_cart/features/customer/orders/presentation/pages/order_details_page.dart';
+import 'package:street_cart/features/customer/orders/presentation/pages/return_request_page.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 class RecentOrdersList extends StatelessWidget {
@@ -20,52 +20,25 @@ class RecentOrdersList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (orders.isEmpty) return const SizedBox.shrink();
 
-    // Split into active and history
-    final activeOrders = orders
-        .where(
-          (o) => OrdersHelper.isCancellable(
-            CustomerOrderStatus.fromString(o.status),
-          ),
-        )
-        .toList();
-    final historyOrders = orders
-        .where(
-          (o) => !OrdersHelper.isCancellable(
-            CustomerOrderStatus.fromString(o.status),
-          ),
-        )
-        .toList();
-
-    // Move delivered orders to the bottom of history list
-    final nonDeliveredHistory = historyOrders
-        .where((o) => o.status.toLowerCase() != 'delivered')
-        .toList();
-    final deliveredHistory = historyOrders
-        .where((o) => o.status.toLowerCase() == 'delivered')
-        .toList();
-    final sortedHistoryOrders = [...nonDeliveredHistory, ...deliveredHistory];
+    // Sort by order creation time
+    final sortedOrders = OrdersHelper.getOrdersSortedByTime(orders);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ACTIVE ORDERS
-          if (activeOrders.isNotEmpty) ...[
-            _SectionLabel(label: 'ACTIVE ORDERS'),
-            SizedBox(height: 8.h),
-            ...activeOrders.map((order) => _ActiveOrderCard(order: order)),
-            SizedBox(height: 24.h),
-          ],
-
-          // ORDER HISTORY
-          if (sortedHistoryOrders.isNotEmpty) ...[
-            _SectionLabel(label: 'RECENT HISTORY'),
-            SizedBox(height: 8.h),
-            ...sortedHistoryOrders.map(
-              (order) => _HistoryOrderCard(order: order),
-            ),
-          ],
+          // Page Title
+          _SectionLabel(label: 'MY ORDERS'),
+          SizedBox(height: 8.h),
+          ...sortedOrders.map((order) {
+            final isCancellable = OrdersHelper.isCancellable(
+              CustomerOrderStatus.fromString(order.status),
+            );
+            return isCancellable
+                ? _ActiveOrderCard(order: order)
+                : _HistoryOrderCard(order: order);
+          }),
         ],
       ),
     );
@@ -80,6 +53,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
+      // Title
       child: Text(
         label,
         style: TextStyle(
@@ -155,6 +129,7 @@ class _ActiveOrderCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
+                              // Product Name
                               child: Text(
                                 displayName,
                                 style: TextStyle(
@@ -189,6 +164,7 @@ class _ActiveOrderCard extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(width: 4.w),
+                                  // Status Text
                                   Text(
                                     statusText,
                                     style: TextStyle(
@@ -203,6 +179,7 @@ class _ActiveOrderCard extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 4.h),
+                        // Order ID
                         Text(
                           'Order #${OrdersHelper.getOrderIdSuffix(order.id)} • $totalItems ${totalItems == 1 ? 'item' : 'items'}',
                           style: TextStyle(
@@ -211,6 +188,7 @@ class _ActiveOrderCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 2.h),
+                        // Price
                         Text(
                           'Total: ₹${order.totalAmount.toStringAsFixed(0)}',
                           style: TextStyle(
@@ -246,7 +224,7 @@ class _ActiveOrderCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 12.h),
-              // Cancel button row
+              // Cancel button
               Row(
                 children: [
                   Expanded(
@@ -301,20 +279,33 @@ class _HistoryOrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firstItem = order.items.first;
-    final dateStr = OrdersHelper.formatDateShort(order.createdAt);
+    final createdDateStr = OrdersHelper.formatDateShort(order.createdAt);
+    final deliveredDateStr = order.deliveredAt != null
+        ? OrdersHelper.formatDateShort(order.deliveredAt!)
+        : createdDateStr;
     final isDelivered = order.status.toLowerCase() == 'delivered';
-    final activeColor = const Color(0xFF5E5CE6);
+    final activeColor = CustomerAppColors.primary;
 
     final displayName = OrdersHelper.getOrderDisplayName(order);
+    final returnStatus = (order.returnStatus ?? '').toLowerCase();
+    final isReturnPicked =
+        returnStatus == 'returned' || returnStatus == 'return_picked';
+    final hasReturnRequest = returnStatus.isNotEmpty;
 
     String statusDisplay;
-    if (order.status.toLowerCase() == 'cancelled') {
-      statusDisplay = 'Cancelled $dateStr';
+    if (hasReturnRequest && isDelivered) {
+      if (isReturnPicked) {
+        statusDisplay = 'Item Returned';
+      } else {
+        statusDisplay = 'Return Requested';
+      }
+    } else if (order.status.toLowerCase() == 'cancelled') {
+      statusDisplay = 'Cancelled $createdDateStr';
     } else if (isDelivered) {
-      statusDisplay = 'Delivered $dateStr';
+      statusDisplay = 'Delivered $deliveredDateStr';
     } else {
       statusDisplay =
-          '${OrdersHelper.getDisplayStatus(CustomerOrderStatus.fromString(order.status))} • $dateStr';
+          '${OrdersHelper.getDisplayStatus(CustomerOrderStatus.fromString(order.status))} • $createdDateStr';
     }
 
     return InkWell(
@@ -345,6 +336,7 @@ class _HistoryOrderCard extends StatelessWidget {
             ),
           ],
         ),
+        // Product Image
         child: Row(
           children: [
             ClipRRect(
@@ -367,6 +359,7 @@ class _HistoryOrderCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12.w),
+            // Name of Product
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,11 +375,18 @@ class _HistoryOrderCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.h),
+                  // Order Status
                   Text(
                     statusDisplay,
                     style: TextStyle(
-                      color: order.status.toLowerCase() == 'cancelled'
+                      color: hasReturnRequest && isDelivered
+                          ? (isReturnPicked
+                                ? CustomerAppColors.success
+                                : CustomerAppColors.error)
+                          : order.status.toLowerCase() == 'cancelled'
                           ? CustomerAppColors.error
+                          : isDelivered
+                          ? CustomerAppColors.success
                           : Colors.grey[500],
                       fontSize: 12.sp,
                     ),
@@ -394,14 +394,20 @@ class _HistoryOrderCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Retuen Button
-            if (OrdersHelper.isReturnEligible(order)) ...[
+            // Return Button
+            if (OrdersHelper.isReturnEligible(order) &&
+                (order.returnStatus == null ||
+                    order.returnStatus!.isEmpty)) ...[
               TextButton(
                 onPressed: () {
-                  CustomSnackBar.show(
+                  Navigator.push(
                     context,
-                    message:
-                        'Return request initiated for ${firstItem.productName}',
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<OrdersBloc>(),
+                        child: ReturnRequestPage(order: order, item: firstItem),
+                      ),
+                    ),
                   );
                 },
                 style: TextButton.styleFrom(

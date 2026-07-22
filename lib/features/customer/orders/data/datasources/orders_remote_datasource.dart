@@ -244,4 +244,24 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
       'delivery_address': validatedAddress.toMap(),
     });
   }
+
+  // Submit Return Request
+  @override
+  Future<void> submitReturnRequest({
+    required String orderId,
+    required String itemId,
+    required String reason,
+    required String details,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('User is not logged in');
+
+    await _firestore.collection('orders').doc(orderId).update({
+      'return_status': 'return_requested',
+      'return_reason': reason,
+      'return_details': details,
+      'returned_item_id': itemId,
+      'returned_at': FieldValue.serverTimestamp(),
+    });
+  }
 }

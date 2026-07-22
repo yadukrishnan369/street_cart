@@ -10,7 +10,9 @@ import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
+import 'package:street_cart/features/customer/orders/presentation/pages/return_request_page.dart';
 
+// Order Details Items Section
 class OrderDetailsItemsSection extends StatelessWidget {
   final OrderModel order;
 
@@ -101,6 +103,7 @@ class OrderDetailsItemsSection extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 8.w),
+                            // Price
                             Text(
                               '₹${(item.price * 1.15).toStringAsFixed(0)}',
                               style: TextStyle(
@@ -151,15 +154,24 @@ class OrderDetailsItemsSection extends StatelessWidget {
                       ),
                     ),
                     // Return Button
-                    if (OrdersHelper.isReturnEligible(order)) ...[
+                    if (OrdersHelper.isReturnEligible(order) &&
+                        (order.returnStatus == null ||
+                            order.returnStatus!.isEmpty)) ...[
                       SizedBox(width: 12.w),
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: () {
-                            CustomSnackBar.show(
+                            Navigator.push(
                               context,
-                              message:
-                                  'Return requested for ${item.productName}',
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: context.read<OrdersBloc>(),
+                                  child: ReturnRequestPage(
+                                    order: order,
+                                    item: item,
+                                  ),
+                                ),
+                              ),
                             );
                           },
                           icon: Icon(
@@ -186,8 +198,11 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     ],
                   ],
                 ),
+                // Return Eligible Date
                 if (OrdersHelper.isReturnEligible(order) &&
-                    order.deliveredAt != null) ...[
+                    order.deliveredAt != null &&
+                    (order.returnStatus == null ||
+                        order.returnStatus!.isEmpty)) ...[
                   SizedBox(height: 8.h),
                   Center(
                     child: Text(

@@ -12,6 +12,12 @@ import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bl
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 
 class OrdersHelper {
+  // Sort orders by creation time
+  static List<OrderModel> getOrdersSortedByTime(List<OrderModel> orders) {
+    return List<OrderModel>.from(orders)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
   // Extract current Order
   static OrderModel getCurrentOrder(OrdersState state, OrderModel order) {
     if (state is OrdersLoaded) {
@@ -280,6 +286,42 @@ class OrdersHelper {
           iconColor: CustomerAppColors.error,
           onPrimaryAction: () => Navigator.pop(dialogCtx),
         ),
+      ),
+    );
+  }
+
+  // Confirmation for Submit Return Request
+  static void showConfirmSubmitReturnDialog({
+    required BuildContext context,
+    required String orderId,
+    required String itemId,
+    required String reason,
+    required String details,
+    required OrdersBloc ordersBloc,
+  }) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => CustomAlertDialog(
+        title: 'Confirm Return Request',
+        content:
+            'Are you sure you want to submit a return request for this item?',
+        secondaryActionLabel: 'Cancel',
+        onSecondaryAction: () => Navigator.pop(dialogCtx),
+        primaryActionLabel: 'Yes, Submit',
+        primaryActionColor: CustomerAppColors.primary,
+        icon: Icons.assignment_return_rounded,
+        iconColor: CustomerAppColors.primary,
+        onPrimaryAction: () {
+          Navigator.pop(dialogCtx);
+          ordersBloc.add(
+            SubmitReturnRequestEvent(
+              orderId: orderId,
+              itemId: itemId,
+              reason: reason,
+              details: details,
+            ),
+          );
+        },
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:street_cart/features/customer/orders/domain/usecases/get_custome
 import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order_item.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/update_order_address.dart';
+import 'package:street_cart/features/customer/orders/domain/usecases/submit_return_request.dart';
 import 'orders_event.dart';
 import 'orders_state.dart';
 
@@ -12,17 +13,20 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final CancelOrder cancelOrder;
   final CancelOrderItem cancelOrderItem;
   final UpdateOrderAddress updateOrderAddress;
+  final SubmitReturnRequest submitReturnRequest;
 
   OrdersBloc({
     required this.getCustomerOrders,
     required this.cancelOrder,
     required this.cancelOrderItem,
     required this.updateOrderAddress,
+    required this.submitReturnRequest,
   }) : super(OrdersInitial()) {
     on<FetchOrders>(_onFetchOrders);
     on<CancelOrderEvent>(_onCancelOrder);
     on<CancelOrderItemEvent>(_onCancelOrderItem);
     on<UpdateOrderAddressEvent>(_onUpdateOrderAddress);
+    on<SubmitReturnRequestEvent>(_onSubmitReturnRequest);
   }
 
   // Fetch Orders of Specific Customer
@@ -79,6 +83,25 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     try {
       await updateOrderAddress(event.orderId, event.address);
       emit(OrderAddressUpdateSuccess());
+    } catch (e) {
+      emit(OrdersFailure(e.toString()));
+    }
+  }
+
+  // Submit Return Request
+  Future<void> _onSubmitReturnRequest(
+    SubmitReturnRequestEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(ReturnRequestSubmitting());
+    try {
+      await submitReturnRequest(
+        orderId: event.orderId,
+        itemId: event.itemId,
+        reason: event.reason,
+        details: event.details,
+      );
+      emit(ReturnRequestSubmittedSuccess());
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }

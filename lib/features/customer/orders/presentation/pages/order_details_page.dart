@@ -9,6 +9,7 @@ import 'package:street_cart/features/customer/orders/presentation/bloc/orders_st
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/widgets/delivery_progress_tracker.dart';
+import 'package:street_cart/features/customer/orders/presentation/widgets/return_progress_tracker.dart';
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_status_banner.dart';
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_items_section.dart';
 import 'package:street_cart/features/customer/orders/presentation/widgets/order_details_shipping_section.dart';
@@ -34,6 +35,8 @@ class OrderDetailsPage extends StatelessWidget {
         final status = CustomerOrderStatus.fromString(currentOrder.status);
         final isDelivered = OrdersHelper.isDelivered(status);
         final isCancelled = OrdersHelper.isCancelled(status);
+        final returnStatus = (currentOrder.returnStatus ?? '').toLowerCase();
+        final hasReturnRequest = returnStatus.isNotEmpty;
 
         return Scaffold(
           backgroundColor: const Color(0xFFF8FAFC),
@@ -87,6 +90,12 @@ class OrderDetailsPage extends StatelessWidget {
                   message: 'Delivery address updated successfully.',
                 );
                 context.read<OrdersBloc>().add(FetchOrders());
+              } else if (state is ReturnRequestSubmittedSuccess) {
+                CustomSnackBar.show(
+                  context,
+                  message: 'Return request submitted successfully!',
+                );
+                context.read<OrdersBloc>().add(FetchOrders());
               } else if (state is OrdersFailure) {
                 if (state.message.contains(
                   "does not deliver to the selected address",
@@ -113,9 +122,21 @@ class OrderDetailsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Top Status Banner
+                      // Status Banner
                       OrderDetailsStatusBanner(order: currentOrder),
                       SizedBox(height: 16.h),
+
+                      // Return Progress Tracker
+                      if (isDelivered && hasReturnRequest) ...[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: ReturnProgressTracker(order: currentOrder),
+                        ),
+                        SizedBox(height: 16.h),
+                      ],
 
                       // Delivery Timeline only if not delivered and not cancelled
                       if (!isDelivered && !isCancelled) ...[

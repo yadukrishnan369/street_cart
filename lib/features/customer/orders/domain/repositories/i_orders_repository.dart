@@ -6,4 +6,10 @@ abstract class IOrdersRepository {
   Future<void> cancelOrder(String orderId);
   Future<void> cancelOrderItem(String orderId, String orderItemId);
   Future<void> updateOrderAddress(String orderId, AddressModel address);
+  Future<void> submitReturnRequest({
+    required String orderId,
+    required String itemId,
+    required String reason,
+    required String details,
+  });
 }
