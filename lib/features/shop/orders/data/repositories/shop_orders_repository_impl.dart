@@ -34,12 +34,38 @@ class ShopOrdersRepositoryImpl implements IShopOrdersRepository {
   }
 
   @override
-  Future<void> updateReturnStatus(String orderId, String returnStatus) async {
+  Future<void> updateReturnStatus(
+    String orderId,
+    String returnStatus, {
+    bool refundViaHand = false,
+    double refundAmount = 0.0,
+  }) async {
     if (!await networkInfo.isConnected) {
       throw NetworkException('Please check your internet connection.');
     }
     try {
-      await remoteDataSource.updateReturnStatus(orderId, returnStatus);
+      await remoteDataSource.updateReturnStatus(
+        orderId,
+        returnStatus,
+        refundViaHand: refundViaHand,
+        refundAmount: refundAmount,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> processRefund(
+    String orderId,
+    double refundAmount,
+    String refundStatus,
+  ) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      await remoteDataSource.processRefund(orderId, refundAmount, refundStatus);
     } catch (e) {
       rethrow;
     }

@@ -61,8 +61,13 @@ class ShopOrderCard extends StatelessWidget {
         returnStatusLabel = 'Return Confirmed';
         returnStatusColor = ShopAppColors.primary;
       } else if (rStatus.toLowerCase() == 'return_picked') {
-        returnStatusLabel = 'Item Picked';
-        returnStatusColor = ShopAppColors.primary;
+        if (order.refundStatus == 'refunded') {
+          returnStatusLabel = 'Refunded';
+          returnStatusColor = ShopAppColors.success;
+        } else {
+          returnStatusLabel = 'Pending Refund';
+          returnStatusColor = ShopAppColors.warning;
+        }
       }
     }
 
@@ -173,20 +178,33 @@ class ShopOrderCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          // Return Status Label
                           if (hasReturn && returnStatusLabel != null) ...[
                             Flexible(
-                              child: Text(
-                                returnStatusLabel,
-                                style: TextStyle(
-                                  color: returnStatusColor,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.bold,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                decoration: BoxDecoration(
+                                  color: returnStatusColor.withOpacity(0.08),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: returnStatusColor.withOpacity(0.15),
+                                  ),
+                                ),
+                                child: Text(
+                                  returnStatusLabel,
+                                  style: TextStyle(
+                                    color: returnStatusColor,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
-                            SizedBox(width: 8.w),
                           ] else if (nextStatusLabel != null &&
                               nextStatus != null) ...[
                             Flexible(
@@ -202,29 +220,30 @@ class ShopOrderCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 8.w),
+                            // Payment Method Label
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: badgeColor.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: Border.all(
+                                  color: badgeColor.withOpacity(0.15),
+                                ),
+                              ),
+                              // Selected Payment Method Label
+                              child: Text(
+                                paymentMethodLabel,
+                                style: TextStyle(
+                                  color: badgeColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: badgeColor.withOpacity(0.08),
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(
-                                color: badgeColor.withOpacity(0.15),
-                              ),
-                            ),
-                            // Selected Payment Method Label
-                            child: Text(
-                              paymentMethodLabel,
-                              style: TextStyle(
-                                color: badgeColor,
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),

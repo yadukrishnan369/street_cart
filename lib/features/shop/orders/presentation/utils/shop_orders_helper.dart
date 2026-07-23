@@ -69,6 +69,20 @@ class ShopOrdersHelper {
   // Get Order Time based on status
   static DateTime getOrderTimeForStatus(OrderModel order) {
     if (order.returnStatus != null && order.returnStatus!.isNotEmpty) {
+      final rStatus = order.returnStatus!.toLowerCase();
+      if (rStatus == 'return_requested') {
+        return order.returnedAt ?? order.createdAt;
+      } else if (rStatus == 'return_confirmed') {
+        return order.returnConfirmedAt ?? order.returnedAt ?? order.createdAt;
+      } else if (rStatus == 'return_picked') {
+        if (order.refundStatus == 'refunded') {
+          return order.refundedAt ??
+              order.returnPickedAt ??
+              order.returnedAt ??
+              order.createdAt;
+        }
+        return order.returnPickedAt ?? order.returnedAt ?? order.createdAt;
+      }
       return order.returnedAt ?? order.createdAt;
     }
     final status = order.status.toLowerCase();
@@ -341,15 +355,32 @@ class ShopOrdersHelper {
   static List<dynamic> getReturnedOrdersListItems(
     List<OrderModel> filteredList,
   ) {
-    final newRequests = filteredList
-        .where((o) => o.returnStatus?.toLowerCase() == 'return_requested')
-        .toList();
-    final confirmedReturns = filteredList
-        .where((o) => o.returnStatus?.toLowerCase() == 'return_confirmed')
-        .toList();
-    final pickedReturns = filteredList
-        .where((o) => o.returnStatus?.toLowerCase() == 'return_picked')
-        .toList();
+    final newRequests =
+        filteredList
+            .where((o) => o.returnStatus?.toLowerCase() == 'return_requested')
+            .toList()
+          ..sort(
+            (a, b) =>
+                getOrderTimeForStatus(b).compareTo(getOrderTimeForStatus(a)),
+          );
+
+    final confirmedReturns =
+        filteredList
+            .where((o) => o.returnStatus?.toLowerCase() == 'return_confirmed')
+            .toList()
+          ..sort(
+            (a, b) =>
+                getOrderTimeForStatus(b).compareTo(getOrderTimeForStatus(a)),
+          );
+
+    final pickedReturns =
+        filteredList
+            .where((o) => o.returnStatus?.toLowerCase() == 'return_picked')
+            .toList()
+          ..sort(
+            (a, b) =>
+                getOrderTimeForStatus(b).compareTo(getOrderTimeForStatus(a)),
+          );
 
     final listItems = <dynamic>[];
     if (newRequests.isNotEmpty) {
@@ -379,5 +410,13 @@ class ShopOrdersHelper {
       );
     }
     return fallbackOrder;
+  }
+
+  // Calculate refund amount
+  static double calculateRefundAmount(List<OrderItemModel> returnedItems) {
+    return returnedItems.fold<double>(
+      0.0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
   }
 }

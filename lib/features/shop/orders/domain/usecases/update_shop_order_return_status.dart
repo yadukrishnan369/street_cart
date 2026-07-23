@@ -5,7 +5,17 @@ class UpdateShopOrderReturnStatus {
 
   UpdateShopOrderReturnStatus(this.repository);
 
-  Future<void> call(String orderId, String returnStatus) {
-    return repository.updateReturnStatus(orderId, returnStatus);
+  Future<void> call(
+    String orderId,
+    String returnStatus, {
+    bool refundViaHand = false,
+    double refundAmount = 0.0,
+  }) {
+    return repository.updateReturnStatus(
+      orderId,
+      returnStatus,
+      refundViaHand: refundViaHand,
+      refundAmount: refundAmount,
+    );
   }
 }

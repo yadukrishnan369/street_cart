@@ -34,14 +34,43 @@ class OrderDetailsStatusBanner extends StatelessWidget {
         final pickedDateStr = order.returnPickedAt != null
             ? OrdersHelper.formatDateShort(order.returnPickedAt!)
             : deliveredDateStr;
-        return _buildBanner(
-          color: const Color(0xFFE8F5E9),
-          borderColor: const Color(0xFFC8E6C9),
-          iconColor: CustomerAppColors.success,
-          icon: Icons.assignment_return_rounded,
-          title: 'Item Returned on $pickedDateStr',
-          subtitle: 'The item has been successfully picked up.',
-          textColor: CustomerAppColors.success,
+
+        final refundBanner = order.refundStatus == 'refunded'
+            ? _buildBanner(
+                color: const Color(0xFFE8F5E9),
+                borderColor: const Color(0xFFC8E6C9),
+                iconColor: CustomerAppColors.success,
+                icon: Icons.currency_rupee,
+                title: 'Refund Completed',
+                subtitle:
+                    'A refund of ₹${order.refundAmount ?? order.totalAmount} has been processed.',
+                textColor: CustomerAppColors.success,
+              )
+            : _buildBanner(
+                color: const Color(0xFFFFF3E0),
+                borderColor: const Color(0xFFFFE0B2),
+                iconColor: CustomerAppColors.warning,
+                icon: Icons.hourglass_empty,
+                title: 'Refund Processing',
+                subtitle:
+                    'Refund will be credited to your account within 2-3 business days.',
+                textColor: CustomerAppColors.warning,
+              );
+
+        return Column(
+          children: [
+            _buildBanner(
+              color: const Color(0xFFE8F5E9),
+              borderColor: const Color(0xFFC8E6C9),
+              iconColor: CustomerAppColors.success,
+              icon: Icons.assignment_return_rounded,
+              title: 'Item Returned on $pickedDateStr',
+              subtitle: 'The item has been successfully picked up.',
+              textColor: CustomerAppColors.success,
+            ),
+            SizedBox(height: 12.h),
+            refundBanner,
+          ],
         );
       } else if (returnStatus == 'return_confirmed') {
         final confirmedDateStr = order.returnConfirmedAt != null

@@ -296,7 +296,11 @@ class _HistoryOrderCard extends StatelessWidget {
     String statusDisplay;
     if (hasReturnRequest && isDelivered) {
       if (isReturnPicked) {
-        statusDisplay = 'Item Returned';
+        if (order.refundStatus == 'refunded') {
+          statusDisplay = 'Returned';
+        } else {
+          statusDisplay = 'Returned & Pending Refund';
+        }
       } else if (returnStatus == 'return_confirmed') {
         statusDisplay = 'Return Confirmed';
       } else {
@@ -379,21 +383,44 @@ class _HistoryOrderCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   // Order Status
-                  Text(
-                    statusDisplay,
-                    style: TextStyle(
-                      color: hasReturnRequest && isDelivered
-                          ? (isReturnPicked
-                                ? CustomerAppColors.success
-                                : CustomerAppColors.error)
-                          : order.status.toLowerCase() == 'cancelled'
-                          ? CustomerAppColors.error
-                          : isDelivered
-                          ? CustomerAppColors.success
-                          : Colors.grey[500],
-                      fontSize: 12.sp,
+                  if (statusDisplay == 'Returned & Pending Refund') ...[
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Returned & ',
+                            style: TextStyle(color: CustomerAppColors.success),
+                          ),
+                          TextSpan(
+                            text: 'Pending Refund',
+                            style: TextStyle(color: CustomerAppColors.warning),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ] else ...[
+                    Text(
+                      statusDisplay,
+                      style: TextStyle(
+                        color: hasReturnRequest && isDelivered
+                            ? (isReturnPicked
+                                  ? (order.refundStatus == 'refunded'
+                                        ? CustomerAppColors.success
+                                        : CustomerAppColors.warning)
+                                  : CustomerAppColors.error)
+                            : order.status.toLowerCase() == 'cancelled'
+                            ? CustomerAppColors.error
+                            : isDelivered
+                            ? CustomerAppColors.success
+                            : Colors.grey[500],
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

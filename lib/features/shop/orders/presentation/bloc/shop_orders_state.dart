@@ -8,12 +8,18 @@ class ShopOrdersState extends Equatable {
   final List<OrderModel> orders;
   final String? errorMessage;
   final bool isPaymentReceived;
+  final String refundStatus;
+  final String? refundError;
+  final bool isRefundViaHand;
 
   const ShopOrdersState({
     this.status = ShopOrdersStatus.initial,
     this.orders = const [],
     this.errorMessage,
     this.isPaymentReceived = false,
+    this.refundStatus = 'initial',
+    this.refundError,
+    this.isRefundViaHand = false,
   });
 
   ShopOrdersState copyWith({
@@ -21,15 +27,29 @@ class ShopOrdersState extends Equatable {
     List<OrderModel>? orders,
     String? errorMessage,
     bool? isPaymentReceived,
+    String? refundStatus,
+    String? refundError,
+    bool? isRefundViaHand,
   }) {
     return ShopOrdersState(
       status: status ?? this.status,
       orders: orders ?? this.orders,
       errorMessage: errorMessage ?? this.errorMessage,
       isPaymentReceived: isPaymentReceived ?? this.isPaymentReceived,
+      refundStatus: refundStatus ?? this.refundStatus,
+      refundError: refundError ?? this.refundError,
+      isRefundViaHand: isRefundViaHand ?? this.isRefundViaHand,
     );
   }
 
   @override
-  List<Object?> get props => [status, orders, errorMessage, isPaymentReceived];
+  List<Object?> get props => [
+    status,
+    orders,
+    errorMessage,
+    isPaymentReceived,
+    refundStatus,
+    refundError,
+    isRefundViaHand,
+  ];
 }

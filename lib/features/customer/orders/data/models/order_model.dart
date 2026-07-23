@@ -22,6 +22,9 @@ class OrderModel {
   final DateTime? returnedAt;
   final DateTime? returnConfirmedAt;
   final DateTime? returnPickedAt;
+  final String? refundStatus;
+  final DateTime? refundedAt;
+  final double? refundAmount;
 
   OrderModel({
     required this.id,
@@ -44,6 +47,9 @@ class OrderModel {
     this.returnedAt,
     this.returnConfirmedAt,
     this.returnPickedAt,
+    this.refundStatus,
+    this.refundedAt,
+    this.refundAmount,
   });
 
   // safely parse a Timestamp or String into DateTime
@@ -93,6 +99,9 @@ class OrderModel {
       returnedAt: _parseTimestamp(map['returned_at']),
       returnConfirmedAt: _parseTimestamp(map['return_confirmed_at']),
       returnPickedAt: _parseTimestamp(map['return_picked_at']),
+      refundStatus: map['refund_status'],
+      refundedAt: _parseTimestamp(map['refunded_at']),
+      refundAmount: (map['refund_amount'] as num?)?.toDouble(),
     );
   }
 
@@ -121,6 +130,9 @@ class OrderModel {
         'return_confirmed_at': Timestamp.fromDate(returnConfirmedAt!),
       if (returnPickedAt != null)
         'return_picked_at': Timestamp.fromDate(returnPickedAt!),
+      if (refundStatus != null) 'refund_status': refundStatus,
+      if (refundedAt != null) 'refunded_at': Timestamp.fromDate(refundedAt!),
+      if (refundAmount != null) 'refund_amount': refundAmount,
     };
   }
 
@@ -145,6 +157,9 @@ class OrderModel {
     DateTime? returnedAt,
     DateTime? returnConfirmedAt,
     DateTime? returnPickedAt,
+    String? refundStatus,
+    DateTime? refundedAt,
+    double? refundAmount,
   }) {
     return OrderModel(
       id: id ?? this.id,
@@ -167,6 +182,9 @@ class OrderModel {
       returnedAt: returnedAt ?? this.returnedAt,
       returnConfirmedAt: returnConfirmedAt ?? this.returnConfirmedAt,
       returnPickedAt: returnPickedAt ?? this.returnPickedAt,
+      refundStatus: refundStatus ?? this.refundStatus,
+      refundedAt: refundedAt ?? this.refundedAt,
+      refundAmount: refundAmount ?? this.refundAmount,
     );
   }
 }

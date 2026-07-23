@@ -11,6 +11,7 @@ import 'package:street_cart/features/shop/orders/presentation/widgets/return_rea
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_return_progress_tracker.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/return_status_banner.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/return_action_button.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/refund_success_widget.dart';
 
 // Shop Order Returned Details Page
 class ShopOrderReturnedDetailsPage extends StatelessWidget {
@@ -48,56 +49,100 @@ class ShopOrderReturnedDetailsPage extends StatelessWidget {
             fallbackOrder: order,
           );
           final returnStatus = (currentOrder.returnStatus ?? '').toLowerCase();
+          final refundStatus = currentOrder.refundStatus;
 
-          return Scaffold(
-            backgroundColor: const Color(0xFFF8FAFC),
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.5,
-              centerTitle: true,
-              // Page Header with Order ID
-              title: Text(
-                'Returned Order #ORD-$orderIdPrefix',
-                style: TextStyle(
-                  color: ShopAppColors.textPrimary,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
+          final returnedItems = ShopOrdersHelper.getReturnedItems(
+            order: currentOrder,
+            shopId: shopId,
+          );
+          final double refundAmount = ShopOrdersHelper.calculateRefundAmount(
+            returnedItems,
+          );
+
+          return Stack(
+            children: [
+              Scaffold(
+                backgroundColor: const Color(0xFFF8FAFC),
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0.5,
+                  centerTitle: true,
+                  // Page Header with Order ID
+                  title: Text(
+                    'Returned Order #ORD-$orderIdPrefix',
+                    style: TextStyle(
+                      color: ShopAppColors.textPrimary,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                body: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Return Status Banner
+                      ReturnStatusBanner(
+                        returnStatus: returnStatus,
+                        refundStatus: refundStatus,
+                        refundAmount: refundAmount,
+                      ),
+                      SizedBox(height: 8.h),
+                      // Return Reason Card
+                      ReturnReasonCard(order: currentOrder, shopId: shopId),
+                      SizedBox(height: 16.h),
+                      // Returned Item Info Card
+                      ReturnedItemInfoCard(order: currentOrder, shopId: shopId),
+                      SizedBox(height: 16.h),
+                      // Customer Info Card
+                      CustomerInfoCard(order: currentOrder),
+                      SizedBox(height: 16.h),
+                      // Shop Return Progress Tracker
+                      ShopReturnProgressTracker(order: currentOrder),
+                      SizedBox(height: 120.h),
+                    ],
+                  ),
+                ),
+                // Return Action Button
+                bottomSheet: ReturnActionButton(
+                  returnStatus: returnStatus,
+                  orderId: order.id,
+                  shopId: shopId,
+                  refundStatus: refundStatus,
+                  refundAmount: refundAmount,
+                  paymentMethod: currentOrder.paymentMethod,
                 ),
               ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Return Status Banner
-                  ReturnStatusBanner(returnStatus: returnStatus),
-                  SizedBox(height: 8.h),
-                  // Return Reason Card
-                  ReturnReasonCard(order: currentOrder, shopId: shopId),
-                  SizedBox(height: 16.h),
-                  // Returned Item Info Card
-                  ReturnedItemInfoCard(order: currentOrder, shopId: shopId),
-                  SizedBox(height: 16.h),
-                  // Customer Info Card
-                  CustomerInfoCard(order: currentOrder),
-                  SizedBox(height: 16.h),
-                  // Shop Return Progress Tracker
-                  ShopReturnProgressTracker(order: currentOrder),
-                  SizedBox(height: 120.h),
-                ],
-              ),
-            ),
-            // Return Action Button
-            bottomSheet: ReturnActionButton(
-              returnStatus: returnStatus,
-              orderId: order.id,
-              shopId: shopId,
-            ),
+              if (state.refundStatus == 'processing')
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black26,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          ShopAppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (state.refundStatus == 'success')
+                Positioned.fill(
+                  child: RefundSuccessWidget(
+                    amount: refundAmount,
+                    onDismiss: () {
+                      context.read<ShopOrdersBloc>().add(
+                        const ResetRefundStatusEvent(),
+                      );
+                    },
+                  ),
+                ),
+            ],
           );
         },
       ),

@@ -11,12 +11,18 @@ class ReturnActionButton extends StatelessWidget {
   final String returnStatus;
   final String orderId;
   final String shopId;
+  final String? refundStatus;
+  final double refundAmount;
+  final String paymentMethod;
 
   const ReturnActionButton({
     super.key,
     required this.returnStatus,
     required this.orderId,
     required this.shopId,
+    this.refundStatus,
+    required this.refundAmount,
+    required this.paymentMethod,
   });
 
   @override
@@ -26,7 +32,7 @@ class ReturnActionButton extends StatelessWidget {
         context,
         label: 'Confirm Return',
         color: ShopAppColors.primary,
-        icon: Icon(Icons.verified_outlined, color: Colors.white),
+        icon: const Icon(Icons.verified_outlined, color: Colors.white),
         // Showing Confirmation for change Return Status
         onPressed: () {
           ShopOrdersHelper.showStatusChangeConfirmation(
@@ -43,24 +49,87 @@ class ReturnActionButton extends StatelessWidget {
         },
       );
     } else if (returnStatus == 'return_confirmed') {
+      return BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
+        builder: (context, state) {
+          return Container(
+            color: Colors.white,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Refund Via Hand Option CheckBox
+                  Row(
+                    children: [
+                      Checkbox(
+                        activeColor: ShopAppColors.primary,
+                        value: state.isRefundViaHand,
+                        onChanged: (val) {
+                          context.read<ShopOrdersBloc>().add(
+                            ToggleRefundViaHandEvent(val ?? false),
+                          );
+                        },
+                      ),
+                      Text(
+                        'Refund via Hand',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: ShopAppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  PrimaryButton(
+                    prefixIcon: const Icon(
+                      Icons.assignment_turned_in_outlined,
+                      color: Colors.white,
+                    ),
+                    text: 'Mark as Picked',
+                    backgroundColor: ShopAppColors.primary,
+                    height: 55.h,
+                    onPressed: () {
+                      ShopOrdersHelper.showStatusChangeConfirmation(
+                        context: context,
+                        statusLabel: 'Mark Return as Picked',
+                        onConfirm: () => context.read<ShopOrdersBloc>().add(
+                          UpdateOrderReturnStatusEvent(
+                            shopId: shopId,
+                            orderId: orderId,
+                            newReturnStatus: 'return_picked',
+                            refundViaHand: state.isRefundViaHand,
+                            refundAmount: refundAmount,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } else if (returnStatus == 'return_picked' && refundStatus == null) {
       return _buildButton(
         context,
-        label: 'Mark as Picked',
+        label: 'Process Refund',
         color: ShopAppColors.primary,
-        icon: Icon(Icons.assignment_turned_in_outlined, color: Colors.white),
-
-        //  Showing Confirmation for change Return Status
+        icon: const Icon(Icons.currency_rupee, color: Colors.white),
         onPressed: () {
           ShopOrdersHelper.showStatusChangeConfirmation(
             context: context,
-            statusLabel: 'Mark Return as Picked',
-            onConfirm: () => context.read<ShopOrdersBloc>().add(
-              UpdateOrderReturnStatusEvent(
-                shopId: shopId,
-                orderId: orderId,
-                newReturnStatus: 'return_picked',
-              ),
-            ),
+            statusLabel: 'Process Refund',
+            onConfirm: () {
+              context.read<ShopOrdersBloc>().add(
+                InitiateRefundEvent(
+                  orderId: orderId,
+                  refundAmount: refundAmount,
+                  paymentMethod: paymentMethod,
+                ),
+              );
+            },
           );
         },
       );
@@ -72,7 +141,7 @@ class ReturnActionButton extends StatelessWidget {
     BuildContext context, {
     required String label,
     required Color color,
-    required icon,
+    required Widget icon,
     required VoidCallback onPressed,
   }) {
     return Container(

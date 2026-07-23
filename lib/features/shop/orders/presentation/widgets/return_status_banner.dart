@@ -1,19 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 
 // Return Status Banner
 class ReturnStatusBanner extends StatelessWidget {
   final String returnStatus;
+  final String? refundStatus;
+  final double? refundAmount;
 
-  const ReturnStatusBanner({super.key, required this.returnStatus});
+  const ReturnStatusBanner({
+    super.key,
+    required this.returnStatus,
+    this.refundStatus,
+    this.refundAmount,
+  });
 
   @override
   Widget build(BuildContext context) {
     String text = 'Return Requested';
-    if (returnStatus == 'return_confirmed') text = 'Return Accepted';
-    if (returnStatus == 'return_picked') text = 'Return Picked Up';
-    final mainColor = ShopAppColors.error;
+    String subtitle = 'Customer return request pending';
+    Color mainColor = ShopAppColors.error;
+
+    if (returnStatus == 'return_confirmed') {
+      text = 'Return Accepted';
+      subtitle = 'Waiting for pickup';
+    } else if (returnStatus == 'return_picked') {
+      if (refundStatus == 'refunded') {
+        text = 'Refund Completed';
+        final amountText = refundAmount != null
+            ? ' of ₹${PriceUtils.formatPrice(refundAmount!)}'
+            : '';
+        subtitle = 'Refund$amountText processed successfully';
+        mainColor = ShopAppColors.success;
+      } else if (refundStatus == 'processing') {
+        text = 'Refund Processing';
+        subtitle = 'Refund is being processed';
+        mainColor = ShopAppColors.warning;
+      } else {
+        text = 'Return Picked Up';
+        subtitle = 'Item returned successfully';
+        mainColor = ShopAppColors.error;
+      }
+    }
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -53,11 +82,7 @@ class ReturnStatusBanner extends StatelessWidget {
                 SizedBox(height: 4.h),
                 // Subtitle
                 Text(
-                  returnStatus == 'return_picked'
-                      ? 'Item returned successfully'
-                      : returnStatus == 'return_confirmed'
-                      ? 'Waiting for pickup'
-                      : 'Customer return request pending',
+                  subtitle,
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: mainColor.withAlpha(170),

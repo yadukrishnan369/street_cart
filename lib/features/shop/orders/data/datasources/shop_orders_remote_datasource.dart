@@ -73,7 +73,12 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
 
   // Update Order Return Status
   @override
-  Future<void> updateReturnStatus(String orderId, String returnStatus) async {
+  Future<void> updateReturnStatus(
+    String orderId,
+    String returnStatus, {
+    bool refundViaHand = false,
+    double refundAmount = 0.0,
+  }) async {
     final orderRef = _firestore.collection('orders').doc(orderId);
     await _firestore.runTransaction((transaction) async {
       final snap = await transaction.get(orderRef);
@@ -114,7 +119,7 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
           {};
       for (final item in itemsToRestock) {
         final productId = item['product_id'] as String? ?? '';
-        // avoid duplicate items
+        // Avoid reads duplicate items
         if (productId.isNotEmpty && !productSnaps.containsKey(productId)) {
           final productRef = _firestore.collection('products').doc(productId);
           productSnaps[productId] = await transaction.get(productRef);
@@ -194,9 +199,28 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
         updates['return_confirmed_at'] = FieldValue.serverTimestamp();
       } else if (returnStatus == 'return_picked') {
         updates['return_picked_at'] = FieldValue.serverTimestamp();
+        if (refundViaHand) {
+          updates['refund_status'] = 'refunded';
+          updates['refund_amount'] = refundAmount;
+          updates['refunded_at'] = FieldValue.serverTimestamp();
+        }
       }
 
       transaction.update(orderRef, updates);
+    });
+  }
+
+  // Process Refund
+  @override
+  Future<void> processRefund(
+    String orderId,
+    double refundAmount,
+    String refundStatus,
+  ) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'refund_status': refundStatus,
+      'refund_amount': refundAmount,
+      'refunded_at': FieldValue.serverTimestamp(),
     });
   }
 }
