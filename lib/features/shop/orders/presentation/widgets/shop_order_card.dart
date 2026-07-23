@@ -23,18 +23,21 @@ class ShopOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get orders Data
     final cardData = ShopOrdersHelper.getShopOrderCardData(
       order: order,
       shopId: shopId,
     );
     if (cardData.isEmpty) return const SizedBox.shrink();
 
-    final shopItems = cardData['shopItems'] as List<OrderItemModel>;
-    final firstItem = cardData['firstItem'] as OrderItemModel;
+    final displayItem = cardData['firstItem'] as OrderItemModel;
     final totalAmount = cardData['totalAmount'] as double;
+    final productNameText =
+        cardData['productNameText'] as String? ?? displayItem.productName;
 
     final orderIdPrefix = ShopOrdersHelper.getOrderIdPrefix(order.id);
-    final timeAgo = ShopOrdersHelper.getRelativeTimeAgo(order.createdAt);
+    final relevantTime = ShopOrdersHelper.getOrderTimeForStatus(order);
+    final timeAgo = ShopOrdersHelper.getRelativeTimeAgo(relevantTime);
     final paymentMethodLabel = ShopOrdersHelper.getDisplayPaymentMethod(
       order.paymentMethod,
     );
@@ -45,10 +48,26 @@ class ShopOrderCard extends StatelessWidget {
       ShopOrderStatus.fromString(order.status),
     );
 
+    final rStatus = order.returnStatus;
+    final hasReturn = rStatus != null && rStatus.isNotEmpty;
+    String? returnStatusLabel;
+    Color returnStatusColor = Colors.grey;
+    // Return Statuses
+    if (hasReturn) {
+      if (rStatus.toLowerCase() == 'return_requested') {
+        returnStatusLabel = 'Return Requested';
+        returnStatusColor = ShopAppColors.error;
+      } else if (rStatus.toLowerCase() == 'return_confirmed') {
+        returnStatusLabel = 'Return Confirmed';
+        returnStatusColor = ShopAppColors.primary;
+      } else if (rStatus.toLowerCase() == 'return_picked') {
+        returnStatusLabel = 'Item Picked';
+        returnStatusColor = ShopAppColors.primary;
+      }
+    }
+
     final bool isCOD = paymentMethodLabel == 'COD';
-    final badgeColor = isCOD
-        ? const Color(0xFF0F766E)
-        : const Color(0xFF5E5CE6);
+    final badgeColor = isCOD ? ShopAppColors.warning : ShopAppColors.success;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -71,7 +90,7 @@ class ShopOrderCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
             child: CachedNetworkImage(
-              imageUrl: firstItem.productImage,
+              imageUrl: displayItem.productImage,
               width: 72.w,
               height: 72.w,
               fit: BoxFit.cover,
@@ -101,7 +120,7 @@ class ShopOrderCard extends StatelessWidget {
                     Text(
                       'ORDER #$orderIdPrefix'.toUpperCase(),
                       style: TextStyle(
-                        color: const Color(0xFF0F766E),
+                        color: ShopAppColors.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 12.sp,
                       ),
@@ -119,9 +138,7 @@ class ShopOrderCard extends StatelessWidget {
                 SizedBox(height: 6.h),
                 // Product name
                 Text(
-                  shopItems.length > 1
-                      ? '${firstItem.productName} + ${shopItems.length - 1} more'
-                      : firstItem.productName,
+                  productNameText,
                   style: TextStyle(
                     color: ShopAppColors.textPrimary,
                     fontSize: 15.sp,
@@ -156,7 +173,21 @@ class ShopOrderCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (nextStatusLabel != null &&
+                          if (hasReturn && returnStatusLabel != null) ...[
+                            Flexible(
+                              child: Text(
+                                returnStatusLabel,
+                                style: TextStyle(
+                                  color: returnStatusColor,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                          ] else if (nextStatusLabel != null &&
                               nextStatus != null) ...[
                             Flexible(
                               child: Text(

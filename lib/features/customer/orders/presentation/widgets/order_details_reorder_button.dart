@@ -6,6 +6,7 @@ import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 
+// Order Details Reorder Button
 class OrderDetailsReorderButton extends StatelessWidget {
   final OrderModel order;
 
@@ -26,6 +27,7 @@ class OrderDetailsReorderButton extends StatelessWidget {
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
+      // Confirmation for Re-Order Item
       onPressed: () {
         showDialog(
           context: context,
@@ -42,6 +44,7 @@ class OrderDetailsReorderButton extends StatelessWidget {
             onPrimaryAction: () {
               Navigator.pop(dialogCtx);
               final cartItems = OrdersHelper.convertToCartItems(order.items);
+              // Navigate to Checkout Page Directly
               Navigator.push(
                 context,
                 MaterialPageRoute(

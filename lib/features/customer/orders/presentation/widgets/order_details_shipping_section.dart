@@ -11,6 +11,7 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 
+// Order Details Shipping Section
 class OrderDetailsShippingSection extends StatelessWidget {
   final OrderModel order;
 
@@ -29,6 +30,7 @@ class OrderDetailsShippingSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Title
             Text(
               'SHIPPING DETAILS',
               style: TextStyle(
@@ -124,6 +126,7 @@ class OrderDetailsShippingSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Customer Name
                     Text(
                       order.deliveryAddress.fullName,
                       style: TextStyle(
@@ -133,6 +136,7 @@ class OrderDetailsShippingSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4.h),
+                    // Customer Address
                     Text(
                       '${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.addressLine2.isNotEmpty ? "${order.deliveryAddress.addressLine2}, " : ""}\n'
                       '${order.deliveryAddress.district.isNotEmpty ? order.deliveryAddress.district : order.deliveryAddress.city}'
@@ -145,6 +149,7 @@ class OrderDetailsShippingSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 6.h),
+                    // Customer Phone Number
                     Text(
                       'Phone: ${order.deliveryAddress.phone}',
                       style: TextStyle(

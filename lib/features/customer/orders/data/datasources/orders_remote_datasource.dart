@@ -256,12 +256,35 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
     final user = _auth.currentUser;
     if (user == null) throw Exception('User is not logged in');
 
-    await _firestore.collection('orders').doc(orderId).update({
-      'return_status': 'return_requested',
-      'return_reason': reason,
-      'return_details': details,
-      'returned_item_id': itemId,
-      'returned_at': FieldValue.serverTimestamp(),
+    final orderRef = _firestore.collection('orders').doc(orderId);
+    await _firestore.runTransaction((transaction) async {
+      final snap = await transaction.get(orderRef);
+      if (!snap.exists) throw Exception('Order not found');
+
+      final data = snap.data()!;
+      final itemsRaw = data['items'] as List<dynamic>? ?? [];
+      final List<Map<String, dynamic>> items = itemsRaw
+          .map((item) => Map<String, dynamic>.from(item as Map))
+          .toList();
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i]['id'] == itemId) {
+          items[i]['return_status'] = 'return_requested';
+          items[i]['return_reason'] = reason;
+          items[i]['return_details'] = details;
+          items[i]['returned_at'] = Timestamp.now();
+          break;
+        }
+      }
+
+      transaction.update(orderRef, {
+        'items': items,
+        'return_status': 'return_requested',
+        'return_reason': reason,
+        'return_details': details,
+        'returned_item_id': itemId,
+        'returned_at': FieldValue.serverTimestamp(),
+      });
     });
   }
 }

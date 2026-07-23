@@ -132,6 +132,13 @@ class Validators {
     return null;
   }
 
+  static String? validateShopLoginPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    return null;
+  }
+
   static String? validateShopAddress(String? value) {
     if (value == null || value.isEmpty) {
       return 'Address is required';

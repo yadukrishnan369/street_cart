@@ -100,7 +100,6 @@ class ShopOrderDetailsActionButton extends StatelessWidget {
                                 newStatus: nextStatus.value,
                               ),
                             );
-                            Navigator.pop(context);
                           },
                         );
                       },

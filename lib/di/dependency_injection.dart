@@ -229,6 +229,7 @@ import 'package:street_cart/features/shop/orders/data/repositories/shop_orders_r
 import 'package:street_cart/features/shop/orders/domain/repositories/i_shop_orders_repository.dart';
 import 'package:street_cart/features/shop/orders/domain/usecases/get_shop_orders.dart';
 import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_status.dart';
+import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_return_status.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 
 // CUSTOMER - ORDERS
@@ -1205,8 +1206,13 @@ void _initShopOrders() {
   );
   sl.registerLazySingleton(() => GetShopOrders(sl()));
   sl.registerLazySingleton(() => UpdateShopOrderStatus(sl()));
+  sl.registerLazySingleton(() => UpdateShopOrderReturnStatus(sl()));
   sl.registerFactory(
-    () => ShopOrdersBloc(getShopOrders: sl(), updateShopOrderStatus: sl()),
+    () => ShopOrdersBloc(
+      getShopOrders: sl(),
+      updateShopOrderStatus: sl(),
+      updateShopOrderReturnStatus: sl(),
+    ),
   );
 }
 

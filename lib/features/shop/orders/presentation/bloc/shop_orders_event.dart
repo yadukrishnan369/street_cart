@@ -43,3 +43,19 @@ class TogglePaymentReceivedEvent extends ShopOrdersEvent {
   @override
   List<Object?> get props => [isReceived];
 }
+
+// Update Order Return Status Event
+class UpdateOrderReturnStatusEvent extends ShopOrdersEvent {
+  final String shopId;
+  final String orderId;
+  final String newReturnStatus;
+
+  const UpdateOrderReturnStatusEvent({
+    required this.shopId,
+    required this.orderId,
+    required this.newReturnStatus,
+  });
+
+  @override
+  List<Object?> get props => [shopId, orderId, newReturnStatus];
+}

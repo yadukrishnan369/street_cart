@@ -101,7 +101,7 @@ class OrdersHelper {
   static String getDisplayStatus(CustomerOrderStatus status) {
     switch (status) {
       case CustomerOrderStatus.placed:
-        return 'ORDER PLACED';
+        return 'PLACED';
       case CustomerOrderStatus.processing:
         return 'ORDER CONFIRMED';
       case CustomerOrderStatus.shipped:

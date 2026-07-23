@@ -5,7 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
 
-// Shop Orders Tabbar
+// Shop Orders Tab Bar
 class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
   final ValueNotifier<int> activeTabNotifier;
 
@@ -18,7 +18,7 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
         final orders = state.status == ShopOrdersStatus.loaded
             ? state.orders
             : const <dynamic>[];
-
+        // Tab Bar Titles
         return TabBar(
           isScrollable: true,
           tabAlignment: TabAlignment.start,
@@ -28,7 +28,7 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
           unselectedLabelColor: Colors.grey[500],
           onTap: (index) => activeTabNotifier.value = index,
           tabs: List.generate(5, (index) {
-            final tabTitles = ['NEW', 'PROCESS', 'SHIPPED', 'DONE', 'RETURNED'];
+            final tabTitles = ['NEW', 'PROCESS', 'SHIPPED', 'DONE', 'RETURNS'];
             final count = ShopOrdersHelper.getCount(orders.cast(), index);
 
             return ValueListenableBuilder<int>(

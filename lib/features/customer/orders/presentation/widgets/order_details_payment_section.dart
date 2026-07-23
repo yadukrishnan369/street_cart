@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 
+// Order Details Payment Section
 class OrderDetailsPaymentSection extends StatelessWidget {
   final OrderModel order;
 
@@ -13,6 +14,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Text(
           'PAYMENT SUMMARY',
           style: TextStyle(
@@ -48,6 +50,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[600], fontSize: 13.sp),
                   ),
                   const Spacer(),
+                  // Payment Method
                   Text(
                     order.paymentMethod.toUpperCase(),
                     style: TextStyle(
@@ -62,6 +65,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Number of Order Item
                   Text(
                     'Number of Items',
                     style: TextStyle(color: Colors.grey[400], fontSize: 13.sp),
@@ -79,6 +83,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Subtotal
                   Text(
                     'Subtotal',
                     style: TextStyle(
@@ -100,6 +105,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Title
                   Text(
                     'Order Total',
                     style: TextStyle(
@@ -108,6 +114,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  // Order Total Amount
                   Text(
                     '₹${order.totalAmount.toStringAsFixed(2)}',
                     style: TextStyle(

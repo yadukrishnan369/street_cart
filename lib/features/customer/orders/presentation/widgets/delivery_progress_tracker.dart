@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/orders/data/models/order_model.dar
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 
+// Delivery Progress Tracker
 class DeliveryProgressTracker extends StatelessWidget {
   final OrderModel order;
 
@@ -28,6 +29,7 @@ class DeliveryProgressTracker extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Title
                   Text(
                     'Order Cancelled',
                     style: TextStyle(
@@ -37,6 +39,7 @@ class DeliveryProgressTracker extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.h),
+                  // Subtitle
                   Text(
                     'This order was cancelled on ${OrdersHelper.formatDateShort(DateTime.now())}.',
                     style: TextStyle(color: Colors.red[700], fontSize: 12.sp),
@@ -57,6 +60,7 @@ class DeliveryProgressTracker extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title
           Text(
             'DELIVERY PROGRESS',
             style: TextStyle(
@@ -134,6 +138,7 @@ class DeliveryProgressTracker extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            // Step Title
                             Text(
                               step['title'] as String,
                               style: TextStyle(
@@ -147,6 +152,7 @@ class DeliveryProgressTracker extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 2.h),
+                            // Step Time
                             Text(
                               step['time'] as String,
                               style: TextStyle(

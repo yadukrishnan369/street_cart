@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/orders/presentation/utils/customer
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
+// Recent Orders List
 class RecentOrdersList extends StatelessWidget {
   final List<OrderModel> orders;
 
@@ -296,6 +297,8 @@ class _HistoryOrderCard extends StatelessWidget {
     if (hasReturnRequest && isDelivered) {
       if (isReturnPicked) {
         statusDisplay = 'Item Returned';
+      } else if (returnStatus == 'return_confirmed') {
+        statusDisplay = 'Return Confirmed';
       } else {
         statusDisplay = 'Return Requested';
       }

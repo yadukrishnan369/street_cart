@@ -32,4 +32,16 @@ class ShopOrdersRepositoryImpl implements IShopOrdersRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> updateReturnStatus(String orderId, String returnStatus) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      await remoteDataSource.updateReturnStatus(orderId, returnStatus);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

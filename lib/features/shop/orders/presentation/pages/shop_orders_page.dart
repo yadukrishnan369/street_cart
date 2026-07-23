@@ -11,6 +11,7 @@ import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order
 import 'package:street_cart/features/shop/orders/presentation/widgets/empty_shop_orders_view.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_orders_tab_bar.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shimmer/shop_orders_shimmer.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/returned_orders_view.dart';
 import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
@@ -106,7 +107,14 @@ class ShopOrdersPage extends StatelessWidget {
                           tabIndex: tabIndex,
                         );
                       }
-                      // Refresh Indicators
+                      // Return Orders View
+                      if (tabIndex == 4) {
+                        return ReturnedOrdersView(
+                          filteredList: filteredList,
+                          shopId: shopId,
+                        );
+                      }
+
                       return RefreshIndicator(
                         onRefresh: () async => context
                             .read<ShopOrdersBloc>()
@@ -118,7 +126,6 @@ class ShopOrdersPage extends StatelessWidget {
                             final order = filteredList[index];
                             return GestureDetector(
                               onTap: () {
-                                // Navigate to Shop Order Details Page
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

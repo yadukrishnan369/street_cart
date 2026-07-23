@@ -70,7 +70,7 @@ class ShopLoginForm extends StatelessWidget {
                   controller: passwordController,
                   hintText: 'Enter your password',
                   isPassword: !state.isPasswordVisible,
-                  validator: Validators.validateShopPassword,
+                  validator: Validators.validateShopLoginPassword,
                   labelStyle: ShopAppTextStyles.bodyMediumBold,
                   textStyle: ShopAppTextStyles.bodyMedium,
                   hintStyle: ShopAppTextStyles.bodyMedium.copyWith(

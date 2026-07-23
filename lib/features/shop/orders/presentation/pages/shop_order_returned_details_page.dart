@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
-import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
-import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
-import 'package:street_cart/features/shop/orders/presentation/widgets/customer_info_card.dart';
-import 'package:street_cart/features/shop/orders/presentation/widgets/item_summary_card.dart';
-import 'package:street_cart/features/shop/orders/presentation/widgets/order_timeline_tracker.dart';
-import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_delivered_banner.dart';
-import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_details_action_button.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
+import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/customer_info_card.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/returned_item_info_card.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/return_reason_card.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/shop_return_progress_tracker.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/return_status_banner.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/return_action_button.dart';
 
-// Shop Order Details Page
-class ShopOrderDetailsPage extends StatelessWidget {
+// Shop Order Returned Details Page
+class ShopOrderReturnedDetailsPage extends StatelessWidget {
   final OrderModel order;
   final String shopId;
 
-  const ShopOrderDetailsPage({
+  const ShopOrderReturnedDetailsPage({
     super.key,
     required this.order,
     required this.shopId,
@@ -34,7 +34,7 @@ class ShopOrderDetailsPage extends StatelessWidget {
           state: state,
           fallbackOrder: order,
         );
-        if (updated.status != order.status) {
+        if (updated.returnStatus != order.returnStatus) {
           if (ModalRoute.of(context)?.isCurrent == true) {
             Navigator.pop(context);
           }
@@ -47,13 +47,7 @@ class ShopOrderDetailsPage extends StatelessWidget {
             state: state,
             fallbackOrder: order,
           );
-
-          final nextStatusLabel = ShopOrdersHelper.getNextStatusActionLabel(
-            ShopOrderStatus.fromString(currentOrder.status),
-          );
-          final nextStatus = ShopOrdersHelper.getNextStatus(
-            ShopOrderStatus.fromString(currentOrder.status),
-          );
+          final returnStatus = (currentOrder.returnStatus ?? '').toLowerCase();
 
           return Scaffold(
             backgroundColor: const Color(0xFFF8FAFC),
@@ -63,7 +57,7 @@ class ShopOrderDetailsPage extends StatelessWidget {
               centerTitle: true,
               // Page Header with Order ID
               title: Text(
-                'Order #ORD-$orderIdPrefix',
+                'Returned Order #ORD-$orderIdPrefix',
                 style: TextStyle(
                   color: ShopAppColors.textPrimary,
                   fontSize: 18.sp,
@@ -80,28 +74,30 @@ class ShopOrderDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Shop Order Delivered Banner
-                  ShopOrderDeliveredBanner(order: currentOrder),
+                  // Return Status Banner
+                  ReturnStatusBanner(returnStatus: returnStatus),
                   SizedBox(height: 8.h),
+                  // Return Reason Card
+                  ReturnReasonCard(order: currentOrder, shopId: shopId),
+                  SizedBox(height: 16.h),
+                  // Returned Item Info Card
+                  ReturnedItemInfoCard(order: currentOrder, shopId: shopId),
+                  SizedBox(height: 16.h),
                   // Customer Info Card
                   CustomerInfoCard(order: currentOrder),
                   SizedBox(height: 16.h),
-                  // Item Summary Card
-                  ItemSummaryCard(order: currentOrder, shopId: shopId),
-                  SizedBox(height: 16.h),
-                  // Order Timeline Tracker
-                  OrderTimelineTracker(order: currentOrder),
+                  // Shop Return Progress Tracker
+                  ShopReturnProgressTracker(order: currentOrder),
                   SizedBox(height: 120.h),
                 ],
               ),
             ),
-            // Shop Order Details Action Button
-            bottomSheet: (nextStatusLabel != null && nextStatus != null)
-                ? ShopOrderDetailsActionButton(
-                    order: currentOrder,
-                    shopId: shopId,
-                  )
-                : null,
+            // Return Action Button
+            bottomSheet: ReturnActionButton(
+              returnStatus: returnStatus,
+              orderId: order.id,
+              shopId: shopId,
+            ),
           );
         },
       ),

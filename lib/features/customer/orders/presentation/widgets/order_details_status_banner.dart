@@ -43,6 +43,19 @@ class OrderDetailsStatusBanner extends StatelessWidget {
           subtitle: 'The item has been successfully picked up.',
           textColor: CustomerAppColors.success,
         );
+      } else if (returnStatus == 'return_confirmed') {
+        final confirmedDateStr = order.returnConfirmedAt != null
+            ? OrdersHelper.formatDateShort(order.returnConfirmedAt!)
+            : deliveredDateStr;
+        return _buildBanner(
+          color: const Color(0xFFE3F2FD),
+          borderColor: const Color(0xFFBBDEFB),
+          iconColor: CustomerAppColors.primary,
+          icon: Icons.assignment_turned_in_outlined,
+          title: 'Return Confirmed on $confirmedDateStr',
+          subtitle: 'Your return request has been confirmed.',
+          textColor: CustomerAppColors.primary,
+        );
       } else {
         // Return requested or confirmed with date
         final returnedDateStr = order.returnedAt != null

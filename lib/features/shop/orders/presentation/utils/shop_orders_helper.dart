@@ -3,8 +3,10 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
+import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 
 class ShopOrdersHelper {
+  // Filter Orders
   static List<OrderModel> filterOrders(List<OrderModel> orders, int tabIndex) {
     switch (tabIndex) {
       case 0: // NEW
@@ -30,16 +32,30 @@ class ShopOrdersHelper {
             .where(
               (o) =>
                   ShopOrderStatus.fromString(o.status) ==
-                  ShopOrderStatus.delivered,
+                      ShopOrderStatus.delivered &&
+                  (o.returnStatus == null || o.returnStatus!.isEmpty),
             )
             .toList();
       case 4: // RETURNED
-        return orders.where((o) {
-          final s = ShopOrderStatus.fromString(o.status);
-          return s == ShopOrderStatus.returned ||
-              s == ShopOrderStatus.cancelled ||
-              s == ShopOrderStatus.return_requested;
+        final returnedOrders = orders.where((o) {
+          return o.returnStatus != null && o.returnStatus!.isNotEmpty;
         }).toList();
+        returnedOrders.sort((a, b) {
+          final statusOrder = {
+            'return_requested': 0,
+            'return_confirmed': 1,
+            'return_picked': 2,
+          };
+          final valA = statusOrder[a.returnStatus?.toLowerCase()] ?? 99;
+          final valB = statusOrder[b.returnStatus?.toLowerCase()] ?? 99;
+          if (valA != valB) {
+            return valA.compareTo(valB);
+          }
+          final timeA = a.returnedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+          final timeB = b.returnedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+          return timeB.compareTo(timeA);
+        });
+        return returnedOrders;
       default:
         return [];
     }
@@ -48,6 +64,24 @@ class ShopOrdersHelper {
   // Get Orders Count
   static int getCount(List<OrderModel> orders, int tabIndex) {
     return filterOrders(orders, tabIndex).length;
+  }
+
+  // Get Order Time based on status
+  static DateTime getOrderTimeForStatus(OrderModel order) {
+    if (order.returnStatus != null && order.returnStatus!.isNotEmpty) {
+      return order.returnedAt ?? order.createdAt;
+    }
+    final status = order.status.toLowerCase();
+    if (status == 'delivered') {
+      return order.deliveredAt ?? order.createdAt;
+    }
+    if (status == 'shipped' || status == 'packed') {
+      return order.shippedAt ?? order.createdAt;
+    }
+    if (status == 'processing') {
+      return order.confirmedAt ?? order.createdAt;
+    }
+    return order.createdAt;
   }
 
   // Get Time
@@ -155,10 +189,55 @@ class ShopOrdersHelper {
       (sum, item) => sum + (item.price * item.quantity),
     );
 
+    final rStatus = order.returnStatus;
+    final hasReturn = rStatus != null && rStatus.isNotEmpty;
+
+    final returnedItems = shopItems.where((item) {
+      return item.returnStatus != null && item.returnStatus!.isNotEmpty;
+    }).toList();
+
+    final displayItem = (hasReturn && returnedItems.isNotEmpty)
+        ? returnedItems.first
+        : firstItem;
+
+    final String productNameText;
+    if (hasReturn && returnedItems.isNotEmpty) {
+      productNameText = returnedItems.length > 1
+          ? '${returnedItems.first.productName} +${returnedItems.length - 1}'
+          : returnedItems.first.productName;
+    } else {
+      productNameText = shopItems.length > 1
+          ? '${firstItem.productName} + ${shopItems.length - 1} more'
+          : firstItem.productName;
+    }
+
+    final double cardTotalAmount;
+    if (hasReturn && returnedItems.isNotEmpty) {
+      final activeItems = returnedItems
+          .where(
+            (item) =>
+                item.returnStatus == 'return_requested' ||
+                item.returnStatus == 'return_confirmed',
+          )
+          .toList();
+      cardTotalAmount = activeItems.isNotEmpty
+          ? activeItems.fold<double>(
+              0.0,
+              (sum, item) => sum + (item.price * item.quantity),
+            )
+          : returnedItems.fold<double>(
+              0.0,
+              (sum, item) => sum + (item.price * item.quantity),
+            );
+    } else {
+      cardTotalAmount = totalAmount;
+    }
+
     return {
       'shopItems': shopItems,
-      'firstItem': firstItem,
-      'totalAmount': totalAmount,
+      'firstItem': displayItem,
+      'totalAmount': cardTotalAmount,
+      'productNameText': productNameText,
     };
   }
 
@@ -197,5 +276,108 @@ class ShopOrdersHelper {
       'finalEarnings': finalEarnings,
       'paymentLabel': paymentLabel,
     };
+  }
+
+  // Calculates data for returned items card
+  static Map<String, dynamic> getReturnedItemCardData({
+    required OrderModel order,
+    required String shopId,
+  }) {
+    final returnedItems = getReturnedItems(order: order, shopId: shopId);
+
+    final paymentLabel = getDisplayPaymentMethod(order.paymentMethod);
+    final badgeColor = paymentLabel == 'COD'
+        ? ShopAppColors.warning
+        : ShopAppColors.success;
+
+    final activeItems = returnedItems
+        .where(
+          (item) =>
+              item.returnStatus == 'return_requested' ||
+              item.returnStatus == 'return_confirmed',
+        )
+        .toList();
+
+    final totalAmount = activeItems.isNotEmpty
+        ? activeItems.fold<double>(
+            0.0,
+            (sum, item) => sum + (item.price * item.quantity),
+          )
+        : returnedItems.fold<double>(
+            0.0,
+            (sum, item) => sum + (item.price * item.quantity),
+          );
+
+    return {
+      'returnedItems': returnedItems,
+      'paymentLabel': paymentLabel,
+      'badgeColor': badgeColor,
+      'totalAmount': totalAmount,
+    };
+  }
+
+  // Get filtered list of returned items
+  static List<OrderItemModel> getReturnedItems({
+    required OrderModel order,
+    required String shopId,
+  }) {
+    final returnedItems = order.items.where((item) {
+      final hasReturnStatus =
+          item.returnStatus != null && item.returnStatus!.isNotEmpty;
+      return hasReturnStatus && item.shopId == shopId;
+    }).toList();
+
+    if (returnedItems.isEmpty) {
+      final fallback = order.items.firstWhere(
+        (item) => item.shopId == shopId,
+        orElse: () => order.items.first,
+      );
+      returnedItems.add(fallback);
+    }
+    return returnedItems;
+  }
+
+  // Get status grouped list items for returned tab
+  static List<dynamic> getReturnedOrdersListItems(
+    List<OrderModel> filteredList,
+  ) {
+    final newRequests = filteredList
+        .where((o) => o.returnStatus?.toLowerCase() == 'return_requested')
+        .toList();
+    final confirmedReturns = filteredList
+        .where((o) => o.returnStatus?.toLowerCase() == 'return_confirmed')
+        .toList();
+    final pickedReturns = filteredList
+        .where((o) => o.returnStatus?.toLowerCase() == 'return_picked')
+        .toList();
+
+    final listItems = <dynamic>[];
+    if (newRequests.isNotEmpty) {
+      listItems.add('New Request');
+      listItems.addAll(newRequests);
+    }
+    if (confirmedReturns.isNotEmpty) {
+      listItems.add('Confirmed Return');
+      listItems.addAll(confirmedReturns);
+    }
+    if (pickedReturns.isNotEmpty) {
+      listItems.add('Picked');
+      listItems.addAll(pickedReturns);
+    }
+    return listItems;
+  }
+
+  // Get currently updated order
+  static OrderModel getCurrentOrder({
+    required ShopOrdersState state,
+    required OrderModel fallbackOrder,
+  }) {
+    if (state.status == ShopOrdersStatus.loaded) {
+      return state.orders.firstWhere(
+        (o) => o.id == fallbackOrder.id,
+        orElse: () => fallbackOrder,
+      );
+    }
+    return fallbackOrder;
   }
 }

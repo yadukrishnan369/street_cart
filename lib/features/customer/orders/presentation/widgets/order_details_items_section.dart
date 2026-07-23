@@ -153,10 +153,56 @@ class OrderDetailsItemsSection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Return Button
-                    if (OrdersHelper.isReturnEligible(order) &&
-                        (order.returnStatus == null ||
-                            order.returnStatus!.isEmpty)) ...[
+                    // Return Button / Return Status Badge
+                    if (item.returnStatus != null &&
+                        item.returnStatus!.isNotEmpty) ...[
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color:
+                                (item.returnStatus == 'return_picked' ||
+                                    item.returnStatus == 'returned')
+                                ? const Color(0xFFE8F5E9)
+                                : item.returnStatus == 'return_confirmed'
+                                ? const Color(0xFFE3F2FD)
+                                : const Color(0xFFFFF3E0),
+                            borderRadius: BorderRadius.circular(20.r),
+                            border: Border.all(
+                              color:
+                                  (item.returnStatus == 'return_picked' ||
+                                      item.returnStatus == 'returned')
+                                  ? const Color(0xFFC8E6C9)
+                                  : item.returnStatus == 'return_confirmed'
+                                  ? const Color(0xFFBBDEFB)
+                                  : const Color(0xFFFFE0B2),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              (item.returnStatus == 'return_picked' ||
+                                      item.returnStatus == 'returned')
+                                  ? 'Returned'
+                                  : item.returnStatus == 'return_confirmed'
+                                  ? 'Return Confirmed'
+                                  : 'Return Requested',
+                              style: TextStyle(
+                                color:
+                                    (item.returnStatus == 'return_picked' ||
+                                        item.returnStatus == 'returned')
+                                    ? CustomerAppColors.success
+                                    : item.returnStatus == 'return_confirmed'
+                                    ? CustomerAppColors.primary
+                                    : CustomerAppColors.error,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ] else if (OrdersHelper.isReturnEligible(order)) ...[
                       SizedBox(width: 12.w),
                       Expanded(
                         child: OutlinedButton.icon(

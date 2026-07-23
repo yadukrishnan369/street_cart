@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 
-// Return Progress Tracker
-class ReturnProgressTracker extends StatelessWidget {
+// Shop Return Progress Tracker
+class ShopReturnProgressTracker extends StatelessWidget {
   final OrderModel order;
 
-  const ReturnProgressTracker({super.key, required this.order});
+  const ShopReturnProgressTracker({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
     final returnStatus = (order.returnStatus ?? '').toLowerCase();
-
-    // Step Completions
+    // Steps
     final isStep1Completed = returnStatus.isNotEmpty;
     final isStep2Completed =
         returnStatus == 'return_confirmed' ||
@@ -22,7 +21,7 @@ class ReturnProgressTracker extends StatelessWidget {
         returnStatus == 'return_picked';
     final isStep3Completed =
         returnStatus == 'returned' || returnStatus == 'return_picked';
-
+    // Status Time
     final returnedTime = order.returnedAt != null
         ? DateFormatter.formatToOrderDateTime(order.returnedAt!)
         : 'Request Submitted';
@@ -32,19 +31,23 @@ class ReturnProgressTracker extends StatelessWidget {
     final pickedTime = order.returnPickedAt != null
         ? DateFormatter.formatToOrderDateTime(order.returnPickedAt!)
         : (isStep3Completed ? 'Item Picked Up' : 'Pending pickup');
-
+    // Return Tracker Steps
     final steps = [
       {
-        'title': 'Returned',
+        'title': 'Return Requested',
         'time': returnedTime,
         'completed': isStep1Completed,
       },
       {
-        'title': 'Confirmed',
+        'title': 'Return Accepted',
         'time': confirmedTime,
         'completed': isStep2Completed,
       },
-      {'title': 'Picked', 'time': pickedTime, 'completed': isStep3Completed},
+      {
+        'title': 'Return Picked',
+        'time': pickedTime,
+        'completed': isStep3Completed,
+      },
     ];
 
     int activeIndex = 0;
@@ -56,7 +59,7 @@ class ReturnProgressTracker extends StatelessWidget {
       activeIndex = 0;
     }
 
-    final activeColor = CustomerAppColors.primary;
+    final activeColor = ShopAppColors.error;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -69,7 +72,7 @@ class ReturnProgressTracker extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w900,
-              color: const Color(0xFF1E293B),
+              color: ShopAppColors.primary,
               letterSpacing: 1.0,
             ),
           ),
@@ -154,7 +157,7 @@ class ReturnProgressTracker extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: isCompleted
-                                    ? activeColor.withValues(alpha: 0.7)
+                                    ? activeColor.withAlpha(180)
                                     : const Color(0xFF1E293B).withOpacity(0.6),
                               ),
                             ),

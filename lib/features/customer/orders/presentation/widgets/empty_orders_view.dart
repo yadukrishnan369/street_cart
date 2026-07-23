@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
 
+// Empty Orders View
 class EmptyOrdersView extends StatelessWidget {
   final VoidCallback onRefresh;
 
@@ -22,7 +23,7 @@ class EmptyOrdersView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Icon wrapper with circle
+                // Icon
                 Container(
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
@@ -36,6 +37,7 @@ class EmptyOrdersView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 24.h),
+                // Title
                 Text(
                   'No Orders Yet',
                   style: TextStyle(
@@ -46,6 +48,7 @@ class EmptyOrdersView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
+                // Subtitle
                 Text(
                   'Your order history is empty. Start exploring shops near you to place your first order!',
                   textAlign: TextAlign.center,

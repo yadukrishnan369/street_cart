@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/orders/data/models/order_model.dar
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 
+// Latest Order Card
 class LatestOrderCard extends StatelessWidget {
   final OrderModel order;
   final VoidCallback onCancel;
@@ -79,6 +80,7 @@ class LatestOrderCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 8.h),
+                    // Product Name
                     Text(
                       firstItem.productName,
                       style: TextStyle(

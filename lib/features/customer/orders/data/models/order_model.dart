@@ -183,6 +183,12 @@ class OrderItemModel {
   final String shopId;
   final double adminCommission;
   final double vendorEarnings;
+  final String? returnStatus;
+  final String? returnReason;
+  final String? returnDetails;
+  final DateTime? returnedAt;
+  final DateTime? returnConfirmedAt;
+  final DateTime? returnPickedAt;
 
   OrderItemModel({
     required this.id,
@@ -196,6 +202,12 @@ class OrderItemModel {
     required this.shopId,
     this.adminCommission = 0.0,
     this.vendorEarnings = 0.0,
+    this.returnStatus,
+    this.returnReason,
+    this.returnDetails,
+    this.returnedAt,
+    this.returnConfirmedAt,
+    this.returnPickedAt,
   });
 
   factory OrderItemModel.fromMap(Map<String, dynamic> map) {
@@ -211,6 +223,24 @@ class OrderItemModel {
       shopId: map['shop_id'] ?? '',
       adminCommission: (map['admin_commission'] as num?)?.toDouble() ?? 0.0,
       vendorEarnings: (map['vendor_earnings'] as num?)?.toDouble() ?? 0.0,
+      returnStatus: map['return_status'],
+      returnReason: map['return_reason'],
+      returnDetails: map['return_details'],
+      returnedAt: map['returned_at'] != null
+          ? (map['returned_at'] is Timestamp
+                ? (map['returned_at'] as Timestamp).toDate()
+                : DateTime.parse(map['returned_at'].toString()))
+          : null,
+      returnConfirmedAt: map['return_confirmed_at'] != null
+          ? (map['return_confirmed_at'] is Timestamp
+                ? (map['return_confirmed_at'] as Timestamp).toDate()
+                : DateTime.parse(map['return_confirmed_at'].toString()))
+          : null,
+      returnPickedAt: map['return_picked_at'] != null
+          ? (map['return_picked_at'] is Timestamp
+                ? (map['return_picked_at'] as Timestamp).toDate()
+                : DateTime.parse(map['return_picked_at'].toString()))
+          : null,
     );
   }
 
@@ -227,6 +257,12 @@ class OrderItemModel {
       'shop_id': shopId,
       'admin_commission': adminCommission,
       'vendor_earnings': vendorEarnings,
+      'return_status': returnStatus,
+      'return_reason': returnReason,
+      'return_details': returnDetails,
+      'returned_at': returnedAt,
+      'return_confirmed_at': returnConfirmedAt,
+      'return_picked_at': returnPickedAt,
     };
   }
 }
