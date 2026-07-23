@@ -19,6 +19,12 @@ class AdminCustomerStatsCard extends StatelessWidget {
     // Returns count
     final returnsCount = AdminCustomersHelper.getReturnsCount(orders);
 
+    // Cancelled count
+    final cancelledCount = AdminCustomersHelper.getCancelledCount(orders);
+
+    // Completed count
+    final completedCount = AdminCustomersHelper.getCompletedCount(orders);
+
     // Total orders count
     final totalOrders = orders.length;
     return Container(
@@ -91,7 +97,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
               // Total Returns Count
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
@@ -102,7 +108,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                       Text(
                         'Returns',
                         style: TextStyle(
-                          fontSize: 11.sp,
+                          fontSize: 10.sp,
                           color: const Color(0xFF8A8A9E),
                           fontWeight: FontWeight.bold,
                         ),
@@ -112,7 +118,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                       Text(
                         '$returnsCount',
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
                           color: const Color(0xFF1E1E2F),
                         ),
@@ -121,12 +127,82 @@ class AdminCustomerStatsCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: 8.w),
+
+              // Cancelled Orders Count
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF9FAFC),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Cancelled',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: const Color(0xFF8A8A9E),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      // Cancel Count
+                      Text(
+                        '$cancelledCount',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF1E1E2F),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+
+              // Completed Orders Count
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF9FAFC),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Completed',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: const Color(0xFF8A8A9E),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      // Completed Count
+                      Text(
+                        '$completedCount',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF1E1E2F),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
 
               // Total Orders
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
@@ -137,7 +213,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                       Text(
                         'Total Orders',
                         style: TextStyle(
-                          fontSize: 11.sp,
+                          fontSize: 10.sp,
                           color: const Color(0xFF8A8A9E),
                           fontWeight: FontWeight.bold,
                         ),
@@ -147,7 +223,7 @@ class AdminCustomerStatsCard extends StatelessWidget {
                       Text(
                         '$totalOrders',
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
                           color: const Color(0xFF1E1E2F),
                         ),

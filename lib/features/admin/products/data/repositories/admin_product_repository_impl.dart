@@ -1,4 +1,3 @@
-import 'package:street_cart/core/constants/admin_constants.dart';
 import 'package:street_cart/core/network/network_info.dart';
 import 'package:street_cart/core/error/exceptions.dart';
 import 'package:street_cart/features/admin/products/domain/repositories/admin_product_repository.dart';
@@ -57,15 +56,8 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
     final outOfStock = allProducts.where((p) => p.stockQuantity == 0).length;
     final disabledItems = allProducts.where((p) => p.disabledByAdmin).length;
 
-    // Compile categories
-    final configuredProductCategories = await _remoteDataSource
-        .getProductCategoryNames();
+    // Get categories - only include categories where at least one product exists
     final uniqueCategoriesSet = <String>{};
-    if (configuredProductCategories.isNotEmpty) {
-      uniqueCategoriesSet.addAll(configuredProductCategories);
-    } else {
-      uniqueCategoriesSet.addAll(AdminConstants.defaultProductCategories);
-    }
     for (final p in allProducts) {
       if (p.category.isNotEmpty) {
         uniqueCategoriesSet.add(p.category);

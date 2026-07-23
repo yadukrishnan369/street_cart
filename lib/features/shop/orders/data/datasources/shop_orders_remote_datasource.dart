@@ -155,11 +155,16 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
           if (productSnap != null && productSnap.exists) {
             final productData = productSnap.data()!;
             final variantsRaw = productData['variants'] as List<dynamic>? ?? [];
+            final currentSales =
+                (productData['sales_count'] as num?)?.toInt() ?? 0;
+            final newSales = (currentSales - quantity).clamp(0, 999999).toInt();
+
             if (variantsRaw.isEmpty) {
               final currentStock =
                   (productData['stockQuantity'] as num?)?.toInt() ?? 0;
               transaction.update(productSnap.reference, {
                 'stockQuantity': currentStock + quantity,
+                'sales_count': newSales,
               });
             } else {
               final List<Map<String, dynamic>> variants = variantsRaw
@@ -184,7 +189,10 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
                   break;
                 }
               }
-              transaction.update(productSnap.reference, {'variants': variants});
+              transaction.update(productSnap.reference, {
+                'variants': variants,
+                'sales_count': newSales,
+              });
             }
           }
         }

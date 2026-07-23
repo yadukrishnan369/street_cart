@@ -105,7 +105,10 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
                   ],
                 ),
                 ...paginatedOrders.map((order) {
-                  final status = order.status;
+                  final returnStatus = (order.returnStatus ?? '').toLowerCase();
+                  final status = returnStatus.isNotEmpty
+                      ? order.returnStatus!
+                      : order.status;
                   final displayStatus = AdminOrdersHelper.getStatusLabel(
                     status,
                   );

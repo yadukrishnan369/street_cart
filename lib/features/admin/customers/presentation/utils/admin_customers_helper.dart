@@ -35,14 +35,33 @@ class AdminCustomersHelper {
 
   // get returns count
   static int getReturnsCount(List<OrderModel> orders) {
+    return orders
+        .where((o) => o.returnStatus != null && o.returnStatus!.isNotEmpty)
+        .length;
+  }
+
+  // get cancelled count
+  static int getCancelledCount(List<OrderModel> orders) {
     return orders.where((o) => o.status.toLowerCase() == 'cancelled').length;
+  }
+
+  // get completed count
+  static int getCompletedCount(List<OrderModel> orders) {
+    return orders.where((o) {
+      final status = o.status.toLowerCase();
+      final isReturned = o.returnStatus != null && o.returnStatus!.isNotEmpty;
+      return status == 'delivered' && !isReturned;
+    }).length;
   }
 
   // Calculates total spent amount
   static double getTotalSpent(List<OrderModel> orders) {
     double totalSpent = 0.0;
     for (final order in orders) {
-      if (order.status.toLowerCase() != 'cancelled') {
+      final isCancelled = order.status.toLowerCase() == 'cancelled';
+      final isReturned =
+          order.returnStatus != null && order.returnStatus!.isNotEmpty;
+      if (!isCancelled && !isReturned) {
         totalSpent += order.totalAmount;
       }
     }
@@ -66,9 +85,13 @@ class AdminCustomersHelper {
 
   // formats the order items list
   static String formatOrderItems(List<OrderItemModel> items) {
-    return items
-        .map((item) => '${item.productName} (x${item.quantity})')
-        .join(', ');
+    if (items.isEmpty) return '';
+    final firstItemName = items.first.productName;
+    if (items.length == 1) {
+      return firstItemName;
+    }
+    final remainingCount = items.length - 1;
+    return '$firstItemName + $remainingCount more';
   }
 
   // formats customer primary address

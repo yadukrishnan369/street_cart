@@ -111,8 +111,6 @@ class ProductsTableContainer extends StatelessWidget {
                         selectedItemBuilder: (context) {
                           return [
                             'Total Products',
-                            'Active',
-                            'Out of Stock',
                             ...state.availableCategories,
                           ].map((option) {
                             return Align(
@@ -125,13 +123,8 @@ class ProductsTableContainer extends StatelessWidget {
                             );
                           }).toList();
                         },
-                        items:
-                            [
-                              'Total Products',
-                              'Active',
-                              'Out of Stock',
-                              ...state.availableCategories,
-                            ].map((option) {
+                        items: ['Total Products', ...state.availableCategories]
+                            .map((option) {
                               return DropdownMenuItem<String>(
                                 value: option,
                                 child: SizedBox(
@@ -143,15 +136,14 @@ class ProductsTableContainer extends StatelessWidget {
                                   ),
                                 ),
                               );
-                            }).toList(),
+                            })
+                            .toList(),
                         onChanged: (selectedOption) {
                           if (selectedOption != null) {
                             String newStatusFilter;
                             String? newCategoryFilter;
 
-                            if (selectedOption == 'Total Products' ||
-                                selectedOption == 'Active' ||
-                                selectedOption == 'Out of Stock') {
+                            if (selectedOption == 'Total Products') {
                               newStatusFilter = selectedOption;
                               newCategoryFilter = null;
                             } else {

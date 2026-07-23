@@ -126,10 +126,12 @@ class AdminOrdersHelper {
             return status == 'processing';
           case 2: // Packed/Shipped
             return status == 'packed' || status == 'shipped';
-          case 3: // Completed
-            return status == 'delivered';
-          case 4: // Cancelled
-            return status == 'cancelled';
+          case 3: // Completed - Delivered and not returned
+            return status == 'delivered' &&
+                (order.returnStatus == null || order.returnStatus!.isEmpty);
+          case 4: // Cancelled/Returned
+            return status == 'cancelled' ||
+                (order.returnStatus != null && order.returnStatus!.isNotEmpty);
           default:
             return true;
         }
@@ -179,6 +181,13 @@ class AdminOrdersHelper {
         return const Color(0xFFE6F4EA);
       case 'cancelled':
         return const Color(0xFFFCE8E6);
+      case 'returned':
+      case 'return_picked':
+        return const Color(0xFFFFF3E0);
+      case 'return_requested':
+        return const Color(0xFFFFF9DB);
+      case 'return_confirmed':
+        return const Color(0xFFE3FAF2);
       default:
         return const Color(0xFFF1F3F4);
     }
@@ -196,6 +205,13 @@ class AdminOrdersHelper {
         return const Color(0xFF137333);
       case 'cancelled':
         return const Color(0xFFC5221F);
+      case 'returned':
+      case 'return_picked':
+        return const Color(0xFFE65100);
+      case 'return_requested':
+        return const Color(0xFFF59F00);
+      case 'return_confirmed':
+        return const Color(0xFF0CA678);
       default:
         return const Color(0xFF5F6368);
     }
@@ -213,6 +229,13 @@ class AdminOrdersHelper {
         return 'Completed';
       case 'cancelled':
         return 'Cancelled';
+      case 'returned':
+      case 'return_picked':
+        return 'Returned';
+      case 'return_requested':
+        return 'Return Requested';
+      case 'return_confirmed':
+        return 'Return Confirmed';
       default:
         return status.toUpperCase();
     }

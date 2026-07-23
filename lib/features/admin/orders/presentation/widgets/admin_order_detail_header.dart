@@ -17,9 +17,11 @@ class AdminOrderDetailHeader extends StatelessWidget {
     required this.dateStr,
     required this.timeStr,
   });
-
   @override
   Widget build(BuildContext context) {
+    final returnStatus = (order.returnStatus ?? '').toLowerCase();
+    final status = returnStatus.isNotEmpty ? order.returnStatus! : order.status;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,15 +40,15 @@ class AdminOrderDetailHeader extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: AdminOrdersHelper.getStatusBgColor(order.status),
+                color: AdminOrdersHelper.getStatusBgColor(status),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Text(
-                AdminOrdersHelper.getStatusLabel(order.status),
+                AdminOrdersHelper.getStatusLabel(status),
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.bold,
-                  color: AdminOrdersHelper.getStatusTextColor(order.status),
+                  color: AdminOrdersHelper.getStatusTextColor(status),
                 ),
               ),
             ),

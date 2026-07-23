@@ -76,7 +76,14 @@ class AdminDashboardRemoteDataSourceImpl
 
       // Fetch total orders count and recent orders
       final ordersSnap = await _firestore.collection('orders').get();
-      final totalOrdersCount = ordersSnap.docs.length;
+      final totalOrdersCount = ordersSnap.docs.where((doc) {
+        final data = doc.data();
+        final status = (data['status'] ?? '').toString().toLowerCase();
+        final returnStatus = (data['return_status'] ?? '')
+            .toString()
+            .toLowerCase();
+        return status != 'cancelled' && returnStatus.isEmpty;
+      }).length;
 
       final allOrders = ordersSnap.docs.map((doc) {
         final data = doc.data();
@@ -89,11 +96,15 @@ class AdminDashboardRemoteDataSourceImpl
                 DateTime.tryParse(data['created_at']) ?? DateTime.now();
           }
         }
+        final returnStatus = (data['return_status'] ?? '').toString();
+        final rawStatus = data['status'] ?? 'pending';
+        final status = returnStatus.isNotEmpty ? returnStatus : rawStatus;
+
         return {
           'id': doc.id,
           'customer_id': data['customer_id'] ?? '',
           'amount': (data['total_amount'] as num?)?.toDouble() ?? 0.0,
-          'status': data['status'] ?? 'pending',
+          'status': status,
           'createdAt': parsedDate,
           'deliveryAddress': data['delivery_address'] ?? {},
         };

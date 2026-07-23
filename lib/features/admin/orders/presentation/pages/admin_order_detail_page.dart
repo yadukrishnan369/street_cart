@@ -17,6 +17,7 @@ import 'package:street_cart/features/admin/orders/presentation/widgets/shop_info
 import 'package:street_cart/features/admin/orders/presentation/widgets/profit_info_card.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/admin_order_detail_header.dart';
 import 'package:street_cart/features/admin/orders/presentation/widgets/shimmer/admin_order_detail_shimmer.dart';
+import 'package:street_cart/features/admin/orders/presentation/widgets/admin_return_reason_card.dart';
 
 // Admin Order Detail Page
 class AdminOrderDetailPage extends StatelessWidget {
@@ -109,6 +110,12 @@ class AdminOrderDetailPage extends StatelessWidget {
                                       // Tracking Details Card
                                       TrackingDetailsCard(order: order),
                                       SizedBox(height: 24.h),
+                                      // Return Reason Card
+                                      if (order.returnStatus != null &&
+                                          order.returnStatus!.isNotEmpty) ...[
+                                        AdminReturnReasonCard(order: order),
+                                        SizedBox(height: 24.h),
+                                      ],
                                       // Order Product Details Card
                                       OrderProductDetailsCard(order: order),
                                       SizedBox(height: 24.h),
@@ -156,6 +163,12 @@ class AdminOrderDetailPage extends StatelessWidget {
                                 // Tracking Details Card
                                 TrackingDetailsCard(order: order),
                                 SizedBox(height: 24.h),
+                                // Return Reason Card
+                                if (order.returnStatus != null &&
+                                    order.returnStatus!.isNotEmpty) ...[
+                                  AdminReturnReasonCard(order: order),
+                                  SizedBox(height: 24.h),
+                                ],
                                 // Order Product Details Card
                                 OrderProductDetailsCard(order: order),
                                 SizedBox(height: 24.h),

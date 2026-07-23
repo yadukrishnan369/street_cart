@@ -61,7 +61,10 @@ class OrdersTable extends StatelessWidget {
           final customer =
               customerNames[order.customerId] ?? order.deliveryAddress.fullName;
           final amount = '₹${PriceUtils.formatPrice(order.totalAmount)}';
-          final status = order.status;
+          final returnStatus = (order.returnStatus ?? '').toLowerCase();
+          final status = returnStatus.isNotEmpty
+              ? order.returnStatus!
+              : order.status;
           final date = DateFormatter.formatToReadableDate(order.createdAt);
 
           final hasItems = order.items.isNotEmpty;

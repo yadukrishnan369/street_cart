@@ -32,14 +32,27 @@ class TrackingDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
-          Text(
-            'Tracking Details',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E2F),
-            ),
+          Row(
+            children: [
+              Text(
+                'Tracking Details',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1E1E2F),
+                ),
+              ),
+              SizedBox(width: 20.w),
+              if (order.returnStatus != null && order.returnStatus!.isNotEmpty)
+                Text(
+                  'ORDER RETURNED',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AdminAppColors.errorColor,
+                  ),
+                ),
+            ],
           ),
           SizedBox(height: 24.h),
           if (activeIndex == -1)

@@ -25,7 +25,7 @@ class OrdersTabBar extends StatelessWidget {
             _buildTab(context, label: 'Processing', index: 1),
             _buildTab(context, label: 'Packed/Shipped', index: 2),
             _buildTab(context, label: 'Completed', index: 3),
-            _buildTab(context, label: 'Cancelled', index: 4),
+            _buildTab(context, label: 'Cancelled/Returned', index: 4),
           ],
         ),
         const Divider(height: 1, thickness: 1.5, color: Color(0xFFE8E7ED)),
