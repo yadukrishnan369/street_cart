@@ -24,7 +24,9 @@ class ReturnRequestPage extends StatefulWidget {
 }
 
 class _ReturnRequestPageState extends State<ReturnRequestPage> {
-  String _selectedReason = 'Item is damaged';
+  final ValueNotifier<String> _selectedReasonNotifier = ValueNotifier<String>(
+    'Item is damaged',
+  );
   final TextEditingController _detailsController = TextEditingController();
   // Reasons of Return
   final List<String> _returnReasons = [
@@ -36,6 +38,7 @@ class _ReturnRequestPageState extends State<ReturnRequestPage> {
 
   @override
   void dispose() {
+    _selectedReasonNotifier.dispose();
     _detailsController.dispose();
     super.dispose();
   }
@@ -46,7 +49,7 @@ class _ReturnRequestPageState extends State<ReturnRequestPage> {
       context: context,
       orderId: widget.order.id,
       itemId: widget.item.id,
-      reason: _selectedReason,
+      reason: _selectedReasonNotifier.value,
       details: _detailsController.text.trim(),
       ordersBloc: context.read<OrdersBloc>(),
     );
@@ -105,16 +108,23 @@ class _ReturnRequestPageState extends State<ReturnRequestPage> {
                 SizedBox(height: 10.h),
 
                 // Return Reason Selection List
-                ReturnReasonSelectionList(
-                  reasons: _returnReasons,
-                  selectedReason: _selectedReason,
-                  onSelect: (reason) =>
-                      setState(() => _selectedReason = reason),
+                ValueListenableBuilder<String>(
+                  valueListenable: _selectedReasonNotifier,
+                  builder: (context, selectedReason, _) {
+                    return ReturnReasonSelectionList(
+                      reasons: _returnReasons,
+                      selectedReason: selectedReason,
+                      onSelect: (reason) =>
+                          _selectedReasonNotifier.value = reason,
+                    );
+                  },
                 ),
                 SizedBox(height: 24.h),
 
                 // Return Section Header Title
-                const ReturnSectionHeaderTitle(title: 'ADDITIONAL DETAILS'),
+                const ReturnSectionHeaderTitle(
+                  title: 'ADDITIONAL DETAILS (optional)',
+                ),
                 SizedBox(height: 10.h),
 
                 // Return Additional Details Input

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+// Image Preview Page
 class ImagePreviewPage extends StatefulWidget {
   final List<String> images;
   final int initialIndex;
@@ -17,18 +18,19 @@ class ImagePreviewPage extends StatefulWidget {
 }
 
 class _ImagePreviewPageState extends State<ImagePreviewPage> {
-  late int _currentIndex;
+  late ValueNotifier<int> _currentIndexNotifier;
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.initialIndex;
+    _currentIndexNotifier = ValueNotifier<int>(widget.initialIndex);
     _pageController = PageController(initialPage: widget.initialIndex);
   }
 
   @override
   void dispose() {
+    _currentIndexNotifier.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -68,9 +70,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
             backgroundDecoration: const BoxDecoration(color: Colors.black),
             pageController: _pageController,
             onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
+              _currentIndexNotifier.value = index;
             },
           ),
 
@@ -88,23 +88,28 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
                   onPressed: () => Navigator.pop(context),
                 ),
                 // Indicator
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    '${_currentIndex + 1} / ${widget.images.length}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                ValueListenableBuilder<int>(
+                  valueListenable: _currentIndexNotifier,
+                  builder: (context, currentIndex, _) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        '${currentIndex + 1} / ${widget.images.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 // Empty spacer
                 const SizedBox(width: 48),
