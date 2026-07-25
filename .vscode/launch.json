@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Street Cart Customer (Android)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/customer_main.dart",
+      "args": [
+        "--flavor",
+        "customer"
+      ]
+    },
+    {
+      "name": "Street Cart Shop (Android)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/shop_main.dart",
+      "args": [
+        "--flavor",
+        "shop"
+      ]
+    },
+    {
+      "name": "Street Cart Admin (Web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/admin_main.dart"
+    }
+  ]
+}

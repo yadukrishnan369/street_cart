@@ -41,6 +41,21 @@ android {
         versionName = flutter.versionName
     }
 
+    flavorDimensions.add("app")
+
+    productFlavors {
+        create("customer") {
+            dimension = "app"
+            applicationId = "com.streetcart.customer"
+            resValue("string", "app_name", "Street Cart")
+        }
+        create("shop") {
+            dimension = "app"
+            applicationId = "com.streetcart.shop"
+            resValue("string", "app_name", "Street Cart Business Partner")
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
