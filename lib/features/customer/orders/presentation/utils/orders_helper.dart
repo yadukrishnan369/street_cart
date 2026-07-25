@@ -10,6 +10,11 @@ import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_product_by_id.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_shop_by_id.dart';
+import 'package:street_cart/features/customer/products/presentation/pages/customer_product_detail_page.dart';
+import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 class OrdersHelper {
   // Sort orders by creation time
@@ -178,6 +183,7 @@ class OrdersHelper {
     ];
   }
 
+  // Convert To Cart Items
   static List<CartItem> convertToCartItems(List<OrderItemModel> items) {
     return items.map((item) {
       return CartItem(
@@ -324,5 +330,52 @@ class OrdersHelper {
         },
       ),
     );
+  }
+
+  // Navigate to Customer Product Detail Page
+  static Future<void> navigateToProductDetails({
+    required BuildContext context,
+    required String productId,
+    required String shopId,
+    String? selectedColor,
+    String? selectedSize,
+  }) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final product = await sl<GetProductById>().call(productId);
+      final shop = await sl<GetShopById>().call(shopId);
+
+      if (context.mounted) {
+        Navigator.pop(context); // Dismiss loading dialog
+      }
+
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CustomerProductDetailPage(
+              product: product,
+              shop: shop,
+              initialColor: selectedColor,
+              initialSize: selectedSize,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context); // Dismiss loading dialog
+        CustomSnackBar.show(
+          context,
+          message: 'Error fetching product details: $e',
+          isError: true,
+        );
+      }
+    }
   }
 }

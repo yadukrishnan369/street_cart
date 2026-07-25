@@ -111,6 +111,13 @@ class Validators {
     return null;
   }
 
+  static String? validateReviewComment(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please write a comment';
+    }
+    return null;
+  }
+
   // Shop Specific Validators
   static String? validateShopName(String? value) {
     if (value == null || value.trim().isEmpty) {

@@ -95,6 +95,14 @@ import 'package:street_cart/features/customer/profile/domain/usecases/delete_add
 import 'package:street_cart/features/customer/profile/domain/usecases/set_default_address.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_bloc.dart';
+
+// CUSTOMER - REVIEW
+import 'package:street_cart/features/customer/review/data/datasources/review_remote_datasource.dart';
+import 'package:street_cart/features/customer/review/data/datasources/review_remote_datasource_impl.dart';
+import 'package:street_cart/features/customer/review/data/repositories/review_repository_impl.dart';
+import 'package:street_cart/features/customer/review/domain/repositories/i_review_repository.dart';
+import 'package:street_cart/features/customer/review/domain/usecases/submit_review.dart';
+import 'package:street_cart/features/customer/review/presentation/bloc/review_bloc.dart';
 // CUSTOMER - PAYMENT
 import 'package:street_cart/core/services/razorpay_service.dart';
 import 'package:street_cart/features/customer/payment/data/datasources/payment_remote_datasource.dart';
@@ -360,6 +368,7 @@ Future<void> initDependencies() async {
   _initCustomerOnboarding();
   _initCustomerSplash();
   await _initCustomerSettings();
+  _initCustomerReview();
 
   // SHOP
   await _initShopAuth();
@@ -632,6 +641,25 @@ void _initCustomerProfile() {
       setDefaultAddress: sl(),
     ),
   );
+}
+
+// ================= CUSTOMER REVIEW =================
+void _initCustomerReview() {
+  sl.registerLazySingleton<IReviewRemoteDataSource>(
+    () => ReviewRemoteDataSourceImpl(
+      auth: sl(),
+      firestore: sl(),
+      cloudinaryService: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<IReviewRepository>(
+    () => ReviewRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+  );
+
+  sl.registerLazySingleton(() => SubmitReview(sl()));
+
+  sl.registerFactory(() => ReviewBloc(submitReview: sl()));
 }
 
 // ================= CUSTOMER LOCATION =================

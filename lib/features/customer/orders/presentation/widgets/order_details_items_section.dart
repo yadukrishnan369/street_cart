@@ -6,11 +6,13 @@ import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/features/customer/orders/presentation/pages/return_request_page.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/features/customer/review/presentation/bloc/review_bloc.dart';
+import 'package:street_cart/features/customer/review/presentation/pages/review_page.dart';
 
 // Order Details Items Section
 class OrderDetailsItemsSection extends StatelessWidget {
@@ -70,16 +72,44 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Product Name
-                        Text(
-                          item.productName,
-                          style: TextStyle(
-                            color: CustomerAppColors.textPrimary,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        // Product Name & View
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                item.productName,
+                                style: TextStyle(
+                                  color: CustomerAppColors.textPrimary,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            GestureDetector(
+                              onTap: () {
+                                OrdersHelper.navigateToProductDetails(
+                                  context: context,
+                                  productId: item.productId,
+                                  shopId: item.shopId,
+                                  selectedColor: item.selectedColor,
+                                  selectedSize: item.selectedSize,
+                                );
+                              },
+                              child: Text(
+                                'View',
+                                style: TextStyle(
+                                  color: CustomerAppColors.primary,
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 4.h),
                         // Color and Size
@@ -127,9 +157,22 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          CustomSnackBar.show(
+                          Navigator.push(
                             context,
-                            message: 'Review for ${item.productName} clicked!',
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider(
+                                create: (_) => sl<ReviewBloc>(),
+                                child: ReviewPage(
+                                  productId: item.productId,
+                                  productName: item.productName,
+                                  productImage: item.productImage,
+                                  shopId: item.shopId,
+                                  selectedSize: item.selectedSize,
+                                  selectedColor: item.selectedColor,
+                                  price: item.price,
+                                ),
+                              ),
+                            ),
                           );
                         },
                         icon: Icon(
