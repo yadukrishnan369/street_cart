@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:street_cart/core/utils/logger.dart';
 import 'package:street_cart/features/customer/products/domain/usecases/get_customer_products.dart';
+import 'package:street_cart/features/customer/review/domain/usecases/get_product_reviews.dart';
+import 'package:street_cart/features/customer/review/data/models/review_model.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'customer_products_event.dart';
@@ -13,10 +15,12 @@ class CustomerProductsBloc
     extends Bloc<CustomerProductsEvent, CustomerProductsState> {
   final GetCustomerProducts getCustomerProducts;
   final SharedPreferences _sharedPreferences;
+  final GetProductReviews getProductReviews;
 
   CustomerProductsBloc({
     required this.getCustomerProducts,
     required SharedPreferences sharedPreferences,
+    required this.getProductReviews,
   }) : _sharedPreferences = sharedPreferences,
        super(CustomerProductsInitial()) {
     on<FetchCustomerProducts>(_onFetchCustomerProducts);
@@ -167,11 +171,19 @@ class CustomerProductsBloc
       if (sizes.isNotEmpty) selectedSize = sizes.first;
     }
 
+    List<ReviewModel> reviews = [];
+    try {
+      reviews = await getProductReviews(product.id);
+    } catch (e) {
+      // Keep empty if failed
+    }
+
     emit(
       ProductDetailState(
         selectedColor: selectedColor,
         selectedSize: selectedSize,
         variantWarningMessage: variantWarningMessage,
+        reviews: reviews,
       ),
     );
   }
@@ -213,7 +225,7 @@ class CustomerProductsBloc
     }
   }
 
-  // Filter + Sort Logic applied to Product List
+  // Filter and Sort Logic applied to Product List
   List<ProductModel> _filterAndSort({
     required List<ProductModel> allProducts,
     required List<ShopProfileModel> shops,

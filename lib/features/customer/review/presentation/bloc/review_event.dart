@@ -44,9 +44,14 @@ class RemoveReviewImageEvent extends ReviewEvent {
 class SubmitReviewEvent extends ReviewEvent {
   final String productId;
   final String shopId;
+  final String? reviewId;
 
-  const SubmitReviewEvent({required this.productId, required this.shopId});
+  const SubmitReviewEvent({
+    required this.productId,
+    required this.shopId,
+    this.reviewId,
+  });
 
   @override
-  List<Object?> get props => [productId, shopId];
+  List<Object?> get props => [productId, shopId, reviewId];
 }

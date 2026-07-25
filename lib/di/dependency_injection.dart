@@ -102,6 +102,8 @@ import 'package:street_cart/features/customer/review/data/datasources/review_rem
 import 'package:street_cart/features/customer/review/data/repositories/review_repository_impl.dart';
 import 'package:street_cart/features/customer/review/domain/repositories/i_review_repository.dart';
 import 'package:street_cart/features/customer/review/domain/usecases/submit_review.dart';
+import 'package:street_cart/features/customer/review/domain/usecases/get_product_reviews.dart';
+import 'package:street_cart/features/customer/review/domain/usecases/delete_review.dart';
 import 'package:street_cart/features/customer/review/presentation/bloc/review_bloc.dart';
 // CUSTOMER - PAYMENT
 import 'package:street_cart/core/services/razorpay_service.dart';
@@ -658,6 +660,8 @@ void _initCustomerReview() {
   );
 
   sl.registerLazySingleton(() => SubmitReview(sl()));
+  sl.registerLazySingleton(() => GetProductReviews(sl()));
+  sl.registerLazySingleton(() => DeleteReview(sl()));
 
   sl.registerFactory(() => ReviewBloc(submitReview: sl()));
 }
@@ -767,6 +771,7 @@ void _initCustomerProducts() {
     () => CustomerProductsBloc(
       getCustomerProducts: sl(),
       sharedPreferences: sl(),
+      getProductReviews: sl(),
     ),
   );
 

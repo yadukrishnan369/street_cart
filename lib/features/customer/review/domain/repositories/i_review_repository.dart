@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:street_cart/features/customer/review/data/models/review_model.dart';
 
 abstract class IReviewRepository {
   Future<void> submitReview({
@@ -7,5 +8,10 @@ abstract class IReviewRepository {
     required int rating,
     required String reviewText,
     required List<File> imageFiles,
+    String? reviewId,
   });
+
+  Future<List<ReviewModel>> getProductReviews(String productId);
+
+  Future<void> deleteReview(String reviewId, String productId);
 }

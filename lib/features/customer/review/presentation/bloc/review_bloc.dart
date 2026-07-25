@@ -63,6 +63,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         rating: state.rating,
         reviewText: state.comment,
         imageFiles: state.images,
+        reviewId: event.reviewId,
       );
       emit(state.copyWith(status: ReviewStatus.success));
     } catch (e) {

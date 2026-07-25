@@ -19,8 +19,9 @@ import 'package:street_cart/features/customer/products/presentation/widgets/prod
 import 'package:street_cart/features/customer/products/presentation/widgets/product_action_buttons.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/product_detail_app_bar.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/stock_status_badge.dart';
-import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/features/customer/products/presentation/widgets/variant_warning_banner.dart';
+import 'package:street_cart/features/customer/products/presentation/widgets/product_reviews_section.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Customer Product Detail Page
 class CustomerProductDetailPage extends StatelessWidget {
@@ -110,6 +111,7 @@ class CustomerProductDetailPage extends StatelessWidget {
                         ProductInfoSection(
                           productName: product.name,
                           shopName: shop.shopName,
+                          rating: product.rating,
                         ),
                         SizedBox(height: 12.h),
                         // Original and Offer Price
@@ -170,7 +172,14 @@ class CustomerProductDetailPage extends StatelessWidget {
                         ProductDescriptionSection(
                           description: product.description,
                         ),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 24.h),
+                        // Ratings & Reviews
+                        ProductReviewsSection(
+                          reviews: state.reviews,
+                          product: product,
+                          shop: shop,
+                        ),
+                        SizedBox(height: 24.h),
                       ],
                     ),
                   ),

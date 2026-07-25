@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/features/customer/review/data/models/review_model.dart';
 
 abstract class CustomerProductsState {}
 
@@ -49,18 +50,17 @@ class CustomerProductsError extends CustomerProductsState {
 // Product Detail Page State
 class ProductDetailState extends CustomerProductsState {
   final String? selectedColor;
-
   final String? selectedSize;
-
   final String? variantWarningMessage;
-
   final int carouselIndex;
+  final List<ReviewModel> reviews;
 
   ProductDetailState({
     this.selectedColor,
     this.selectedSize,
     this.variantWarningMessage,
     this.carouselIndex = 0,
+    this.reviews = const [],
   });
 
   ProductDetailState copyWith({
@@ -68,6 +68,7 @@ class ProductDetailState extends CustomerProductsState {
     String? selectedSize,
     String? Function()? variantWarningMessage,
     int? carouselIndex,
+    List<ReviewModel>? reviews,
   }) {
     return ProductDetailState(
       selectedColor: selectedColor ?? this.selectedColor,
@@ -76,6 +77,7 @@ class ProductDetailState extends CustomerProductsState {
           ? variantWarningMessage()
           : this.variantWarningMessage,
       carouselIndex: carouselIndex ?? this.carouselIndex,
+      reviews: reviews ?? this.reviews,
     );
   }
 }

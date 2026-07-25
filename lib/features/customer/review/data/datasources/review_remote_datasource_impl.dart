@@ -15,6 +15,7 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     required this.firestore,
     required this.cloudinaryService,
   });
+
   // Submit Review
   @override
   Future<void> submitReview({
@@ -23,6 +24,7 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     required int rating,
     required String reviewText,
     required List<File> imageFiles,
+    String? reviewId,
   }) async {
     final user = auth.currentUser;
     if (user == null) {
@@ -40,7 +42,7 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     if (customerDoc.exists && customerDoc.data() != null) {
       final data = customerDoc.data()!;
       customerName = data['full_name'] ?? user.displayName ?? 'Anonymous';
-      customerImage = data['profile_image'] ?? user.photoURL ?? '';
+      customerImage = data['profile_image'] ?? '';
     }
 
     // Upload images to Cloudinary
@@ -53,7 +55,9 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     }
 
     // Create review doc
-    final reviewRef = firestore.collection('reviews').doc();
+    final reviewRef = reviewId != null
+        ? firestore.collection('reviews').doc(reviewId)
+        : firestore.collection('reviews').doc();
 
     final reviewModel = ReviewModel(
       id: reviewRef.id,
@@ -72,6 +76,34 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     await reviewRef.set(reviewModel.toMap());
 
     // Calculate new average rating for product
+    await _recalculateProductRating(productId);
+  }
+
+  // Get Product Reviews
+  @override
+  Future<List<ReviewModel>> getProductReviews(String productId) async {
+    final snapshot = await firestore
+        .collection('reviews')
+        .where('product_id', isEqualTo: productId)
+        .get();
+
+    final list = snapshot.docs
+        .map((doc) => ReviewModel.fromMap(doc.data(), doc.id))
+        .toList();
+    // Sort descending by created_at
+    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return list;
+  }
+
+  // Delete Review by Cusomter
+  @override
+  Future<void> deleteReview(String reviewId, String productId) async {
+    await firestore.collection('reviews').doc(reviewId).delete();
+    await _recalculateProductRating(productId);
+  }
+
+  // Re calculate Product Rating
+  Future<void> _recalculateProductRating(String productId) async {
     final reviewsSnapshot = await firestore
         .collection('reviews')
         .where('product_id', isEqualTo: productId)

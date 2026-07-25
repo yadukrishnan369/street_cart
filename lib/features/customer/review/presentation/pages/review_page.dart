@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/utils/validators.dart';
+import 'package:street_cart/features/customer/review/data/models/review_model.dart';
 import 'package:street_cart/features/customer/review/presentation/bloc/review_bloc.dart';
 import 'package:street_cart/features/customer/review/presentation/bloc/review_event.dart';
 import 'package:street_cart/features/customer/review/presentation/bloc/review_state.dart';
@@ -22,6 +23,7 @@ class ReviewPage extends StatefulWidget {
   final String? selectedSize;
   final String? selectedColor;
   final double? price;
+  final ReviewModel? existingReview;
 
   const ReviewPage({
     super.key,
@@ -32,6 +34,7 @@ class ReviewPage extends StatefulWidget {
     this.selectedSize,
     this.selectedColor,
     this.price,
+    this.existingReview,
   });
 
   @override
@@ -41,6 +44,22 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   final _commentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingReview != null) {
+      _commentController.text = widget.existingReview!.reviewText;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<ReviewBloc>().add(
+          ChangeRatingEvent(widget.existingReview!.rating),
+        );
+        context.read<ReviewBloc>().add(
+          ChangeCommentEvent(widget.existingReview!.reviewText),
+        );
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -55,9 +74,11 @@ class _ReviewPageState extends State<ReviewPage> {
         if (state.status == ReviewStatus.success) {
           CustomSnackBar.show(
             context,
-            message: 'Review submitted successfully!',
+            message: widget.existingReview != null
+                ? 'Review updated successfully!'
+                : 'Review submitted successfully!',
           );
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else if (state.status == ReviewStatus.failure) {
           CustomSnackBar.show(
             context,
@@ -76,7 +97,7 @@ class _ReviewPageState extends State<ReviewPage> {
             elevation: 0,
             // Page Title
             title: Text(
-              'Write a Review',
+              widget.existingReview != null ? 'Edit Review' : 'Write a Review',
               style: TextStyle(
                 color: const Color(0xFF1E293B),
                 fontWeight: FontWeight.bold,
@@ -145,6 +166,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           formKey: _formKey,
                           productId: widget.productId,
                           shopId: widget.shopId,
+                          reviewId: widget.existingReview?.id,
                         );
                       },
                     ),

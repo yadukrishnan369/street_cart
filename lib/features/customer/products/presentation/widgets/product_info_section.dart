@@ -6,11 +6,13 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 class ProductInfoSection extends StatelessWidget {
   final String productName;
   final String shopName;
+  final double rating;
 
   const ProductInfoSection({
     super.key,
     required this.productName,
     required this.shopName,
+    required this.rating,
   });
 
   @override
@@ -41,17 +43,18 @@ class ProductInfoSection extends StatelessWidget {
                 color: const Color(0xFFF3E8FF),
                 borderRadius: BorderRadius.circular(12.r),
               ),
+              // Product Overall Rating
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.star_border,
+                    Icons.star_rounded,
                     color: CustomerAppColors.primary,
                     size: 14.sp,
                   ),
                   SizedBox(width: 4.w),
                   Text(
-                    '4.8',
+                    rating > 0.0 ? rating.toStringAsFixed(1) : '0.0',
                     style: TextStyle(
                       color: CustomerAppColors.primary,
                       fontSize: 12.sp,

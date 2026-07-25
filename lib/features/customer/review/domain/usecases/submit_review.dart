@@ -12,6 +12,7 @@ class SubmitReview {
     required int rating,
     required String reviewText,
     required List<File> imageFiles,
+    String? reviewId,
   }) async {
     return await repository.submitReview(
       productId: productId,
@@ -19,6 +20,7 @@ class SubmitReview {
       rating: rating,
       reviewText: reviewText,
       imageFiles: imageFiles,
+      reviewId: reviewId,
     );
   }
 }

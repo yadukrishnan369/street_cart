@@ -22,6 +22,8 @@ class ProductModel {
   final int salesCount;
   final bool isActive;
   final bool disabledByAdmin;
+  final double rating;
+  final int reviewsCount;
 
   ProductModel({
     required this.id,
@@ -41,6 +43,8 @@ class ProductModel {
     this.salesCount = 0,
     this.isActive = true,
     this.disabledByAdmin = false,
+    this.rating = 0.0,
+    this.reviewsCount = 0,
   });
 
   // Returns true when this product uses the new variant
@@ -136,6 +140,8 @@ class ProductModel {
       salesCount: (map['sales_count'] as num?)?.toInt() ?? 0,
       isActive: map['is_active'] ?? (computedStock > 0),
       disabledByAdmin: map['disabled_by_admin'] ?? false,
+      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
+      reviewsCount: (map['reviews_count'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -162,6 +168,8 @@ class ProductModel {
       'sales_count': salesCount,
       'is_active': totalStock > 0,
       'disabled_by_admin': disabledByAdmin,
+      'rating': rating,
+      'reviews_count': reviewsCount,
     };
   }
 
@@ -183,6 +191,8 @@ class ProductModel {
     int? salesCount,
     bool? isActive,
     bool? disabledByAdmin,
+    double? rating,
+    int? reviewsCount,
   }) {
     return ProductModel(
       id: id ?? this.id,
@@ -202,6 +212,8 @@ class ProductModel {
       salesCount: salesCount ?? this.salesCount,
       isActive: isActive ?? this.isActive,
       disabledByAdmin: disabledByAdmin ?? this.disabledByAdmin,
+      rating: rating ?? this.rating,
+      reviewsCount: reviewsCount ?? this.reviewsCount,
     );
   }
 }
