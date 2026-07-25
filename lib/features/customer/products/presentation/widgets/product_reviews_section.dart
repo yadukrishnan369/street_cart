@@ -14,18 +14,22 @@ class ProductReviewsSection extends StatelessWidget {
   final List<ReviewModel> reviews;
   final ProductModel product;
   final ShopProfileModel shop;
+  final String? selectedColor;
+  final String? selectedSize;
 
   const ProductReviewsSection({
     super.key,
     required this.reviews,
     required this.product,
     required this.shop,
+    this.selectedColor,
+    this.selectedSize,
   });
 
   @override
   Widget build(BuildContext context) {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-    // Empty State
+
     if (reviews.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,6 +206,8 @@ class ProductReviewsSection extends StatelessWidget {
                                           review: review,
                                           product: product,
                                           shop: shop,
+                                          selectedColor: selectedColor,
+                                          selectedSize: selectedSize,
                                         ),
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(

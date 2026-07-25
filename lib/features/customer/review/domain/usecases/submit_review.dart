@@ -13,6 +13,7 @@ class SubmitReview {
     required String reviewText,
     required List<File> imageFiles,
     String? reviewId,
+    List<String>? existingImageUrls,
   }) async {
     return await repository.submitReview(
       productId: productId,
@@ -21,6 +22,7 @@ class SubmitReview {
       reviewText: reviewText,
       imageFiles: imageFiles,
       reviewId: reviewId,
+      existingImageUrls: existingImageUrls,
     );
   }
 }

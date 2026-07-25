@@ -50,14 +50,6 @@ class _ReviewPageState extends State<ReviewPage> {
     super.initState();
     if (widget.existingReview != null) {
       _commentController.text = widget.existingReview!.reviewText;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<ReviewBloc>().add(
-          ChangeRatingEvent(widget.existingReview!.rating),
-        );
-        context.read<ReviewBloc>().add(
-          ChangeCommentEvent(widget.existingReview!.reviewText),
-        );
-      });
     }
   }
 
@@ -146,6 +138,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     SizedBox(height: 24.h),
                     // Review Photo Picker
                     ReviewPhotoPicker(
+                      existingImageUrls: state.existingImageUrls,
                       selectedImages: state.images,
                       onPickImages: () {
                         context.read<ReviewBloc>().add(PickReviewImagesEvent());
@@ -153,6 +146,11 @@ class _ReviewPageState extends State<ReviewPage> {
                       onRemoveImage: (index) {
                         context.read<ReviewBloc>().add(
                           RemoveReviewImageEvent(index),
+                        );
+                      },
+                      onRemoveExistingImage: (index) {
+                        context.read<ReviewBloc>().add(
+                          RemoveExistingImageEvent(index),
                         );
                       },
                     ),

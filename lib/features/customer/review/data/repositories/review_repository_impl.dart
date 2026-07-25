@@ -22,6 +22,7 @@ class ReviewRepositoryImpl implements IReviewRepository {
     required String reviewText,
     required List<File> imageFiles,
     String? reviewId,
+    List<String>? existingImageUrls,
   }) async {
     if (!await networkInfo.isConnected) {
       throw NetworkException('Please check your internet connection.');
@@ -33,6 +34,7 @@ class ReviewRepositoryImpl implements IReviewRepository {
       reviewText: reviewText,
       imageFiles: imageFiles,
       reviewId: reviewId,
+      existingImageUrls: existingImageUrls,
     );
   }
 

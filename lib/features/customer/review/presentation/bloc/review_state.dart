@@ -8,6 +8,7 @@ class ReviewState extends Equatable {
   final int rating;
   final String comment;
   final List<File> images;
+  final List<String> existingImageUrls;
   final ReviewStatus status;
   final String? errorMessage;
 
@@ -15,6 +16,7 @@ class ReviewState extends Equatable {
     this.rating = 4,
     this.comment = '',
     this.images = const [],
+    this.existingImageUrls = const [],
     this.status = ReviewStatus.initial,
     this.errorMessage,
   });
@@ -23,6 +25,7 @@ class ReviewState extends Equatable {
     int? rating,
     String? comment,
     List<File>? images,
+    List<String>? existingImageUrls,
     ReviewStatus? status,
     String? errorMessage,
   }) {
@@ -30,11 +33,19 @@ class ReviewState extends Equatable {
       rating: rating ?? this.rating,
       comment: comment ?? this.comment,
       images: images ?? this.images,
+      existingImageUrls: existingImageUrls ?? this.existingImageUrls,
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [rating, comment, images, status, errorMessage];
+  List<Object?> get props => [
+    rating,
+    comment,
+    images,
+    existingImageUrls,
+    status,
+    errorMessage,
+  ];
 }

@@ -178,6 +178,8 @@ class CustomerProductDetailPage extends StatelessWidget {
                           reviews: state.reviews,
                           product: product,
                           shop: shop,
+                          selectedColor: state.selectedColor,
+                          selectedSize: state.selectedSize,
                         ),
                         SizedBox(height: 24.h),
                       ],

@@ -14,7 +14,10 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     on<PickReviewImagesEvent>(_onPickImages);
     on<RemoveReviewImageEvent>(_onRemoveImage);
     on<SubmitReviewEvent>(_onSubmitReview);
+    on<InitializeReviewEvent>(_onInitializeReview);
+    on<RemoveExistingImageEvent>(_onRemoveExistingImage);
   }
+
   // Change Rating
   void _onChangeRating(ChangeRatingEvent event, Emitter<ReviewState> emit) {
     emit(state.copyWith(rating: event.rating));
@@ -30,9 +33,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     PickReviewImagesEvent event,
     Emitter<ReviewState> emit,
   ) async {
+    final totalImagesCount =
+        state.images.length + state.existingImageUrls.length;
     try {
       final images = await ImagePickerHelper.pickMultiImage(
-        limit: 5 - state.images.length,
+        limit: 5 - totalImagesCount,
       );
       if (images.isNotEmpty) {
         final List<File> updatedList = List.from(state.images)..addAll(images);
@@ -50,6 +55,32 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     }
   }
 
+  // Initialize Review
+  void _onInitializeReview(
+    InitializeReviewEvent event,
+    Emitter<ReviewState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        rating: event.rating,
+        comment: event.comment,
+        existingImageUrls: event.existingImageUrls,
+      ),
+    );
+  }
+
+  // Remove Existing Image
+  void _onRemoveExistingImage(
+    RemoveExistingImageEvent event,
+    Emitter<ReviewState> emit,
+  ) {
+    if (event.index >= 0 && event.index < state.existingImageUrls.length) {
+      final List<String> updatedList = List.from(state.existingImageUrls)
+        ..removeAt(event.index);
+      emit(state.copyWith(existingImageUrls: updatedList));
+    }
+  }
+
   // Submit Review
   Future<void> _onSubmitReview(
     SubmitReviewEvent event,
@@ -64,6 +95,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         reviewText: state.comment,
         imageFiles: state.images,
         reviewId: event.reviewId,
+        existingImageUrls: state.existingImageUrls,
       );
       emit(state.copyWith(status: ReviewStatus.success));
     } catch (e) {

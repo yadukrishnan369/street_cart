@@ -25,6 +25,7 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     required String reviewText,
     required List<File> imageFiles,
     String? reviewId,
+    List<String>? existingImageUrls,
   }) async {
     final user = auth.currentUser;
     if (user == null) {
@@ -45,8 +46,11 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
       customerImage = data['profile_image'] ?? '';
     }
 
-    // Upload images to Cloudinary
-    final List<String> imageUrls = [];
+    // Existing non deleted URLs and newly uploaded Images
+    final List<String> imageUrls = existingImageUrls != null
+        ? List<String>.from(existingImageUrls)
+        : [];
+
     for (final file in imageFiles) {
       final url = await cloudinaryService.uploadImage(file);
       if (url != null) {
@@ -95,14 +99,14 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
     return list;
   }
 
-  // Delete Review by Cusomter
+  // Delete Review
   @override
   Future<void> deleteReview(String reviewId, String productId) async {
     await firestore.collection('reviews').doc(reviewId).delete();
     await _recalculateProductRating(productId);
   }
 
-  // Re calculate Product Rating
+  // Re Calculate Product Rating
   Future<void> _recalculateProductRating(String productId) async {
     final reviewsSnapshot = await firestore
         .collection('reviews')

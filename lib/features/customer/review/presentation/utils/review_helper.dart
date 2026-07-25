@@ -162,12 +162,21 @@ class ReviewHelper {
     required ReviewModel review,
     required ProductModel product,
     required ShopProfileModel shop,
+    String? selectedColor,
+    String? selectedSize,
   }) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => BlocProvider(
-          create: (_) => sl<ReviewBloc>(),
+          create: (_) => sl<ReviewBloc>()
+            ..add(
+              InitializeReviewEvent(
+                rating: review.rating,
+                comment: review.reviewText,
+                existingImageUrls: review.images,
+              ),
+            ),
           child: ReviewPage(
             productId: product.id,
             productName: product.name,
@@ -175,6 +184,8 @@ class ReviewHelper {
             shopId: shop.uid,
             price: product.offerPrice,
             existingReview: review,
+            selectedColor: selectedColor,
+            selectedSize: selectedSize,
           ),
         ),
       ),

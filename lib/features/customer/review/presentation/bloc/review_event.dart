@@ -55,3 +55,29 @@ class SubmitReviewEvent extends ReviewEvent {
   @override
   List<Object?> get props => [productId, shopId, reviewId];
 }
+
+// Initialize Review Event for Editing
+class InitializeReviewEvent extends ReviewEvent {
+  final int rating;
+  final String comment;
+  final List<String> existingImageUrls;
+
+  const InitializeReviewEvent({
+    required this.rating,
+    required this.comment,
+    required this.existingImageUrls,
+  });
+
+  @override
+  List<Object?> get props => [rating, comment, existingImageUrls];
+}
+
+// Remove Existing Image Event
+class RemoveExistingImageEvent extends ReviewEvent {
+  final int index;
+
+  const RemoveExistingImageEvent(this.index);
+
+  @override
+  List<Object?> get props => [index];
+}

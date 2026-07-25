@@ -9,6 +9,7 @@ abstract class IReviewRepository {
     required String reviewText,
     required List<File> imageFiles,
     String? reviewId,
+    List<String>? existingImageUrls,
   });
 
   Future<List<ReviewModel>> getProductReviews(String productId);

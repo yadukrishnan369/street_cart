@@ -8,7 +8,8 @@ abstract class IReviewRemoteDataSource {
     required int rating,
     required String reviewText,
     required List<File> imageFiles,
-    String? reviewId, // reviewId for editing
+    String? reviewId,
+    List<String>? existingImageUrls,
   });
 
   Future<List<ReviewModel>> getProductReviews(String productId);

@@ -68,17 +68,14 @@ class ProductInfoCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                // Product Size and Color
-                if (size != null || color != null) ...[
-                  SizedBox(height: 4.h),
-                  Text(
-                    'Size: ${size ?? "Standard"} | Color: ${color ?? "Default"}',
-                    style: TextStyle(
-                      color: const Color(0xFF94A3B8),
-                      fontSize: 12.sp,
-                    ),
+                SizedBox(height: 4.h),
+                Text(
+                  'Size: ${size ?? "Standard"} | Color: ${color ?? "Default"}',
+                  style: TextStyle(
+                    color: const Color(0xFF94A3B8),
+                    fontSize: 12.sp,
                   ),
-                ],
+                ),
                 // Product Price
                 if (price != null) ...[
                   SizedBox(height: 6.h),
