@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:street_cart/core/utils/logger.dart';
 import 'package:street_cart/features/customer/products/domain/usecases/get_customer_products.dart';
 import 'package:street_cart/features/customer/review/domain/usecases/get_product_reviews.dart';
-import 'package:street_cart/features/customer/review/data/models/review_model.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'customer_products_event.dart';
@@ -171,21 +170,23 @@ class CustomerProductsBloc
       if (sizes.isNotEmpty) selectedSize = sizes.first;
     }
 
-    List<ReviewModel> reviews = [];
-    try {
-      reviews = await getProductReviews(product.id);
-    } catch (e) {
-      // Keep empty if failed
-    }
-
     emit(
       ProductDetailState(
         selectedColor: selectedColor,
         selectedSize: selectedSize,
         variantWarningMessage: variantWarningMessage,
-        reviews: reviews,
+        reviews: const [],
       ),
     );
+
+    try {
+      final reviews = await getProductReviews(product.id);
+      if (!isClosed && state is ProductDetailState) {
+        emit((state as ProductDetailState).copyWith(reviews: reviews));
+      }
+    } catch (e) {
+      // Keep empty if failed
+    }
   }
 
   // Selects a Color and Resets Sizes
