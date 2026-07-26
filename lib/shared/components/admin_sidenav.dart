@@ -127,7 +127,7 @@ class AdminSidenav extends StatelessWidget {
                   _buildMenuItem(
                     icon: Icons.rate_review_outlined,
                     label: 'Reviews',
-                    route: '',
+                    route: '/reviews',
                   ),
                   SizedBox(height: 24.h),
                   const Divider(color: Color(0xFFF0EFF5), height: 1),

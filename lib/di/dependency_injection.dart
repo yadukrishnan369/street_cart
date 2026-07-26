@@ -360,6 +360,18 @@ import 'package:street_cart/features/shop/reviews/domain/repositories/i_shop_rev
 import 'package:street_cart/features/shop/reviews/domain/usecases/get_shop_product_reviews.dart';
 import 'package:street_cart/features/shop/reviews/presentation/bloc/shop_reviews_bloc.dart';
 
+// ADMIN - REVIEWS
+import 'package:street_cart/features/admin/reviews/data/datasources/admin_reviews_remote_datasource.dart';
+import 'package:street_cart/features/admin/reviews/data/datasources/admin_reviews_remote_datasource_impl.dart';
+import 'package:street_cart/features/admin/reviews/data/repositories/admin_reviews_repository_impl.dart';
+import 'package:street_cart/features/admin/reviews/domain/repositories/i_admin_reviews_repository.dart';
+import 'package:street_cart/features/admin/reviews/domain/usecases/get_admin_reviews.dart';
+import 'package:street_cart/features/admin/reviews/domain/usecases/delete_review_by_admin.dart';
+import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_reviews_bloc.dart';
+import 'package:street_cart/features/admin/reviews/domain/usecases/toggle_review_visibility.dart';
+import 'package:street_cart/features/admin/reviews/domain/usecases/get_admin_review_details.dart';
+import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_review_detail_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -402,6 +414,7 @@ Future<void> initDependencies() async {
   _initAdminCustomers();
   _initAdminProducts();
   _initAdminOrders();
+  _initAdminReviews();
 }
 
 // ================= SHOP SPLASH =================
@@ -1285,4 +1298,28 @@ void _initShopReviews() {
   );
   sl.registerLazySingleton(() => GetShopProductReviews(sl()));
   sl.registerFactory(() => ShopReviewsBloc(getShopProductReviews: sl()));
+}
+
+// ================= ADMIN REVIEWS =================
+void _initAdminReviews() {
+  sl.registerLazySingleton<IAdminReviewsRemoteDataSource>(
+    () => AdminReviewsRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<IAdminReviewsRepository>(
+    () => AdminReviewsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+  );
+  sl.registerLazySingleton(() => GetAdminReviews(sl()));
+  sl.registerLazySingleton(() => DeleteReviewByAdmin(sl()));
+  sl.registerLazySingleton(() => ToggleReviewVisibility(sl()));
+  sl.registerLazySingleton(() => GetAdminReviewDetails(sl()));
+  sl.registerFactory(
+    () => AdminReviewsBloc(getAdminReviews: sl(), deleteReviewByAdmin: sl()),
+  );
+  sl.registerFactory(
+    () => AdminReviewDetailBloc(
+      getAdminReviewDetails: sl(),
+      toggleReviewVisibility: sl(),
+      deleteReviewByAdmin: sl(),
+    ),
+  );
 }

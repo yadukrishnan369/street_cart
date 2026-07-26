@@ -143,6 +143,10 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return 'Order Details';
     } else if (route.contains(RoutePaths.orders)) {
       return 'Order Management';
+    } else if (route.contains('/reviews/')) {
+      return 'Review Details';
+    } else if (route.contains(RoutePaths.reviews)) {
+      return 'Reviews & Ratings';
     }
     return '';
   }
@@ -178,6 +182,10 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return Icons.assignment_outlined;
     } else if (route.contains(RoutePaths.orders)) {
       return Icons.shopping_cart_outlined;
+    } else if (route.contains('/reviews/')) {
+      return Icons.rate_review_outlined;
+    } else if (route.contains(RoutePaths.reviews)) {
+      return Icons.rate_review_outlined;
     }
     return Icons.circle;
   }

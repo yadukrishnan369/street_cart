@@ -22,6 +22,8 @@ import 'package:street_cart/features/admin/products/presentation/pages/admin_pro
 import 'package:street_cart/features/admin/products/presentation/pages/admin_product_detail_page.dart';
 import 'package:street_cart/features/admin/orders/presentation/pages/admin_orders_page.dart';
 import 'package:street_cart/features/admin/orders/presentation/pages/admin_order_detail_page.dart';
+import 'package:street_cart/features/admin/reviews/presentation/pages/admin_reviews_page.dart';
+import 'package:street_cart/features/admin/reviews/presentation/pages/admin_review_detail_page.dart';
 import 'route_paths.dart';
 
 class AdminRoutes {
@@ -119,6 +121,17 @@ class AdminRoutes {
           builder: (context, state) {
             final orderId = state.pathParameters['id'] ?? '';
             return AdminOrderDetailPage(orderId: orderId);
+          },
+        ),
+        GoRoute(
+          path: RoutePaths.reviews,
+          builder: (context, state) => const AdminReviewsPage(),
+        ),
+        GoRoute(
+          path: RoutePaths.reviewDetails,
+          builder: (context, state) {
+            final reviewId = state.pathParameters['id'] ?? '';
+            return AdminReviewDetailPage(reviewId: reviewId);
           },
         ),
       ],

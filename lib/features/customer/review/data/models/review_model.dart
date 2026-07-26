@@ -12,6 +12,7 @@ class ReviewModel extends Equatable {
   final String reviewText;
   final List<String> images;
   final DateTime createdAt;
+  final bool isHidden;
 
   const ReviewModel({
     required this.id,
@@ -24,6 +25,7 @@ class ReviewModel extends Equatable {
     required this.reviewText,
     required this.images,
     required this.createdAt,
+    this.isHidden = false,
   });
 
   factory ReviewModel.fromMap(Map<String, dynamic> map, String docId) {
@@ -40,6 +42,7 @@ class ReviewModel extends Equatable {
       createdAt: (map['created_at'] is Timestamp)
           ? (map['created_at'] as Timestamp).toDate()
           : DateTime.tryParse(map['created_at'] ?? '') ?? DateTime.now(),
+      isHidden: map['is_hidden'] ?? false,
     );
   }
 
@@ -54,6 +57,7 @@ class ReviewModel extends Equatable {
       'review_text': reviewText,
       'images': images,
       'created_at': Timestamp.fromDate(createdAt),
+      'is_hidden': isHidden,
     };
   }
 
@@ -69,5 +73,6 @@ class ReviewModel extends Equatable {
     reviewText,
     images,
     createdAt,
+    isHidden,
   ];
 }
