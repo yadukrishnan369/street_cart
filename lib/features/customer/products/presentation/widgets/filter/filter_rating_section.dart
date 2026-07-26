@@ -34,13 +34,13 @@ class FilterRatingSection extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildRatingChip('4★ & above'),
+              _buildRatingChip('1 & above'),
               SizedBox(width: 8.w),
-              _buildRatingChip('3★ & above'),
+              _buildRatingChip('2 & above'),
               SizedBox(width: 8.w),
-              _buildRatingChip('2★ & above'),
+              _buildRatingChip('3 & above'),
               SizedBox(width: 8.w),
-              _buildRatingChip('1★ & above'),
+              _buildRatingChip('4 & above'),
             ],
           ),
         ),

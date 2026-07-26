@@ -276,7 +276,19 @@ class CustomerProductsBloc
         matchSize = product.allSizes.any((s) => selectedSizes.contains(s));
       }
 
-      return matchQuery && matchCat && matchPrice && matchColor && matchSize;
+      // Rating Filter logic
+      bool matchRating = selectedRating == null;
+      if (!matchRating) {
+        final minRating = double.tryParse(selectedRating[0]) ?? 0.0;
+        matchRating = product.rating >= minRating;
+      }
+
+      return matchQuery &&
+          matchCat &&
+          matchPrice &&
+          matchColor &&
+          matchSize &&
+          matchRating;
     }).toList();
 
     // Sort Filtered Products by Selected Sort Option
@@ -286,6 +298,12 @@ class CustomerProductsBloc
         if (a.createdAt == null) return 1;
         if (b.createdAt == null) return -1;
         return b.createdAt!.compareTo(a.createdAt!);
+      });
+    } else if (selectedSort == 'Popularity') {
+      filtered.sort((a, b) {
+        final scoreA = a.salesCount + a.rating;
+        final scoreB = b.salesCount + b.rating;
+        return scoreB.compareTo(scoreA);
       });
     } else if (selectedSort == 'Price: Low to High') {
       filtered.sort((a, b) {
