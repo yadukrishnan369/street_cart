@@ -352,6 +352,14 @@ import 'package:street_cart/features/admin/orders/data/repositories/admin_orders
 import 'package:street_cart/features/admin/orders/domain/usecases/get_admin_orders.dart';
 import 'package:street_cart/features/admin/orders/presentation/bloc/admin_orders_bloc.dart';
 
+// SHOP - REVIEWS
+import 'package:street_cart/features/shop/reviews/data/datasources/shop_reviews_remote_datasource.dart';
+import 'package:street_cart/features/shop/reviews/data/datasources/shop_reviews_remote_datasource_impl.dart';
+import 'package:street_cart/features/shop/reviews/data/repositories/shop_reviews_repository_impl.dart';
+import 'package:street_cart/features/shop/reviews/domain/repositories/i_shop_reviews_repository.dart';
+import 'package:street_cart/features/shop/reviews/domain/usecases/get_shop_product_reviews.dart';
+import 'package:street_cart/features/shop/reviews/presentation/bloc/shop_reviews_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -382,6 +390,7 @@ Future<void> initDependencies() async {
   await _initShopSettings();
   await _initShopProducts();
   _initShopOrders();
+  _initShopReviews();
 
   // ADMIN
   _initAdminAuth();
@@ -1264,4 +1273,16 @@ void _initAdminOrders() {
   );
   sl.registerLazySingleton(() => GetAdminOrders(sl()));
   sl.registerFactory(() => AdminOrdersBloc(getAdminOrders: sl()));
+}
+
+// ================= SHOP REVIEWS =================
+void _initShopReviews() {
+  sl.registerLazySingleton<IShopReviewsRemoteDataSource>(
+    () => ShopReviewsRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<IShopReviewsRepository>(
+    () => ShopReviewsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetShopProductReviews(sl()));
+  sl.registerFactory(() => ShopReviewsBloc(getShopProductReviews: sl()));
 }

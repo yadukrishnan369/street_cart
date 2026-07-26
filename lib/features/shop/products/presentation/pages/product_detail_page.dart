@@ -14,6 +14,7 @@ import 'package:street_cart/features/shop/products/presentation/widgets/product_
 import 'package:street_cart/features/shop/products/presentation/widgets/product_detail_colors_section.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/product_detail_edit_button.dart';
 import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
+import 'package:street_cart/features/shop/products/presentation/widgets/shop_product_reviews_section.dart';
 
 // Product Detail Page
 class ProductDetailPage extends StatefulWidget {
@@ -154,6 +155,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           style: ShopAppTextStyles.bodyMedium.copyWith(
                             height: 1.5,
                           ),
+                        ),
+                        SizedBox(height: 24.h),
+                        const Divider(height: 1, color: Color(0xFFE2E8F0)),
+                        SizedBox(height: 24.h),
+                        // Shop Product Reviews Section
+                        ShopProductReviewsSection(
+                          product: currentProduct,
+                          shopId: widget.shopId,
                         ),
                         SizedBox(height: 40.h),
                         // Product Detail Edit Button

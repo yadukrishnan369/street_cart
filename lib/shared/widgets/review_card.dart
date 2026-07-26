@@ -12,7 +12,7 @@ import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 class ReviewCard extends StatelessWidget {
   final ReviewModel review;
   final ProductModel product;
-  final ShopProfileModel shop;
+  final ShopProfileModel? shop;
   final String? currentUserId;
   final String? selectedColor;
   final String? selectedSize;
@@ -21,7 +21,7 @@ class ReviewCard extends StatelessWidget {
     super.key,
     required this.review,
     required this.product,
-    required this.shop,
+    this.shop,
     required this.currentUserId,
     this.selectedColor,
     this.selectedSize,
@@ -110,7 +110,7 @@ class ReviewCard extends StatelessWidget {
                                   context: context,
                                   review: review,
                                   product: product,
-                                  shop: shop,
+                                  shop: shop!,
                                   selectedColor: selectedColor,
                                   selectedSize: selectedSize,
                                 ),
