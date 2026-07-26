@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
 import 'package:street_cart/features/admin/reviews/presentation/utils/review_helper.dart';
@@ -130,7 +129,7 @@ class ReviewsTable extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: CustomerAppColors.primary,
+                      color: AdminAppColors.primaryColor,
                     ),
                   ),
                 ),
