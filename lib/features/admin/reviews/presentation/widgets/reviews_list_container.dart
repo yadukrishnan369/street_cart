@@ -111,10 +111,10 @@ class _ReviewsListContainerState extends State<ReviewsListContainer> {
             reviews: widget.loadedState.paginatedReviews,
             productNames: widget.loadedState.productNames,
             onViewDetail: (r) async {
-              final refresh = await context.push(
+              await context.push(
                 RoutePaths.reviewDetails.replaceAll(':id', r.id),
               );
-              if (refresh == true && mounted) {
+              if (mounted) {
                 bloc.add(LoadAdminReviewsRequested());
               }
             },
