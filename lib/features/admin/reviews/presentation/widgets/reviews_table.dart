@@ -184,14 +184,20 @@ class ReviewsTable extends StatelessWidget {
           ),
         ),
 
-        // Comment
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           child: Text(
             r.reviewText.isNotEmpty
                 ? r.reviewText
                 : 'No text comment provided.',
-            style: TextStyle(fontSize: 13.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: r.isHidden
+                  ? AdminAppColors.errorColor
+                  : const Color(0xFF6C6C80),
+              decoration: r.isHidden ? TextDecoration.lineThrough : null,
+              decorationColor: AdminAppColors.errorColor,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

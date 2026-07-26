@@ -19,6 +19,7 @@ class ShopReviewsRemoteDataSourceImpl implements IShopReviewsRemoteDataSource {
 
       final list = snapshot.docs
           .map((doc) => ReviewModel.fromMap(doc.data(), doc.id))
+          .where((r) => !r.isHidden)
           .toList();
 
       list.sort((a, b) => b.createdAt.compareTo(a.createdAt));

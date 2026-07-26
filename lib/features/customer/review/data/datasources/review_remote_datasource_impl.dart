@@ -93,6 +93,7 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
 
     final list = snapshot.docs
         .map((doc) => ReviewModel.fromMap(doc.data(), doc.id))
+        .where((r) => !r.isHidden)
         .toList();
     // Sort descending by created_at
     list.sort((a, b) => b.createdAt.compareTo(a.createdAt));

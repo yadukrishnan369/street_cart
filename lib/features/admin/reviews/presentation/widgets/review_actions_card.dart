@@ -69,7 +69,7 @@ class ReviewActionsCard extends StatelessWidget {
                 color: const Color(0xFF1E1E2F),
               ),
               label: Text(
-                review.isHidden ? 'Show Review' : 'Hide/Show Review',
+                review.isHidden ? 'Show Review' : 'Hide Review',
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,

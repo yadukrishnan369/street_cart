@@ -84,15 +84,44 @@ class ReviewDetailsCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Customer Name
-                            Text(
-                              review.customerName.isNotEmpty
-                                  ? review.customerName
-                                  : 'Anonymous',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1E1E2F),
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  review.customerName.isNotEmpty
+                                      ? review.customerName
+                                      : 'Anonymous',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF1E1E2F),
+                                  ),
+                                ),
+                                // Hidden Badge
+                                if (review.isHidden) ...[
+                                  SizedBox(width: 8.w),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                      vertical: 2.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFEF2F2),
+                                      borderRadius: BorderRadius.circular(4.r),
+                                      border: Border.all(
+                                        color: const Color(0xFFFCA5A5),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'HIDDEN',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: AdminAppColors.errorColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                             SizedBox(height: 2.h),
                             // Customer ID
