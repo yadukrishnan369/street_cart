@@ -7,6 +7,7 @@ import 'package:street_cart/features/admin/reviews/presentation/widgets/reviews_
 import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_reviews_bloc.dart';
 import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_reviews_event.dart';
 import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_reviews_state.dart';
+import 'package:street_cart/features/admin/reviews/presentation/widgets/shimmer/admin_reviews_shimmer.dart';
 import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
@@ -43,9 +44,9 @@ class _AdminReviewsPageState extends State<AdminReviewsPage> {
               if (state is AdminReviewsLoaded) {
                 _lastLoadedState = state;
               }
-
+              // Show Shimmer
               if (state is AdminReviewsLoading && _lastLoadedState == null) {
-                return const Center(child: CircularProgressIndicator());
+                return const AdminReviewsShimmer();
               }
               // Error View
               if (_lastLoadedState == null) {
@@ -57,7 +58,7 @@ class _AdminReviewsPageState extends State<AdminReviewsPage> {
                     ),
                   );
                 }
-                return const Center(child: CircularProgressIndicator());
+                return const AdminReviewsShimmer();
               }
 
               final loadedState = _lastLoadedState!;

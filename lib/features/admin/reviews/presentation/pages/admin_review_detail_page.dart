@@ -9,6 +9,7 @@ import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_revie
 import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_review_detail_state.dart';
 import 'package:street_cart/features/admin/reviews/presentation/widgets/review_actions_card.dart';
 import 'package:street_cart/features/admin/reviews/presentation/widgets/review_details_card.dart';
+import 'package:street_cart/features/admin/reviews/presentation/widgets/shimmer/review_detail_shimmer.dart';
 import 'package:street_cart/shared/widgets/admin_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
@@ -42,8 +43,9 @@ class AdminReviewDetailPage extends StatelessWidget {
               }
             },
             builder: (context, state) {
+              // Showing Shimmer
               if (state is AdminReviewDetailLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const ReviewDetailShimmer();
               }
               // Error View
               if (state is AdminReviewDetailError) {
