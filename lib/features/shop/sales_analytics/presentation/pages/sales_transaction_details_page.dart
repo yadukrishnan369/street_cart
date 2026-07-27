@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/t
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/transaction_item_summary.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/transaction_status_banner.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/shimmer/sales_transaction_details_shimmer.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Shop Sales Transaction Details Page
 class ShopSalesTransactionDetailsPage extends StatelessWidget {
@@ -42,8 +43,24 @@ class ShopSalesTransactionDetailsPage extends StatelessWidget {
       body: FutureBuilder<void>(
         future: Future.delayed(const Duration(milliseconds: 600)),
         builder: (context, snapshot) {
+          // Loading shimmer
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SalesTransactionDetailsShimmer();
+          }
+          // Error view
+          if (snapshot.hasError) {
+            return AppErrorView(
+              message: snapshot.error.toString(),
+              onRetry: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ShopSalesTransactionDetailsPage(
+                    order: order,
+                    shopId: shopId,
+                  ),
+                ),
+              ),
+            );
           }
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

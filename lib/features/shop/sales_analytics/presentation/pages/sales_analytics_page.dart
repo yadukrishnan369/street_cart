@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
+import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/bloc/sales_analytics_bloc.dart';
@@ -63,10 +64,10 @@ class ShopSalesAnalyticsPage extends StatelessWidget {
                 }
                 // Error View
                 if (state is SalesAnalyticsError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${state.message}',
-                      style: const TextStyle(color: Colors.red),
+                  return AppErrorView(
+                    message: state.message,
+                    onRetry: () => context.read<SalesAnalyticsBloc>().add(
+                      FetchSalesAnalyticsData(shopId),
                     ),
                   );
                 }
@@ -90,66 +91,67 @@ class ShopSalesAnalyticsPage extends StatelessWidget {
                       );
                       await Future.delayed(const Duration(milliseconds: 800));
                     },
-                    // Nested Scroll View
-                    child: NestedScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
+                    child: CustomScrollView(
                       controller: scrollController,
-                      headerSliverBuilder: (context, innerBoxIsScrolled) {
-                        return [
-                          SliverToBoxAdapter(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 20.h,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Analytics Header
-                                  AnalyticsHeader(
-                                    selectedTimeframe: state.selectedTimeframe,
-                                    selectedCategory: state.selectedCategory,
-                                    availableCategories:
-                                        state.availableCategories,
-                                    customStartDate: state.customStartDate,
-                                    customEndDate: state.customEndDate,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  // Earnings Card
-                                  EarningsCard(
-                                    totalEarnings: state.totalEarnings,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  // Time frame Earnings Cards
-                                  TimeframeEarningsCards(
-                                    todayEarnings: state.todayEarnings,
-                                    weekEarnings: state.weekEarnings,
-                                    monthEarnings: state.monthEarnings,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  // Sales and Items Count Cards
-                                  SalesItemsCountCards(
-                                    salesCount: salesCount,
-                                    itemsCount: itemsCount,
-                                  ),
-                                  SizedBox(height: 28.h),
-                                  // Order Summary Grid
-                                  OrderSummaryGrid(
-                                    orderSummary: state.orderSummary,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                ],
-                              ),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        // Analytics Cards Header
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 20.h,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Analytics Header
+                                AnalyticsHeader(
+                                  selectedTimeframe: state.selectedTimeframe,
+                                  selectedCategory: state.selectedCategory,
+                                  availableCategories:
+                                      state.availableCategories,
+                                  customStartDate: state.customStartDate,
+                                  customEndDate: state.customEndDate,
+                                ),
+                                SizedBox(height: 20.h),
+                                // Earnings Card
+                                EarningsCard(
+                                  totalEarnings: state.totalEarnings,
+                                ),
+                                SizedBox(height: 20.h),
+                                // Time frame Earnings Cards
+                                TimeframeEarningsCards(
+                                  todayEarnings: state.todayEarnings,
+                                  weekEarnings: state.weekEarnings,
+                                  monthEarnings: state.monthEarnings,
+                                ),
+                                SizedBox(height: 20.h),
+                                // Sales and Items Count Cards
+                                SalesItemsCountCards(
+                                  salesCount: salesCount,
+                                  itemsCount: itemsCount,
+                                ),
+                                SizedBox(height: 28.h),
+                                // Order Summary Grid
+                                OrderSummaryGrid(
+                                  orderSummary: state.orderSummary,
+                                ),
+                                SizedBox(height: 20.h),
+                              ],
                             ),
                           ),
-                        ];
-                      },
-                      // Recent Transactions Section
-                      body: RecentTransactionsSection(
-                        transactions: state.recentTransactions,
-                        shopId: shopId,
-                        scrollController: scrollController,
-                      ),
+                        ),
+                        // Recent Transactions Section fills remaining space
+                        SliverFillRemaining(
+                          hasScrollBody: true,
+                          child: RecentTransactionsSection(
+                            transactions: state.recentTransactions,
+                            shopId: shopId,
+                            scrollController: scrollController,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
