@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/features/shop/sales_analytics/presentation/pages/sales_analytics_page.dart';
 
 // Weekly Sales Card
 class WeeklySalesCard extends StatelessWidget {
@@ -56,11 +57,18 @@ class WeeklySalesCard extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ShopSalesAnalyticsPage(),
+                    ),
+                  );
+                },
                 child: Row(
                   children: [
                     Text(
-                      'VIEW',
+                      'VIEW SALES ANALYTICS',
                       style: ShopAppTextStyles.caption.copyWith(
                         fontWeight: FontWeight.w900,
                         color: ShopAppColors.primary,

@@ -12,4 +12,8 @@ class PriceUtils {
   static String formatPrice(num price) {
     return NumberFormat('#,##,##0.00', 'en_IN').format(price);
   }
+
+  static String formatPriceWithoutDecimals(num price) {
+    return NumberFormat('#,##,##0', 'en_IN').format(price);
+  }
 }

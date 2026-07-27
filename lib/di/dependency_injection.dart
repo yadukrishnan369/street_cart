@@ -360,6 +360,13 @@ import 'package:street_cart/features/shop/reviews/domain/repositories/i_shop_rev
 import 'package:street_cart/features/shop/reviews/domain/usecases/get_shop_product_reviews.dart';
 import 'package:street_cart/features/shop/reviews/presentation/bloc/shop_reviews_bloc.dart';
 
+// SHOP - SALES ANALYTICS
+import 'package:street_cart/features/shop/sales_analytics/data/datasources/sales_analytics_remote_datasource.dart';
+import 'package:street_cart/features/shop/sales_analytics/data/repositories/sales_analytics_repository_impl.dart';
+import 'package:street_cart/features/shop/sales_analytics/domain/repositories/i_sales_analytics_repository.dart';
+import 'package:street_cart/features/shop/sales_analytics/domain/usecases/get_sales_analytics.dart';
+import 'package:street_cart/features/shop/sales_analytics/presentation/bloc/sales_analytics_bloc.dart';
+
 // ADMIN - REVIEWS
 import 'package:street_cart/features/admin/reviews/data/datasources/admin_reviews_remote_datasource.dart';
 import 'package:street_cart/features/admin/reviews/data/datasources/admin_reviews_remote_datasource_impl.dart';
@@ -403,6 +410,7 @@ Future<void> initDependencies() async {
   await _initShopProducts();
   _initShopOrders();
   _initShopReviews();
+  _initShopSalesAnalytics();
 
   // ADMIN
   _initAdminAuth();
@@ -1322,4 +1330,19 @@ void _initAdminReviews() {
       deleteReviewByAdmin: sl(),
     ),
   );
+}
+
+// ================= SHOP SALES ANALYTICS =================
+void _initShopSalesAnalytics() {
+  sl.registerLazySingleton<ISalesAnalyticsRemoteDataSource>(
+    () => SalesAnalyticsRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<IShopSalesAnalyticsRepository>(
+    () => ShopSalesAnalyticsRepositoryImpl(
+      remoteDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  sl.registerLazySingleton(() => GetSalesAnalytics(sl()));
+  sl.registerFactory(() => SalesAnalyticsBloc(getSalesAnalytics: sl()));
 }
