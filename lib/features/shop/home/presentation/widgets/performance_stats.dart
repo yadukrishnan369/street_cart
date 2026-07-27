@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
+import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 
 // Performance Status
 class PerformanceStats extends StatelessWidget {
@@ -18,6 +20,7 @@ class PerformanceStats extends StatelessWidget {
       builder: (context, state) {
         int todayOrdersCount = 0;
         int pendingDeliveriesCount = 0;
+        double todaySales = 0.0;
 
         if (state is ShopHomeDataLoaded) {
           final now = DateTime.now();
@@ -38,6 +41,11 @@ class PerformanceStats extends StatelessWidget {
               todayOrdersCount++;
             }
           }
+
+          todaySales = ShopHomeHelper.calculateTodaySales(
+            orders: state.orders,
+            shopId: shopId,
+          );
         }
 
         return Column(
@@ -83,8 +91,13 @@ class PerformanceStats extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 16.w),
-                // Todal Sales Card
-                Expanded(child: _buildStatCard('TODAY SALES', '₹12,450.0')),
+                // Today Sales Card
+                Expanded(
+                  child: _buildStatCard(
+                    'TODAY SALES',
+                    PriceUtils.formatPrice(todaySales),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 20.h),

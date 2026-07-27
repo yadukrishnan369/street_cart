@@ -153,7 +153,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                               PerformanceStats(shopId: shopId),
                               SizedBox(height: 20.h),
                               // Weekly Sales Card
-                              const WeeklySalesCard(),
+                              WeeklySalesCard(shopId: shopId),
                               SizedBox(height: 20.h),
                               // Quick Actions
                               QuickActions(

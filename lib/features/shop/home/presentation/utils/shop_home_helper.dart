@@ -155,4 +155,77 @@ class ShopHomeHelper {
       MaterialPageRoute(builder: (_) => const ShopOrdersPage()),
     );
   }
+
+  // Calculate total earnings from all delivered orders
+  static double calculateTotalSales({
+    required List<OrderModel> orders,
+    required String shopId,
+  }) {
+    double total = 0.0;
+    for (final order in orders) {
+      final status = order.status.toLowerCase();
+      final isReturned =
+          order.returnStatus != null && order.returnStatus!.isNotEmpty;
+      if (status == 'delivered' && !isReturned) {
+        for (final item in order.items) {
+          if (item.shopId == shopId) {
+            total += item.price * item.quantity;
+          }
+        }
+      }
+    }
+    return total;
+  }
+
+  // Calculate weekly earnings
+  static double calculateWeeklySales({
+    required List<OrderModel> orders,
+    required String shopId,
+  }) {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+    double total = 0.0;
+    for (final order in orders) {
+      final status = order.status.toLowerCase();
+      final isReturned =
+          order.returnStatus != null && order.returnStatus!.isNotEmpty;
+      final isInRange =
+          order.createdAt.isAfter(weekAgo) && order.createdAt.isBefore(now);
+      if (status == 'delivered' && !isReturned && isInRange) {
+        for (final item in order.items) {
+          if (item.shopId == shopId) {
+            total += item.price * item.quantity;
+          }
+        }
+      }
+    }
+    return total;
+  }
+
+  // Calculate today earnings
+  static double calculateTodaySales({
+    required List<OrderModel> orders,
+    required String shopId,
+  }) {
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    double total = 0.0;
+    for (final order in orders) {
+      final status = order.status.toLowerCase();
+      final isReturned =
+          order.returnStatus != null && order.returnStatus!.isNotEmpty;
+      final isToday =
+          order.createdAt.isAfter(todayStart) &&
+          order.createdAt.isBefore(todayEnd);
+      if (status == 'delivered' && !isReturned && isToday) {
+        for (final item in order.items) {
+          if (item.shopId == shopId) {
+            total += item.price * item.quantity;
+          }
+        }
+      }
+    }
+    return total;
+  }
 }
