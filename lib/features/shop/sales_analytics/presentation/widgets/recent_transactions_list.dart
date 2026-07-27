@@ -23,33 +23,38 @@ class RecentTransactionsList extends StatelessWidget {
     final displayList = transactions;
     // Transaction Empty State
     if (displayList.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.receipt_long_outlined, color: ShopAppColors.primary),
-              SizedBox(height: 2.h),
-              Text(
-                'No transactions found for this period.',
-                style: ShopAppTextStyles.bodyMedium.copyWith(
-                  color: ShopAppColors.primary,
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Container(
+          width: double.infinity,
+          height: 300.h,
+          padding: EdgeInsets.all(24.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.receipt_long_outlined, color: ShopAppColors.primary),
+                SizedBox(height: 2.h),
+                Text(
+                  'No transactions found for this period.',
+                  style: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: ShopAppColors.primary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
     }
     // List of Transaction
     return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.only(bottom: 24.h),
       itemCount: displayList.length,
       separatorBuilder: (_, __) => SizedBox(height: 12.h),

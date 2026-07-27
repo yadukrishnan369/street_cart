@@ -13,6 +13,8 @@ import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/o
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/recent_transactions_section.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/timeframe_earnings_cards.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/shimmer/sales_analytics_shimmer.dart';
+import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/sales_items_count_cards.dart';
+import 'package:street_cart/features/shop/sales_analytics/presentation/utils/sales_analytics_helper.dart';
 
 // Shop Sales Analytics Page
 class ShopSalesAnalyticsPage extends StatelessWidget {
@@ -26,109 +28,135 @@ class ShopSalesAnalyticsPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           sl<SalesAnalyticsBloc>()..add(FetchSalesAnalyticsData(shopId)),
-      child: Scaffold(
-        backgroundColor: ShopAppColors.background,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.5,
-          // Page Header
-          title: Text(
-            'Sales Analytics',
-            style: TextStyle(
-              color: const Color(0xFF0F172A),
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
+      child: BlocListener<SalesAnalyticsBloc, SalesAnalyticsState>(
+        listener: (context, state) {
+          if (state is SalesAnalyticsLoaded) {
+            if (scrollController.hasClients) {
+              scrollController.jumpTo(0.0);
+            }
+          }
+        },
+        child: Scaffold(
+          backgroundColor: ShopAppColors.background,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.5,
+            // Page Header
+            title: Text(
+              'Sales Analytics',
+              style: TextStyle(
+                color: const Color(0xFF0F172A),
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            centerTitle: true,
+            leading: const BackButton(color: Colors.black),
           ),
-          centerTitle: true,
-          leading: const BackButton(color: Colors.black),
-        ),
-        body: SafeArea(
-          child: BlocBuilder<SalesAnalyticsBloc, SalesAnalyticsState>(
-            builder: (context, state) {
-              // Showing Loading Shimmer
-              if (state is SalesAnalyticsLoading ||
-                  state is SalesAnalyticsInitial) {
-                return const SalesAnalyticsShimmer();
-              }
-              // Error View
-              if (state is SalesAnalyticsError) {
-                return Center(
-                  child: Text(
-                    'Error: ${state.message}',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                );
-              }
-              // Refresh Indicator
-              if (state is SalesAnalyticsLoaded) {
-                return RefreshIndicator(
-                  color: ShopAppColors.primary,
-                  onRefresh: () async {
-                    context.read<SalesAnalyticsBloc>().add(
-                      FetchSalesAnalyticsData(shopId),
-                    );
-                    await Future.delayed(const Duration(milliseconds: 800));
-                  },
-                  // Nested Scroll View
-                  child: NestedScrollView(
-                    controller: scrollController,
-                    headerSliverBuilder: (context, innerBoxIsScrolled) {
-                      return [
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20.w,
-                              vertical: 20.h,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Analytics Header
-                                AnalyticsHeader(
-                                  selectedTimeframe: state.selectedTimeframe,
-                                  selectedCategory: state.selectedCategory,
-                                  availableCategories:
-                                      state.availableCategories,
-                                  customStartDate: state.customStartDate,
-                                  customEndDate: state.customEndDate,
-                                ),
-                                SizedBox(height: 20.h),
-                                // Earnings Card
-                                EarningsCard(
-                                  totalEarnings: state.totalEarnings,
-                                ),
-                                SizedBox(height: 20.h),
-                                // Time frame Earnings Cards
-                                TimeframeEarningsCards(
-                                  todayEarnings: state.todayEarnings,
-                                  weekEarnings: state.weekEarnings,
-                                  monthEarnings: state.monthEarnings,
-                                ),
-                                SizedBox(height: 28.h),
-                                // Order Summary Grid
-                                OrderSummaryGrid(
-                                  orderSummary: state.orderSummary,
-                                ),
-                                SizedBox(height: 20.h),
-                              ],
+          body: SafeArea(
+            child: BlocBuilder<SalesAnalyticsBloc, SalesAnalyticsState>(
+              builder: (context, state) {
+                // Showing Loading Shimmer
+                if (state is SalesAnalyticsLoading ||
+                    state is SalesAnalyticsInitial) {
+                  return const SalesAnalyticsShimmer();
+                }
+                // Error View
+                if (state is SalesAnalyticsError) {
+                  return Center(
+                    child: Text(
+                      'Error: ${state.message}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                }
+
+                if (state is SalesAnalyticsLoaded) {
+                  final countData =
+                      SalesAnalyticsHelper.calculateSalesAndItemsCount(
+                        orders: state.filteredOrders,
+                        shopId: shopId,
+                        productCategories: state.productCategories,
+                        selectedCategory: state.selectedCategory,
+                      );
+                  final salesCount = countData['salesCount'] ?? 0;
+                  final itemsCount = countData['itemsCount'] ?? 0;
+                  // Refresh Indicator
+                  return RefreshIndicator(
+                    color: ShopAppColors.primary,
+                    onRefresh: () async {
+                      context.read<SalesAnalyticsBloc>().add(
+                        FetchSalesAnalyticsData(shopId),
+                      );
+                      await Future.delayed(const Duration(milliseconds: 800));
+                    },
+                    // Nested Scroll View
+                    child: NestedScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: scrollController,
+                      headerSliverBuilder: (context, innerBoxIsScrolled) {
+                        return [
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.w,
+                                vertical: 20.h,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Analytics Header
+                                  AnalyticsHeader(
+                                    selectedTimeframe: state.selectedTimeframe,
+                                    selectedCategory: state.selectedCategory,
+                                    availableCategories:
+                                        state.availableCategories,
+                                    customStartDate: state.customStartDate,
+                                    customEndDate: state.customEndDate,
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  // Earnings Card
+                                  EarningsCard(
+                                    totalEarnings: state.totalEarnings,
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  // Time frame Earnings Cards
+                                  TimeframeEarningsCards(
+                                    todayEarnings: state.todayEarnings,
+                                    weekEarnings: state.weekEarnings,
+                                    monthEarnings: state.monthEarnings,
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  // Sales and Items Count Cards
+                                  SalesItemsCountCards(
+                                    salesCount: salesCount,
+                                    itemsCount: itemsCount,
+                                  ),
+                                  SizedBox(height: 28.h),
+                                  // Order Summary Grid
+                                  OrderSummaryGrid(
+                                    orderSummary: state.orderSummary,
+                                  ),
+                                  SizedBox(height: 20.h),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ];
-                    },
-                    // Recent Transactions Section
-                    body: RecentTransactionsSection(
-                      transactions: state.recentTransactions,
-                      shopId: shopId,
-                      scrollController: scrollController,
+                        ];
+                      },
+                      // Recent Transactions Section
+                      body: RecentTransactionsSection(
+                        transactions: state.recentTransactions,
+                        shopId: shopId,
+                        scrollController: scrollController,
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              return const SizedBox.shrink();
-            },
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
       ),

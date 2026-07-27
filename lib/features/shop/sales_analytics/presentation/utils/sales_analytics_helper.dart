@@ -282,6 +282,47 @@ class SalesAnalyticsHelper {
       ),
     );
   }
+
+  // Calculate completed sales count and total items sold count
+  static Map<String, int> calculateSalesAndItemsCount({
+    required List<OrderModel> orders,
+    required String shopId,
+    required Map<String, String> productCategories,
+    required String selectedCategory,
+  }) {
+    int salesCount = 0;
+    int itemsCount = 0;
+
+    for (final order in orders) {
+      final status = order.status.toLowerCase();
+      final isDelivered = status == 'delivered';
+      final isReturned =
+          order.returnStatus != null && order.returnStatus!.isNotEmpty;
+      final isCancelled = status == 'cancelled';
+
+      if (isDelivered && !isReturned && !isCancelled) {
+        bool hasShopItem = false;
+        int orderItemsQuantity = 0;
+
+        for (final item in order.items) {
+          if (item.shopId == shopId) {
+            final category = productCategories[item.productId] ?? 'Other';
+            if (selectedCategory == 'All' || category == selectedCategory) {
+              hasShopItem = true;
+              orderItemsQuantity += item.quantity;
+            }
+          }
+        }
+
+        if (hasShopItem) {
+          salesCount++;
+          itemsCount += orderItemsQuantity;
+        }
+      }
+    }
+
+    return {'salesCount': salesCount, 'itemsCount': itemsCount};
+  }
 }
 
 // Analytics Transaction Item Model
