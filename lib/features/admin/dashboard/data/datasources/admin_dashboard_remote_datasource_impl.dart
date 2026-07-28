@@ -17,7 +17,6 @@ class AdminDashboardRemoteDataSourceImpl
     try {
       int shopsCount = 0;
       int customersCount = 0;
-      const double revenue = 582000.0;
 
       // Fetch approved shops count
       final shopsSnap = await _firestore
@@ -151,11 +150,30 @@ class AdminDashboardRemoteDataSourceImpl
         );
       }
 
+      // Calculate total revenue
+      final double totalRevenue = ordersSnap.docs.fold(0.0, (sum, doc) {
+        final data = doc.data();
+        final status = (data['status'] ?? '').toString().toLowerCase();
+        final returnStatus = (data['return_status'] ?? '')
+            .toString()
+            .toLowerCase();
+        if (status == 'delivered' && returnStatus.isEmpty) {
+          final items = data['items'] as List<dynamic>? ?? [];
+          final orderCommission = items.fold(0.0, (itemSum, item) {
+            final itemMap = item as Map<String, dynamic>;
+            return itemSum +
+                ((itemMap['admin_commission'] as num?)?.toDouble() ?? 0.0);
+          });
+          return sum + orderCommission;
+        }
+        return sum;
+      });
+
       return DashboardStatsModel(
         totalShops: shopsCount,
         totalCustomers: customersCount,
         totalOrders: totalOrdersCount,
-        totalRevenue: revenue,
+        totalRevenue: totalRevenue,
         newRegistrations: newRegistrations,
         recentOrders: recentOrders,
       );

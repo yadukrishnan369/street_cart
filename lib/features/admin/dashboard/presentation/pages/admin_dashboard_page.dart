@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/number_formatter.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
@@ -72,7 +73,7 @@ class AdminDashboardPage extends StatelessWidget {
                                 stats.totalShops,
                               ),
                               icon: Icons.storefront_outlined,
-                              iconColor: const Color(0xFF7B2CBF),
+                              iconColor: AdminAppColors.primaryColor,
                               iconBgColor: const Color(0xFFF4EBFF),
                             ),
                             StatCard(
@@ -90,15 +91,15 @@ class AdminDashboardPage extends StatelessWidget {
                                 stats.totalOrders,
                               ),
                               icon: Icons.shopping_bag_outlined,
-                              iconColor: const Color(0xFFE67E22),
+                              iconColor: AdminAppColors.warningColor,
                               iconBgColor: const Color(0xFFFFF4E5),
                             ),
                             StatCard(
                               title: 'Total Revenue',
                               value:
-                                  '\$${NumberFormatter.formatNumber(stats.totalRevenue.toInt())}',
+                                  '₹${stats.totalRevenue.toStringAsFixed(2)}',
                               icon: Icons.monetization_on_outlined,
-                              iconColor: const Color(0xFF137333),
+                              iconColor: AdminAppColors.successColor,
                               iconBgColor: const Color(0xFFE6F4EA),
                             ),
                           ],
