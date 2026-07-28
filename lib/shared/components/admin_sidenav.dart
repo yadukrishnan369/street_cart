@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 
+// Admin Side nav
 class AdminSidenav extends StatelessWidget {
   final String currentRoute;
   final String adminName;
@@ -18,7 +19,7 @@ class AdminSidenav extends StatelessWidget {
     required this.onRouteSelected,
     this.onLogout,
   });
-
+  // Get Admin Initial Name
   String _getInitials(String name) {
     if (name.trim().isEmpty) return 'AD';
     final parts = name.trim().split(' ');
@@ -51,7 +52,7 @@ class AdminSidenav extends StatelessWidget {
         children: [
           // Header Logo & App Title
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
             child: Row(
               children: [
                 Container(
@@ -63,7 +64,7 @@ class AdminSidenav extends StatelessWidget {
                   child: AppLogo(
                     backgroundColor: AdminAppColors.primaryColor,
                     logoColor: AdminAppColors.surfaceWhite,
-                    size: 40,
+                    size: 36,
                   ),
                 ),
                 SizedBox(width: 12.w),
@@ -98,6 +99,7 @@ class AdminSidenav extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   _buildMenuItem(
                     icon: Icons.grid_view_outlined,
@@ -129,9 +131,14 @@ class AdminSidenav extends StatelessWidget {
                     label: 'Reviews',
                     route: '/reviews',
                   ),
-                  SizedBox(height: 24.h),
+                  _buildMenuItem(
+                    icon: Icons.bar_chart_outlined,
+                    label: 'Revenue',
+                    route: '/revenue',
+                  ),
+                  SizedBox(height: 12.h),
                   const Divider(color: Color(0xFFF0EFF5), height: 1),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 12.h),
                   _buildMenuItem(
                     icon: Icons.settings_outlined,
                     label: 'Settings',

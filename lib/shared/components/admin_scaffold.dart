@@ -147,6 +147,8 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return 'Review Details';
     } else if (route.contains(RoutePaths.reviews)) {
       return 'Reviews & Ratings';
+    } else if (route.contains(RoutePaths.revenue)) {
+      return 'Revenue';
     }
     return '';
   }
@@ -186,6 +188,8 @@ class _AdminScaffoldState extends State<AdminScaffold> {
       return Icons.rate_review_outlined;
     } else if (route.contains(RoutePaths.reviews)) {
       return Icons.rate_review_outlined;
+    } else if (route.contains(RoutePaths.revenue)) {
+      return Icons.bar_chart_outlined;
     }
     return Icons.circle;
   }

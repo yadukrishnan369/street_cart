@@ -19,4 +19,5 @@ class RoutePaths {
   static const orderDetails = '/orders/:id';
   static const reviews = '/reviews';
   static const reviewDetails = '/reviews/:id';
+  static const revenue = '/revenue';
 }

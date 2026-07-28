@@ -24,6 +24,7 @@ import 'package:street_cart/features/admin/orders/presentation/pages/admin_order
 import 'package:street_cart/features/admin/orders/presentation/pages/admin_order_detail_page.dart';
 import 'package:street_cart/features/admin/reviews/presentation/pages/admin_reviews_page.dart';
 import 'package:street_cart/features/admin/reviews/presentation/pages/admin_review_detail_page.dart';
+import 'package:street_cart/features/admin/revenue/presentation/pages/admin_revenue_page.dart';
 import 'route_paths.dart';
 
 class AdminRoutes {
@@ -133,6 +134,10 @@ class AdminRoutes {
             final reviewId = state.pathParameters['id'] ?? '';
             return AdminReviewDetailPage(reviewId: reviewId);
           },
+        ),
+        GoRoute(
+          path: RoutePaths.revenue,
+          builder: (context, state) => const AdminRevenuePage(),
         ),
       ],
     ),

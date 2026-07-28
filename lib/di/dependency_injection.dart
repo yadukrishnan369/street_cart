@@ -379,6 +379,17 @@ import 'package:street_cart/features/admin/reviews/domain/usecases/toggle_review
 import 'package:street_cart/features/admin/reviews/domain/usecases/get_admin_review_details.dart';
 import 'package:street_cart/features/admin/reviews/presentation/bloc/admin_review_detail_bloc.dart';
 
+// ADMIN - REVENUE
+import 'package:street_cart/features/admin/revenue/data/datasources/i_admin_revenue_remote_datasource.dart';
+import 'package:street_cart/features/admin/revenue/data/datasources/admin_revenue_remote_datasource_impl.dart';
+import 'package:street_cart/features/admin/revenue/data/repositories/admin_revenue_repository_impl.dart';
+import 'package:street_cart/features/admin/revenue/domain/repositories/i_admin_revenue_repository.dart';
+import 'package:street_cart/features/admin/revenue/domain/usecases/get_revenue_orders.dart';
+import 'package:street_cart/features/admin/revenue/domain/usecases/get_revenue_shops.dart';
+import 'package:street_cart/features/admin/revenue/domain/usecases/get_revenue_products.dart';
+import 'package:street_cart/features/admin/revenue/domain/usecases/get_revenue_customers.dart';
+import 'package:street_cart/features/admin/revenue/presentation/bloc/admin_revenue_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -423,6 +434,7 @@ Future<void> initDependencies() async {
   _initAdminProducts();
   _initAdminOrders();
   _initAdminReviews();
+  _initAdminRevenue();
 }
 
 // ================= SHOP SPLASH =================
@@ -1345,4 +1357,27 @@ void _initShopSalesAnalytics() {
   );
   sl.registerLazySingleton(() => GetSalesAnalytics(sl()));
   sl.registerFactory(() => SalesAnalyticsBloc(getSalesAnalytics: sl()));
+}
+
+// ================= ADMIN REVENUE =================
+void _initAdminRevenue() {
+  sl.registerLazySingleton<IAdminRevenueRemoteDataSource>(
+    () => AdminRevenueRemoteDataSourceImpl(firestore: sl()),
+  );
+  sl.registerLazySingleton<IAdminRevenueRepository>(
+    () => AdminRevenueRepositoryImpl(dataSource: sl(), networkInfo: sl()),
+  );
+  // Individual use cases
+  sl.registerLazySingleton(() => GetRevenueOrders(sl()));
+  sl.registerLazySingleton(() => GetRevenueShops(sl()));
+  sl.registerLazySingleton(() => GetRevenueProducts(sl()));
+  sl.registerLazySingleton(() => GetRevenueCustomers(sl()));
+  sl.registerFactory(
+    () => AdminRevenueBloc(
+      getOrders: sl(),
+      getShops: sl(),
+      getProducts: sl(),
+      getCustomers: sl(),
+    ),
+  );
 }
