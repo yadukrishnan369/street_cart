@@ -19,7 +19,7 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
   }) : _auth = auth,
        _firestore = firestore,
        _locationService = locationService;
-
+  // Get Customer Home Data
   @override
   Future<HomeData> getHomeData() async {
     try {
@@ -119,9 +119,33 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
           .where('is_approved', isEqualTo: true)
           .get();
 
-      final allShops = shopsSnap.docs
-          .map((doc) => ShopProfileModel.fromMap(doc.data(), doc.id))
-          .toList();
+      final allShops = <ShopProfileModel>[];
+      for (final doc in shopsSnap.docs) {
+        var shop = ShopProfileModel.fromMap(doc.data(), doc.id);
+        if (shop.rating == 0.0) {
+          final prodSnap = await _firestore
+              .collection('products')
+              .where('shop_id', isEqualTo: shop.uid)
+              .get();
+
+          double totalRatingSum = 0.0;
+          int totalCount = 0;
+          for (final pDoc in prodSnap.docs) {
+            final pData = pDoc.data();
+            final pRating = (pData['rating'] as num?)?.toDouble() ?? 0.0;
+            final pCount = (pData['reviews_count'] as num?)?.toInt() ?? 0;
+            if (pRating > 0) {
+              totalRatingSum += (pRating * (pCount > 0 ? pCount : 1));
+              totalCount += (pCount > 0 ? pCount : 1);
+            }
+          }
+          if (totalCount > 0) {
+            final avg = totalRatingSum / totalCount;
+            shop = shop.copyWith(rating: avg, reviewsCount: totalCount);
+          }
+        }
+        allShops.add(shop);
+      }
       return allShops.where((shop) {
         if (shop.isSuspended) return false;
         if (shop.latitude == null || shop.longitude == null) return false;

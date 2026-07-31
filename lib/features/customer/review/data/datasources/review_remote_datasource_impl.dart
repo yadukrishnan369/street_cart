@@ -128,5 +128,46 @@ class ReviewRemoteDataSourceImpl implements IReviewRemoteDataSource {
       'rating': averageRating,
       'reviews_count': reviewsCount,
     });
+
+    // Recalculate the shop average rating across all products
+    final productDoc = await firestore
+        .collection('products')
+        .doc(productId)
+        .get();
+    if (productDoc.exists) {
+      final shopId = productDoc.data()?['shop_id'] as String?;
+      if (shopId != null && shopId.isNotEmpty) {
+        await _recalculateShopRating(shopId);
+      }
+    }
+  }
+
+  // Calculating Average Rating of Shop by its own Products
+  Future<void> _recalculateShopRating(String shopId) async {
+    final productsSnap = await firestore
+        .collection('products')
+        .where('shop_id', isEqualTo: shopId)
+        .get();
+
+    double totalRatingSum = 0.0;
+    int totalReviewsCount = 0;
+
+    for (final doc in productsSnap.docs) {
+      final rating = (doc.data()['rating'] as num?)?.toDouble() ?? 0.0;
+      final count = (doc.data()['reviews_count'] as num?)?.toInt() ?? 0;
+      if (count > 0) {
+        totalRatingSum += (rating * count);
+        totalReviewsCount += count;
+      }
+    }
+
+    final shopAvgRating = totalReviewsCount > 0
+        ? (totalRatingSum / totalReviewsCount)
+        : 0.0;
+
+    await firestore.collection('shops').doc(shopId).update({
+      'rating': shopAvgRating,
+      'reviews_count': totalReviewsCount,
+    });
   }
 }

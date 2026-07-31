@@ -169,10 +169,16 @@ class ShopsListSection extends StatelessWidget {
                       SizedBox(height: 4.h),
                       Row(
                         children: [
-                          Icon(Icons.star, color: Colors.orange, size: 14.sp),
+                          Icon(
+                            Icons.star,
+                            color: CustomerAppColors.warning,
+                            size: 14.sp,
+                          ),
                           SizedBox(width: 4.w),
                           Text(
-                            '4.5',
+                            shop.rating > 0
+                                ? shop.rating.toStringAsFixed(1)
+                                : 'New',
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,

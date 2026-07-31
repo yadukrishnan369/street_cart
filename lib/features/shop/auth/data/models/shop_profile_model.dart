@@ -30,6 +30,8 @@ class ShopProfileModel {
   final bool isRejected;
   final String rejectionReason;
   final bool isReRegistered;
+  final double rating;
+  final int reviewsCount;
 
   ShopProfileModel({
     required this.uid,
@@ -61,6 +63,8 @@ class ShopProfileModel {
     this.isRejected = false,
     this.rejectionReason = '',
     this.isReRegistered = false,
+    this.rating = 0.0,
+    this.reviewsCount = 0,
   });
 
   factory ShopProfileModel.fromMap(Map<String, dynamic> map, String id) {
@@ -98,6 +102,8 @@ class ShopProfileModel {
       isRejected: map['is_rejected'] ?? false,
       rejectionReason: map['rejection_reason'] ?? '',
       isReRegistered: map['is_reregistered'] ?? false,
+      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
+      reviewsCount: (map['reviews_count'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -133,6 +139,8 @@ class ShopProfileModel {
       'is_rejected': isRejected,
       'rejection_reason': rejectionReason,
       'is_reregistered': isReRegistered,
+      'rating': rating,
+      'reviews_count': reviewsCount,
     };
   }
 
@@ -165,6 +173,8 @@ class ShopProfileModel {
     bool? isRejected,
     String? rejectionReason,
     bool? isReRegistered,
+    double? rating,
+    int? reviewsCount,
   }) {
     return ShopProfileModel(
       uid: uid,
@@ -196,6 +206,8 @@ class ShopProfileModel {
       isRejected: isRejected ?? this.isRejected,
       rejectionReason: rejectionReason ?? this.rejectionReason,
       isReRegistered: isReRegistered ?? this.isReRegistered,
+      rating: rating ?? this.rating,
+      reviewsCount: reviewsCount ?? this.reviewsCount,
     );
   }
 }

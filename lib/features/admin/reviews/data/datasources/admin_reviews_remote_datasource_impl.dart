@@ -134,5 +134,45 @@ class AdminReviewsRemoteDataSourceImpl
       'rating': averageRating,
       'reviews_count': reviewsCount,
     });
+
+    final productDoc = await _firestore
+        .collection('products')
+        .doc(productId)
+        .get();
+    if (productDoc.exists) {
+      final shopId = productDoc.data()?['shop_id'] as String?;
+      if (shopId != null && shopId.isNotEmpty) {
+        await _recalculateShopRating(shopId);
+      }
+    }
+  }
+
+  // Recalculate Shop Rating
+  Future<void> _recalculateShopRating(String shopId) async {
+    final productsSnap = await _firestore
+        .collection('products')
+        .where('shop_id', isEqualTo: shopId)
+        .get();
+
+    double totalRatingSum = 0.0;
+    int totalReviewsCount = 0;
+
+    for (final doc in productsSnap.docs) {
+      final rating = (doc.data()['rating'] as num?)?.toDouble() ?? 0.0;
+      final count = (doc.data()['reviews_count'] as num?)?.toInt() ?? 0;
+      if (count > 0) {
+        totalRatingSum += (rating * count);
+        totalReviewsCount += count;
+      }
+    }
+
+    final shopAvgRating = totalReviewsCount > 0
+        ? (totalRatingSum / totalReviewsCount)
+        : 0.0;
+
+    await _firestore.collection('shops').doc(shopId).update({
+      'rating': shopAvgRating,
+      'reviews_count': totalReviewsCount,
+    });
   }
 }

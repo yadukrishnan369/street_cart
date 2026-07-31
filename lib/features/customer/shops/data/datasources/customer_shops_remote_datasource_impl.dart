@@ -45,8 +45,32 @@ class CustomerShopsRemoteDataSourceImpl
       for (final doc in snap.docs) {
         final data = doc.data();
 
-        // Parse the shop
-        final shop = ShopProfileModel.fromMap(data, doc.id);
+        var shop = ShopProfileModel.fromMap(data, doc.id);
+
+        // If rating is 0, calculate average Rating
+        if (shop.rating == 0.0) {
+          final prodSnap = await _firestore
+              .collection('products')
+              .where('shop_id', isEqualTo: shop.uid)
+              .get();
+
+          double totalRatingSum = 0.0;
+          int totalCount = 0;
+          for (final pDoc in prodSnap.docs) {
+            final pData = pDoc.data();
+            final pRating = (pData['rating'] as num?)?.toDouble() ?? 0.0;
+            final pCount = (pData['reviews_count'] as num?)?.toInt() ?? 0;
+            if (pRating > 0) {
+              totalRatingSum += (pRating * (pCount > 0 ? pCount : 1));
+              totalCount += (pCount > 0 ? pCount : 1);
+            }
+          }
+          if (totalCount > 0) {
+            final avg = totalRatingSum / totalCount;
+            shop = shop.copyWith(rating: avg, reviewsCount: totalCount);
+          }
+        }
+
         allShops.add(shop);
       }
 

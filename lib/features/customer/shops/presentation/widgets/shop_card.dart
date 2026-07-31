@@ -14,8 +14,7 @@ class ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Shop rating
-    const double dummyRating = 4.8;
+    final double shopRating = shop.rating;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12.w).copyWith(bottom: 16.h),
@@ -92,12 +91,14 @@ class ShopCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.star_rounded,
-                              color: const Color(0xFFF59E0B),
+                              color: CustomerAppColors.warning,
                               size: 14.sp,
                             ),
                             SizedBox(width: 3.w),
                             Text(
-                              dummyRating.toStringAsFixed(1),
+                              shopRating > 0
+                                  ? shopRating.toStringAsFixed(1)
+                                  : 'New',
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w700,
