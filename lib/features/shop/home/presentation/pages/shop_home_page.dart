@@ -30,6 +30,7 @@ class ShopHomePage extends StatefulWidget {
 
 class _ShopHomePageState extends State<ShopHomePage> {
   late ShopHomeBloc _homeBloc;
+  String shopId = '';
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
     context.read<ShopAuthBloc>().add(ShopStatusSubscriptionRequested());
     final authState = context.read<ShopAuthBloc>().state;
     if (authState.status == ShopAuthStatus.authenticated) {
-      final shopId = authState.shop?.uid ?? '';
+      shopId = authState.shop?.uid ?? '';
       if (shopId.isNotEmpty) {
         if (_homeBloc.state is! ShopHomeDataLoaded) {
           _homeBloc.add(FetchShopHomeDataEvent(shopId));
@@ -62,6 +63,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
           BlocListener<ShopAuthBloc, ShopAuthState>(
             listener: (context, state) {
               if (state.status == ShopAuthStatus.initial) {
+                shopId = '';
                 // Navigate to Shop Login Page
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -71,7 +73,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                   (route) => false,
                 );
               } else if (state.status == ShopAuthStatus.authenticated) {
-                final shopId = state.shop?.uid ?? '';
+                shopId = state.shop?.uid ?? '';
                 if (shopId.isNotEmpty &&
                     _homeBloc.state is! ShopHomeDataLoaded) {
                   _homeBloc.add(FetchShopHomeDataEvent(shopId));
@@ -124,12 +126,8 @@ class _ShopHomePageState extends State<ShopHomePage> {
               return RefreshIndicator(
                 color: ShopAppColors.primary,
                 onRefresh: () async {
-                  final authState = context.read<ShopAuthBloc>().state;
-                  if (authState.status == ShopAuthStatus.authenticated) {
-                    final shopId = authState.shop?.uid ?? '';
-                    if (shopId.isNotEmpty) {
-                      _homeBloc.add(FetchShopHomeDataEvent(shopId));
-                    }
+                  if (shopId.isNotEmpty) {
+                    _homeBloc.add(FetchShopHomeDataEvent(shopId));
                   }
                   await Future.delayed(const Duration(milliseconds: 800));
                 },
@@ -142,10 +140,6 @@ class _ShopHomePageState extends State<ShopHomePage> {
                       SizedBox(height: 20.h),
                       BlocBuilder<ShopAuthBloc, ShopAuthState>(
                         builder: (context, authState) {
-                          final shopId =
-                              authState.status == ShopAuthStatus.authenticated
-                              ? (authState.shop?.uid ?? '')
-                              : '';
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

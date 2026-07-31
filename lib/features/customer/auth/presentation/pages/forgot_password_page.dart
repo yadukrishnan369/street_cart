@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/auth/presentation/bloc/auth_event.
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Forgot Password Page
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
 
@@ -41,15 +42,21 @@ class ForgotPasswordPage extends StatelessWidget {
                 );
                 Navigator.pop(context); // Go back to Login
               } else if (state is AuthError) {
-                CustomSnackBar.show(context, message: state.message, isError: true);
+                CustomSnackBar.show(
+                  context,
+                  message: state.message,
+                  isError: true,
+                );
               }
             },
             builder: (context, state) {
               return Column(
                 children: [
                   40.verticalSpace,
+                  // App Logo
                   const AppLogo(size: 80),
                   16.verticalSpace,
+                  // App name
                   Text(
                     "Street Cart",
                     style: CustomerAppTextStyles.heading2.copyWith(
@@ -57,6 +64,7 @@ class ForgotPasswordPage extends StatelessWidget {
                     ),
                   ),
                   40.verticalSpace,
+                  // Fotgot Password
                   Text(
                     "Forgot Password",
                     style: CustomerAppTextStyles.heading1,
@@ -74,7 +82,7 @@ class ForgotPasswordPage extends StatelessWidget {
                     ),
                   ),
                   40.verticalSpace,
-
+                  // Forgot Password Form
                   ForgotPasswordForm(
                     isLoading: state is AuthLoading,
                     onSendResetLink: (email) {
@@ -83,7 +91,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       );
                     },
                   ),
-
+                  // Back to Login Page
                   32.verticalSpace,
                   TextButton.icon(
                     onPressed: () => Navigator.pop(context),

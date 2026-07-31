@@ -15,6 +15,7 @@ import 'package:street_cart/features/customer/auth/presentation/widgets/login_fo
 import 'signup_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
+// Login Page
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -26,6 +27,7 @@ class LoginPage extends StatelessWidget {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
+              // If new User Navigate to Location Permission Page
               if (state.isNewUser) {
                 Navigator.pushReplacement(
                   context,
@@ -52,7 +54,11 @@ class LoginPage extends StatelessWidget {
               }
             } else if (state is AuthError) {
               AppLogger.error("AuthError: ${state.message}");
-              CustomSnackBar.show(context, message: state.message, isError: true);
+              CustomSnackBar.show(
+                context,
+                message: state.message,
+                isError: true,
+              );
             }
           },
           builder: (context, state) {
@@ -75,20 +81,21 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
+                      // Authentication Header
                       AuthHeader(
                         title: "Welcome Back",
                         subtitle: "Please enter your details to sign in",
                         centerText: true,
                       ),
                       32.verticalSpace,
-
+                      // Google Signing Option Button
                       SocialLoginSection(
                         onGoogleLogin: () {
                           context.read<AuthBloc>().add(GoogleSignInRequested());
                         },
                       ),
                       24.verticalSpace,
-
+                      // Login Form
                       LoginForm(
                         isLoading: state is AuthLoading,
                         onLogin: (email, password) {
@@ -99,11 +106,12 @@ class LoginPage extends StatelessWidget {
                       ),
 
                       32.verticalSpace,
-
+                      // Auth Footer
                       AuthFooter(
                         text1: "Don't have an account? ",
                         text2: "Sign Up",
                         onTap: () {
+                          // Navigate to Signup Page
                           Navigator.push(
                             context,
                             MaterialPageRoute(

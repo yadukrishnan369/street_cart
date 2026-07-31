@@ -40,6 +40,7 @@ class SignupPage extends StatelessWidget {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthSuccess) {
+                // If new User Navigate to Location Permission Page
                 if (state.isNewUser) {
                   Navigator.pushReplacement(
                     context,
@@ -58,6 +59,7 @@ class SignupPage extends StatelessWidget {
                     ),
                   );
                 }
+                // Showing Verification Bottom Sheet
               } else if (state is AuthVerificationWaiting &&
                   !state.isVerificationSheetShowing) {
                 context.read<AuthBloc>().add(SetVerificationSheetShowing(true));
@@ -92,6 +94,7 @@ class SignupPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   24.verticalSpace,
+                  // Auth Header Section
                   AuthHeader(
                     title: "Create Account",
                     subtitle:
@@ -99,6 +102,7 @@ class SignupPage extends StatelessWidget {
                     showLogo: false,
                   ),
                   40.verticalSpace,
+                  // Signup Form
                   SignupForm(
                     isLoading: state is AuthLoading,
                     onSignUp: (email, password, fullName) {
@@ -112,10 +116,12 @@ class SignupPage extends StatelessWidget {
                     },
                   ),
                   32.verticalSpace,
+                  // Auth Footer
                   AuthFooter(
                     text1: "Already have an account? ",
                     text2: "Log In",
                     onTap: () {
+                      // Navigate to Login Page
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (_) => const LoginPage()),
