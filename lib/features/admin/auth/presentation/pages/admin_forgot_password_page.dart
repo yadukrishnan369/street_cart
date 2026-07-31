@@ -6,6 +6,8 @@ import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_blo
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/auth/presentation/widgets/admin_forgot_password_form.dart';
 
 // Admin Forgot Password Page
@@ -18,6 +20,7 @@ class AdminForgotPasswordPage extends StatefulWidget {
 }
 
 class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
   final _formKey1 = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
@@ -78,7 +81,7 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                       children: [
                         Card(
                           elevation: 8,
-                          shadowColor: Colors.black.withOpacity(0.06),
+                          shadowColor: Colors.black.withValues(alpha: 0.06),
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24.r),
@@ -113,7 +116,7 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          '© 2026 Streetcart Marketplace. All systems operational.',
+                          '© ${_appInfoService.currentYear} Streetcart Marketplace. All systems operational.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 11.sp,

@@ -77,7 +77,7 @@ class UserProfilePage extends StatelessWidget {
                       // Navigate to Settings Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const SettingsPage()),
+                        MaterialPageRoute(builder: (_) => SettingsPage()),
                       ).then((_) {
                         if (context.mounted) {
                           context.read<ProfileBloc>().add(FetchProfileData());
@@ -117,7 +117,7 @@ class UserProfilePage extends StatelessWidget {
                           const SupportSection(),
                           SizedBox(height: 24.h),
                           // About Section
-                          const AboutSection(),
+                          AboutSection(),
                           SizedBox(height: 32.h),
                           // Logout Button
                           const LogoutButton(),

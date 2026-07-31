@@ -5,11 +5,14 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/services/communication_service.dart';
 import 'package:street_cart/features/shop/support/presentation/utils/shop_support_helper.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/contact_support_row.dart';
 
 // Contact Support Page
 class ContactSupportPage extends StatelessWidget {
-  const ContactSupportPage({super.key});
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
+
+  ContactSupportPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,6 @@ class ContactSupportPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
-          onPressed: () => Navigator.pop(context),
-        ),
         // Page Header
         title: Text(
           'Contact Support',
@@ -43,7 +42,7 @@ class ContactSupportPage extends StatelessWidget {
               height: 200.h,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: const Color(0xFFFFEBEE).withOpacity(0.3),
+                color: ShopAppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(24.r),
                 gradient: const LinearGradient(
                   colors: [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
@@ -101,7 +100,7 @@ class ContactSupportPage extends StatelessWidget {
 
             // Footer App Version
             Text(
-              'Street Cart Seller App v2.4.0',
+              '${_appInfoService.appName} Seller App v${_appInfoService.version}',
               style: ShopAppTextStyles.bodySmall.copyWith(
                 color: ShopAppColors.textTertiary,
                 fontSize: 11.sp,

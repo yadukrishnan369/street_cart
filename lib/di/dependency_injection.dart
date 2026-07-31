@@ -10,6 +10,7 @@ import 'package:street_cart/core/network/network_info.dart';
 import 'package:street_cart/core/services/location_service.dart';
 import 'package:street_cart/core/services/communication_service.dart';
 import 'package:street_cart/core/services/cloudinary_service.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
 import 'package:street_cart/core/firebase/firebase_auth_service.dart';
 
 // CUSTOMER - AUTH
@@ -564,6 +565,10 @@ Future<void> _initShopAuth() async {
 
 // ================= CORE =================
 Future<void> _initCore() async {
+  final appInfoService = AppInfoService();
+  await appInfoService.init();
+  sl.registerSingleton<IAppInfoService>(appInfoService);
+
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => GoogleSignIn());

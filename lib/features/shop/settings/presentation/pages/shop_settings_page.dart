@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
@@ -15,9 +17,10 @@ import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile
 
 // Shop Settings Page
 class ShopSettingsPage extends StatelessWidget {
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
   final ShopAuthBloc authBloc;
 
-  const ShopSettingsPage({super.key, required this.authBloc});
+  ShopSettingsPage({super.key, required this.authBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +120,7 @@ class ShopSettingsPage extends StatelessWidget {
                     Center(
                       // Footer App Info
                       child: Text(
-                        'Street Cart Seller App v2.4.0',
+                        '${_appInfoService.appName} Seller App v${_appInfoService.version}',
                         style: ShopAppTextStyles.bodySmall.copyWith(
                           color: ShopAppColors.textTertiary,
                           fontSize: 11.sp,

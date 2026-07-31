@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/about_app_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/privacy_policy_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/terms_conditions_page.dart';
 
 // About Section
 class AboutSection extends StatelessWidget {
-  const AboutSection({super.key});
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
+
+  AboutSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class AboutSection extends StatelessWidget {
         children: [
           // Title
           Text(
-            'ABOUT STREET CART',
+            'ABOUT ${_appInfoService.appName.toUpperCase()}',
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.bold,
@@ -34,7 +38,7 @@ class AboutSection extends StatelessWidget {
             child: Column(
               children: [
                 // About App
-                _buildListTile(context, 'About App', const AboutAppPage()),
+                _buildListTile(context, 'About App', AboutAppPage()),
                 Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
                 // Privacy Policy
                 _buildListTile(
@@ -66,7 +70,7 @@ class AboutSection extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '2.4.0',
+                        _appInfoService.version,
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,

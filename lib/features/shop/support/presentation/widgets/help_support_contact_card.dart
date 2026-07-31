@@ -45,7 +45,7 @@ class HelpSupportContactCard extends StatelessWidget {
               // Navigate to Contact Support Page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const ContactSupportPage()),
+                MaterialPageRoute(builder: (_) => ContactSupportPage()),
               );
             },
             style: ElevatedButton.styleFrom(

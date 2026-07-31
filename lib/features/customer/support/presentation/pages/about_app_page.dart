@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/core/constants/customer_constants.dart';
 import 'package:street_cart/features/customer/support/presentation/widgets/about_logo_section.dart';
 import 'package:street_cart/features/customer/support/presentation/widgets/about_action_card.dart';
@@ -10,7 +12,9 @@ import 'terms_conditions_page.dart';
 
 // About App Page
 class AboutAppPage extends StatelessWidget {
-  const AboutAppPage({super.key});
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
+
+  AboutAppPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class AboutAppPage extends StatelessWidget {
               SizedBox(height: 24.h),
               // App name header
               Text(
-                'Street Cart',
+                _appInfoService.appName,
                 style: CustomerAppTextStyles.heading1.copyWith(
                   fontSize: 28.sp,
                   color: const Color(0xFF1E293B),
@@ -49,7 +53,7 @@ class AboutAppPage extends StatelessWidget {
               SizedBox(height: 8.h),
               // version number label
               Text(
-                'Version 2.1.0',
+                _appInfoService.fullVersionString,
                 style: CustomerAppTextStyles.body.copyWith(
                   color: CustomerAppColors.primary,
                   fontWeight: FontWeight.w600,
@@ -102,7 +106,7 @@ class AboutAppPage extends StatelessWidget {
               SizedBox(height: 60.h),
               // Copyright footer text
               Text(
-                '© 2026 Street Cart',
+                _appInfoService.getCopyrightText(),
                 style: CustomerAppTextStyles.body.copyWith(
                   color: Colors.grey.shade400,
                   fontSize: 12.sp,

@@ -78,9 +78,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       // Navigate to Contact Support Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const ContactSupportPage(),
-                        ),
+                        MaterialPageRoute(builder: (_) => ContactSupportPage()),
                       );
                     },
                   ),
@@ -113,7 +111,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const AboutAppPage()),
+                        MaterialPageRoute(builder: (_) => AboutAppPage()),
                       );
                     },
                   ),

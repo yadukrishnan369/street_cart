@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_bloc.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_event.dart';
@@ -19,7 +20,9 @@ import 'package:street_cart/shared/widgets/app_error_view.dart';
 
 // Settings Page
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
+
+  SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +86,7 @@ class SettingsPage extends StatelessWidget {
                       Center(
                         // Bottom App name and Version
                         child: Text(
-                          'STREET CART APP\nVersion 2.4.0',
+                          '${_appInfoService.appName.toUpperCase()} APP\n${_appInfoService.fullVersionString}',
                           textAlign: TextAlign.center,
                           style: CustomerAppTextStyles.body.copyWith(
                             color: CustomerAppColors.textSecondary.withValues(

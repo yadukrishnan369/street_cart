@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
@@ -20,6 +21,7 @@ class AdminSplashPage extends StatefulWidget {
 }
 
 class _AdminSplashPageState extends State<AdminSplashPage> {
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
   late AdminSplashBloc _splashBloc;
 
   @override
@@ -134,7 +136,7 @@ class _AdminSplashPageState extends State<AdminSplashPage> {
                                     value: progress,
                                     minHeight: 8.h,
                                     backgroundColor: AdminAppColors.primaryLight
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: 0.3),
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
                                           AdminAppColors.primaryColor,
@@ -149,7 +151,7 @@ class _AdminSplashPageState extends State<AdminSplashPage> {
                                     Icon(
                                       Icons.lock_outline,
                                       color: AdminAppColors.primaryColor
-                                          .withOpacity(0.6),
+                                          .withValues(alpha: 0.6),
                                       size: 14.sp,
                                     ),
                                     SizedBox(width: 6.w),
@@ -170,7 +172,9 @@ class _AdminSplashPageState extends State<AdminSplashPage> {
                             Padding(
                               padding: EdgeInsets.only(bottom: 24.h),
                               child: Text(
-                                '© 2026 Street Cart Systems Inc.',
+                                _appInfoService.getCopyrightText(
+                                  'Systems Inc.',
+                                ),
                                 style: AdminAppTextStyles.caption.copyWith(
                                   color: AdminAppColors.textSecondary,
                                 ),

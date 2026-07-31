@@ -15,24 +15,6 @@ class PrivacyPolicyPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        leading: Padding(
-          padding: EdgeInsets.all(8.r),
-          child: InkWell(
-            onTap: () => Navigator.pop(context),
-            borderRadius: BorderRadius.circular(20.r),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFE8F5E9),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: ShopAppColors.primary,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
         // Page Header
         title: Text(
           'Privacy Policy',
@@ -82,14 +64,6 @@ class PrivacyPolicyPage extends StatelessWidget {
               style: ShopAppTextStyles.heading2.copyWith(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              'Last Updated: October 24, 2023',
-              style: ShopAppTextStyles.bodySmall.copyWith(
-                color: ShopAppColors.textSecondary,
-                fontSize: 12.sp,
               ),
             ),
             SizedBox(height: 24.h),

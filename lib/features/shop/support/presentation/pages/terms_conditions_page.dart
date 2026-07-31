@@ -14,24 +14,6 @@ class TermsConditionsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        leading: Padding(
-          padding: EdgeInsets.all(8.r),
-          child: InkWell(
-            onTap: () => Navigator.pop(context),
-            borderRadius: BorderRadius.circular(20.r),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFE8F5E9),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: ShopAppColors.primary,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
         // Page Header
         title: Text(
           'Terms & Conditions',
@@ -54,15 +36,6 @@ class TermsConditionsPage extends StatelessWidget {
                 color: ShopAppColors.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 20.sp,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            // Last Update
-            Text(
-              'Last updated: March 03, 2026',
-              style: ShopAppTextStyles.bodySmall.copyWith(
-                color: ShopAppColors.textSecondary,
-                fontSize: 12.sp,
               ),
             ),
             SizedBox(height: 24.h),

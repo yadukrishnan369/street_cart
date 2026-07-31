@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/constants/shop_constants.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/about_app_action_card.dart';
 import 'privacy_policy_page.dart';
@@ -10,7 +12,9 @@ import 'terms_conditions_page.dart';
 
 // About App Page
 class AboutAppPage extends StatelessWidget {
-  const AboutAppPage({super.key});
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
+
+  AboutAppPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,30 +23,11 @@ class AboutAppPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        leading: Padding(
-          padding: EdgeInsets.all(8.r),
-          child: InkWell(
-            onTap: () => Navigator.pop(context),
-            borderRadius: BorderRadius.circular(20.r),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFE8F5E9),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: ShopAppColors.primary,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-        // Page Header
         title: Text(
           'About App',
-          style: ShopAppTextStyles.heading4.copyWith(
+          style: ShopAppTextStyles.heading2.copyWith(
+            fontSize: 18.sp,
             color: ShopAppColors.textPrimary,
-            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
@@ -52,9 +37,8 @@ class AboutAppPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             children: [
-              SizedBox(height: 32.h),
-
-              // App Logo Card
+              SizedBox(height: 36.h),
+              // App logo section
               Center(
                 child: AppLogo(
                   size: 90.r,
@@ -64,18 +48,18 @@ class AboutAppPage extends StatelessWidget {
               ),
               SizedBox(height: 24.h),
 
-              // Title & Version
+              // App name & Version
               Text(
-                'Street Cart',
+                _appInfoService.appName,
                 style: ShopAppTextStyles.heading2.copyWith(
-                  fontSize: 26.sp,
+                  fontSize: 20.sp,
                   color: ShopAppColors.textPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 4.h),
               Text(
-                'Version 2.1.0',
+                _appInfoService.fullVersionString,
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
                   color: ShopAppColors.primary,
                   fontSize: 14.sp,
@@ -165,7 +149,7 @@ class AboutAppPage extends StatelessWidget {
 
               // Footer text
               Text(
-                '© 2026 Street Cart Technologies Private Limited',
+                _appInfoService.getCopyrightText(''),
                 style: ShopAppTextStyles.bodySmall.copyWith(
                   color: ShopAppColors.textTertiary,
                   fontSize: 11.sp,

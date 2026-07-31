@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
+import 'package:street_cart/core/services/app_info_service.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_state.dart';
@@ -19,6 +21,7 @@ class AdminLoginPage extends StatefulWidget {
 }
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
+  final IAppInfoService _appInfoService = sl<IAppInfoService>();
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -95,7 +98,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         SizedBox(height: 24.h),
                         // Footer Content
                         Text(
-                          '© 2026 Hyperlocal Marketplace. All systems operational.',
+                          '© ${_appInfoService.currentYear} Hyperlocal Marketplace. All systems operational.',
                           textAlign: TextAlign.center,
                           style: AdminAppTextStyles.caption.copyWith(
                             color: AdminAppColors.textSecondary,
