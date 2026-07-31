@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/core/utils/validators.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
+import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_event.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 
 // Basic product details form
@@ -67,6 +70,8 @@ class ProductBasicDetailsForm extends StatelessWidget {
           borderColor: Colors.grey[300],
           focusedBorderColor: ShopAppColors.primary,
           validator: Validators.validateProductName,
+          onChanged: (val) =>
+              context.read<AddEditProductBloc>().add(UpdateNameEvent(val)),
         ),
         SizedBox(height: 16.h),
 
@@ -95,6 +100,9 @@ class ProductBasicDetailsForm extends StatelessWidget {
                 borderColor: Colors.grey[300],
                 focusedBorderColor: ShopAppColors.primary,
                 validator: Validators.validateProductOriginalPrice,
+                onChanged: (val) => context.read<AddEditProductBloc>().add(
+                  UpdateOriginalPriceEvent(val),
+                ),
               ),
             ),
             SizedBox(width: 16.w),
@@ -122,6 +130,9 @@ class ProductBasicDetailsForm extends StatelessWidget {
                 validator: (val) => Validators.validateProductOfferPrice(
                   val,
                   priceController.text,
+                ),
+                onChanged: (val) => context.read<AddEditProductBloc>().add(
+                  UpdateOfferPriceEvent(val),
                 ),
               ),
             ),
@@ -155,6 +166,9 @@ class ProductBasicDetailsForm extends StatelessWidget {
           borderColor: Colors.grey[300],
           focusedBorderColor: ShopAppColors.primary,
           validator: Validators.validateProductDescription,
+          onChanged: (val) => context.read<AddEditProductBloc>().add(
+            UpdateDescriptionEvent(val),
+          ),
         ),
         SizedBox(height: 16.h),
 
