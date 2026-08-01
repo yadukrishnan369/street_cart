@@ -20,25 +20,35 @@ class MyOrdersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider<OrdersBloc>(
       create: (context) => sl<OrdersBloc>()..add(FetchOrders()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: theme.cardColor,
           elevation: 0.5,
           centerTitle: true,
           // Page Header
           title: Text(
             'My Orders',
             style: TextStyle(
-              color: CustomerAppColors.textPrimary,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(
+              Icons.arrow_back,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+            ),
             onPressed: () => Navigator.pushReplacement(
               context,
               PageRouteBuilder(

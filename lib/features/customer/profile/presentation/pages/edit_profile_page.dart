@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_event.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_state.dart';
@@ -94,22 +93,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
           final isUploading = profileState?.isUploadingImage ?? false;
 
           return Scaffold(
-            backgroundColor: CustomerAppColors.background,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: AppBar(
-              backgroundColor: CustomerAppColors.background,
               elevation: 0,
               leading: IconButton(
-                icon: const Icon(Icons.close, color: Colors.black87),
+                icon: Icon(
+                  Icons.close,
+                  color: Theme.of(context).appBarTheme.foregroundColor,
+                ),
                 onPressed: () => Navigator.pop(context),
               ),
               // Page Header
               title: Text(
                 'Edit Profile',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
               ),
               centerTitle: true,
             ),

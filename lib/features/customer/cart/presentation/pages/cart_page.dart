@@ -57,14 +57,13 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: CustomerAppColors.textPrimary,
+            color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             if (Navigator.canPop(context)) {
@@ -84,11 +83,7 @@ class _CartPageState extends State<CartPage> {
         // Page Header
         title: Text(
           'My Cart',
-          style: TextStyle(
-            color: CustomerAppColors.textPrimary,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
         actions: [
           BlocBuilder<CartBloc, CartState>(

@@ -8,23 +8,32 @@ class ShopCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final blockColor = isDark ? Colors.grey[850]! : Colors.white;
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade200,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: baseColor,
+        highlightColor: highlightColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,7 +48,7 @@ class ShopCardShimmer extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: 180.h,
-                    color: Colors.white,
+                    color: blockColor,
                   ),
                   Positioned(
                     top: 12.h,
@@ -48,7 +57,7 @@ class ShopCardShimmer extends StatelessWidget {
                       width: 50.w,
                       height: 24.h,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: blockColor,
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                     ),
@@ -67,14 +76,14 @@ class ShopCardShimmer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Container(height: 16.h, color: Colors.white),
+                        child: Container(height: 16.h, color: blockColor),
                       ),
                       SizedBox(width: 8.w),
                       Container(
                         width: 60.w,
                         height: 20.h,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: blockColor,
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                       ),
@@ -85,23 +94,19 @@ class ShopCardShimmer extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: 12.h,
-                    color: Colors.white,
+                    color: blockColor,
                   ),
                   SizedBox(height: 6.h),
-                  Container(width: 220.w, height: 12.h, color: Colors.white),
+                  Container(width: 220.w, height: 12.h, color: blockColor),
                   SizedBox(height: 16.h),
                   // Location and Action
                   Row(
                     children: [
-                      Container(width: 12.w, height: 12.h, color: Colors.white),
+                      Container(width: 12.w, height: 12.h, color: blockColor),
                       SizedBox(width: 6.w),
-                      Container(
-                        width: 100.w,
-                        height: 12.h,
-                        color: Colors.white,
-                      ),
+                      Container(width: 100.w, height: 12.h, color: blockColor),
                       const Spacer(),
-                      Container(width: 80.w, height: 14.h, color: Colors.white),
+                      Container(width: 80.w, height: 14.h, color: blockColor),
                     ],
                   ),
                 ],

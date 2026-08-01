@@ -15,6 +15,9 @@ class ShopsListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     if (shops.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
@@ -22,9 +25,16 @@ class ShopsListSection extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: const Color(0xFFFEF2F2),
+            color: isDark
+                ? CustomerAppColors.darkEmptyErrorBg
+                : CustomerAppColors.emptyErrorBg,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFFCA5A5), width: 1),
+            border: Border.all(
+              color: isDark
+                  ? CustomerAppColors.darkEmptyErrorBorder
+                  : CustomerAppColors.emptyErrorBorder,
+              width: 1,
+            ),
           ),
           child: Column(
             children: [
@@ -67,7 +77,13 @@ class ShopsListSection extends StatelessWidget {
             children: [
               Text(
                 '${shops.length} ${shops.length == 1 ? 'shop' : 'shops'} near by you',
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
+                ),
               ),
               GestureDetector(
                 onTap: () {
@@ -108,6 +124,9 @@ class ShopsListSection extends StatelessWidget {
   }
 
   Widget _buildShopCard(BuildContext context, ShopProfileModel shop) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(right: 16.w),
       child: GestureDetector(
@@ -120,11 +139,14 @@ class ShopsListSection extends StatelessWidget {
         child: Container(
           width: 280.w,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16.r),
+            border: isDark
+                ? Border.all(color: CustomerAppColors.darkBorder)
+                : null,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.08),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),

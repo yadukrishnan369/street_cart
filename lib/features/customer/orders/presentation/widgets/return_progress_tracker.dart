@@ -12,6 +12,8 @@ class ReturnProgressTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final returnStatus = (order.returnStatus ?? '').toLowerCase();
 
     // Step Completions
@@ -69,7 +71,9 @@ class ReturnProgressTracker extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w900,
-              color: const Color(0xFF1E293B),
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textPrimary,
               letterSpacing: 1.0,
             ),
           ),
@@ -94,11 +98,17 @@ class ReturnProgressTracker extends StatelessWidget {
                           width: 28.w,
                           height: 28.w,
                           decoration: BoxDecoration(
-                            color: isCompleted ? activeColor : Colors.white,
+                            color: isCompleted
+                                ? activeColor
+                                : isDark
+                                ? CustomerAppColors.darkInputBackground
+                                : Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isCompleted
                                   ? activeColor
+                                  : isDark
+                                  ? CustomerAppColors.darkBorder
                                   : const Color(0xFF1E293B),
                               width: 2.w,
                             ),
@@ -113,7 +123,9 @@ class ReturnProgressTracker extends StatelessWidget {
                               ? Icon(
                                   Icons.assignment_return_outlined,
                                   size: 14.sp,
-                                  color: const Color(0xFF1E293B),
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextPrimary
+                                      : const Color(0xFF1E293B),
                                 )
                               : null,
                         ),
@@ -123,6 +135,8 @@ class ReturnProgressTracker extends StatelessWidget {
                               width: 2.w,
                               color: isCompleted && index < activeIndex
                                   ? activeColor
+                                  : isDark
+                                  ? CustomerAppColors.darkBorder
                                   : Colors.grey[300],
                             ),
                           ),
@@ -144,7 +158,9 @@ class ReturnProgressTracker extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: isCompleted
                                     ? activeColor
-                                    : const Color(0xFF1E293B),
+                                    : isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary,
                               ),
                             ),
                             SizedBox(height: 2.h),
@@ -155,7 +171,11 @@ class ReturnProgressTracker extends StatelessWidget {
                                 fontSize: 12.sp,
                                 color: isCompleted
                                     ? activeColor.withValues(alpha: 0.7)
-                                    : const Color(0xFF1E293B).withOpacity(0.6),
+                                    : isDark
+                                    ? CustomerAppColors.darkTextSecondary
+                                    : CustomerAppColors.textPrimary.withValues(
+                                        alpha: 0.6,
+                                      ),
                               ),
                             ),
                           ],

@@ -11,12 +11,18 @@ class TermsChecklistBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: CustomerAppColors.background,
+        color: isDark
+            ? CustomerAppColors.darkInputBackground
+            : CustomerAppColors.background,
         borderRadius: BorderRadius.circular(20.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
       ),
       child: Column(
         children: [
@@ -26,7 +32,9 @@ class TermsChecklistBox extends StatelessWidget {
             style: CustomerAppTextStyles.body.copyWith(
               fontWeight: FontWeight.w500,
               fontSize: 13.sp,
-              color: const Color(0xFF475569),
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : const Color(0xFF475569),
             ),
           ),
           SizedBox(height: 16.h),
@@ -40,7 +48,7 @@ class TermsChecklistBox extends StatelessWidget {
                   Icon(
                     Icons.check_circle_outline_rounded,
                     size: 18.sp,
-                    color: CustomerAppColors.primary.withOpacity(0.7),
+                    color: CustomerAppColors.primary.withValues(alpha: 0.7),
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
@@ -48,7 +56,9 @@ class TermsChecklistBox extends StatelessWidget {
                       step,
                       style: CustomerAppTextStyles.body.copyWith(
                         fontSize: 13.sp,
-                        color: const Color(0xFF64748B),
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : const Color(0xFF64748B),
                         height: 1.4,
                       ),
                     ),

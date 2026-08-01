@@ -18,15 +18,20 @@ class AboutActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20.r),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
-          color: CustomerAppColors.surface,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: Colors.grey.shade100),
+          border: Border.all(
+            color: isDark ? CustomerAppColors.darkBorder : Colors.grey.shade100,
+          ),
         ),
         child: Row(
           children: [
@@ -39,12 +44,20 @@ class AboutActionCard extends StatelessWidget {
                 style: CustomerAppTextStyles.body.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 15.sp,
-                  color: const Color(0xFF1E293B),
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
             ),
             // trailing arrow
-            Icon(Icons.chevron_right, color: Colors.grey.shade300, size: 20.sp),
+            Icon(
+              Icons.chevron_right,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade300,
+              size: 20.sp,
+            ),
           ],
         ),
       ),

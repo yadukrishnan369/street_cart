@@ -5,16 +5,20 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_bloc.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_event.dart';
+import 'package:street_cart/core/theme/customer/theme_cubit.dart';
 import 'package:street_cart/features/customer/settings/presentation/widgets/settings_switch_tile.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 
-Widget _buildSectionHeader(String text) {
+Widget _buildSectionHeader(BuildContext context, String text) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
   return Padding(
     padding: EdgeInsets.only(left: 16.w, top: 24.h, bottom: 8.h),
     child: Text(
       text,
       style: CustomerAppTextStyles.body.copyWith(
-        color: CustomerAppColors.textSecondary,
+        color: isDark
+            ? CustomerAppColors.darkTextSecondary
+            : CustomerAppColors.textSecondary,
         fontSize: 12.sp,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
@@ -40,7 +44,7 @@ class AppPreferencesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
-        _buildSectionHeader('APP PREFERENCES'),
+        _buildSectionHeader(context, 'APP PREFERENCES'),
         SettingsSwitchTile(
           icon: Icons.nightlight_round,
           iconColor: CustomerAppColors.primary,
@@ -51,6 +55,7 @@ class AppPreferencesSection extends StatelessWidget {
             context.read<SettingsBloc>().add(
               ToggleSetting(key: 'darkMode', value: val),
             );
+            context.read<ThemeCubit>().toggleTheme(val);
           },
         ),
         if (hasLocationData)

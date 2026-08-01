@@ -7,11 +7,14 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 class ProfileShimmer extends StatelessWidget {
   const ProfileShimmer({super.key});
 
-  Widget _buildListTileShimmer({
+  Widget _buildListTileShimmer(
+    BuildContext context, {
     required IconData icon,
     required String title,
     String? subtitle,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
@@ -56,7 +59,10 @@ class ProfileShimmer extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: Colors.grey.shade300),
+          Icon(
+            Icons.chevron_right,
+            color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+          ),
         ],
       ),
     );
@@ -64,6 +70,11 @@ class ProfileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : CustomerAppColors.surface;
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -74,11 +85,11 @@ class ProfileShimmer extends StatelessWidget {
             margin: EdgeInsets.all(16.w),
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
-              color: CustomerAppColors.surface,
+              color: cardBg,
               borderRadius: BorderRadius.circular(24.r),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   spreadRadius: 2,
                   offset: const Offset(0, 4),
@@ -86,8 +97,8 @@ class ProfileShimmer extends StatelessWidget {
               ],
             ),
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
+              baseColor: shimmerBase,
+              highlightColor: shimmerHigh,
               child: Column(
                 children: [
                   // Circular Avatar Outer Frame
@@ -184,22 +195,25 @@ class ProfileShimmer extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade600,
+                    color: isDark
+                        ? CustomerAppColors.darkTextSecondary
+                        : Colors.grey.shade600,
                     letterSpacing: 1.2,
                   ),
                 ),
                 SizedBox(height: 12.h),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: cardBg,
                     borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
+                    baseColor: shimmerBase,
+                    highlightColor: shimmerHigh,
                     child: Column(
                       children: [
                         _buildListTileShimmer(
+                          context,
                           icon: Icons.map_outlined,
                           title: 'Saved Addresses',
                           subtitle: 'Manage delivery locations',
@@ -207,7 +221,9 @@ class ProfileShimmer extends StatelessWidget {
                         Divider(
                           height: 1,
                           indent: 64.w,
-                          color: Colors.grey.shade100,
+                          color: isDark
+                              ? CustomerAppColors.darkBorder
+                              : Colors.grey.shade100,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -270,7 +286,7 @@ class ProfileShimmer extends StatelessWidget {
                                     child: Switch(
                                       value: true,
                                       onChanged: (val) {},
-                                      activeColor: Colors.white,
+                                      activeThumbColor: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -293,7 +309,7 @@ class ProfileShimmer extends StatelessWidget {
                                     child: Switch(
                                       value: false,
                                       onChanged: (val) {},
-                                      activeColor: Colors.white,
+                                      activeThumbColor: Colors.white,
                                     ),
                                   ),
                                 ],

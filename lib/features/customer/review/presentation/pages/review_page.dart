@@ -83,18 +83,20 @@ class _ReviewPageState extends State<ReviewPage> {
         final isLoading = state.status == ReviewStatus.submitting;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF8FAFC),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
-            backgroundColor: Colors.white,
             elevation: 0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
             // Page Title
             title: Text(
               widget.existingReview != null ? 'Edit Review' : 'Write a Review',
-              style: TextStyle(
-                color: const Color(0xFF1E293B),
-                fontWeight: FontWeight.bold,
-                fontSize: 16.sp,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
             ),
             centerTitle: true,
           ),

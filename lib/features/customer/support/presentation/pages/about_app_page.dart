@@ -18,18 +18,31 @@ class AboutAppPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
-        elevation: 0,
+        backgroundColor: theme.cardColor,
+        elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'About App',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: CustomerAppTextStyles.heading2.copyWith(
+            fontSize: 20.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),
@@ -47,7 +60,9 @@ class AboutAppPage extends StatelessWidget {
                 _appInfoService.appName,
                 style: CustomerAppTextStyles.heading1.copyWith(
                   fontSize: 28.sp,
-                  color: const Color(0xFF1E293B),
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -66,7 +81,9 @@ class AboutAppPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: CustomerAppTextStyles.heading2.copyWith(
                   fontSize: 18.sp,
-                  color: const Color(0xFF334155),
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : const Color(0xFF334155),
                   height: 1.4,
                 ),
               ),
@@ -76,7 +93,9 @@ class AboutAppPage extends StatelessWidget {
                 CustomerConstants.aboutAppDescription,
                 textAlign: TextAlign.center,
                 style: CustomerAppTextStyles.body.copyWith(
-                  color: Colors.grey.shade600,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey.shade600,
                   height: 1.6,
                   fontSize: 14.sp,
                 ),
@@ -108,7 +127,9 @@ class AboutAppPage extends StatelessWidget {
               Text(
                 _appInfoService.getCopyrightText(),
                 style: CustomerAppTextStyles.body.copyWith(
-                  color: Colors.grey.shade400,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey.shade400,
                   fontSize: 12.sp,
                 ),
               ),

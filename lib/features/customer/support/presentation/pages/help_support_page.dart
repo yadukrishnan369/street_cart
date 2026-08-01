@@ -13,19 +13,32 @@ class HelpSupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
-        elevation: 0,
+        backgroundColor: theme.cardColor,
+        elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         // Page Title
         title: Text(
           'Help & Support',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: CustomerAppTextStyles.heading2.copyWith(
+            fontSize: 20.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),
@@ -35,7 +48,7 @@ class HelpSupportPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHelpHeader(),
+              _buildHelpHeader(context),
               SizedBox(height: 32.h),
               // Categories
               _buildCategory(0, Icons.inventory_2_outlined),
@@ -65,26 +78,39 @@ class HelpSupportPage extends StatelessWidget {
   }
 
   // Help Section Header
-  Widget _buildHelpHeader() {
+  Widget _buildHelpHeader(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFEEEFFF),
+        color: isDark
+            ? CustomerAppColors.primary.withValues(alpha: 0.15)
+            : const Color(0xFFEEEFFF),
         borderRadius: BorderRadius.circular(24.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'How can we help?',
-            style: CustomerAppTextStyles.heading2.copyWith(fontSize: 18.sp),
+            style: CustomerAppTextStyles.heading2.copyWith(
+              fontSize: 18.sp,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+            ),
           ),
           SizedBox(height: 8.h),
           Text(
             'Search our knowledge base or browse categories below.',
             style: CustomerAppTextStyles.body.copyWith(
-              color: Colors.grey.shade600,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade600,
             ),
           ),
         ],

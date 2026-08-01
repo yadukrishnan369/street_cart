@@ -16,6 +16,7 @@ class ProductPricingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final originalPriceText = '₹${PriceUtils.formatPrice(originalPrice)}';
     final offerPriceText = offerPrice != null
         ? '₹${PriceUtils.formatPrice(offerPrice!)}'
@@ -39,7 +40,9 @@ class ProductPricingSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w900,
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
         if (offerPriceText != null) ...[

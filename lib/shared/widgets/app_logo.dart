@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/Customer_app_colors.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 class AppLogo extends StatefulWidget {
   final bool isDark;
@@ -52,12 +52,14 @@ class _AppLogoState extends State<AppLogo> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // Default colors if not provided
-    final bgColor = widget.backgroundColor ??
+    final bgColor =
+        widget.backgroundColor ??
         (widget.isDark
             ? CustomerAppColors.primary
             : CustomerAppColors.primaryLight);
-    
-    final iconColor = widget.logoColor ?? 
+
+    final iconColor =
+        widget.logoColor ??
         (widget.isDark ? Colors.white : CustomerAppColors.primary);
 
     return FadeTransition(
@@ -72,7 +74,7 @@ class _AppLogoState extends State<AppLogo> with SingleTickerProviderStateMixin {
             borderRadius: BorderRadius.circular((widget.size * 0.3).r),
             boxShadow: [
               BoxShadow(
-                color: bgColor.withOpacity(0.3),
+                color: bgColor.withValues(alpha: 0.3),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),

@@ -13,14 +13,18 @@ class ReturnItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -59,7 +63,9 @@ class ReturnItemCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E293B),
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -75,7 +81,12 @@ class ReturnItemCard extends StatelessWidget {
                       if (item.selectedColor != null)
                         'Color: ${item.selectedColor}',
                     ].join(' | '),
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[500]),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey[500],
+                    ),
                   ),
                   SizedBox(height: 6.h),
                 ],

@@ -27,6 +27,8 @@ class OrderDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final orderIdText = OrdersHelper.getOrderIdSuffix(order.id);
     final activeColor = CustomerAppColors.primary;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return BlocBuilder<OrdersBloc, OrdersState>(
       builder: (context, state) {
@@ -39,9 +41,9 @@ class OrderDetailsPage extends StatelessWidget {
         final hasReturnRequest = returnStatus.isNotEmpty;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF8FAFC),
+          backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: theme.cardColor,
             elevation: 0.5,
             centerTitle: true,
             title: Column(
@@ -50,7 +52,9 @@ class OrderDetailsPage extends StatelessWidget {
                 Text(
                   'Order Details',
                   style: TextStyle(
-                    color: CustomerAppColors.textPrimary,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -67,7 +71,12 @@ class OrderDetailsPage extends StatelessWidget {
               ],
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              icon: Icon(
+                Icons.arrow_back,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -130,8 +139,13 @@ class OrderDetailsPage extends StatelessWidget {
                       if (isDelivered && hasReturnRequest) ...[
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: theme.cardColor,
                             borderRadius: BorderRadius.circular(16.r),
+                            border: isDark
+                                ? Border.all(
+                                    color: CustomerAppColors.darkBorder,
+                                  )
+                                : null,
                           ),
                           child: ReturnProgressTracker(order: currentOrder),
                         ),
@@ -142,8 +156,13 @@ class OrderDetailsPage extends StatelessWidget {
                       if (!isDelivered && !isCancelled) ...[
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: theme.cardColor,
                             borderRadius: BorderRadius.circular(16.r),
+                            border: isDark
+                                ? Border.all(
+                                    color: CustomerAppColors.darkBorder,
+                                  )
+                                : null,
                           ),
                           child: DeliveryProgressTracker(order: currentOrder),
                         ),

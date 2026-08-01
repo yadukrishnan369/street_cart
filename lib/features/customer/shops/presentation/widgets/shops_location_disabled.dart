@@ -11,6 +11,8 @@ class ShopsLocationDisabled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Padding(
         padding: EdgeInsets.all(24.w),
@@ -29,7 +31,9 @@ class ShopsLocationDisabled extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: CustomerAppColors.textPrimary,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 8.h),
@@ -39,7 +43,9 @@ class ShopsLocationDisabled extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: CustomerAppColors.textSecondary,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : CustomerAppColors.textSecondary,
               ),
             ),
             SizedBox(height: 24.h),

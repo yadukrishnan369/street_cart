@@ -23,14 +23,22 @@ class ProductInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? CustomerAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: isDark
+              ? CustomerAppColors.darkBorder
+              : const Color(0xFFCBD5E1),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -61,7 +69,9 @@ class ProductInfoCard extends StatelessWidget {
                 Text(
                   productName,
                   style: TextStyle(
-                    color: const Color(0xFF1E293B),
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 15.sp,
                   ),
@@ -72,7 +82,9 @@ class ProductInfoCard extends StatelessWidget {
                 Text(
                   'Size: ${size ?? "Standard"} | Color: ${color ?? "Default"}',
                   style: TextStyle(
-                    color: const Color(0xFF94A3B8),
+                    color: isDark
+                        ? CustomerAppColors.darkTextSecondary
+                        : const Color(0xFF94A3B8),
                     fontSize: 12.sp,
                   ),
                 ),

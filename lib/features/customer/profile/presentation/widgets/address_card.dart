@@ -23,19 +23,25 @@ class AddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: isDark
+            ? CustomerAppColors.darkSurface
+            : CustomerAppColors.surface,
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
-          color: isSelected ? CustomerAppColors.primary : Colors.transparent,
+          color: isSelected
+              ? CustomerAppColors.primary
+              : (isDark ? CustomerAppColors.darkBorder : Colors.transparent),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -91,7 +97,9 @@ class AddressCard extends StatelessWidget {
                             style: CustomerAppTextStyles.body.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 16.sp,
-                              color: Colors.black87,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextPrimary
+                                  : CustomerAppColors.textPrimary,
                             ),
                           ),
                           // Address Type
@@ -103,7 +111,9 @@ class AddressCard extends StatelessWidget {
                       Text(
                         address.phone,
                         style: CustomerAppTextStyles.body.copyWith(
-                          color: Colors.grey.shade600,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : Colors.grey.shade600,
                           fontSize: 14.sp,
                         ),
                       ),
@@ -115,7 +125,9 @@ class AddressCard extends StatelessWidget {
                         '${address.state.isNotEmpty ? ", ${address.state}" : ""}'
                         ' - ${address.pincode}',
                         style: CustomerAppTextStyles.body.copyWith(
-                          color: Colors.grey.shade700,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : Colors.grey.shade700,
                           fontSize: 14.sp,
                           height: 1.4,
                         ),
@@ -126,7 +138,10 @@ class AddressCard extends StatelessWidget {
               ],
             ),
           ),
-          Divider(height: 1, color: Colors.grey.shade100),
+          Divider(
+            height: 1,
+            color: isDark ? CustomerAppColors.darkBorder : Colors.grey.shade100,
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Row(
@@ -143,7 +158,9 @@ class AddressCard extends StatelessWidget {
                   icon: Icons.delete_outline_rounded,
                   label: 'Delete',
                   onTap: onDelete,
-                  color: Colors.grey.shade500,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey.shade500,
                 ),
               ],
             ),
@@ -157,7 +174,7 @@ class AddressCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: CustomerAppColors.primary.withOpacity(0.1),
+        color: CustomerAppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(

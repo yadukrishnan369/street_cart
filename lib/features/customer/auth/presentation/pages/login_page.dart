@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -62,17 +62,25 @@ class LoginPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            final theme = Theme.of(context);
+            final isDark = theme.brightness == Brightness.dark;
+
             return Center(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
                 child: Container(
                   padding: EdgeInsets.all(32.w),
                   decoration: BoxDecoration(
-                    color: CustomerAppColors.surface,
+                    color: theme.cardColor,
                     borderRadius: BorderRadius.circular(32.r),
+                    border: isDark
+                        ? Border.all(color: CustomerAppColors.darkBorder)
+                        : null,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(
+                          alpha: isDark ? 0.2 : 0.05,
+                        ),
                         blurRadius: 8,
                         offset: const Offset(0, 8),
                       ),

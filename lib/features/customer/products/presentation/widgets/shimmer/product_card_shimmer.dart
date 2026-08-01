@@ -19,6 +19,13 @@ class ProductCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final blockColor = isDark ? Colors.grey[850]! : Colors.white;
+
     return GridView.builder(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       physics: physics,
@@ -33,20 +40,22 @@ class ProductCardShimmer extends StatelessWidget {
       itemBuilder: (context, index) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(
+              color: isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade200,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
+            baseColor: baseColor,
+            highlightColor: highlightColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,7 +65,7 @@ class ProductCardShimmer extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: blockColor,
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(16.r),
                       ),

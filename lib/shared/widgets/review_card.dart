@@ -29,6 +29,36 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Color for both customer & shop app
+    final cardBg = isDark ? CustomerAppColors.darkSurface : Colors.white;
+    final cardBorder = isDark
+        ? CustomerAppColors.darkBorder
+        : const Color(0xFFE2E8F0);
+    final avatarBg = isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF1F5F9);
+    final avatarIconColor = isDark
+        ? const Color(0xFF6B7280)
+        : const Color(0xFF94A3B8);
+    final nameColor = isDark
+        ? CustomerAppColors.darkTextPrimary
+        : CustomerAppColors.textPrimary;
+    final editIconColor = isDark
+        ? const Color(0xFF9CA3AF)
+        : const Color(0xFF64748B);
+    final dateColor = isDark
+        ? const Color(0xFF6B7280)
+        : const Color(0xFF94A3B8);
+    final commentColor = isDark
+        ? CustomerAppColors.darkTextSecondary
+        : const Color(0xFF334155);
+    final imageBorderColor = isDark
+        ? const Color(0xFF374151)
+        : const Color(0xFFCBD5E1);
+    final imagePlaceholderBg = isDark
+        ? const Color(0xFF1F2937)
+        : const Color(0xFFF1F5F9);
+
     final customerName = review.customerName;
     final customerImage = review.customerImage;
     final rating = review.rating;
@@ -40,22 +70,23 @@ class ReviewCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
+              // Customer Avatar
               customerImage.isEmpty
                   ? CircleAvatar(
                       radius: 18.r,
-                      backgroundColor: const Color(0xFFF1F5F9),
+                      backgroundColor: avatarBg,
                       child: Icon(
                         Icons.person_rounded,
-                        color: const Color(0xFF94A3B8),
+                        color: avatarIconColor,
                         size: 20.sp,
                       ),
                     )
@@ -67,7 +98,7 @@ class ReviewCard extends StatelessWidget {
                       ),
                       placeholder: (context, url) => CircleAvatar(
                         radius: 18.r,
-                        backgroundColor: const Color(0xFFF1F5F9),
+                        backgroundColor: avatarBg,
                         child: SizedBox(
                           width: 14.w,
                           height: 14.w,
@@ -78,10 +109,10 @@ class ReviewCard extends StatelessWidget {
                       ),
                       errorWidget: (context, url, error) => CircleAvatar(
                         radius: 18.r,
-                        backgroundColor: const Color(0xFFF1F5F9),
+                        backgroundColor: avatarBg,
                         child: Icon(
                           Icons.person_rounded,
-                          color: const Color(0xFF94A3B8),
+                          color: avatarIconColor,
                           size: 20.sp,
                         ),
                       ),
@@ -94,14 +125,16 @@ class ReviewCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // Customer Name
                         Text(
                           customerName,
                           style: TextStyle(
-                            color: CustomerAppColors.textPrimary,
+                            color: nameColor,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        // Edit / Delete actions own review only
                         if (isOwnReview)
                           Row(
                             children: [
@@ -120,7 +153,7 @@ class ReviewCard extends StatelessWidget {
                                   ),
                                   child: Icon(
                                     Icons.edit_outlined,
-                                    color: const Color(0xFF64748B),
+                                    color: editIconColor,
                                     size: 16.sp,
                                   ),
                                 ),
@@ -150,24 +183,23 @@ class ReviewCard extends StatelessWidget {
                     SizedBox(height: 2.h),
                     Row(
                       children: [
+                        // Star Rating
                         Row(
                           children: List.generate(5, (starIndex) {
                             return Icon(
                               starIndex < rating
                                   ? Icons.star_rounded
                                   : Icons.star_outline_rounded,
-                              color: CustomerAppColors.primary,
+                              color: CustomerAppColors.warning,
                               size: 14.sp,
                             );
                           }),
                         ),
                         const Spacer(),
+                        // Date
                         Text(
                           formattedDate,
-                          style: TextStyle(
-                            color: const Color(0xFF94A3B8),
-                            fontSize: 11.sp,
-                          ),
+                          style: TextStyle(color: dateColor, fontSize: 11.sp),
                         ),
                       ],
                     ),
@@ -176,17 +208,19 @@ class ReviewCard extends StatelessWidget {
               ),
             ],
           ),
+          // Review Comment
           if (comment.trim().isNotEmpty) ...[
             SizedBox(height: 12.h),
             Text(
               comment,
               style: TextStyle(
-                color: const Color(0xFF334155),
+                color: commentColor,
                 fontSize: 13.sp,
                 height: 1.4,
               ),
             ),
           ],
+          // Review Images
           if (images.isNotEmpty) ...[
             SizedBox(height: 12.h),
             SizedBox(
@@ -214,7 +248,7 @@ class ReviewCard extends StatelessWidget {
                         margin: EdgeInsets.only(right: 8.w),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: const Color(0xFFCBD5E1)),
+                          border: Border.all(color: imageBorderColor),
                           image: DecorationImage(
                             image: imageProvider,
                             fit: BoxFit.cover,
@@ -226,7 +260,7 @@ class ReviewCard extends StatelessWidget {
                         margin: EdgeInsets.only(right: 8.w),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),
-                          color: const Color(0xFFF1F5F9),
+                          color: imagePlaceholderBg,
                         ),
                         child: const Center(
                           child: ProductImagePlaceholder(height: 60),
@@ -237,11 +271,11 @@ class ReviewCard extends StatelessWidget {
                         margin: EdgeInsets.only(right: 8.w),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.r),
-                          color: const Color(0xFFF1F5F9),
+                          color: imagePlaceholderBg,
                         ),
                         child: Icon(
                           Icons.broken_image_outlined,
-                          color: const Color(0xFF94A3B8),
+                          color: avatarIconColor,
                           size: 20.sp,
                         ),
                       ),

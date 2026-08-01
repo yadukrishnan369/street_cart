@@ -26,11 +26,7 @@ class FilterColorsSection extends StatelessWidget {
       children: [
         Text(
           'Colors',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12.h),
         // List Of Colors

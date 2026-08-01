@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
@@ -71,7 +70,7 @@ class _CustomerProductsPageState extends State<CustomerProductsPage> {
           ),
         ),
       child: Scaffold(
-        backgroundColor: CustomerAppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         // App Bar
         appBar: const ProductsAppBar(),
         body: Column(

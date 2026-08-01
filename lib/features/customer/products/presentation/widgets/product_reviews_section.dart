@@ -28,6 +28,7 @@ class ProductReviewsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     if (reviews.isEmpty) {
@@ -38,7 +39,9 @@ class ProductReviewsSection extends StatelessWidget {
           Text(
             'Customer Reviews',
             style: TextStyle(
-              color: CustomerAppColors.textPrimary,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -48,14 +51,23 @@ class ProductReviewsSection extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? CustomerAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(
+                color: isDark
+                    ? CustomerAppColors.darkBorder
+                    : const Color(0xFFE2E8F0),
+              ),
             ),
             // Empty Info
             child: Text(
               'No reviews yet for this product.',
-              style: TextStyle(color: const Color(0xFF64748B), fontSize: 13.sp),
+              style: TextStyle(
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : const Color(0xFF64748B),
+                fontSize: 13.sp,
+              ),
             ),
           ),
         ],
@@ -75,7 +87,9 @@ class ProductReviewsSection extends StatelessWidget {
             Text(
               'Ratings & Reviews',
               style: TextStyle(
-                color: CustomerAppColors.textPrimary,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -85,14 +99,16 @@ class ProductReviewsSection extends StatelessWidget {
               children: [
                 Icon(
                   Icons.star_rounded,
-                  color: CustomerAppColors.primary,
+                  color: CustomerAppColors.warning,
                   size: 18.sp,
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   averageRating.toStringAsFixed(1),
                   style: TextStyle(
-                    color: CustomerAppColors.textPrimary,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -100,7 +116,9 @@ class ProductReviewsSection extends StatelessWidget {
                 Text(
                   ' (${reviews.length})',
                   style: TextStyle(
-                    color: const Color(0xFF64748B),
+                    color: isDark
+                        ? CustomerAppColors.darkTextSecondary
+                        : const Color(0xFF64748B),
                     fontSize: 13.sp,
                   ),
                 ),

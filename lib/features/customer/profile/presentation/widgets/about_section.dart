@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/services/app_info_service.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/about_app_page.dart';
@@ -14,6 +15,8 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
@@ -25,35 +28,55 @@ class AboutSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.grey.shade600,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade600,
               letterSpacing: 1.2,
             ),
           ),
           SizedBox(height: 12.h),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? CustomerAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(
               children: [
                 // About App
                 _buildListTile(context, 'About App', AboutAppPage()),
-                Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
+                Divider(
+                  height: 1,
+                  indent: 16.w,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade100,
+                ),
                 // Privacy Policy
                 _buildListTile(
                   context,
                   'Privacy Policy',
                   const PrivacyPolicyPage(),
                 ),
-                Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
+                Divider(
+                  height: 1,
+                  indent: 16.w,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade100,
+                ),
                 // Terms and Conditions
                 _buildListTile(
                   context,
                   'Terms & Conditions',
                   const TermsConditionsPage(),
                 ),
-                Divider(height: 1, indent: 16.w, color: Colors.grey.shade100),
+                Divider(
+                  height: 1,
+                  indent: 16.w,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade100,
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 16.w,
@@ -66,7 +89,9 @@ class AboutSection extends StatelessWidget {
                         'App Version',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: Colors.grey.shade500,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : Colors.grey.shade500,
                         ),
                       ),
                       Text(
@@ -74,7 +99,9 @@ class AboutSection extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade500,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : Colors.grey.shade500,
                           letterSpacing: 1.5,
                         ),
                       ),
@@ -90,6 +117,8 @@ class AboutSection extends StatelessWidget {
   }
 
   Widget _buildListTile(BuildContext context, String title, Widget page) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: () =>
           Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
@@ -104,10 +133,17 @@ class AboutSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.grey.shade400),
+            Icon(
+              Icons.chevron_right,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade400,
+            ),
           ],
         ),
       ),

@@ -7,13 +7,16 @@ import 'package:street_cart/features/customer/settings/presentation/bloc/setting
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_event.dart';
 import 'package:street_cart/features/customer/settings/presentation/widgets/settings_switch_tile.dart';
 
-Widget _buildSectionHeader(String text) {
+Widget _buildSectionHeader(BuildContext context, String text) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
   return Padding(
     padding: EdgeInsets.only(left: 16.w, top: 24.h, bottom: 8.h),
     child: Text(
       text,
       style: CustomerAppTextStyles.body.copyWith(
-        color: CustomerAppColors.textSecondary,
+        color: isDark
+            ? CustomerAppColors.darkTextSecondary
+            : CustomerAppColors.textSecondary,
         fontSize: 12.sp,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
@@ -34,7 +37,7 @@ class NotificationSettingsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
-        _buildSectionHeader('NOTIFICATION SETTINGS'),
+        _buildSectionHeader(context, 'NOTIFICATION SETTINGS'),
 
         // Settings Switch Tile
         SettingsSwitchTile(

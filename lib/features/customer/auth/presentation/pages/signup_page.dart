@@ -22,13 +22,21 @@ class SignupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: CustomerAppColors.textPrimary),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),

@@ -14,6 +14,7 @@ import 'package:street_cart/features/customer/location/presentation/bloc/locatio
 import 'package:street_cart/features/customer/location/presentation/bloc/location_state.dart';
 import 'package:street_cart/features/customer/location/presentation/widgets/location_hero_illustration.dart';
 
+// Location Permission Page
 class LocationPermissionPage extends StatefulWidget {
   final bool isProfileCompleted;
   const LocationPermissionPage({super.key, this.isProfileCompleted = false});
@@ -25,6 +26,9 @@ class LocationPermissionPage extends StatefulWidget {
 class _LocationPermissionPageState extends State<LocationPermissionPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (_) => sl<LocationBloc>(),
       child: BlocListener<LocationBloc, LocationState>(
@@ -74,18 +78,28 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
           }
         },
         child: Scaffold(
-          backgroundColor: CustomerAppColors.background,
+          backgroundColor: theme.scaffoldBackgroundColor,
           body: SafeArea(
             child: Center(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(AppConstants.defaultPadding.w),
                 // Location Permission Card Section
-                child: Card(
-                  elevation: 4,
-                  color: CustomerAppColors.surface,
-                  shadowColor: Colors.black.withOpacity(0.5),
-                  shape: RoundedRectangleBorder(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.cardColor,
                     borderRadius: BorderRadius.circular(24.r),
+                    border: isDark
+                        ? Border.all(color: CustomerAppColors.darkBorder)
+                        : null,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(
+                          alpha: isDark ? 0.3 : 0.08,
+                        ),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -103,6 +117,9 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
                               "Location Permission",
                               style: CustomerAppTextStyles.heading2.copyWith(
                                 fontSize: 18.sp,
+                                color: isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary,
                               ),
                             ),
                             40.verticalSpace,
@@ -110,7 +127,11 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
                             40.verticalSpace,
                             Text(
                               "Enable Location Access",
-                              style: CustomerAppTextStyles.heading1,
+                              style: CustomerAppTextStyles.heading1.copyWith(
+                                color: isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                             16.verticalSpace,
@@ -120,7 +141,9 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
                                 "Find the best deals around you. We use your location to show nearby shops and calculate precise delivery times for your orders.",
                                 textAlign: TextAlign.center,
                                 style: CustomerAppTextStyles.body.copyWith(
-                                  color: CustomerAppColors.textSecondary,
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextSecondary
+                                      : CustomerAppColors.textSecondary,
                                   height: 1.5,
                                 ),
                               ),
@@ -153,6 +176,8 @@ class _LocationPermissionPageState extends State<LocationPermissionPage> {
                                     .copyWith(
                                       color: isLoading
                                           ? Colors.grey
+                                          : isDark
+                                          ? CustomerAppColors.darkTextSecondary
                                           : CustomerAppColors.textSecondary,
                                     ),
                               ),

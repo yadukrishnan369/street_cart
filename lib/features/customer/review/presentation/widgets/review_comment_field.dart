@@ -17,6 +17,8 @@ class ReviewCommentField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,7 +26,9 @@ class ReviewCommentField extends StatelessWidget {
         Text(
           'Your Review',
           style: TextStyle(
-            color: const Color(0xFF1E293B),
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
             fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -37,24 +41,39 @@ class ReviewCommentField extends StatelessWidget {
           maxLength: 500,
           onChanged: onChanged,
           validator: validator,
-          style: TextStyle(fontSize: 14.sp, color: const Color(0xFF1E293B)),
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           decoration: InputDecoration(
             hintText: 'What did you like or dislike? How was the quality?',
             hintStyle: TextStyle(
-              color: const Color(0xFF94A3B8),
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : const Color(0xFF94A3B8),
               fontSize: 13.sp,
             ),
-            fillColor: Colors.white,
+            fillColor: isDark ? CustomerAppColors.darkSurface : Colors.white,
             filled: true,
             contentPadding: EdgeInsets.all(16.w),
             counterText: '',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
-              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+              borderSide: BorderSide(
+                color: isDark
+                    ? CustomerAppColors.darkBorder
+                    : const Color(0xFFE2E8F0),
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
-              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+              borderSide: BorderSide(
+                color: isDark
+                    ? CustomerAppColors.darkBorder
+                    : const Color(0xFFE2E8F0),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),

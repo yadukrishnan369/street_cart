@@ -11,18 +11,31 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
-        elevation: 0,
+        backgroundColor: theme.cardColor,
+        elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Privacy Policy',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: CustomerAppTextStyles.heading2.copyWith(
+            fontSize: 20.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),
@@ -36,14 +49,18 @@ class PrivacyPolicyPage extends StatelessWidget {
               'Street Cart Privacy',
               style: CustomerAppTextStyles.heading2.copyWith(
                 fontSize: 22.sp,
-                color: const Color(0xFF1E293B),
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 8.h),
             Text(
-              'Last updated: October 24, 2023',
+              'Information is regularly updated',
               style: CustomerAppTextStyles.body.copyWith(
-                color: Colors.grey.shade500,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey.shade500,
                 fontSize: 12.sp,
               ),
             ),
@@ -56,15 +73,15 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             // data type bullet points
-            _PrivacyPoint(
+            const _PrivacyPoint(
               'Account Data',
               'Name, email address, and phone number when you register.',
             ),
-            _PrivacyPoint(
+            const _PrivacyPoint(
               'Transaction Info',
               'Details about items purchased, delivery address, and payment confirmation.',
             ),
-            _PrivacyPoint(
+            const _PrivacyPoint(
               'Device Data',
               'IP address, browser type, and operating system identifiers.',
             ),
@@ -118,6 +135,9 @@ class _PrivacyPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h, left: 16.w),
       child: RichText(
@@ -125,12 +145,19 @@ class _PrivacyPoint extends StatelessWidget {
           style: CustomerAppTextStyles.body.copyWith(
             height: 1.5,
             fontSize: 14.sp,
-            color: Colors.grey.shade700,
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : Colors.grey.shade700,
           ),
           children: [
             TextSpan(
               text: '$boldText: ',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
+              ),
             ),
             TextSpan(text: normalText),
           ],

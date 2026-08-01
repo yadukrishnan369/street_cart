@@ -27,7 +27,7 @@ class ProductImageCarousel extends StatelessWidget {
         height: 320.h,
         iconSize: 80.sp,
         borderRadius: BorderRadius.circular(16.r),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).cardColor,
       );
     }
 
@@ -81,7 +81,7 @@ class ProductImageCarousel extends StatelessWidget {
                   },
                   child: Container(
                     width: double.infinity,
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     padding: EdgeInsets.all(12.w),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.r),

@@ -16,6 +16,8 @@ class AddressTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,7 +25,9 @@ class AddressTypeSelector extends StatelessWidget {
           'Save As',
           style: CustomerAppTextStyles.body.copyWith(
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
         SizedBox(height: 12.h),
@@ -63,6 +67,7 @@ class AddressTypeSelector extends StatelessWidget {
     IconData filledIcon,
   ) {
     final bool isSelected = selectedType == type;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Expanded(
       child: InkWell(
@@ -77,7 +82,9 @@ class AddressTypeSelector extends StatelessWidget {
             border: Border.all(
               color: isSelected
                   ? CustomerAppColors.primary
-                  : Colors.grey.shade200,
+                  : (isDark
+                        ? CustomerAppColors.darkBorder
+                        : Colors.grey.shade200),
               width: 1.5,
             ),
           ),
@@ -87,7 +94,11 @@ class AddressTypeSelector extends StatelessWidget {
               Icon(
                 isSelected ? filledIcon : outlineIcon,
                 size: 18.sp,
-                color: isSelected ? Colors.white : Colors.grey.shade600,
+                color: isSelected
+                    ? Colors.white
+                    : (isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey.shade600),
               ),
               SizedBox(width: 8.w),
               Text(
@@ -95,7 +106,11 @@ class AddressTypeSelector extends StatelessWidget {
                 style: CustomerAppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 14.sp,
-                  color: isSelected ? Colors.white : Colors.grey.shade600,
+                  color: isSelected
+                      ? Colors.white
+                      : (isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : Colors.grey.shade600),
                 ),
               ),
             ],

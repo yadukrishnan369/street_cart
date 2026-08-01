@@ -11,6 +11,8 @@ class EmptyOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return RefreshIndicator(
       color: const Color(0xFF5E5CE6),
       onRefresh: () async => onRefresh(),
@@ -27,13 +29,13 @@ class EmptyOrdersView extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF5E5CE6).withOpacity(0.08),
+                    color: CustomerAppColors.primary.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.shopping_bag_outlined,
                     size: 64.sp,
-                    color: const Color(0xFF5E5CE6),
+                    color: CustomerAppColors.primary,
                   ),
                 ),
                 SizedBox(height: 24.h),
@@ -43,7 +45,9 @@ class EmptyOrdersView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
-                    color: CustomerAppColors.textPrimary,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -54,7 +58,7 @@ class EmptyOrdersView extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: Colors.grey[500],
+                    color: isDark ? Colors.grey[400] : Colors.grey[500],
                     height: 1.5,
                   ),
                 ),
@@ -73,7 +77,7 @@ class EmptyOrdersView extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5E5CE6),
+                      backgroundColor: CustomerAppColors.primary,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.r),

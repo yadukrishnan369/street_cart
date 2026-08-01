@@ -9,19 +9,21 @@ class VariantWarningBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.red[50]!,
+        color: isDark ? Colors.red[900]! : Colors.red[50]!,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: Colors.red[200]!),
+        border: Border.all(color: isDark ? Colors.red[700]! : Colors.red[200]!),
       ),
       child: Row(
         children: [
           Icon(
             Icons.warning_amber_rounded,
-            color: Colors.red[700]!,
+            color: isDark ? Colors.red[300]! : Colors.red[700]!,
             size: 20.sp,
           ),
           SizedBox(width: 8.w),
@@ -31,7 +33,7 @@ class VariantWarningBanner extends StatelessWidget {
               warningMessage,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: Colors.red[700]!,
+                color: isDark ? Colors.red[300]! : Colors.red[700]!,
                 fontWeight: FontWeight.w500,
               ),
             ),

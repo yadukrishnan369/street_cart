@@ -35,13 +35,17 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -62,7 +66,9 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Container(
                     width: double.infinity,
-                    color: Colors.grey[200],
+                    color: isDark
+                        ? CustomerAppColors.darkInputBackground
+                        : Colors.grey[200],
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       fit: BoxFit.cover,
@@ -81,14 +87,20 @@ class ProductCard extends StatelessWidget {
                     behavior: HitTestBehavior.opaque,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? CustomerAppColors.darkSurface
+                            : Colors.white,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
                         size: 18.sp,
-                        color: isFavorite ? Colors.red : Colors.grey,
+                        color: isFavorite
+                            ? Colors.red
+                            : (isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : Colors.grey),
                       ),
                     ),
                   ),
@@ -126,7 +138,7 @@ class ProductCard extends StatelessWidget {
                         vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.50),
+                        color: const Color(0xFF10B981).withValues(alpha: 0.50),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
@@ -153,7 +165,7 @@ class ProductCard extends StatelessWidget {
                   Text(
                     brand.toUpperCase(),
                     style: TextStyle(
-                      color: Colors.blueAccent,
+                      color: CustomerAppColors.primary,
                       fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -166,6 +178,9 @@ class ProductCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -179,6 +194,9 @@ class ProductCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
+                          color: isDark
+                              ? CustomerAppColors.darkTextPrimary
+                              : CustomerAppColors.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -190,7 +208,9 @@ class ProductCard extends StatelessWidget {
                             originalPrice!,
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: Colors.grey,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : Colors.grey,
                               decoration: TextDecoration.lineThrough,
                             ),
                             maxLines: 1,

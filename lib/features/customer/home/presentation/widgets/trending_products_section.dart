@@ -29,6 +29,9 @@ class TrendingProductsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     if (products.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -36,15 +39,24 @@ class TrendingProductsSection extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFFBEB),
+            color: isDark
+                ? CustomerAppColors.darkEmptyErrorBg
+                : const Color(0xFFFFFBEB),
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFFDE68A), width: 1),
+            border: Border.all(
+              color: isDark
+                  ? CustomerAppColors.darkEmptyErrorBorder
+                  : const Color(0xFFFDE68A),
+              width: 1,
+            ),
           ),
           child: Column(
             children: [
               Icon(
                 Icons.inventory_2_outlined,
-                color: const Color(0xFFD97706),
+                color: isDark
+                    ? CustomerAppColors.warning
+                    : const Color(0xFFD97706),
                 size: 32.sp,
               ),
               SizedBox(height: 8.h),
@@ -53,7 +65,9 @@ class TrendingProductsSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF92400E),
+                  color: isDark
+                      ? CustomerAppColors.warning
+                      : const Color(0xFF92400E),
                 ),
               ),
               SizedBox(height: 4.h),
@@ -64,7 +78,9 @@ class TrendingProductsSection extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: const Color(0xFFB45309),
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : const Color(0xFFB45309),
                 ),
               ),
             ],
@@ -88,15 +104,24 @@ class TrendingProductsSection extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFFBEB),
+            color: isDark
+                ? CustomerAppColors.darkEmptyErrorBg
+                : const Color(0xFFFFFBEB),
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFFDE68A), width: 1),
+            border: Border.all(
+              color: isDark
+                  ? CustomerAppColors.darkEmptyErrorBorder
+                  : const Color(0xFFFDE68A),
+              width: 1,
+            ),
           ),
           child: Column(
             children: [
               Icon(
                 Icons.category_outlined,
-                color: const Color(0xFFD97706),
+                color: isDark
+                    ? CustomerAppColors.warning
+                    : const Color(0xFFD97706),
                 size: 32.sp,
               ),
               SizedBox(height: 8.h),
@@ -105,7 +130,9 @@ class TrendingProductsSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF92400E),
+                  color: isDark
+                      ? CustomerAppColors.warning
+                      : const Color(0xFF92400E),
                 ),
               ),
               SizedBox(height: 4.h),
@@ -114,7 +141,9 @@ class TrendingProductsSection extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: const Color(0xFFB45309),
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : const Color(0xFFB45309),
                 ),
               ),
             ],
@@ -133,7 +162,13 @@ class TrendingProductsSection extends StatelessWidget {
             children: [
               Text(
                 'Trending near you',
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
+                ),
               ),
               GestureDetector(
                 onTap: () {

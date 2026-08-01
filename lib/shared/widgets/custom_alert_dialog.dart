@@ -28,6 +28,9 @@ class CustomAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
       elevation: 0,
@@ -37,11 +40,14 @@ class CustomAlertDialog extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: CustomerAppColors.surface,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(24.r),
+            border: isDark
+                ? Border.all(color: CustomerAppColors.darkBorder)
+                : null,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -55,7 +61,7 @@ class CustomAlertDialog extends StatelessWidget {
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     color: (iconColor ?? Theme.of(context).primaryColor)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -69,7 +75,13 @@ class CustomAlertDialog extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
+                ),
               ),
               SizedBox(height: 12.h),
               Text(
@@ -77,7 +89,9 @@ class CustomAlertDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: Colors.grey[600],
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey[600],
                   height: 1.5,
                 ),
               ),
@@ -98,7 +112,9 @@ class CustomAlertDialog extends StatelessWidget {
                         child: Text(
                           secondaryActionLabel!,
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : Colors.grey[600],
                             fontWeight: FontWeight.w600,
                             fontSize: 14.sp,
                           ),
@@ -111,7 +127,9 @@ class CustomAlertDialog extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: onPrimaryAction,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryActionColor ?? Theme.of(context).primaryColor,
+                        backgroundColor:
+                            primaryActionColor ??
+                            Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         elevation: 0,

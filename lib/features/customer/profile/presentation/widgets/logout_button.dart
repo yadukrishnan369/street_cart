@@ -30,15 +30,21 @@ class LogoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => _showLogoutConfirmation(context),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w),
         padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.05),
+          color: isDark
+              ? Colors.red.withValues(alpha: 0.15)
+              : Colors.red.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(30.r),
-          border: Border.all(color: Colors.red.shade100),
+          border: Border.all(
+            color: isDark ? Colors.red.shade900 : Colors.red.shade100,
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +56,7 @@ class LogoutButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.red.shade500,
+                color: isDark ? Colors.red.shade300 : Colors.red.shade500,
               ),
             ),
           ],

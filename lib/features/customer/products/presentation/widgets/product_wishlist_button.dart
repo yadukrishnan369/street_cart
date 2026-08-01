@@ -33,7 +33,7 @@ class ProductWishlistButton extends StatelessWidget {
         return IconButton(
           icon: Icon(
             isWishlisted ? Icons.favorite : Icons.favorite_border,
-            color: isWishlisted ? Colors.red : CustomerAppColors.textPrimary,
+            color: isWishlisted ? Colors.red : CustomerAppColors.primary,
           ),
           onPressed: () {
             if (isWishlisted) {

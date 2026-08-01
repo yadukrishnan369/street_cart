@@ -11,6 +11,11 @@ class AddressCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : CustomerAppColors.surface;
+
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       itemCount: itemCount,
@@ -18,7 +23,7 @@ class AddressCardShimmer extends StatelessWidget {
         return Container(
           margin: EdgeInsets.only(bottom: 16.h),
           decoration: BoxDecoration(
-            color: CustomerAppColors.surface,
+            color: cardBg,
             borderRadius: BorderRadius.circular(24.r),
             boxShadow: [
               BoxShadow(
@@ -29,8 +34,8 @@ class AddressCardShimmer extends StatelessWidget {
             ],
           ),
           child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
+            baseColor: shimmerBase,
+            highlightColor: shimmerHigh,
             child: Column(
               children: [
                 Padding(

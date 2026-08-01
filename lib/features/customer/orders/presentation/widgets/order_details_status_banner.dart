@@ -13,6 +13,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final status = CustomerOrderStatus.fromString(order.status);
     final isDelivered = OrdersHelper.isDelivered(status);
     final isCancelled = OrdersHelper.isCancelled(status);
@@ -37,8 +38,13 @@ class OrderDetailsStatusBanner extends StatelessWidget {
 
         final refundBanner = order.refundStatus == 'refunded'
             ? _buildBanner(
-                color: const Color(0xFFE8F5E9),
-                borderColor: const Color(0xFFC8E6C9),
+                isDark: isDark,
+                color: isDark
+                    ? const Color(0xFF1B3A2B)
+                    : const Color(0xFFE8F5E9),
+                borderColor: isDark
+                    ? const Color(0xFF2E6B47)
+                    : const Color(0xFFC8E6C9),
                 iconColor: CustomerAppColors.success,
                 icon: Icons.currency_rupee,
                 title: 'Refund Completed',
@@ -47,8 +53,13 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                 textColor: CustomerAppColors.success,
               )
             : _buildBanner(
-                color: const Color(0xFFFFF3E0),
-                borderColor: const Color(0xFFFFE0B2),
+                isDark: isDark,
+                color: isDark
+                    ? const Color(0xFF3A2E1B)
+                    : const Color(0xFFFFF3E0),
+                borderColor: isDark
+                    ? const Color(0xFF6B4E2E)
+                    : const Color(0xFFFFE0B2),
                 iconColor: CustomerAppColors.warning,
                 icon: Icons.hourglass_empty,
                 title: 'Refund Processing',
@@ -60,8 +71,11 @@ class OrderDetailsStatusBanner extends StatelessWidget {
         return Column(
           children: [
             _buildBanner(
-              color: const Color(0xFFE8F5E9),
-              borderColor: const Color(0xFFC8E6C9),
+              isDark: isDark,
+              color: isDark ? const Color(0xFF1B3A2B) : const Color(0xFFE8F5E9),
+              borderColor: isDark
+                  ? const Color(0xFF2E6B47)
+                  : const Color(0xFFC8E6C9),
               iconColor: CustomerAppColors.success,
               icon: Icons.assignment_return_rounded,
               title: 'Item Returned on $pickedDateStr',
@@ -77,8 +91,11 @@ class OrderDetailsStatusBanner extends StatelessWidget {
             ? OrdersHelper.formatDateShort(order.returnConfirmedAt!)
             : deliveredDateStr;
         return _buildBanner(
-          color: const Color(0xFFE3F2FD),
-          borderColor: const Color(0xFFBBDEFB),
+          isDark: isDark,
+          color: isDark ? const Color(0xFF1B2D3A) : const Color(0xFFE3F2FD),
+          borderColor: isDark
+              ? const Color(0xFF2E4D6B)
+              : const Color(0xFFBBDEFB),
           iconColor: CustomerAppColors.primary,
           icon: Icons.assignment_turned_in_outlined,
           title: 'Return Confirmed on $confirmedDateStr',
@@ -91,8 +108,11 @@ class OrderDetailsStatusBanner extends StatelessWidget {
             ? OrdersHelper.formatDateShort(order.returnedAt!)
             : deliveredDateStr;
         return _buildBanner(
-          color: const Color(0xFFFFF3E0),
-          borderColor: const Color(0xFFFFE0B2),
+          isDark: isDark,
+          color: isDark ? const Color(0xFF3A2E1B) : const Color(0xFFFFF3E0),
+          borderColor: isDark
+              ? const Color(0xFF6B4E2E)
+              : const Color(0xFFFFE0B2),
           iconColor: CustomerAppColors.error,
           icon: Icons.assignment_return_outlined,
           title: 'Return Requested on $returnedDateStr',
@@ -107,9 +127,11 @@ class OrderDetailsStatusBanner extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F0FF),
+          color: isDark ? const Color(0xFF1E2A3A) : const Color(0xFFF1F0FF),
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE2DFFF)),
+          border: Border.all(
+            color: isDark ? const Color(0xFF3A4A6A) : const Color(0xFFE2DFFF),
+          ),
         ),
         child: Row(
           children: [
@@ -130,7 +152,9 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                   Text(
                     'Delivered on $deliveredDateStr',
                     style: TextStyle(
-                      color: const Color(0xFF1E293B),
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
                     ),
@@ -139,7 +163,10 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                   // Customer Name
                   Text(
                     'Handed over to ${order.deliveryAddress.fullName}',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12.sp),
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      fontSize: 12.sp,
+                    ),
                   ),
                 ],
               ),
@@ -152,9 +179,11 @@ class OrderDetailsStatusBanner extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: Colors.red[50],
+          color: isDark ? const Color(0xFF3A1B1B) : Colors.red[50],
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: Colors.red[100]!),
+          border: Border.all(
+            color: isDark ? const Color(0xFF6B2E2E) : Colors.red[100]!,
+          ),
         ),
         child: Row(
           children: [
@@ -183,7 +212,10 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                   SizedBox(height: 2.h),
                   Text(
                     'This order was cancelled.',
-                    style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey,
+                      fontSize: 12.sp,
+                    ),
                   ),
                 ],
               ),
@@ -248,6 +280,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
   }
 
   Widget _buildBanner({
+    required bool isDark,
     required Color color,
     required Color borderColor,
     required Color iconColor,

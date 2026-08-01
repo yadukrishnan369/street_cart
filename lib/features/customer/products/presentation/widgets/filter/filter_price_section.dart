@@ -21,6 +21,8 @@ class FilterPriceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,11 +31,7 @@ class FilterPriceSection extends StatelessWidget {
           children: [
             Text(
               'Price Range',
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
             ),
             // Active Price Range Label
             Text(
@@ -56,7 +54,7 @@ class FilterPriceSection extends StatelessWidget {
               ? (state.absoluteMaxPrice - state.absoluteMinPrice).round()
               : 1,
           activeColor: CustomerAppColors.primary,
-          inactiveColor: Colors.grey[200],
+          inactiveColor: isDark ? const Color(0xFF3D3D3D) : Colors.grey[200],
           onChanged: (values) =>
               bloc.add(UpdateFilterPriceRange(values.start, values.end)),
         ),

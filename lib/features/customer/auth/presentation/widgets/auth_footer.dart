@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
+// Auth Footer
 class AuthFooter extends StatelessWidget {
   final String text1;
   final String text2;
@@ -17,6 +18,9 @@ class AuthFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Center(
       child: GestureDetector(
         onTap: onTap,
@@ -26,7 +30,9 @@ class AuthFooter extends StatelessWidget {
             text: TextSpan(
               text: text1,
               style: CustomerAppTextStyles.body.copyWith(
-                color: CustomerAppColors.textSecondary,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : CustomerAppColors.textSecondary,
               ),
               children: [
                 TextSpan(

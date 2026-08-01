@@ -23,12 +23,18 @@ class CustomSnackBar {
       content: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: backgroundColor ?? (isError ? CustomerAppColors.error : CustomerAppColors.success),
+          color:
+              backgroundColor ??
+              (isError ? CustomerAppColors.error : CustomerAppColors.success),
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
-              color: (backgroundColor ?? (isError ? CustomerAppColors.error : CustomerAppColors.success))
-                  .withOpacity(0.3),
+              color:
+                  (backgroundColor ??
+                          (isError
+                              ? CustomerAppColors.error
+                              : CustomerAppColors.success))
+                      .withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),

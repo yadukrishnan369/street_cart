@@ -26,10 +26,11 @@ class ConfirmationModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
@@ -38,12 +39,15 @@ class ConfirmationModal extends StatelessWidget {
         ),
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: surfaceColor ?? CustomerAppColors.surface,
+          color: surfaceColor ?? theme.cardColor,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(16.r),
+          border: isDark
+              ? Border.all(color: CustomerAppColors.darkBorder)
+              : null,
           boxShadow: [
             BoxShadow(
-              color: Colors.black26,
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.16),
               blurRadius: 10.r,
               offset: const Offset(0.0, 10.0),
             ),
@@ -57,6 +61,9 @@ class ConfirmationModal extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 16.h),
@@ -65,7 +72,9 @@ class ConfirmationModal extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: Colors.grey.shade700,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey.shade700,
               ),
             ),
             SizedBox(height: 24.h),
@@ -77,7 +86,9 @@ class ConfirmationModal extends StatelessWidget {
                   child: Text(
                     cancelText,
                     style: TextStyle(
-                      color: Colors.grey.shade600,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey.shade600,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -90,7 +101,10 @@ class ConfirmationModal extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 12.h,
+                    ),
                   ),
                   child: Text(
                     confirmText,

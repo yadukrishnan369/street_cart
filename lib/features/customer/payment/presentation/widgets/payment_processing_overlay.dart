@@ -127,10 +127,13 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: CustomerAppColors.background,
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: BlocConsumer<PaymentBloc, PaymentState>(
           // listen for payment result states
           listenWhen: (prev, curr) =>
@@ -193,12 +196,12 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
                             width: 100.w,
                             height: 100.w,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: theme.cardColor,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
                                   color: CustomerAppColors.primary.withValues(
-                                    alpha: 0.1,
+                                    alpha: isDark ? 0.10 : 0.1,
                                   ),
                                   blurRadius: 20,
                                   spreadRadius: 5,
@@ -325,7 +328,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
                             style: TextStyle(
                               fontSize: 24.sp,
                               fontWeight: FontWeight.w800,
-                              color: CustomerAppColors.textPrimary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextPrimary
+                                  : CustomerAppColors.textPrimary,
                               letterSpacing: -0.5,
                             ),
                             textAlign: TextAlign.center,
@@ -335,7 +340,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
                             isLoading ? loadingSubtitle : successSubtitle,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: CustomerAppColors.textSecondary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : CustomerAppColors.textSecondary,
                               height: 1.45,
                               fontWeight: FontWeight.w500,
                             ),
@@ -352,7 +359,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
                       vertical: 8.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.withValues(alpha: 0.05),
+                      color: isDark
+                          ? CustomerAppColors.darkInputBackground
+                          : Colors.grey.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(30.r),
                     ),
                     child: Row(
@@ -360,7 +369,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
                       children: [
                         Icon(
                           Icons.storefront,
-                          color: Colors.green[700],
+                          color: isDark
+                              ? CustomerAppColors.success
+                              : Colors.green[700],
                           size: 22.sp,
                         ),
                         SizedBox(width: 8.w),
@@ -369,7 +380,9 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
                           style: TextStyle(
                             fontSize: 22.sp,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey[700],
+                            color: isDark
+                                ? CustomerAppColors.darkTextPrimary
+                                : Colors.grey[700],
                             letterSpacing: 0.8,
                           ),
                         ),

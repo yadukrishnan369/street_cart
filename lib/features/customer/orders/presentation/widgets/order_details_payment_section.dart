@@ -11,6 +11,9 @@ class OrderDetailsPaymentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -20,7 +23,9 @@ class OrderDetailsPaymentSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.grey[600],
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : Colors.grey[600],
             letterSpacing: 0.8,
           ),
         ),
@@ -29,11 +34,14 @@ class OrderDetailsPaymentSection extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16.r),
+            border: isDark
+                ? Border.all(color: CustomerAppColors.darkBorder)
+                : null,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -43,37 +51,60 @@ class OrderDetailsPaymentSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.payment, color: Colors.grey[600], size: 20.sp),
+                  Icon(
+                    Icons.payment,
+                    color: isDark
+                        ? CustomerAppColors.darkTextSecondary
+                        : Colors.grey[600],
+                    size: 20.sp,
+                  ),
                   SizedBox(width: 8.w),
                   Text(
                     'Payment Method',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 13.sp),
+                    style: TextStyle(
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey[600],
+                      fontSize: 13.sp,
+                    ),
                   ),
                   const Spacer(),
                   // Payment Method
                   Text(
                     order.paymentMethod.toUpperCase(),
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 13.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              Divider(height: 24.h, color: Colors.grey[100]),
+              Divider(
+                height: 24.h,
+                color: isDark ? CustomerAppColors.darkBorder : Colors.grey[100],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Number of Order Item
                   Text(
                     'Number of Items',
-                    style: TextStyle(color: Colors.grey[400], fontSize: 13.sp),
+                    style: TextStyle(
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey[400],
+                      fontSize: 13.sp,
+                    ),
                   ),
                   Text(
                     '${order.items.length}',
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 13.sp,
                     ),
                   ),
@@ -87,21 +118,28 @@ class OrderDetailsPaymentSection extends StatelessWidget {
                   Text(
                     'Subtotal',
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 14.sp,
                     ),
                   ),
                   Text(
                     '₹${order.totalAmount.toStringAsFixed(2)}',
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              Divider(height: 24.h, color: Colors.grey[100]),
+              Divider(
+                height: 24.h,
+                color: isDark ? CustomerAppColors.darkBorder : Colors.grey[100],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -109,7 +147,9 @@ class OrderDetailsPaymentSection extends StatelessWidget {
                   Text(
                     'Order Total',
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -118,7 +158,7 @@ class OrderDetailsPaymentSection extends StatelessWidget {
                   Text(
                     '₹${order.totalAmount.toStringAsFixed(2)}',
                     style: TextStyle(
-                      color: const Color(0xFF5E5CE6),
+                      color: CustomerAppColors.primary,
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                     ),

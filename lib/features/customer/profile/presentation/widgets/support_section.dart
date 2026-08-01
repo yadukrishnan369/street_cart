@@ -11,6 +11,8 @@ class SupportSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
@@ -21,14 +23,16 @@ class SupportSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.grey.shade600,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade600,
               letterSpacing: 1.2,
             ),
           ),
           SizedBox(height: 12.h),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? CustomerAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(
@@ -40,14 +44,26 @@ class SupportSection extends StatelessWidget {
                   'Help & Support',
                   const HelpSupportPage(),
                 ),
-                Divider(height: 1, indent: 48.w, color: Colors.grey.shade100),
+                Divider(
+                  height: 1,
+                  indent: 48.w,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade100,
+                ),
                 _buildListTile(
                   context,
                   Icons.chat_bubble_outline,
                   'Contact Support',
                   const ContactSupportPage(),
                 ),
-                Divider(height: 1, indent: 48.w, color: Colors.grey.shade100),
+                Divider(
+                  height: 1,
+                  indent: 48.w,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade100,
+                ),
                 _buildListTile(
                   context,
                   Icons.warning_amber_rounded,
@@ -68,6 +84,8 @@ class SupportSection extends StatelessWidget {
     String title,
     Widget page,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: () =>
           Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
@@ -84,11 +102,18 @@ class SupportSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.grey.shade400),
+            Icon(
+              Icons.chevron_right,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade400,
+            ),
           ],
         ),
       ),

@@ -24,16 +24,21 @@ class SettingsSwitchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? CustomerAppColors.darkSurface : Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: CustomerAppColors.border.withOpacity(0.5),
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : CustomerAppColors.border.withValues(alpha: 0.5),
             width: 1,
           ),
         ),
+        borderRadius: BorderRadius.all(Radius.circular(8.r)),
       ),
       child: Row(
         children: [
@@ -53,7 +58,9 @@ class SettingsSwitchTile extends StatelessWidget {
               title,
               style: CustomerAppTextStyles.body.copyWith(
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : Colors.black87,
               ),
             ),
           ),
@@ -63,10 +70,12 @@ class SettingsSwitchTile extends StatelessWidget {
             child: Switch(
               value: value,
               onChanged: onChanged,
-              activeColor: Colors.white,
+              activeThumbColor: Colors.white,
               activeTrackColor: CustomerAppColors.primary,
               inactiveThumbColor: Colors.white,
-              inactiveTrackColor: Colors.grey.shade300,
+              inactiveTrackColor: isDark
+                  ? Colors.grey[700]
+                  : Colors.grey.shade300,
             ),
           ),
         ],

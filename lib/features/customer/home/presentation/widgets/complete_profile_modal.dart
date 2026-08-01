@@ -16,23 +16,28 @@ class CompleteProfileModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.r)),
       elevation: 0,
-      backgroundColor: CustomerAppColors.surface,
+      backgroundColor: theme.cardColor,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildIcon(),
+            _buildIcon(isDark),
             SizedBox(height: 24.h),
             Text(
               'Welcome to Street Cart!',
               textAlign: TextAlign.center,
               style: CustomerAppTextStyles.heading2.copyWith(
                 fontSize: 22.sp,
-                color: const Color(0xFF1E293B),
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : const Color(0xFF1E293B),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -42,7 +47,9 @@ class CompleteProfileModal extends StatelessWidget {
               textAlign: TextAlign.center,
               style: CustomerAppTextStyles.body.copyWith(
                 fontSize: 14.sp,
-                color: const Color(0xFF64748B),
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : const Color(0xFF64748B),
                 height: 1.5,
               ),
             ),
@@ -56,7 +63,7 @@ class CompleteProfileModal extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   elevation: 8,
-                  shadowColor: CustomerAppColors.primary.withOpacity(0.4),
+                  shadowColor: CustomerAppColors.primary.withValues(alpha: 0.4),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.r),
                   ),
@@ -79,7 +86,9 @@ class CompleteProfileModal extends StatelessWidget {
               child: Text(
                 'Maybe later',
                 style: CustomerAppTextStyles.body.copyWith(
-                  color: const Color(0xFF94A3B8),
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : const Color(0xFF94A3B8),
                   fontWeight: FontWeight.w600,
                   fontSize: 14.sp,
                 ),
@@ -92,12 +101,14 @@ class CompleteProfileModal extends StatelessWidget {
   }
 
   // dialogue header profile icon
-  Widget _buildIcon() {
+  Widget _buildIcon(bool isDark) {
     return Container(
       width: 80.w,
       height: 80.w,
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F2FF),
+        color: isDark
+            ? CustomerAppColors.primary.withValues(alpha: 0.15)
+            : const Color(0xFFF0F2FF),
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -105,10 +116,12 @@ class CompleteProfileModal extends StatelessWidget {
           width: 48.w,
           height: 48.w,
           decoration: BoxDecoration(
-            color: const Color(0xFFEBEEFF),
+            color: isDark
+                ? CustomerAppColors.primary.withValues(alpha: 0.25)
+                : const Color(0xFFEBEEFF),
             shape: BoxShape.circle,
             border: Border.all(
-              color: CustomerAppColors.primary.withOpacity(0.1),
+              color: CustomerAppColors.primary.withValues(alpha: 0.2),
               width: 1,
             ),
           ),

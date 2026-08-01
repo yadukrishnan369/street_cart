@@ -18,29 +18,42 @@ class SupportContactButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: Colors.grey.shade200),
+          side: BorderSide(
+            color: isDark ? CustomerAppColors.darkBorder : Colors.grey.shade200,
+          ),
           padding: EdgeInsets.symmetric(vertical: 16.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
-          backgroundColor: CustomerAppColors.surface,
+          backgroundColor: theme.cardColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 20.sp, color: Colors.black87),
+            Icon(
+              icon,
+              size: 20.sp,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+            ),
             SizedBox(width: 12.w),
             Text(
               label,
               style: CustomerAppTextStyles.body.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 15.sp,
-                color: Colors.black87,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
           ],

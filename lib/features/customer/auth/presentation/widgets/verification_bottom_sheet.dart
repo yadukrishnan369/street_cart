@@ -49,10 +49,13 @@ class _VerificationBottomSheetState extends State<VerificationBottomSheet> {
       },
       builder: (context, state) {
         final secondsRemaining = state.secondsRemaining;
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
         return Container(
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
           ),
           child: Column(
@@ -62,7 +65,9 @@ class _VerificationBottomSheetState extends State<VerificationBottomSheet> {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -78,7 +83,9 @@ class _VerificationBottomSheetState extends State<VerificationBottomSheet> {
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 12.h),
@@ -87,7 +94,9 @@ class _VerificationBottomSheetState extends State<VerificationBottomSheet> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: CustomerAppColors.textSecondary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : CustomerAppColors.textSecondary,
                   height: 1.5,
                 ),
               ),
@@ -101,7 +110,9 @@ class _VerificationBottomSheetState extends State<VerificationBottomSheet> {
                     child: CircularProgressIndicator(
                       value: secondsRemaining / 90,
                       strokeWidth: 4,
-                      backgroundColor: Colors.grey.shade100,
+                      backgroundColor: isDark
+                          ? CustomerAppColors.darkInputBackground
+                          : Colors.grey.shade100,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         secondsRemaining > 30
                             ? CustomerAppColors.primary
@@ -114,9 +125,9 @@ class _VerificationBottomSheetState extends State<VerificationBottomSheet> {
                     style: TextStyle(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
-                      color: secondsRemaining > 30
-                          ? CustomerAppColors.primary
-                          : Colors.redAccent,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                     ),
                   ),
                 ],

@@ -18,6 +18,9 @@ class SupportCategorySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,8 +43,11 @@ class SupportCategorySection extends StatelessWidget {
           (item) => Container(
             margin: EdgeInsets.only(bottom: 8.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(16.r),
+              border: isDark
+                  ? Border.all(color: CustomerAppColors.darkBorder)
+                  : null,
             ),
             child: Theme(
               data: Theme.of(
@@ -51,12 +57,16 @@ class SupportCategorySection extends StatelessWidget {
                 title: Text(
                   item['title'],
                   style: CustomerAppTextStyles.body.copyWith(
-                    color: Colors.black87,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 iconColor: CustomerAppColors.primary,
-                collapsedIconColor: Colors.grey.shade400,
+                collapsedIconColor: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey.shade400,
                 childrenPadding: EdgeInsets.only(
                   left: 16.w,
                   right: 16.w,
@@ -66,7 +76,9 @@ class SupportCategorySection extends StatelessWidget {
                   Text(
                     item['content'],
                     style: CustomerAppTextStyles.body.copyWith(
-                      color: Colors.grey.shade600,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey.shade600,
                       height: 1.5,
                     ),
                   ),

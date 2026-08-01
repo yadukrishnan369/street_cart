@@ -60,6 +60,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAccountDeleted) {
@@ -82,20 +83,25 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
         return BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, settingsState) {
             return Scaffold(
-              backgroundColor: CustomerAppColors.background,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               appBar: AppBar(
-                backgroundColor: CustomerAppColors.background,
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).appBarTheme.foregroundColor,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
                 // Page Header
                 title: Text(
                   'Delete Account',
-                  style: CustomerAppTextStyles.heading2.copyWith(
-                    color: Colors.black87,
+                  style: TextStyle(
                     fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                   ),
                 ),
                 centerTitle: true,

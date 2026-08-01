@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/di/dependency_injection.dart';
-import 'package:street_cart/core/theme/customer/Customer_app_colors.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/features/customer/onboarding/presentation/pages/onboarding_page.dart';
@@ -52,6 +52,9 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider.value(
       value: _splashBloc,
       child: BlocListener<SplashBloc, SplashState>(
@@ -83,7 +86,7 @@ class _SplashPageState extends State<SplashPage>
           }
         },
         child: Scaffold(
-          backgroundColor: CustomerAppColors.background,
+          backgroundColor: theme.scaffoldBackgroundColor,
           body: AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -93,18 +96,26 @@ class _SplashPageState extends State<SplashPage>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AppLogo(isDark: true, size: 85.w),
+                        AppLogo(isDark: isDark, size: 85.w),
                         32.verticalSpace,
                         // App Name
                         Text(
                           "Street Cart",
-                          style: CustomerAppTextStyles.heading1,
+                          style: CustomerAppTextStyles.heading1.copyWith(
+                            color: isDark
+                                ? CustomerAppColors.darkTextPrimary
+                                : CustomerAppColors.textPrimary,
+                          ),
                         ),
                         8.verticalSpace,
                         // Subtitle
                         Text(
                           "Discover shops around you",
-                          style: CustomerAppTextStyles.subtitle,
+                          style: CustomerAppTextStyles.subtitle.copyWith(
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : CustomerAppColors.textSecondary,
+                          ),
                         ),
                       ],
                     ),
@@ -123,7 +134,9 @@ class _SplashPageState extends State<SplashPage>
                             Text(
                               "Initializing...",
                               style: CustomerAppTextStyles.body.copyWith(
-                                color: CustomerAppColors.textSecondary,
+                                color: isDark
+                                    ? CustomerAppColors.darkTextSecondary
+                                    : CustomerAppColors.textSecondary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -140,8 +153,9 @@ class _SplashPageState extends State<SplashPage>
                         // Linear Progress Line
                         LinearProgressIndicator(
                           value: _controller.value,
-                          backgroundColor: CustomerAppColors.primary
-                              .withOpacity(0.15),
+                          backgroundColor: CustomerAppColors.primary.withValues(
+                            alpha: 0.15,
+                          ),
                           color: CustomerAppColors.primary,
                           minHeight: 6.h,
                           borderRadius: BorderRadius.circular(10.r),

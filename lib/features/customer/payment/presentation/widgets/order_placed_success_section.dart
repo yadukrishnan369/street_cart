@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/payment/presentation/animation/riding_scooter_animation.dart';
 
+// Order Placed Success Section
 class OrderPlacedSuccessSection extends StatelessWidget {
   final String orderIdSuffix;
 
@@ -10,6 +11,9 @@ class OrderPlacedSuccessSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       children: [
         // Check Circle
@@ -42,7 +46,9 @@ class OrderPlacedSuccessSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 22.sp,
             fontWeight: FontWeight.bold,
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
           textAlign: TextAlign.center,
         ),
@@ -53,7 +59,9 @@ class OrderPlacedSuccessSection extends StatelessWidget {
           text: TextSpan(
             style: TextStyle(
               fontSize: 14.sp,
-              color: CustomerAppColors.textSecondary,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
               height: 1.4,
             ),
             children: [

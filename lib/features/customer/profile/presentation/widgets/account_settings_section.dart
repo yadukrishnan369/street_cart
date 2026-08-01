@@ -15,6 +15,8 @@ class AccountSettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         final orderUpdates = state is ProfileLoaded ? state.orderUpdates : true;
@@ -32,14 +34,16 @@ class AccountSettingsSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade600,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey.shade600,
                   letterSpacing: 1.2,
                 ),
               ),
               SizedBox(height: 12.h),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? CustomerAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Column(
@@ -59,6 +63,7 @@ class AccountSettingsSection extends StatelessWidget {
                       },
                       // Saved Address Section
                       child: _buildSettingTile(
+                        context: context,
                         icon: Icons.map_outlined,
                         title: 'Saved Addresses',
                         subtitle: 'Manage delivery locations',
@@ -68,17 +73,22 @@ class AccountSettingsSection extends StatelessWidget {
                         iconColor: CustomerAppColors.primary,
                         trailing: Icon(
                           Icons.chevron_right,
-                          color: Colors.grey.shade400,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : Colors.grey.shade400,
                         ),
                       ),
                     ),
                     Divider(
                       height: 1,
                       indent: 64.w,
-                      color: Colors.grey.shade100,
+                      color: isDark
+                          ? CustomerAppColors.darkBorder
+                          : Colors.grey.shade100,
                     ),
                     // Notifications Section
                     _buildSettingTile(
+                      context: context,
                       icon: Icons.notifications_none,
                       title: 'Notifications',
                       iconBgColor: CustomerAppColors.primary.withValues(
@@ -100,7 +110,12 @@ class AccountSettingsSection extends StatelessWidget {
                             children: [
                               Text(
                                 'Order Updates',
-                                style: TextStyle(fontSize: 13.sp),
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextPrimary
+                                      : CustomerAppColors.textPrimary,
+                                ),
                               ),
                               SizedBox(
                                 height: 24.h,
@@ -123,7 +138,12 @@ class AccountSettingsSection extends StatelessWidget {
                             children: [
                               Text(
                                 'Offers & Promotions',
-                                style: TextStyle(fontSize: 13.sp),
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextPrimary
+                                      : CustomerAppColors.textPrimary,
+                                ),
                               ),
                               SizedBox(
                                 height: 24.h,
@@ -154,6 +174,7 @@ class AccountSettingsSection extends StatelessWidget {
   }
 
   Widget _buildSettingTile({
+    required BuildContext context,
     required IconData icon,
     required String title,
     String? subtitle,
@@ -161,6 +182,8 @@ class AccountSettingsSection extends StatelessWidget {
     required Color iconColor,
     required Widget trailing,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: Row(
@@ -183,7 +206,9 @@ class AccountSettingsSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                   ),
                 ),
                 if (subtitle != null) ...[
@@ -192,7 +217,9 @@ class AccountSettingsSection extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: Colors.grey.shade500,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey.shade500,
                     ),
                   ),
                 ],

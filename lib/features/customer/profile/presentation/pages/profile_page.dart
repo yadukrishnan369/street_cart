@@ -4,7 +4,6 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
 import 'package:street_cart/features/customer/auth/presentation/pages/login_page.dart';
@@ -41,12 +40,14 @@ class UserProfilePage extends StatelessWidget {
         child: Builder(
           builder: (context) {
             return Scaffold(
-              backgroundColor: CustomerAppColors.background,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               appBar: AppBar(
-                backgroundColor: CustomerAppColors.background,
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).appBarTheme.foregroundColor,
+                  ),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -61,7 +62,6 @@ class UserProfilePage extends StatelessWidget {
                 title: Text(
                   'Profile',
                   style: TextStyle(
-                    color: Colors.black87,
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w600,
                   ),
@@ -69,9 +69,9 @@ class UserProfilePage extends StatelessWidget {
                 centerTitle: true,
                 actions: [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.settings_outlined,
-                      color: Colors.black87,
+                      color: Theme.of(context).appBarTheme.foregroundColor,
                     ),
                     onPressed: () {
                       // Navigate to Settings Page

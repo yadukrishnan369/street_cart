@@ -122,6 +122,7 @@ import 'package:street_cart/features/customer/settings/domain/repositories/setti
 import 'package:street_cart/features/customer/settings/domain/usecases/get_settings.dart';
 import 'package:street_cart/features/customer/settings/domain/usecases/update_setting.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_bloc.dart';
+import 'package:street_cart/core/theme/customer/theme_cubit.dart';
 
 // CUSTOMER - LOCATION
 import 'package:street_cart/features/customer/location/data/datasource/location_datasource.dart';
@@ -785,7 +786,7 @@ Future<void> _initCustomerSettings() async {
   sl.registerLazySingleton(() => GetSettings(sl()));
   sl.registerLazySingleton(() => UpdateSetting(sl()));
 
-  sl.registerFactory(
+  sl.registerLazySingleton(
     () => SettingsBloc(
       getSettings: sl(),
       updateSetting: sl(),
@@ -793,6 +794,8 @@ Future<void> _initCustomerSettings() async {
       authRepository: sl(),
     ),
   );
+
+  sl.registerLazySingleton(() => ThemeCubit(sharedPreferences: sl()));
 }
 
 // ================= CUSTOMER PRODUCTS =================

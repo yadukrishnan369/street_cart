@@ -12,6 +12,8 @@ class AddressEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +29,9 @@ class AddressEmptyState extends StatelessWidget {
             'No saved addresses yet',
             style: CustomerAppTextStyles.heading2.copyWith(
               fontSize: 18.sp,
-              color: Colors.grey.shade400,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade400,
             ),
           ),
           SizedBox(height: 8.h),
@@ -35,7 +39,9 @@ class AddressEmptyState extends StatelessWidget {
           Text(
             'Add an address to make delivery faster',
             style: CustomerAppTextStyles.body.copyWith(
-              color: Colors.grey.shade500,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade500,
             ),
           ),
           SizedBox(height: 24.h),

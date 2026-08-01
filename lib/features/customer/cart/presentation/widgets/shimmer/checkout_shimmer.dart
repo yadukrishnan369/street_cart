@@ -8,6 +8,14 @@ class CheckoutShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : CustomerAppColors.surface;
+    final cardBorder = isDark
+        ? CustomerAppColors.darkBorder
+        : Colors.grey.withValues(alpha: 0.1);
+
     return Column(
       children: [
         Expanded(
@@ -23,8 +31,8 @@ class CheckoutShimmer extends StatelessWidget {
               children: [
                 // Delivery Address Header Shimmer
                 Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
+                  baseColor: shimmerBase,
+                  highlightColor: shimmerHigh,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -52,16 +60,13 @@ class CheckoutShimmer extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: CustomerAppColors.surface,
+                    color: cardBg,
                     borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(
-                      color: Colors.grey.withValues(alpha: 0.1),
-                      width: 1,
-                    ),
+                    border: Border.all(color: cardBorder, width: 1),
                   ),
                   child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
+                    baseColor: shimmerBase,
+                    highlightColor: shimmerHigh,
                     child: Row(
                       children: [
                         Container(
@@ -113,8 +118,8 @@ class CheckoutShimmer extends StatelessWidget {
                 SizedBox(height: 28.h),
                 // Payment Methods Header Shimmer
                 Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
+                  baseColor: shimmerBase,
+                  highlightColor: shimmerHigh,
                   child: Container(
                     width: 140.w,
                     height: 16.h,
@@ -126,15 +131,15 @@ class CheckoutShimmer extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 // Payment Card 1
-                _buildPaymentCardShimmer(),
+                _buildPaymentCardShimmer(context),
                 SizedBox(height: 12.h),
                 // Payment Card 2
-                _buildPaymentCardShimmer(),
+                _buildPaymentCardShimmer(context),
                 SizedBox(height: 28.h),
                 // Order Summary Header Shimmer
                 Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
+                  baseColor: shimmerBase,
+                  highlightColor: shimmerHigh,
                   child: Container(
                     width: 120.w,
                     height: 16.h,
@@ -149,16 +154,13 @@ class CheckoutShimmer extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: CustomerAppColors.surface,
+                    color: cardBg,
                     borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(
-                      color: Colors.grey.withValues(alpha: 0.1),
-                      width: 1,
-                    ),
+                    border: Border.all(color: cardBorder, width: 1),
                   ),
                   child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
+                    baseColor: shimmerBase,
+                    highlightColor: shimmerHigh,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -201,18 +203,13 @@ class CheckoutShimmer extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           decoration: BoxDecoration(
-            color: CustomerAppColors.surface,
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey.withValues(alpha: 0.1),
-                width: 1,
-              ),
-            ),
+            color: cardBg,
+            border: Border(top: BorderSide(color: cardBorder, width: 1)),
           ),
           child: SafeArea(
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
+              baseColor: shimmerBase,
+              highlightColor: shimmerHigh,
               child: Container(
                 width: double.infinity,
                 height: 48.h,
@@ -228,17 +225,25 @@ class CheckoutShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentCardShimmer() {
+  Widget _buildPaymentCardShimmer(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : CustomerAppColors.surface;
+    final cardBorder = isDark
+        ? CustomerAppColors.darkBorder
+        : Colors.grey.withValues(alpha: 0.1);
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: cardBg,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+        border: Border.all(color: cardBorder, width: 1),
       ),
       child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: shimmerBase,
+        highlightColor: shimmerHigh,
         child: Row(
           children: [
             Container(

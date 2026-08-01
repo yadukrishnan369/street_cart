@@ -22,11 +22,7 @@ class FilterSortSection extends StatelessWidget {
       children: [
         Text(
           'Sort By',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12.h),
         // Sort Chips
@@ -47,23 +43,32 @@ class FilterSortSection extends StatelessWidget {
   // Renders single sort chip
   Widget _buildSortChip(String label) {
     final isSelected = selectedSort == label;
-    return GestureDetector(
-      onTap: () => bloc.add(UpdateFilterSort(label)),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: isSelected ? CustomerAppColors.primary : Colors.grey[100],
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black87,
-            fontSize: 13.sp,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+    return Builder(
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return GestureDetector(
+          onTap: () => bloc.add(UpdateFilterSort(label)),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? CustomerAppColors.primary
+                  : (isDark ? const Color(0xFF2D2D2D) : Colors.grey[100]),
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? Colors.white
+                    : (isDark ? Colors.white70 : Colors.black87),
+                fontSize: 13.sp,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

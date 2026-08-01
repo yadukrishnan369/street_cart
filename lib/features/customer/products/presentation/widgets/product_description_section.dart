@@ -10,6 +10,8 @@ class ProductDescriptionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -18,7 +20,9 @@ class ProductDescriptionSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
         SizedBox(height: 8.h),
@@ -27,7 +31,9 @@ class ProductDescriptionSection extends StatelessWidget {
           description,
           style: TextStyle(
             fontSize: 14.sp,
-            color: CustomerAppColors.textSecondary,
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : CustomerAppColors.textSecondary,
             height: 1.5,
           ),
         ),

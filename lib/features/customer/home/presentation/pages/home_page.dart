@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             }
 
             return Scaffold(
-              backgroundColor: CustomerAppColors.background,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               appBar: HomeAppBar(
                 isLoading: isLoading,
                 hasLocation: hasLocation,

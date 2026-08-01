@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
+// Shop List Shimmer
 class ShopListShimmer extends StatelessWidget {
   const ShopListShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final blockColor = isDark ? Colors.grey[850]! : Colors.white;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -19,7 +25,7 @@ class ShopListShimmer extends StatelessWidget {
                 width: 120.w,
                 height: 18.h,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: baseColor,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
               ),
@@ -27,7 +33,7 @@ class ShopListShimmer extends StatelessWidget {
                 width: 70.w,
                 height: 14.h,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: baseColor,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
               ),
@@ -36,8 +42,8 @@ class ShopListShimmer extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
+          baseColor: baseColor,
+          highlightColor: highlightColor,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: const NeverScrollableScrollPhysics(),
@@ -50,7 +56,7 @@ class ShopListShimmer extends StatelessWidget {
                     width: 280.w,
                     padding: EdgeInsets.all(8.w),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: blockColor,
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Row(
@@ -59,7 +65,7 @@ class ShopListShimmer extends StatelessWidget {
                           width: 74.w,
                           height: 74.h,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: blockColor,
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
@@ -71,7 +77,7 @@ class ShopListShimmer extends StatelessWidget {
                               Container(
                                 width: 120.w,
                                 height: 14.h,
-                                color: Colors.white,
+                                color: blockColor,
                               ),
                               SizedBox(height: 8.h),
                               Row(
@@ -79,13 +85,13 @@ class ShopListShimmer extends StatelessWidget {
                                   Container(
                                     width: 30.w,
                                     height: 12.h,
-                                    color: Colors.white,
+                                    color: blockColor,
                                   ),
                                   SizedBox(width: 8.w),
                                   Container(
                                     width: 50.w,
                                     height: 12.h,
-                                    color: Colors.white,
+                                    color: blockColor,
                                   ),
                                 ],
                               ),
@@ -93,7 +99,7 @@ class ShopListShimmer extends StatelessWidget {
                               Container(
                                 width: 80.w,
                                 height: 12.h,
-                                color: Colors.white,
+                                color: blockColor,
                               ),
                             ],
                           ),

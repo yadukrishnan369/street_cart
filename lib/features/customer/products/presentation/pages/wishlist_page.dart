@@ -50,25 +50,20 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.surface,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: CustomerAppColors.textPrimary,
+            color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: const Text(
           'Wishlist',
-          style: TextStyle(
-            color: CustomerAppColors.textPrimary,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         actions: [
           BlocBuilder<WishlistBloc, WishlistState>(
@@ -88,9 +83,9 @@ class _WishlistPageState extends State<WishlistPage> {
                     child: Text('Delete all'),
                   ),
                 ],
-                icon: const Icon(
+                icon: Icon(
                   Icons.more_vert,
-                  color: CustomerAppColors.textPrimary,
+                  color: Theme.of(context).appBarTheme.foregroundColor,
                 ),
               );
             },

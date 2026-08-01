@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final String hintText;
@@ -23,15 +24,19 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(30.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -40,7 +45,11 @@ class CustomSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.search, color: Colors.grey, size: 24.sp),
+          Icon(
+            Icons.search,
+            color: isDark ? CustomerAppColors.darkTextSecondary : Colors.grey,
+            size: 24.sp,
+          ),
           SizedBox(width: 8.w),
           Expanded(
             child: TextField(
@@ -48,20 +57,24 @@ class CustomSearchBar extends StatelessWidget {
               onChanged: onChanged,
               onTap: onTap,
               autofocus: autofocus,
+              style: TextStyle(
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
+                fontSize: 14.sp,
+              ),
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: TextStyle(
-                  color: Colors.grey,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey,
                   fontSize: 14.sp,
                   overflow: TextOverflow.ellipsis,
                 ),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
-              ),
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.black87,
               ),
             ),
           ),

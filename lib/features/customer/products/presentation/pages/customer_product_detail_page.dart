@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
@@ -57,7 +56,6 @@ class CustomerProductDetailPage extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Product Details'),
-                backgroundColor: CustomerAppColors.surface,
                 elevation: 0.5,
               ),
               body: AppErrorView(
@@ -88,7 +86,7 @@ class CustomerProductDetailPage extends StatelessWidget {
             selectedColor,
           );
           return Scaffold(
-            backgroundColor: CustomerAppColors.background,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             //  App Bar
             appBar: ProductDetailAppBar(
               product: product,

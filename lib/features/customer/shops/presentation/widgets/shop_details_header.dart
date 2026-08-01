@@ -16,18 +16,26 @@ class ShopDetailsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: CustomerAppColors.border, width: 1.w),
+          border: Border.all(
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : CustomerAppColors.border,
+            width: 1.w,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -41,10 +49,15 @@ class ShopDetailsHeader extends StatelessWidget {
               height: 110.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: CustomerAppColors.border, width: 2.w),
+                border: Border.all(
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : CustomerAppColors.border,
+                  width: 2.w,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -90,7 +103,9 @@ class ShopDetailsHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -105,7 +120,9 @@ class ShopDetailsHeader extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.location_on_outlined,
-                    color: CustomerAppColors.textSecondary,
+                    color: isDark
+                        ? CustomerAppColors.darkTextSecondary
+                        : CustomerAppColors.textSecondary,
                     size: 14.sp,
                   ),
                   SizedBox(width: 4.w),
@@ -119,7 +136,9 @@ class ShopDetailsHeader extends StatelessWidget {
                           : 'Local Shop',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: CustomerAppColors.textSecondary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : CustomerAppColors.textSecondary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -130,7 +149,12 @@ class ShopDetailsHeader extends StatelessWidget {
 
             Padding(
               padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Divider(color: CustomerAppColors.border, height: 1),
+              child: Divider(
+                color: isDark
+                    ? CustomerAppColors.darkBorder
+                    : CustomerAppColors.border,
+                height: 1,
+              ),
             ),
 
             // Info Stats
@@ -138,16 +162,19 @@ class ShopDetailsHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildInfoStat(
+                  context,
                   Icons.category_outlined,
                   'Category',
                   shop.category.isNotEmpty ? shop.category : '',
                 ),
                 _buildInfoStat(
+                  context,
                   Icons.delivery_dining_outlined,
                   'Delivery',
                   '${shop.deliveryRadius.toStringAsFixed(0)} km',
                 ),
                 _buildInfoStat(
+                  context,
                   Icons.payments_outlined,
                   'Payments',
                   shop.paymentMethods.isNotEmpty
@@ -221,14 +248,20 @@ class ShopDetailsHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoStat(IconData icon, String label, String value) {
+  Widget _buildInfoStat(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-            color: CustomerAppColors.primary.withValues(alpha: 0.08),
+            color: CustomerAppColors.primary.withValues(alpha: 0.12),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: CustomerAppColors.primary, size: 20.sp),
@@ -238,7 +271,9 @@ class ShopDetailsHeader extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 10.sp,
-            color: CustomerAppColors.textSecondary,
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : CustomerAppColors.textSecondary,
           ),
         ),
         SizedBox(height: 2.h),
@@ -247,7 +282,9 @@ class ShopDetailsHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.bold,
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
       ],

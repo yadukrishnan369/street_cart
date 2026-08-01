@@ -21,6 +21,8 @@ class OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 800),
       curve: Curves.easeInOut,
@@ -39,8 +41,15 @@ class OrderSummary extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: CustomerAppColors.surface,
+                  color: isDark
+                      ? CustomerAppColors.darkSurface
+                      : CustomerAppColors.surface,
                   borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: isDark
+                        ? CustomerAppColors.darkBorder
+                        : CustomerAppColors.border,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.02),
@@ -57,20 +66,30 @@ class OrderSummary extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: CustomerAppColors.textPrimary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextPrimary
+                            : CustomerAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 12.h),
                     // Products
-                    _summaryRow('Product Types', '$productTypes'),
+                    _summaryRow(context, 'Product Types', '$productTypes'),
                     SizedBox(height: 8.h),
                     // Total Quantity
-                    _summaryRow('Total Quantity', '$totalItems'),
+                    _summaryRow(context, 'Total Quantity', '$totalItems'),
                     SizedBox(height: 8.h),
                     // Calculated Subtotals
-                    _summaryRow('Subtotal', '₹${subtotal.toStringAsFixed(0)}'),
+                    _summaryRow(
+                      context,
+                      'Subtotal',
+                      '₹${subtotal.toStringAsFixed(0)}',
+                    ),
                     SizedBox(height: 12.h),
-                    const Divider(color: CustomerAppColors.border),
+                    Divider(
+                      color: isDark
+                          ? CustomerAppColors.darkBorder
+                          : CustomerAppColors.border,
+                    ),
                     SizedBox(height: 12.h),
                     // Total Amount Section
                     Row(
@@ -81,7 +100,9 @@ class OrderSummary extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
-                            color: CustomerAppColors.textPrimary,
+                            color: isDark
+                                ? CustomerAppColors.darkTextPrimary
+                                : CustomerAppColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -105,7 +126,8 @@ class OrderSummary extends StatelessWidget {
     );
   }
 
-  Widget _summaryRow(String label, String value) {
+  Widget _summaryRow(BuildContext context, String label, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -113,7 +135,9 @@ class OrderSummary extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: CustomerAppColors.textSecondary,
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : CustomerAppColors.textSecondary,
           ),
         ),
         Text(
@@ -121,7 +145,9 @@ class OrderSummary extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
       ],

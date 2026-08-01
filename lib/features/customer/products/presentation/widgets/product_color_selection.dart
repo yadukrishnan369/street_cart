@@ -19,6 +19,7 @@ class ProductColorSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (colors.isEmpty) return const SizedBox.shrink();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +32,9 @@ class ProductColorSelection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
-                color: CustomerAppColors.textPrimary,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             Text(

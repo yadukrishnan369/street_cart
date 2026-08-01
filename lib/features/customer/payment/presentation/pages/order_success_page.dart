@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/payment/presentation/widgets/order
 import 'package:street_cart/features/customer/payment/presentation/widgets/order_success_estimation_banner.dart';
 import 'package:street_cart/features/customer/payment/presentation/utils/payment_helper.dart';
 
+// Order Success Page
 class OrderSuccessPage extends StatefulWidget {
   final String paymentMethod;
   final String paymentStatus;
@@ -35,16 +36,21 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.surface,
+        backgroundColor: theme.cardColor,
         elevation: 0.5,
         centerTitle: true,
         title: Text(
           'Order Status',
           style: TextStyle(
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),

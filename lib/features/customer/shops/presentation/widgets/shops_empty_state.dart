@@ -10,6 +10,8 @@ class ShopsEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +28,9 @@ class ShopsEmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: CustomerAppColors.textPrimary,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -37,7 +41,9 @@ class ShopsEmptyState extends StatelessWidget {
                 : "We're expanding to your area soon!",
             style: TextStyle(
               fontSize: 13.sp,
-              color: CustomerAppColors.textSecondary,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
             ),
           ),
         ],

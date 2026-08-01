@@ -35,17 +35,22 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (_) => sl<CustomerShopsBloc>()..add(FetchCustomerShops()),
       child: Scaffold(
-        backgroundColor: CustomerAppColors.background,
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: CustomerAppColors.surface,
+          backgroundColor: theme.cardColor,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
-              color: CustomerAppColors.textPrimary,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
             onPressed: () {
               if (Navigator.canPop(context)) {
@@ -62,7 +67,6 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
             },
           ),
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
@@ -77,7 +81,9 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
             ],
@@ -87,7 +93,12 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(height: 1, color: CustomerAppColors.border),
+            Divider(
+              height: 1,
+              color: isDark
+                  ? CustomerAppColors.darkBorder
+                  : CustomerAppColors.border,
+            ),
             // Search Field
             Builder(
               builder: (context) {

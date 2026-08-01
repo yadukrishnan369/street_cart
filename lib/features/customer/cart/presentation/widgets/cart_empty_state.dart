@@ -9,6 +9,8 @@ class CartEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -18,8 +20,10 @@ class CartEmptyState extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.all(24.w),
-              decoration: const BoxDecoration(
-                color: CustomerAppColors.primaryLight,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? CustomerAppColors.primary.withValues(alpha: 0.15)
+                    : CustomerAppColors.primaryLight,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -34,7 +38,9 @@ class CartEmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: CustomerAppColors.textPrimary,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 12.h),
@@ -43,7 +49,9 @@ class CartEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: CustomerAppColors.textSecondary,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : CustomerAppColors.textSecondary,
                 height: 1.5,
               ),
             ),

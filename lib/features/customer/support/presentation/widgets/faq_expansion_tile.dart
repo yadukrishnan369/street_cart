@@ -16,12 +16,17 @@ class FAQExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(
+          color: isDark ? CustomerAppColors.darkBorder : Colors.grey.shade100,
+        ),
       ),
       child: ExpansionTile(
         title: Text(
@@ -29,19 +34,26 @@ class FAQExpansionTile extends StatelessWidget {
           style: CustomerAppTextStyles.body.copyWith(
             fontWeight: FontWeight.w600,
             fontSize: 14.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
         shape: const RoundedRectangleBorder(side: BorderSide.none),
         collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
         iconColor: CustomerAppColors.primary,
-        collapsedIconColor: Colors.grey.shade400,
+        collapsedIconColor: isDark
+            ? CustomerAppColors.darkTextSecondary
+            : Colors.grey.shade400,
         childrenPadding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 20.h),
         expandedAlignment: Alignment.topLeft,
         children: [
           Text(
             answer,
             style: CustomerAppTextStyles.body.copyWith(
-              color: CustomerAppColors.textSecondary,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
               height: 1.5,
             ),
           ),

@@ -17,11 +17,16 @@ class CustomerImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.grey[200],
+        color:
+            backgroundColor ??
+            (isDark ? CustomerAppColors.darkInputBackground : Colors.grey[200]),
         shape: BoxShape.circle,
       ),
       child: Center(

@@ -9,6 +9,7 @@ class StockStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOut = qty == 0;
     final isLow = qty > 0 && qty <= 5;
 
@@ -18,18 +19,22 @@ class StockStatusBadge extends StatelessWidget {
     IconData icon;
 
     if (isOut) {
-      bg = Colors.red[50]!;
-      fg = Colors.red[700]!;
+      bg = isDark ? Colors.red[900]! : Colors.red[50]!;
+      fg = isDark ? const Color.fromARGB(255, 231, 203, 203) : Colors.red[700]!;
       text = 'Out of Stock';
       icon = Icons.remove_circle_outline_rounded;
     } else if (isLow) {
-      bg = Colors.orange[50]!;
-      fg = Colors.orange[700]!;
+      bg = isDark ? Colors.orange[900]! : Colors.orange[50]!;
+      fg = isDark
+          ? const Color.fromARGB(255, 230, 222, 212)
+          : Colors.orange[700]!;
       text = 'Only $qty left!';
       icon = Icons.warning_amber_rounded;
     } else {
-      bg = Colors.green[50]!;
-      fg = Colors.green[700]!;
+      bg = isDark ? Colors.green[900]! : Colors.green[50]!;
+      fg = isDark
+          ? const Color.fromARGB(255, 202, 224, 203)
+          : Colors.green[700]!;
       text = 'In Stock $qty available';
       icon = Icons.check_circle_outline_rounded;
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Order Success Estimation Banner
 class OrderSuccessEstimationBanner extends StatelessWidget {
   final double totalAmount;
   final String paymentStatus;
@@ -14,26 +15,37 @@ class OrderSuccessEstimationBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final bool isPaid = paymentStatus.toLowerCase() == 'paid';
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+        border: Border.all(
+          color: isDark
+              ? CustomerAppColors.darkBorder
+              : Colors.grey.withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: isDark
+                  ? CustomerAppColors.darkInputBackground
+                  : Colors.grey[100],
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.receipt_long_outlined,
-              color: CustomerAppColors.textSecondary,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
               size: 20.sp,
             ),
           ),
@@ -46,7 +58,9 @@ class OrderSuccessEstimationBanner extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -55,7 +69,9 @@ class OrderSuccessEstimationBanner extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
             ],
@@ -69,7 +85,9 @@ class OrderSuccessEstimationBanner extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey,
                 ),
               ),
               SizedBox(height: 2.h),

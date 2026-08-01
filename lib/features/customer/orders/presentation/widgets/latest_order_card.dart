@@ -20,6 +20,8 @@ class LatestOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (order.items.isEmpty) return const SizedBox.shrink();
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final firstItem = order.items.first;
     final totalItems = OrdersHelper.getOrderTotalItems(order);
     final statusColor = OrdersHelper.getStatusColor(
@@ -34,11 +36,12 @@ class LatestOrderCard extends StatelessWidget {
       margin: EdgeInsets.all(16.w),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -84,7 +87,9 @@ class LatestOrderCard extends StatelessWidget {
                     Text(
                       firstItem.productName,
                       style: TextStyle(
-                        color: CustomerAppColors.textPrimary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextPrimary
+                            : CustomerAppColors.textPrimary,
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -95,7 +100,9 @@ class LatestOrderCard extends StatelessWidget {
                     Text(
                       'Order $orderIdText • $totalItems ${totalItems == 1 ? 'Item' : 'Items'}',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : Colors.grey[600],
                         fontSize: 12.sp,
                       ),
                     ),
@@ -114,8 +121,15 @@ class LatestOrderCard extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 72.w,
                     height: 72.w,
-                    color: Colors.grey[200],
-                    child: Icon(Icons.image, color: Colors.grey[400]),
+                    color: isDark
+                        ? CustomerAppColors.darkInputBackground
+                        : Colors.grey[200],
+                    child: Icon(
+                      Icons.image,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey[400],
+                    ),
                   ),
                 ),
               ),
@@ -132,7 +146,11 @@ class LatestOrderCard extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: onCancel,
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.grey[300]!),
+                  side: BorderSide(
+                    color: isDark
+                        ? CustomerAppColors.darkBorder
+                        : Colors.grey[300]!,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.r),
                   ),
@@ -140,7 +158,9 @@ class LatestOrderCard extends StatelessWidget {
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: CustomerAppColors.textPrimary,
+                    color: isDark
+                        ? CustomerAppColors.darkTextPrimary
+                        : CustomerAppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14.sp,
                   ),

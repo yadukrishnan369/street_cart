@@ -22,11 +22,7 @@ class FilterRatingSection extends StatelessWidget {
       children: [
         Text(
           'Rating',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12.h),
         // List Of Rating Chips
@@ -51,34 +47,45 @@ class FilterRatingSection extends StatelessWidget {
   // Renders single rating chip
   Widget _buildRatingChip(String label) {
     final isSelected = selectedRating == label;
-    return GestureDetector(
-      onTap: () => bloc.add(ToggleFilterRating(label)),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: isSelected ? CustomerAppColors.primary : Colors.grey[100],
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSelected ? Icons.star : Icons.star_border,
-              size: 16.sp,
-              color: isSelected ? Colors.white : Colors.amber,
+    return Builder(
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return GestureDetector(
+          onTap: () => bloc.add(ToggleFilterRating(label)),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? CustomerAppColors.primary
+                  : (isDark ? const Color(0xFF2D2D2D) : Colors.grey[100]),
+              borderRadius: BorderRadius.circular(20.r),
             ),
-            SizedBox(width: 4.w),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black87,
-                fontSize: 13.sp,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isSelected ? Icons.star : Icons.star_border,
+                  size: 16.sp,
+                  color: isSelected ? Colors.white : Colors.amber,
+                ),
+                SizedBox(width: 4.w),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: isSelected
+                        ? Colors.white
+                        : (isDark ? Colors.white70 : Colors.black87),
+                    fontSize: 13.sp,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

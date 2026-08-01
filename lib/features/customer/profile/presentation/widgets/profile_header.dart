@@ -18,16 +18,20 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.all(16.w),
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: isDark
+            ? CustomerAppColors.darkSurface
+            : CustomerAppColors.surface,
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 2,
             offset: const Offset(0, 4),
@@ -40,7 +44,12 @@ class ProfileHeader extends StatelessWidget {
             padding: EdgeInsets.all(4.w),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade200, width: 2),
+              border: Border.all(
+                color: isDark
+                    ? CustomerAppColors.darkBorder
+                    : Colors.grey.shade200,
+                width: 2,
+              ),
             ),
             child: GestureDetector(
               onTap: profile.profileImageUrl.isNotEmpty
@@ -79,19 +88,34 @@ class ProfileHeader extends StatelessWidget {
           // Customer Name
           Text(
             profile.fullName.isEmpty ? 'User' : profile.fullName,
-            style: CustomerAppTextStyles.heading1.copyWith(fontSize: 25.sp),
+            style: CustomerAppTextStyles.heading1.copyWith(
+              fontSize: 25.sp,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+            ),
           ),
           SizedBox(height: 4.h),
           // Customer Email
           Text(
             profile.email,
-            style: CustomerAppTextStyles.heading2.copyWith(fontSize: 16.sp),
+            style: CustomerAppTextStyles.heading2.copyWith(
+              fontSize: 16.sp,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 2.h),
           // Customer Phone
           Text(
             profile.phone.isNotEmpty ? profile.phone : 'No phone number added',
-            style: CustomerAppTextStyles.subtitle.copyWith(fontSize: 16.sp),
+            style: CustomerAppTextStyles.subtitle.copyWith(
+              fontSize: 16.sp,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 8.h),
           Row(
@@ -100,7 +124,9 @@ class ProfileHeader extends StatelessWidget {
               Icon(
                 Icons.location_on_outlined,
                 size: 14.sp,
-                color: Colors.grey.shade600,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey.shade600,
               ),
               SizedBox(width: 4.w),
               // Customer Location
@@ -108,7 +134,12 @@ class ProfileHeader extends StatelessWidget {
                 profile.locationName.isEmpty
                     ? 'Unknown Location'
                     : profile.locationName,
-                style: CustomerAppTextStyles.subtitle.copyWith(fontSize: 12.sp),
+                style: CustomerAppTextStyles.subtitle.copyWith(
+                  fontSize: 12.sp,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : CustomerAppColors.textSecondary,
+                ),
               ),
             ],
           ),

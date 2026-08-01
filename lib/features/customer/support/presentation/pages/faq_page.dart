@@ -13,19 +13,32 @@ class FAQPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
-        elevation: 0,
+        backgroundColor: theme.cardColor,
+        elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         // Page Title
         title: Text(
           'FAQ',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: CustomerAppTextStyles.heading2.copyWith(
+            fontSize: 20.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),
@@ -36,7 +49,7 @@ class FAQPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              _buildHeader(),
+              _buildHeader(context),
               SizedBox(height: 32.h),
               Text(
                 'FREQUENTLY ASKED QUESTIONS',
@@ -78,13 +91,19 @@ class FAQPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F1FF),
+        color: isDark
+            ? CustomerAppColors.primary.withValues(alpha: 0.15)
+            : const Color(0xFFF0F1FF),
         borderRadius: BorderRadius.circular(24.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,14 +112,18 @@ class FAQPage extends StatelessWidget {
             'How can we help you?',
             style: CustomerAppTextStyles.heading2.copyWith(
               fontSize: 22.sp,
-              color: Colors.black87,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
           Text(
             'Find answers to your questions about orders, payments, and how Street Cart works.',
             style: CustomerAppTextStyles.body.copyWith(
-              color: Colors.grey.shade600,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade600,
               height: 1.4,
             ),
           ),

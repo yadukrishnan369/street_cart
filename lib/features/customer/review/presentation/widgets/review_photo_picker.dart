@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 // Review Photo Picker
 class ReviewPhotoPicker extends StatelessWidget {
@@ -22,6 +23,7 @@ class ReviewPhotoPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final totalCount = existingImageUrls.length + selectedImages.length;
     final showUploadButton = totalCount < 5;
 
@@ -32,7 +34,9 @@ class ReviewPhotoPicker extends StatelessWidget {
         Text(
           'Add Photos (optional)',
           style: TextStyle(
-            color: const Color(0xFF1E293B),
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
             fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -54,10 +58,14 @@ class ReviewPhotoPicker extends StatelessWidget {
                     height: 72.w,
                     margin: EdgeInsets.only(right: 12.w),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark
+                          ? CustomerAppColors.darkSurface
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
-                        color: const Color(0xFFCBD5E1),
+                        color: isDark
+                            ? CustomerAppColors.darkBorder
+                            : const Color(0xFFCBD5E1),
                         width: 1.5,
                       ),
                     ),
@@ -66,14 +74,18 @@ class ReviewPhotoPicker extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.add_photo_alternate_outlined,
-                          color: const Color(0xFF94A3B8),
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : const Color(0xFF94A3B8),
                           size: 20.sp,
                         ),
                         SizedBox(height: 4.h),
                         Text(
                           'Upload',
                           style: TextStyle(
-                            color: const Color(0xFF94A3B8),
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : const Color(0xFF94A3B8),
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
                             height: 1.2,

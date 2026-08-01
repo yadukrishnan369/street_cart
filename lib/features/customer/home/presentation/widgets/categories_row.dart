@@ -18,6 +18,8 @@ class CategoriesRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final displayCategories = ['All', ...categories.where((c) => c != 'All')];
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -33,18 +35,26 @@ class CategoriesRow extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: isSelected ? CustomerAppColors.primary : Colors.white,
+                  color: isSelected
+                      ? CustomerAppColors.primary
+                      : theme.cardColor,
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent
-                        : Colors.grey.shade300,
+                        : (isDark
+                              ? CustomerAppColors.darkBorder
+                              : Colors.grey.shade300),
                   ),
                 ),
                 child: Text(
                   category,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black87,
+                    color: isSelected
+                        ? Colors.white
+                        : (isDark
+                              ? CustomerAppColors.darkTextPrimary
+                              : CustomerAppColors.textPrimary),
                     fontSize: 14.sp,
                     fontWeight: isSelected
                         ? FontWeight.bold

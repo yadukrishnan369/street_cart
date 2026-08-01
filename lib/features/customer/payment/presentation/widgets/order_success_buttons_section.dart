@@ -4,11 +4,15 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/customer/orders/presentation/pages/my_orders_page.dart';
 
+// Order Success Buttons Section
 class OrderSuccessButtonsSection extends StatelessWidget {
   const OrderSuccessButtonsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       children: [
         // Track Order Button
@@ -57,9 +61,15 @@ class OrderSuccessButtonsSection extends StatelessWidget {
               );
             },
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.grey[200],
-              foregroundColor: CustomerAppColors.textPrimary,
-              side: BorderSide.none,
+              backgroundColor: isDark
+                  ? CustomerAppColors.darkInputBackground
+                  : Colors.grey[200],
+              foregroundColor: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+              side: isDark
+                  ? const BorderSide(color: CustomerAppColors.darkBorder)
+                  : BorderSide.none,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.r),
               ),

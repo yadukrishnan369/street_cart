@@ -12,6 +12,8 @@ class ProductSoldBySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -22,16 +24,22 @@ class ProductSoldBySection extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? CustomerAppColors.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+          border: Border.all(
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : Colors.grey.withValues(alpha: 0.1),
+          ),
         ),
         child: Row(
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF3E8FF),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? CustomerAppColors.primary.withValues(alpha: 0.2)
+                    : const Color(0xFFF3E8FF),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -51,7 +59,9 @@ class ProductSoldBySection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -60,7 +70,9 @@ class ProductSoldBySection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

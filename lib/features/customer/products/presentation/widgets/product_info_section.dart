@@ -17,6 +17,8 @@ class ProductInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,7 +33,9 @@ class ProductInfoSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
             ),
@@ -40,7 +44,9 @@ class ProductInfoSection extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: const Color(0xFFF3E8FF),
+                color: isDark
+                    ? CustomerAppColors.primary.withValues(alpha: 0.2)
+                    : const Color(0xFFF3E8FF),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               // Product Overall Rating
@@ -49,14 +55,16 @@ class ProductInfoSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.star_rounded,
-                    color: CustomerAppColors.primary,
+                    color: CustomerAppColors.warning,
                     size: 14.sp,
                   ),
                   SizedBox(width: 4.w),
                   Text(
                     rating > 0.0 ? rating.toStringAsFixed(1) : '0.0',
                     style: TextStyle(
-                      color: CustomerAppColors.primary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                     ),

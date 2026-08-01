@@ -24,7 +24,7 @@ class SavedAddressesPage extends StatelessWidget {
     return BlocProvider.value(
       value: context.read<AddressBloc>()..add(FetchAddresses()),
       child: Scaffold(
-        backgroundColor: CustomerAppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         // Page App bar
         appBar: const SavedAddressesAppBar(),
         body: BlocBuilder<AddressBloc, AddressState>(
@@ -71,14 +71,22 @@ class SavedAddressesPage extends StatelessWidget {
                       vertical: 16.h,
                     ),
                     // Title
-                    child: Text(
-                      'SAVED ADDRESSES',
-                      style: CustomerAppTextStyles.body.copyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade500,
-                        letterSpacing: 1.2,
-                      ),
+                    child: Builder(
+                      builder: (context) {
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        return Text(
+                          'SAVED ADDRESSES',
+                          style: CustomerAppTextStyles.body.copyWith(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold,
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : Colors.grey.shade500,
+                            letterSpacing: 1.2,
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Expanded(

@@ -27,6 +27,8 @@ class EditProfileHeader extends StatelessWidget {
     final String? imageUrl = profile?.profileImageUrl;
     final bool hasImage = imageUrl != null && imageUrl.isNotEmpty;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Column(
         children: [
@@ -36,10 +38,12 @@ class EditProfileHeader extends StatelessWidget {
                 padding: EdgeInsets.all(4.w),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: CustomerAppColors.surface,
+                  color: isDark
+                      ? CustomerAppColors.darkSurface
+                      : CustomerAppColors.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 10,
                       spreadRadius: 2,
                       offset: const Offset(0, 4),
@@ -78,7 +82,9 @@ class EditProfileHeader extends StatelessWidget {
                       color: CustomerAppColors.primary,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: CustomerAppColors.surface,
+                        color: isDark
+                            ? CustomerAppColors.darkSurface
+                            : CustomerAppColors.surface,
                         width: 2,
                       ),
                     ),
@@ -117,7 +123,9 @@ class EditProfileHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -140,7 +148,9 @@ class EditProfileHeader extends StatelessWidget {
                 Container(
                   width: 1.w,
                   height: 12.h,
-                  color: Colors.grey.shade300,
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.shade300,
                 ),
                 SizedBox(width: 16.w),
                 GestureDetector(

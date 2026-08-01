@@ -23,6 +23,7 @@ class FilterSizesSection extends StatelessWidget {
         .where((c) => c != 'All')
         .toList();
     if (selectedCatsWithoutAll.isEmpty) return const SizedBox();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +43,7 @@ class FilterSizesSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
+                color: isDark ? Colors.white70 : Colors.grey[800],
               ),
             ),
             SizedBox(height: 8.h),
@@ -66,14 +67,18 @@ class FilterSizesSection extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? CustomerAppColors.primary
-                            : Colors.grey[100],
+                            : (isDark
+                                  ? const Color(0xFF2D2D2D)
+                                  : Colors.grey[100]),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Center(
                         child: Text(
                           size,
                           style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black87,
+                            color: isSelected
+                                ? Colors.white
+                                : (isDark ? Colors.white70 : Colors.black87),
                             fontSize: 13.sp,
                             fontWeight: isSelected
                                 ? FontWeight.bold

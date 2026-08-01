@@ -17,13 +17,21 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: CustomerAppColors.textPrimary),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -54,20 +62,27 @@ class ForgotPasswordPage extends StatelessWidget {
                 children: [
                   40.verticalSpace,
                   // App Logo
-                  const AppLogo(size: 80),
+                  AppLogo(isDark: isDark, size: 80),
                   16.verticalSpace,
                   // App name
                   Text(
                     "Street Cart",
                     style: CustomerAppTextStyles.heading2.copyWith(
                       fontSize: 20.sp,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                     ),
                   ),
                   40.verticalSpace,
-                  // Fotgot Password
+                  // Forgot Password
                   Text(
                     "Forgot Password",
-                    style: CustomerAppTextStyles.heading1,
+                    style: CustomerAppTextStyles.heading1.copyWith(
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
+                    ),
                   ),
                   16.verticalSpace,
                   Padding(
@@ -76,7 +91,9 @@ class ForgotPasswordPage extends StatelessWidget {
                       "Enter your registered email address to receive a password reset link",
                       textAlign: TextAlign.center,
                       style: CustomerAppTextStyles.body.copyWith(
-                        color: CustomerAppColors.textSecondary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : CustomerAppColors.textSecondary,
                         height: 1.5,
                       ),
                     ),

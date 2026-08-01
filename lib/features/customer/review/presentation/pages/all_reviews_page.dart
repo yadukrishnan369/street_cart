@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/review/data/models/review_model.dart';
 import 'package:street_cart/shared/widgets/review_card.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
@@ -29,21 +28,22 @@ class AllReviewsPage extends StatelessWidget {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0.5,
         // Page Title
         title: Text(
           '${product.name} - Reviews',
-          style: TextStyle(
-            color: CustomerAppColors.textPrimary,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        leading: const BackButton(color: Colors.black),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         // List of Reviews

@@ -44,6 +44,12 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final iconColor = isDark
+        ? CustomerAppColors.darkTextSecondary
+        : CustomerAppColors.textSecondary;
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         return Form(
@@ -58,7 +64,7 @@ class _SignupFormState extends State<SignupForm> {
                 validator: Validators.validateName,
                 prefixIcon: Icon(
                   Icons.person_outline,
-                  color: CustomerAppColors.textSecondary,
+                  color: iconColor,
                   size: 20.h,
                 ),
               ),
@@ -72,7 +78,7 @@ class _SignupFormState extends State<SignupForm> {
                 validator: Validators.validateEmail,
                 prefixIcon: Icon(
                   Icons.email_outlined,
-                  color: CustomerAppColors.textSecondary,
+                  color: iconColor,
                   size: 20.h,
                 ),
               ),
@@ -86,7 +92,7 @@ class _SignupFormState extends State<SignupForm> {
                 validator: Validators.validatePassword,
                 prefixIcon: Icon(
                   Icons.lock_outline,
-                  color: CustomerAppColors.textSecondary,
+                  color: iconColor,
                   size: 20.h,
                 ),
                 suffixIcon: IconButton(
@@ -94,7 +100,7 @@ class _SignupFormState extends State<SignupForm> {
                     state.obscurePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: CustomerAppColors.textSecondary,
+                    color: iconColor,
                     size: 20.h,
                   ),
                   onPressed: () {
@@ -113,7 +119,7 @@ class _SignupFormState extends State<SignupForm> {
                 isPassword: state.obscureConfirmPassword,
                 prefixIcon: Icon(
                   Icons.lock_outline,
-                  color: CustomerAppColors.textSecondary,
+                  color: iconColor,
                   size: 20.h,
                 ),
                 suffixIcon: IconButton(
@@ -121,7 +127,7 @@ class _SignupFormState extends State<SignupForm> {
                     state.obscureConfirmPassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: CustomerAppColors.textSecondary,
+                    color: iconColor,
                     size: 20.h,
                   ),
                   onPressed: () {

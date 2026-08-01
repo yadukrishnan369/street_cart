@@ -3,16 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Settings Shimmer
 class SettingsShimmer extends StatelessWidget {
   const SettingsShimmer({super.key});
 
-  Widget _buildSectionHeaderShimmer(String text) {
+  Widget _buildSectionHeaderShimmer(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(left: 16.w, top: 24.h, bottom: 8.h),
       child: Text(
         text,
         style: TextStyle(
-          color: CustomerAppColors.textSecondary,
+          color: isDark
+              ? CustomerAppColors.darkTextSecondary
+              : CustomerAppColors.textSecondary,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.5,
@@ -21,12 +25,20 @@ class SettingsShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildSwitchTileShimmer({required IconData icon}) {
+  Widget _buildSwitchTileShimmer(
+    BuildContext context, {
+    required IconData icon,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -37,8 +49,8 @@ class SettingsShimmer extends StatelessWidget {
         ],
       ),
       child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: shimmerBase,
+        highlightColor: shimmerHigh,
         child: Row(
           children: [
             Container(
@@ -79,12 +91,21 @@ class SettingsShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildActionTileShimmer({required IconData icon, Color? iconColor}) {
+  Widget _buildActionTileShimmer(
+    BuildContext context, {
+    required IconData icon,
+    Color? iconColor,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -95,8 +116,8 @@ class SettingsShimmer extends StatelessWidget {
         ],
       ),
       child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: shimmerBase,
+        highlightColor: shimmerHigh,
         child: Row(
           children: [
             Container(
@@ -126,7 +147,10 @@ class SettingsShimmer extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Icon(Icons.chevron_right, color: Colors.grey.shade300),
+            Icon(
+              Icons.chevron_right,
+              color: isDark ? Colors.grey[700] : Colors.grey.shade300,
+            ),
           ],
         ),
       ),
@@ -135,34 +159,45 @@ class SettingsShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeaderShimmer('APP PREFERENCES'),
-          _buildSwitchTileShimmer(icon: Icons.nightlight_round),
-          _buildSwitchTileShimmer(icon: Icons.location_on_outlined),
+          _buildSectionHeaderShimmer(context, 'APP PREFERENCES'),
+          _buildSwitchTileShimmer(context, icon: Icons.nightlight_round),
+          _buildSwitchTileShimmer(context, icon: Icons.location_on_outlined),
 
-          _buildSectionHeaderShimmer('NOTIFICATION SETTINGS'),
-          _buildSwitchTileShimmer(icon: Icons.notifications_none_outlined),
-          _buildSwitchTileShimmer(icon: Icons.shopping_bag_outlined),
+          _buildSectionHeaderShimmer(context, 'NOTIFICATION SETTINGS'),
+          _buildSwitchTileShimmer(
+            context,
+            icon: Icons.notifications_none_outlined,
+          ),
+          _buildSwitchTileShimmer(context, icon: Icons.shopping_bag_outlined),
 
-          _buildSectionHeaderShimmer('PRIVACY & SECURITY'),
-          _buildActionTileShimmer(icon: Icons.lock_outline),
+          _buildSectionHeaderShimmer(context, 'PRIVACY & SECURITY'),
+          _buildActionTileShimmer(context, icon: Icons.lock_outline),
           _buildActionTileShimmer(
+            context,
             icon: Icons.delete_outline,
             iconColor: Colors.red,
           ),
 
-          _buildSectionHeaderShimmer('APP SETTINGS'),
-          _buildActionTileShimmer(icon: Icons.cleaning_services_outlined),
+          _buildSectionHeaderShimmer(context, 'APP SETTINGS'),
+          _buildActionTileShimmer(
+            context,
+            icon: Icons.cleaning_services_outlined,
+          ),
 
           40.verticalSpace,
           Center(
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
+              baseColor: shimmerBase,
+              highlightColor: shimmerHigh,
               child: Column(
                 children: [
                   Container(

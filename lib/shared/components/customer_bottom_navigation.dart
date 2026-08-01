@@ -17,11 +17,17 @@ class CustomerBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BottomNavigationBar(
       currentIndex: currentIndex,
       type: BottomNavigationBarType.fixed,
+      backgroundColor: theme.cardColor,
       selectedItemColor: CustomerAppColors.primary,
-      unselectedItemColor: Colors.grey,
+      unselectedItemColor: isDark
+          ? CustomerAppColors.darkTextSecondary
+          : Colors.grey,
       items: [
         const BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),

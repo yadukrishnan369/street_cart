@@ -16,6 +16,9 @@ class SupportSectionBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,7 +37,9 @@ class SupportSectionBlock extends StatelessWidget {
           style: CustomerAppTextStyles.body.copyWith(
             height: 1.6,
             fontSize: 14.sp,
-            color: const Color(0xFF475569),
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : const Color(0xFF475569),
           ),
         ),
       ],

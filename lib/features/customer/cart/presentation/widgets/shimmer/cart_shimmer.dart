@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 class CartShimmer extends StatelessWidget {
   const CartShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final shimmerHigh = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final cardBg = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    final cardBorder = isDark
+        ? const Color(0xFF2D2D2D)
+        : Colors.grey.withValues(alpha: 0.1);
+    final bottomBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
+    final bottomBorder = isDark
+        ? const Color(0xFF2D2D2D)
+        : Colors.grey.withValues(alpha: 0.1);
+
     return Column(
       children: [
         Expanded(
@@ -19,16 +30,13 @@ class CartShimmer extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 16.h),
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: CustomerAppColors.surface,
+                  color: cardBg,
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    width: 1,
-                  ),
+                  border: Border.all(color: cardBorder, width: 1),
                 ),
                 child: Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
+                  baseColor: shimmerBase,
+                  highlightColor: shimmerHigh,
                   child: Row(
                     children: [
                       // Product Image Shimmer
@@ -100,13 +108,8 @@ class CartShimmer extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: CustomerAppColors.surface,
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey.withValues(alpha: 0.1),
-                width: 1,
-              ),
-            ),
+            color: bottomBg,
+            border: Border(top: BorderSide(color: bottomBorder, width: 1)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -115,16 +118,13 @@ class CartShimmer extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: CustomerAppColors.surface,
+                  color: cardBg,
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    width: 1,
-                  ),
+                  border: Border.all(color: cardBorder, width: 1),
                 ),
                 child: Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
+                  baseColor: shimmerBase,
+                  highlightColor: shimmerHigh,
                   child: Column(
                     children: [
                       Row(
@@ -201,8 +201,8 @@ class CartShimmer extends StatelessWidget {
               SizedBox(height: 16.h),
               // Proceed button shimmer
               Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
+                baseColor: shimmerBase,
+                highlightColor: shimmerHigh,
                 child: Container(
                   width: double.infinity,
                   height: 48.h,

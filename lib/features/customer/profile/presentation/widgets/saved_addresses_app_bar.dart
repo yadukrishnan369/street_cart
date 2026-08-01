@@ -13,17 +13,26 @@ class SavedAddressesAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
-      backgroundColor: CustomerAppColors.surface,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+        icon: Icon(
+          Icons.arrow_back,
+          color: Theme.of(context).appBarTheme.foregroundColor,
+        ),
         onPressed: () => Navigator.pop(context),
       ),
       // Title
       title: Text(
         'Saved Address',
-        style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+        style: TextStyle(
+          fontSize: 20.sp,
+          fontWeight: FontWeight.bold,
+          color: isDark
+              ? CustomerAppColors.darkTextPrimary
+              : CustomerAppColors.textPrimary,
+        ),
       ),
       centerTitle: true,
       actions: [

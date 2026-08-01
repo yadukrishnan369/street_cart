@@ -52,6 +52,9 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
       // Title
@@ -60,7 +63,9 @@ class _SectionLabel extends StatelessWidget {
         style: TextStyle(
           fontSize: 13.sp,
           fontWeight: FontWeight.w900,
-          color: const Color(0xFF1E293B),
+          color: isDark
+              ? CustomerAppColors.darkTextSecondary
+              : CustomerAppColors.textPrimary,
           letterSpacing: 1.0,
         ),
       ),
@@ -75,6 +80,8 @@ class _ActiveOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final firstItem = order.items.first;
     final statusColor = OrdersHelper.getStatusColor(
       CustomerOrderStatus.fromString(order.status),
@@ -88,11 +95,12 @@ class _ActiveOrderCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -134,7 +142,9 @@ class _ActiveOrderCard extends StatelessWidget {
                               child: Text(
                                 displayName,
                                 style: TextStyle(
-                                  color: CustomerAppColors.textPrimary,
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextPrimary
+                                      : CustomerAppColors.textPrimary,
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -150,7 +160,7 @@ class _ActiveOrderCard extends StatelessWidget {
                                 vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
-                                color: statusColor.withOpacity(0.1),
+                                color: statusColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Row(
@@ -184,7 +194,9 @@ class _ActiveOrderCard extends StatelessWidget {
                         Text(
                           'Order #${OrdersHelper.getOrderIdSuffix(order.id)} • $totalItems ${totalItems == 1 ? 'item' : 'items'}',
                           style: TextStyle(
-                            color: Colors.grey[500],
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : Colors.grey[500],
                             fontSize: 12.sp,
                           ),
                         ),
@@ -193,7 +205,9 @@ class _ActiveOrderCard extends StatelessWidget {
                         Text(
                           'Total: ₹${order.totalAmount.toStringAsFixed(0)}',
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : Colors.grey[600],
                             fontSize: 12.sp,
                           ),
                         ),
@@ -239,7 +253,9 @@ class _ActiveOrderCard extends StatelessWidget {
                       },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                          color: const Color.fromARGB(255, 219, 214, 214),
+                          color: isDark
+                              ? CustomerAppColors.darkBorder
+                              : const Color.fromARGB(255, 219, 214, 214),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.r),
@@ -259,7 +275,9 @@ class _ActiveOrderCard extends StatelessWidget {
                   SizedBox(width: 12.w),
                   Icon(
                     Icons.chevron_right,
-                    color: Colors.grey[400],
+                    color: isDark
+                        ? CustomerAppColors.darkTextSecondary
+                        : Colors.grey[400],
                     size: 20.sp,
                   ),
                 ],
@@ -279,6 +297,8 @@ class _HistoryOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final firstItem = order.items.first;
     final createdDateStr = OrdersHelper.formatDateShort(order.createdAt);
     final deliveredDateStr = order.deliveredAt != null
@@ -333,11 +353,14 @@ class _HistoryOrderCard extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 12.h),
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(16.r),
+          border: isDark
+              ? Border.all(color: CustomerAppColors.darkBorder)
+              : null,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -374,7 +397,9 @@ class _HistoryOrderCard extends StatelessWidget {
                   Text(
                     displayName,
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -416,6 +441,8 @@ class _HistoryOrderCard extends StatelessWidget {
                             ? CustomerAppColors.error
                             : isDelivered
                             ? CustomerAppColors.success
+                            : isDark
+                            ? CustomerAppColors.darkTextSecondary
                             : Colors.grey[500],
                         fontSize: 12.sp,
                       ),
@@ -456,7 +483,13 @@ class _HistoryOrderCard extends StatelessWidget {
               ),
               SizedBox(width: 4.w),
             ],
-            Icon(Icons.chevron_right, color: Colors.grey[400], size: 20.sp),
+            Icon(
+              Icons.chevron_right,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey[400],
+              size: 20.sp,
+            ),
           ],
         ),
       ),

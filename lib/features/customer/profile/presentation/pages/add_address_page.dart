@@ -19,6 +19,8 @@ class AddAddressPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocListener<AddressBloc, AddressState>(
       listener: (context, state) {
         if (state is AddressActionSuccess) {
@@ -31,18 +33,25 @@ class AddAddressPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: CustomerAppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: CustomerAppColors.surface,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black87),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           // title
           title: Text(
             address == null ? 'Add New Address' : 'Edit Address',
-            style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+            style: CustomerAppTextStyles.heading2.copyWith(
+              fontSize: 20.sp,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+            ),
           ),
           centerTitle: true,
         ),

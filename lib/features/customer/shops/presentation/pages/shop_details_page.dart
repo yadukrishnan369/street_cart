@@ -24,10 +24,13 @@ class ShopDetailsPage extends StatelessWidget {
           sl<ShopDetailsBloc>()..add(FetchShopProducts(shopId: shop.uid)),
       child: Builder(
         builder: (context) {
+          final theme = Theme.of(context);
+          final isDark = theme.brightness == Brightness.dark;
+
           return Scaffold(
-            backgroundColor: CustomerAppColors.background,
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: AppBar(
-              backgroundColor: CustomerAppColors.background,
+              backgroundColor: theme.scaffoldBackgroundColor,
               elevation: 0,
               // Page Header
               title: Text(
@@ -35,7 +38,9 @@ class ShopDetailsPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
               centerTitle: true,
@@ -77,7 +82,9 @@ class ShopDetailsPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
-                                color: CustomerAppColors.textPrimary,
+                                color: isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary,
                               ),
                             ),
                           ),

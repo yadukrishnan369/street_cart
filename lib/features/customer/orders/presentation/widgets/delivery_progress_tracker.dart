@@ -13,13 +13,19 @@ class DeliveryProgressTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     if (order.status.toLowerCase() == 'cancelled') {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: Colors.red[50],
+          color: isDark ? CustomerAppColors.darkEmptyErrorBg : Colors.red[50],
           borderRadius: BorderRadius.circular(12.r),
+          border: isDark
+              ? Border.all(color: CustomerAppColors.darkEmptyErrorBorder)
+              : null,
         ),
         child: Row(
           children: [
@@ -33,7 +39,7 @@ class DeliveryProgressTracker extends StatelessWidget {
                   Text(
                     'Order Cancelled',
                     style: TextStyle(
-                      color: Colors.red[900],
+                      color: CustomerAppColors.error,
                       fontWeight: FontWeight.bold,
                       fontSize: 14.sp,
                     ),
@@ -42,7 +48,12 @@ class DeliveryProgressTracker extends StatelessWidget {
                   // Subtitle
                   Text(
                     'This order was cancelled on ${OrdersHelper.formatDateShort(DateTime.now())}.',
-                    style: TextStyle(color: Colors.red[700], fontSize: 12.sp),
+                    style: TextStyle(
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.red[700],
+                      fontSize: 12.sp,
+                    ),
                   ),
                 ],
               ),
@@ -66,7 +77,9 @@ class DeliveryProgressTracker extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w900,
-              color: const Color(0xFF1E293B),
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textPrimary,
               letterSpacing: 1.0,
             ),
           ),
@@ -96,11 +109,17 @@ class DeliveryProgressTracker extends StatelessWidget {
                           width: 28.w,
                           height: 28.w,
                           decoration: BoxDecoration(
-                            color: isCompleted ? activeColor : Colors.white,
+                            color: isCompleted
+                                ? activeColor
+                                : isDark
+                                ? CustomerAppColors.darkInputBackground
+                                : Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isCompleted
                                   ? activeColor
+                                  : isDark
+                                  ? CustomerAppColors.darkBorder
                                   : Colors.grey[300]!,
                               width: 2.w,
                             ),
@@ -125,6 +144,8 @@ class DeliveryProgressTracker extends StatelessWidget {
                               width: 2.w,
                               color: isCompleted && index < currentProgressIndex
                                   ? activeColor
+                                  : isDark
+                                  ? CustomerAppColors.darkBorder
                                   : Colors.grey[300],
                             ),
                           ),
@@ -147,7 +168,11 @@ class DeliveryProgressTracker extends StatelessWidget {
                                 color: isCompleted
                                     ? (isActiveStage
                                           ? activeColor
-                                          : const Color(0xFF1E293B))
+                                          : isDark
+                                          ? CustomerAppColors.darkTextPrimary
+                                          : CustomerAppColors.textPrimary)
+                                    : isDark
+                                    ? CustomerAppColors.darkTextSecondary
                                     : Colors.grey[500],
                               ),
                             ),
@@ -159,8 +184,12 @@ class DeliveryProgressTracker extends StatelessWidget {
                                 fontSize: 12.sp,
                                 color: isCompleted
                                     ? (isActiveStage
-                                          ? activeColor.withOpacity(0.7)
+                                          ? activeColor.withValues(alpha: 0.7)
+                                          : isDark
+                                          ? CustomerAppColors.darkTextSecondary
                                           : Colors.grey[500])
+                                    : isDark
+                                    ? CustomerAppColors.darkTextSecondary
                                     : Colors.grey[400],
                               ),
                             ),

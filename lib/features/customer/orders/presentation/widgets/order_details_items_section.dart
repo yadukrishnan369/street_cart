@@ -22,6 +22,8 @@ class OrderDetailsItemsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isDelivered = order.status.toLowerCase() == 'delivered';
 
     return Column(
@@ -30,11 +32,14 @@ class OrderDetailsItemsSection extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16.r),
+            border: isDark
+                ? Border.all(color: CustomerAppColors.darkBorder)
+                : null,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -81,7 +86,9 @@ class OrderDetailsItemsSection extends StatelessWidget {
                               child: Text(
                                 item.productName,
                                 style: TextStyle(
-                                  color: CustomerAppColors.textPrimary,
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextPrimary
+                                      : CustomerAppColors.textPrimary,
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -116,7 +123,9 @@ class OrderDetailsItemsSection extends StatelessWidget {
                         Text(
                           'Size: ${item.selectedSize ?? "M"}  |  Color: ${item.selectedColor ?? "Default"}',
                           style: TextStyle(
-                            color: Colors.grey[400],
+                            color: isDark
+                                ? CustomerAppColors.darkTextSecondary
+                                : Colors.grey[400],
                             fontSize: 11.sp,
                           ),
                         ),
@@ -127,17 +136,21 @@ class OrderDetailsItemsSection extends StatelessWidget {
                             Text(
                               '₹${item.price.toStringAsFixed(0)}',
                               style: TextStyle(
-                                color: CustomerAppColors.textPrimary,
+                                color: isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
                             SizedBox(width: 8.w),
-                            // Price
+                            // Original Price
                             Text(
                               '₹${(item.price * 1.15).toStringAsFixed(0)}',
                               style: TextStyle(
-                                color: Colors.grey[400],
+                                color: isDark
+                                    ? CustomerAppColors.darkTextSecondary
+                                    : Colors.grey[400],
                                 fontSize: 12.sp,
                                 decoration: TextDecoration.lineThrough,
                               ),
@@ -178,17 +191,25 @@ class OrderDetailsItemsSection extends StatelessWidget {
                         icon: Icon(
                           Icons.star_border,
                           size: 16.sp,
-                          color: CustomerAppColors.textPrimary,
+                          color: isDark
+                              ? CustomerAppColors.darkTextPrimary
+                              : CustomerAppColors.textPrimary,
                         ),
                         label: Text(
                           'Write a Review',
                           style: TextStyle(
-                            color: CustomerAppColors.textPrimary,
+                            color: isDark
+                                ? CustomerAppColors.darkTextPrimary
+                                : CustomerAppColors.textPrimary,
                             fontSize: 13.sp,
                           ),
                         ),
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.grey[200]!),
+                          side: BorderSide(
+                            color: isDark
+                                ? CustomerAppColors.darkBorder
+                                : Colors.grey[200]!,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.r),
                           ),
@@ -204,22 +225,36 @@ class OrderDetailsItemsSection extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 8.h),
                           decoration: BoxDecoration(
-                            color:
-                                (item.returnStatus == 'return_picked' ||
-                                    item.returnStatus == 'returned')
-                                ? const Color(0xFFE8F5E9)
-                                : item.returnStatus == 'return_confirmed'
-                                ? const Color(0xFFE3F2FD)
-                                : const Color(0xFFFFF3E0),
+                            color: isDark
+                                ? ((item.returnStatus == 'return_picked' ||
+                                          item.returnStatus == 'returned')
+                                      ? const Color(0xFF1B3A2B)
+                                      : item.returnStatus == 'return_confirmed'
+                                      ? const Color(0xFF1B2D3A)
+                                      : const Color(0xFF3A2E1B))
+                                : ((item.returnStatus == 'return_picked' ||
+                                          item.returnStatus == 'returned')
+                                      ? const Color(0xFFE8F5E9)
+                                      : item.returnStatus == 'return_confirmed'
+                                      ? const Color(0xFFE3F2FD)
+                                      : const Color(0xFFFFF3E0)),
                             borderRadius: BorderRadius.circular(20.r),
                             border: Border.all(
-                              color:
-                                  (item.returnStatus == 'return_picked' ||
-                                      item.returnStatus == 'returned')
-                                  ? const Color(0xFFC8E6C9)
-                                  : item.returnStatus == 'return_confirmed'
-                                  ? const Color(0xFFBBDEFB)
-                                  : const Color(0xFFFFE0B2),
+                              color: isDark
+                                  ? ((item.returnStatus == 'return_picked' ||
+                                            item.returnStatus == 'returned')
+                                        ? const Color(0xFF2E6B47)
+                                        : item.returnStatus ==
+                                              'return_confirmed'
+                                        ? const Color(0xFF2E4D6B)
+                                        : const Color(0xFF6B4E2E))
+                                  : ((item.returnStatus == 'return_picked' ||
+                                            item.returnStatus == 'returned')
+                                        ? const Color(0xFFC8E6C9)
+                                        : item.returnStatus ==
+                                              'return_confirmed'
+                                        ? const Color(0xFFBBDEFB)
+                                        : const Color(0xFFFFE0B2)),
                             ),
                           ),
                           child: Center(
@@ -266,17 +301,25 @@ class OrderDetailsItemsSection extends StatelessWidget {
                           icon: Icon(
                             Icons.reply,
                             size: 16.sp,
-                            color: CustomerAppColors.textPrimary,
+                            color: isDark
+                                ? CustomerAppColors.darkTextPrimary
+                                : CustomerAppColors.textPrimary,
                           ),
                           label: Text(
                             'Return Item',
                             style: TextStyle(
-                              color: CustomerAppColors.textPrimary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextPrimary
+                                  : CustomerAppColors.textPrimary,
                               fontSize: 13.sp,
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.grey[200]!),
+                            side: BorderSide(
+                              color: isDark
+                                  ? CustomerAppColors.darkBorder
+                                  : Colors.grey[200]!,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.r),
                             ),
@@ -297,7 +340,9 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     child: Text(
                       'Eligible for return until ${DateFormatter.formatToReadableDate(order.deliveredAt!.add(const Duration(days: 4)))}',
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : Colors.grey[400],
                         fontSize: 11.sp,
                       ),
                     ),
@@ -322,7 +367,11 @@ class OrderDetailsItemsSection extends StatelessWidget {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey[300]!),
+                      side: BorderSide(
+                        color: isDark
+                            ? CustomerAppColors.darkBorder
+                            : Colors.grey[300]!,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.r),
                       ),

@@ -46,19 +46,30 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         // Page Header
         title: Text(
           'Change Password',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
+        centerTitle: true,
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -79,16 +90,28 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             children: [
               Text(
                 'Security Settings',
-                style: CustomerAppTextStyles.heading2.copyWith(
+                style: TextStyle(
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
               8.verticalSpace,
-              Text(
-                'Update your password to keep your account secure',
-                style: CustomerAppTextStyles.body.copyWith(
-                  color: CustomerAppColors.textSecondary,
-                ),
+              Builder(
+                builder: (context) {
+                  final isDark =
+                      Theme.of(context).brightness == Brightness.dark;
+                  return Text(
+                    'Update your password to keep your account secure',
+                    style: CustomerAppTextStyles.body.copyWith(
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : CustomerAppColors.textSecondary,
+                    ),
+                  );
+                },
               ),
               32.verticalSpace,
               // Change Password Form
@@ -110,33 +133,45 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 },
               ),
               24.verticalSpace,
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: CustomerAppColors.primary.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: CustomerAppColors.primary.withOpacity(0.1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: CustomerAppColors.primary,
-                      size: 20.w,
-                    ),
-                    12.horizontalSpace,
-                    Expanded(
-                      child: Text(
-                        'Your password must be at least 6 characters long.',
-                        style: CustomerAppTextStyles.subtitle.copyWith(
-                          color: CustomerAppColors.textSecondary,
+              Builder(
+                builder: (context) {
+                  final isDark =
+                      Theme.of(context).brightness == Brightness.dark;
+                  return Container(
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? CustomerAppColors.primary.withValues(alpha: 0.1)
+                          : CustomerAppColors.primary.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: CustomerAppColors.primary.withValues(
+                          alpha: 0.15,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: CustomerAppColors.primary,
+                          size: 20.w,
+                        ),
+                        12.horizontalSpace,
+                        Expanded(
+                          child: Text(
+                            'Your password must be at least 6 characters long.',
+                            style: CustomerAppTextStyles.subtitle.copyWith(
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : CustomerAppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),

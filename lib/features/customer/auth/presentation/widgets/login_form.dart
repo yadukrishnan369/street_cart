@@ -81,7 +81,9 @@ class _LoginFormState extends State<LoginForm> {
                     state.isPasswordVisible
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: CustomerAppColors.iconColor,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? CustomerAppColors.darkTextSecondary
+                        : CustomerAppColors.iconColor,
                   ),
                   onPressed: () {
                     context.read<AuthBloc>().add(

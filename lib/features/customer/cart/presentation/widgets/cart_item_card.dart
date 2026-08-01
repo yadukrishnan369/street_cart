@@ -24,6 +24,8 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Format variant string
     final List<String> variantDetails = [];
     if (item.selectedSize != null) {
@@ -38,9 +40,15 @@ class CartItemCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: isDark
+            ? CustomerAppColors.darkSurface
+            : CustomerAppColors.surface,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: CustomerAppColors.border),
+        border: Border.all(
+          color: isDark
+              ? CustomerAppColors.darkBorder
+              : CustomerAppColors.border,
+        ),
       ),
       child: Column(
         children: [
@@ -80,7 +88,9 @@ class CartItemCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.bold,
-                        color: CustomerAppColors.textPrimary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextPrimary
+                            : CustomerAppColors.textPrimary,
                       ),
                     ),
                     if (variantText.isNotEmpty) ...[
@@ -89,7 +99,9 @@ class CartItemCard extends StatelessWidget {
                         variantText,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: CustomerAppColors.textSecondary,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : CustomerAppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -108,7 +120,14 @@ class CartItemCard extends StatelessWidget {
                         // Quantity control
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[50],
+                            color: isDark
+                                ? const Color(0xFF2A2A2A)
+                                : Colors.grey[50],
+                            border: Border.all(
+                              color: isDark
+                                  ? CustomerAppColors.darkBorder
+                                  : CustomerAppColors.border,
+                            ),
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Row(
@@ -117,14 +136,18 @@ class CartItemCard extends StatelessWidget {
                                 onTap: onDecrement,
                                 child: Container(
                                   padding: EdgeInsets.all(6.w),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? const Color(0xFF1F1F1F)
+                                        : Colors.white,
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
                                     Icons.remove,
                                     size: 14.sp,
-                                    color: CustomerAppColors.textSecondary,
+                                    color: isDark
+                                        ? CustomerAppColors.darkTextSecondary
+                                        : CustomerAppColors.textSecondary,
                                   ),
                                 ),
                               ),
@@ -135,7 +158,9 @@ class CartItemCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: CustomerAppColors.textPrimary,
+                                    color: isDark
+                                        ? CustomerAppColors.darkTextPrimary
+                                        : CustomerAppColors.textPrimary,
                                   ),
                                 ),
                               ),
@@ -164,7 +189,13 @@ class CartItemCard extends StatelessWidget {
               ),
             ],
           ),
-          Divider(color: CustomerAppColors.border, height: 16.h, thickness: 1),
+          Divider(
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : CustomerAppColors.border,
+            height: 16.h,
+            thickness: 1,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

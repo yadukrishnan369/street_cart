@@ -22,6 +22,7 @@ class ProductSizeSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (sizes.isEmpty) return const SizedBox.shrink();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +35,9 @@ class ProductSizeSelection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
-                color: CustomerAppColors.textPrimary,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             Text(
@@ -66,15 +69,23 @@ class ProductSizeSelection extends StatelessWidget {
                   height: 48.h,
                   decoration: BoxDecoration(
                     color: isOutOfStock
-                        ? Colors.grey[100]
-                        : (isSelected ? Colors.transparent : Colors.white),
+                        ? (isDark ? Colors.grey[850] : Colors.grey[100])
+                        : (isSelected
+                              ? Colors.transparent
+                              : (isDark
+                                    ? const Color(0xFF2A2A2A)
+                                    : Colors.white)),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: isSelected
                           ? CustomerAppColors.primary
                           : (isOutOfStock
-                                ? Colors.grey[200]!
-                                : Colors.grey.withValues(alpha: 0.2)),
+                                ? (isDark
+                                      ? Colors.grey[700]!
+                                      : Colors.grey[200]!)
+                                : (isDark
+                                      ? const Color(0xFF444444)
+                                      : Colors.grey.withValues(alpha: 0.2))),
                       width: isSelected ? 2 : 1,
                     ),
                   ),
@@ -90,10 +101,12 @@ class ProductSizeSelection extends StatelessWidget {
                           fontSize: 13.sp,
                           fontWeight: FontWeight.bold,
                           color: isOutOfStock
-                              ? Colors.grey[400]
+                              ? (isDark ? Colors.grey[600] : Colors.grey[400])
                               : (isSelected
                                     ? CustomerAppColors.primary
-                                    : CustomerAppColors.textPrimary),
+                                    : (isDark
+                                          ? Colors.white
+                                          : CustomerAppColors.textPrimary)),
                           decoration: isOutOfStock
                               ? TextDecoration.lineThrough
                               : null,

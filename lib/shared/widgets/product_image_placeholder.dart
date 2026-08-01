@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 class ProductImagePlaceholder extends StatelessWidget {
   final double? width;
@@ -21,17 +22,24 @@ class ProductImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: width ?? double.infinity,
       height: height ?? double.infinity,
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.grey[200],
+        color:
+            backgroundColor ??
+            (isDark ? CustomerAppColors.darkInputBackground : Colors.grey[200]),
         borderRadius: borderRadius ?? BorderRadius.circular(12.r),
       ),
       child: Center(
         child: Icon(
           Icons.image_outlined,
-          color: iconColor ?? Colors.grey[400],
+          color:
+              iconColor ??
+              (isDark ? CustomerAppColors.darkTextSecondary : Colors.grey[400]),
           size: iconSize ?? 30.sp,
         ),
       ),

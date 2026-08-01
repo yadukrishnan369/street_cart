@@ -12,6 +12,8 @@ class CheckoutAddressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,7 +25,9 @@ class CheckoutAddressSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: CustomerAppColors.textPrimary,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             TextButton(
@@ -65,10 +69,14 @@ class CheckoutAddressSection extends StatelessWidget {
               return Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
-                  color: CustomerAppColors.surface,
+                  color: isDark
+                      ? CustomerAppColors.darkSurface
+                      : CustomerAppColors.surface,
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
-                    color: Colors.grey.withValues(alpha: 0.1),
+                    color: isDark
+                        ? CustomerAppColors.darkBorder
+                        : Colors.grey.withValues(alpha: 0.1),
                     width: 1,
                   ),
                 ),
@@ -76,8 +84,10 @@ class CheckoutAddressSection extends StatelessWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.all(12.w),
-                      decoration: const BoxDecoration(
-                        color: CustomerAppColors.primaryLight,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? CustomerAppColors.primary.withValues(alpha: 0.15)
+                            : CustomerAppColors.primaryLight,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -96,7 +106,9 @@ class CheckoutAddressSection extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 15.sp,
                               fontWeight: FontWeight.bold,
-                              color: CustomerAppColors.textPrimary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextPrimary
+                                  : CustomerAppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 4.h),
@@ -104,7 +116,9 @@ class CheckoutAddressSection extends StatelessWidget {
                             '${defaultAddress.addressLine1}${defaultAddress.addressLine2.isNotEmpty ? ", ${defaultAddress.addressLine2}" : ""}',
                             style: TextStyle(
                               fontSize: 13.sp,
-                              color: CustomerAppColors.textSecondary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : CustomerAppColors.textSecondary,
                             ),
                           ),
                           Text(
@@ -112,7 +126,9 @@ class CheckoutAddressSection extends StatelessWidget {
                             '${defaultAddress.state.isNotEmpty ? ", ${defaultAddress.state}" : ""} - ${defaultAddress.pincode}',
                             style: TextStyle(
                               fontSize: 13.sp,
-                              color: CustomerAppColors.textSecondary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : CustomerAppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -127,10 +143,14 @@ class CheckoutAddressSection extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: CustomerAppColors.surface,
+                color: isDark
+                    ? CustomerAppColors.darkSurface
+                    : CustomerAppColors.surface,
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(
-                  color: Colors.grey.withValues(alpha: 0.1),
+                  color: isDark
+                      ? CustomerAppColors.darkBorder
+                      : Colors.grey.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -138,7 +158,7 @@ class CheckoutAddressSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.location_off_outlined,
-                    color: Colors.grey,
+                    color: isDark ? Colors.grey[500] : Colors.grey,
                     size: 32.sp,
                   ),
                   SizedBox(height: 8.h),
@@ -146,7 +166,9 @@ class CheckoutAddressSection extends StatelessWidget {
                     'No delivery address found.',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: CustomerAppColors.textSecondary,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : CustomerAppColors.textSecondary,
                     ),
                   ),
                   SizedBox(height: 8.h),

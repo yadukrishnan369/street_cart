@@ -12,13 +12,16 @@ import 'package:street_cart/features/customer/settings/presentation/pages/delete
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 
-Widget _buildSectionHeader(String text) {
+Widget _buildSectionHeader(BuildContext context, String text) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
   return Padding(
     padding: EdgeInsets.only(left: 16.w, top: 24.h, bottom: 8.h),
     child: Text(
       text,
       style: CustomerAppTextStyles.body.copyWith(
-        color: CustomerAppColors.textSecondary,
+        color: isDark
+            ? CustomerAppColors.darkTextSecondary
+            : CustomerAppColors.textSecondary,
         fontSize: 12.sp,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
@@ -36,7 +39,7 @@ class PrivacySecuritySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('PRIVACY & SECURITY'),
+        _buildSectionHeader(context, 'PRIVACY & SECURITY'),
         SettingsActionTile(
           icon: Icons.lock_outline,
           iconColor: CustomerAppColors.primary,

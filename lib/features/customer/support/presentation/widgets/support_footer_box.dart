@@ -20,12 +20,18 @@ class SupportFooterBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F5FF),
+        color: isDark
+            ? CustomerAppColors.primary.withValues(alpha: 0.15)
+            : const Color(0xFFF3F5FF),
         borderRadius: BorderRadius.circular(24.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
       ),
       child: Column(
         children: [
@@ -34,7 +40,9 @@ class SupportFooterBox extends StatelessWidget {
             title,
             style: CustomerAppTextStyles.heading2.copyWith(
               fontSize: 18.sp,
-              color: Colors.black87,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -43,7 +51,9 @@ class SupportFooterBox extends StatelessWidget {
             subtitle,
             textAlign: TextAlign.center,
             style: CustomerAppTextStyles.body.copyWith(
-              color: Colors.grey.shade600,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey.shade600,
             ),
           ),
           SizedBox(height: 20.h),

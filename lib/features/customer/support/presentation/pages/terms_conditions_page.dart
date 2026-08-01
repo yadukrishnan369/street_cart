@@ -11,18 +11,31 @@ class TermsConditionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
-        elevation: 0,
+        backgroundColor: theme.cardColor,
+        elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Terms & Conditions',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: CustomerAppTextStyles.heading2.copyWith(
+            fontSize: 20.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),
@@ -39,14 +52,18 @@ class TermsConditionsPage extends StatelessWidget {
               'Street Cart Service Agreement',
               style: CustomerAppTextStyles.heading2.copyWith(
                 fontSize: 22.sp,
-                color: const Color(0xFF1E293B),
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 8.h),
             Text(
-              'Last updated: October 24, 2026',
+              'Information is regularly updated',
               style: CustomerAppTextStyles.body.copyWith(
-                color: Colors.grey.shade500,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey.shade500,
                 fontSize: 12.sp,
               ),
             ),
@@ -64,13 +81,13 @@ class TermsConditionsPage extends StatelessWidget {
               content:
                   'Street Cart acts as a bridge between local vendors and consumers. Delivery times provided are estimates and may vary based on traffic, weather, or shop preparation times.',
             ),
-            _TermsSubPoint(
+            const _TermsSubPoint(
               'Maximum delivery radius is currently 5km from the shop location.',
             ),
-            _TermsSubPoint(
+            const _TermsSubPoint(
               'Perishable goods must be accepted immediately upon arrival.',
             ),
-            _TermsSubPoint(
+            const _TermsSubPoint(
               'Street Cart is not liable for minor delays caused by vendor preparation.',
             ),
             SizedBox(height: 32.h),
@@ -102,7 +119,9 @@ class TermsConditionsPage extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 1.h,
-              color: Colors.grey.shade100,
+              color: isDark
+                  ? CustomerAppColors.darkBorder
+                  : Colors.grey.shade100,
             ),
             SizedBox(height: 24.h),
             Text(
@@ -110,7 +129,9 @@ class TermsConditionsPage extends StatelessWidget {
               textAlign: TextAlign.center,
               style: CustomerAppTextStyles.body.copyWith(
                 fontSize: 11.sp,
-                color: Colors.grey.shade400,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey.shade400,
                 height: 1.5,
               ),
             ),
@@ -126,11 +147,16 @@ class TermsConditionsPage extends StatelessWidget {
 class _TermsTopIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: 50.w,
       height: 50.w,
       decoration: BoxDecoration(
-        color: const Color(0xFFEEEFFF),
+        color: isDark
+            ? CustomerAppColors.primary.withValues(alpha: 0.2)
+            : const Color(0xFFEEEFFF),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Center(
@@ -147,6 +173,9 @@ class _TermsSubPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(top: 8.h, left: 16.w),
       child: Row(
@@ -157,8 +186,8 @@ class _TermsSubPoint extends StatelessWidget {
             margin: EdgeInsets.only(top: 8.h),
             width: 4.w,
             height: 4.w,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
+            decoration: BoxDecoration(
+              color: isDark ? CustomerAppColors.darkTextSecondary : Colors.grey,
               shape: BoxShape.circle,
             ),
           ),
@@ -168,7 +197,9 @@ class _TermsSubPoint extends StatelessWidget {
               text,
               style: const TextStyle().copyWith(
                 fontSize: 13,
-                color: Colors.grey,
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey,
                 height: 1.4,
               ),
             ),

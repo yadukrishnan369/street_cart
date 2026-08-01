@@ -17,6 +17,9 @@ class ReturnReasonSelectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       children: reasons
           .map(
@@ -26,11 +29,16 @@ class ReturnReasonSelectionList extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 10.h),
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(20.r),
+                  border: isDark
+                      ? Border.all(color: CustomerAppColors.darkBorder)
+                      : null,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.02),
+                      color: Colors.black.withValues(
+                        alpha: isDark ? 0.2 : 0.02,
+                      ),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
@@ -46,6 +54,8 @@ class ReturnReasonSelectionList extends StatelessWidget {
                         border: Border.all(
                           color: selectedReason == reason
                               ? CustomerAppColors.primary
+                              : isDark
+                              ? CustomerAppColors.darkBorder
                               : Colors.grey[300]!,
                           width: 2,
                         ),
@@ -70,7 +80,9 @@ class ReturnReasonSelectionList extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1E293B),
+                        color: isDark
+                            ? CustomerAppColors.darkTextPrimary
+                            : CustomerAppColors.textPrimary,
                       ),
                     ),
                   ],

@@ -17,18 +17,31 @@ class ContactSupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CustomerAppColors.background,
-        elevation: 0,
+        backgroundColor: theme.cardColor,
+        elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Contact Support',
-          style: CustomerAppTextStyles.heading2.copyWith(fontSize: 20.sp),
+          style: CustomerAppTextStyles.heading2.copyWith(
+            fontSize: 20.sp,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),
@@ -43,7 +56,12 @@ class ContactSupportPage extends StatelessWidget {
               // Help header
               Text(
                 'How can we help?',
-                style: CustomerAppTextStyles.heading2.copyWith(fontSize: 24.sp),
+                style: CustomerAppTextStyles.heading2.copyWith(
+                  fontSize: 24.sp,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
+                ),
               ),
               SizedBox(height: 12.h),
               // Description Content
@@ -51,7 +69,9 @@ class ContactSupportPage extends StatelessWidget {
                 'Our support team is here to assist you with any questions about your orders or our services. You can reach us via phone during business hours or send us an email anytime.',
                 textAlign: TextAlign.center,
                 style: CustomerAppTextStyles.body.copyWith(
-                  color: Colors.grey.shade600,
+                  color: isDark
+                      ? CustomerAppColors.darkTextSecondary
+                      : Colors.grey.shade600,
                   height: 1.5,
                 ),
               ),
@@ -80,7 +100,9 @@ class ContactSupportPage extends StatelessWidget {
                   Text(
                     'Looking for quick answers? ',
                     style: CustomerAppTextStyles.body.copyWith(
-                      color: Colors.grey.shade600,
+                      color: isDark
+                          ? CustomerAppColors.darkTextSecondary
+                          : Colors.grey.shade600,
                     ),
                   ),
                   GestureDetector(

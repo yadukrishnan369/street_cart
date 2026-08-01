@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
@@ -25,12 +24,11 @@ class ProductDetailAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: CustomerAppColors.surface,
       elevation: 0.5,
       leading: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back,
-          color: CustomerAppColors.textPrimary,
+          color: Theme.of(context).appBarTheme.foregroundColor,
         ),
         onPressed: () {
           if (Navigator.canPop(context)) {
@@ -50,11 +48,7 @@ class ProductDetailAppBar extends StatelessWidget
       // Page Header
       title: Text(
         'Product Details',
-        style: TextStyle(
-          color: CustomerAppColors.textPrimary,
-          fontSize: 18.sp,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
       ),
       // WishList Button
       actions: [

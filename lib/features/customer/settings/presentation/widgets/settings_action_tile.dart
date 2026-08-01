@@ -26,18 +26,23 @@ class SettingsActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? CustomerAppColors.darkSurface : Colors.white,
           border: Border(
             bottom: BorderSide(
-              color: CustomerAppColors.border.withOpacity(0.5),
+              color: isDark
+                  ? CustomerAppColors.darkBorder
+                  : CustomerAppColors.border.withValues(alpha: 0.5),
               width: 1,
             ),
           ),
+          borderRadius: BorderRadius.all(Radius.circular(8.r)),
         ),
         child: Row(
           children: [
@@ -57,7 +62,11 @@ class SettingsActionTile extends StatelessWidget {
                 title,
                 style: CustomerAppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: titleColor ?? Colors.black87,
+                  color:
+                      titleColor ??
+                      (isDark
+                          ? CustomerAppColors.darkTextPrimary
+                          : Colors.black87),
                 ),
               ),
             ),
@@ -65,7 +74,7 @@ class SettingsActionTile extends StatelessWidget {
             if (showArrow)
               Icon(
                 Icons.chevron_right,
-                color: Colors.grey.shade400,
+                color: isDark ? Colors.grey[600] : Colors.grey.shade400,
                 size: 24.h,
               ),
           ],

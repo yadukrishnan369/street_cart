@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
+// Customer Orders Shimmer
 class CustomerOrdersShimmer extends StatelessWidget {
   const CustomerOrdersShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final baseColor = Colors.grey[300]!;
-    final highlightColor = Colors.grey[100]!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
 
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
@@ -36,11 +41,14 @@ class CustomerOrdersShimmer extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 16.h),
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(16.r),
+                border: isDark
+                    ? Border.all(color: CustomerAppColors.darkBorder)
+                    : null,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -124,11 +132,16 @@ class CustomerOrdersShimmer extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 12.h),
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(16.r),
+                  border: isDark
+                      ? Border.all(color: CustomerAppColors.darkBorder)
+                      : null,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(
+                        alpha: isDark ? 0.2 : 0.02,
+                      ),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

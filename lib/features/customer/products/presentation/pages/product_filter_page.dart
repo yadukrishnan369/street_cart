@@ -105,22 +105,17 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.close, color: Colors.black87),
+            icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
             onPressed: () => Navigator.pop(context),
           ),
           centerTitle: true,
           title: Text(
             'Filters',
-            style: TextStyle(
-              color: Colors.black87,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
           actions: [
             // Reset Button
@@ -188,8 +183,10 @@ class _ProductFilterPageBodyState extends State<_ProductFilterPageBody> {
                     vertical: 16.h,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(top: BorderSide(color: Colors.grey[100]!)),
+                    color: Theme.of(context).cardColor,
+                    border: Border(
+                      top: BorderSide(color: Theme.of(context).dividerColor),
+                    ),
                   ),
                   child: SizedBox(
                     width: double.infinity,

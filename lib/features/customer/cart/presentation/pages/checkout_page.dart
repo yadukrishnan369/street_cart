@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_bloc.dart';
@@ -41,14 +40,13 @@ class CheckoutPage extends StatelessWidget {
         BlocProvider(create: (context) => sl<PaymentBloc>()),
       ],
       child: Scaffold(
-        backgroundColor: CustomerAppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: CustomerAppColors.surface,
           elevation: 0.5,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
-              color: CustomerAppColors.textPrimary,
+              color: Theme.of(context).appBarTheme.foregroundColor,
             ),
             onPressed: () => Navigator.pop(context),
           ),
@@ -56,11 +54,7 @@ class CheckoutPage extends StatelessWidget {
           // Page Header
           title: Text(
             'Checkout',
-            style: TextStyle(
-              color: CustomerAppColors.textPrimary,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
         ),
         body: BlocConsumer<PaymentBloc, PaymentState>(

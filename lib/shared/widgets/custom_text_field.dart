@@ -45,21 +45,37 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Default fallback values if not provided
     final effectiveLabelStyle =
         labelStyle ??
         TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.w600,
-          color: Colors.black,
+          color: isDark ? const Color(0xFFF3F4F6) : Colors.black,
         );
     final effectiveTextStyle =
-        textStyle ?? TextStyle(fontSize: 14.sp, color: Colors.black);
+        textStyle ??
+        TextStyle(
+          fontSize: 14.sp,
+          color: isDark ? const Color(0xFFF3F4F6) : Colors.black,
+        );
     final effectiveHintStyle =
-        hintStyle ?? TextStyle(fontSize: 14.sp, color: Colors.grey);
-    final effectiveFillColor = fillColor ?? const Color(0xFFF5F5F5);
-    final effectiveBorderColor = borderColor ?? const Color(0xFFE0E0E0);
-    final effectiveFocusedBorderColor = focusedBorderColor ?? Colors.blue;
+        hintStyle ??
+        TextStyle(
+          fontSize: 14.sp,
+          color: isDark ? const Color(0xFF9CA3AF) : Colors.grey,
+        );
+    final effectiveFillColor =
+        fillColor ??
+        (isDark ? const Color(0xFF242424) : const Color(0xFFF5F5F5));
+    final effectiveBorderColor =
+        borderColor ??
+        (isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0));
+    final effectiveFocusedBorderColor =
+        focusedBorderColor ?? theme.primaryColor;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

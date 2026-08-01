@@ -28,6 +28,11 @@ class EditProfileForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final inputBg = isDark
+        ? CustomerAppColors.darkSurface
+        : CustomerAppColors.surface;
+
     return Form(
       key: formKey,
       child: Column(
@@ -39,7 +44,7 @@ class EditProfileForm extends StatelessWidget {
             hintText: 'Enter your full name',
             controller: nameController,
             validator: Validators.validateName,
-            fillColor: CustomerAppColors.surface,
+            fillColor: inputBg,
             focusedBorderColor: CustomerAppColors.primary,
             prefixIcon: const Icon(
               Icons.person_outline,
@@ -53,7 +58,7 @@ class EditProfileForm extends StatelessWidget {
             hintText: 'Enter your email address',
             controller: emailController,
             validator: Validators.validateEmail,
-            fillColor: CustomerAppColors.surface,
+            fillColor: inputBg,
             focusedBorderColor: CustomerAppColors.primary,
             keyboardType: TextInputType.emailAddress,
             prefixIcon: const Icon(
@@ -68,7 +73,7 @@ class EditProfileForm extends StatelessWidget {
             hintText: 'Enter your phone number',
             controller: phoneController,
             validator: Validators.validatePhone,
-            fillColor: CustomerAppColors.surface,
+            fillColor: inputBg,
             focusedBorderColor: CustomerAppColors.primary,
             keyboardType: TextInputType.phone,
             prefixIcon: const Icon(
@@ -82,7 +87,7 @@ class EditProfileForm extends StatelessWidget {
             text: 'Save Changes',
             onPressed: onSave,
             isLoading: isLoading || isImageUploading,
-            suffixIcon: Icon(
+            prefixIcon: Icon(
               Icons.check_circle_outline,
               color: Colors.white,
               size: 20.sp,

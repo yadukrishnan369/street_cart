@@ -24,6 +24,8 @@ class DeleteAccountForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Form(
       key: formKey,
       child: Column(
@@ -32,9 +34,12 @@ class DeleteAccountForm extends StatelessWidget {
           // Header
           Text(
             'Verify Identity',
-            style: CustomerAppTextStyles.heading2.copyWith(
+            style: TextStyle(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -44,7 +49,9 @@ class DeleteAccountForm extends StatelessWidget {
                 ? 'For security, you must enter your current password to confirm account deletion. This process cannot be undone.'
                 : 'Your account is linked with Google. You do not need to enter a password to delete your account, but this action is permanent.',
             style: CustomerAppTextStyles.body.copyWith(
-              color: CustomerAppColors.textSecondary,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
               height: 1.4,
             ),
           ),
@@ -59,9 +66,16 @@ class DeleteAccountForm extends StatelessWidget {
               isPassword: obscurePassword,
               labelStyle: CustomerAppTextStyles.body.copyWith(
                 fontWeight: FontWeight.bold,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
-              textStyle: CustomerAppTextStyles.body,
-              fillColor: Colors.white,
+              textStyle: CustomerAppTextStyles.body.copyWith(
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
+              ),
+              fillColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
               borderColor: CustomerAppColors.border,
               focusedBorderColor: Colors.red,
               suffixIcon: IconButton(
@@ -82,9 +96,14 @@ class DeleteAccountForm extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFEBEE),
+              color: isDark ? const Color(0xFF2D1515) : const Color(0xFFFFEBEE),
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: const Color(0xFFFFCDD2), width: 0.8),
+              border: Border.all(
+                color: isDark
+                    ? const Color(0xFF5C2020)
+                    : const Color(0xFFFFCDD2),
+                width: 0.8,
+              ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +114,9 @@ class DeleteAccountForm extends StatelessWidget {
                   child: Text(
                     'Confirming deletion will immediately remove your profile details, past order records, and saved addresses from the platform.',
                     style: CustomerAppTextStyles.body.copyWith(
-                      color: const Color(0xFFC62828),
+                      color: isDark
+                          ? const Color(0xFFEF9A9A)
+                          : const Color(0xFFC62828),
                       height: 1.4,
                       fontWeight: FontWeight.bold,
                       fontSize: 12.sp,

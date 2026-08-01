@@ -30,6 +30,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (_) => sl<OnboardingBloc>(),
       child: BlocListener<OnboardingBloc, OnboardingState>(
@@ -46,7 +49,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             final currentPage = state.currentPage;
 
             return Scaffold(
-              backgroundColor: CustomerAppColors.background,
+              backgroundColor: theme.scaffoldBackgroundColor,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -93,7 +96,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(24.r),
                                     border: Border.all(
-                                      color: CustomerAppColors.surface,
+                                      color: isDark
+                                          ? CustomerAppColors.darkBorder
+                                          : CustomerAppColors.surface,
                                       width: 4,
                                     ),
                                   ),
@@ -108,13 +113,24 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 40.verticalSpace,
                                 Text(
                                   item['title']!,
-                                  style: CustomerAppTextStyles.heading2,
+                                  style: CustomerAppTextStyles.heading2
+                                      .copyWith(
+                                        color: isDark
+                                            ? CustomerAppColors.darkTextPrimary
+                                            : CustomerAppColors.textPrimary,
+                                      ),
                                   textAlign: TextAlign.center,
                                 ),
                                 16.verticalSpace,
                                 Text(
                                   item['text']!,
-                                  style: CustomerAppTextStyles.subtitle,
+                                  style: CustomerAppTextStyles.subtitle
+                                      .copyWith(
+                                        color: isDark
+                                            ? CustomerAppColors
+                                                  .darkTextSecondary
+                                            : CustomerAppColors.textSecondary,
+                                      ),
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -135,6 +151,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           decoration: BoxDecoration(
                             color: currentPage == index
                                 ? CustomerAppColors.primary
+                                : isDark
+                                ? CustomerAppColors.primary.withValues(
+                                    alpha: 0.25,
+                                  )
                                 : CustomerAppColors.primaryLight,
                             borderRadius: BorderRadius.circular(4.r),
                           ),
@@ -175,7 +195,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           Text(
                             "Step ${currentPage + 1} of 3",
                             style: CustomerAppTextStyles.body.copyWith(
-                              color: CustomerAppColors.textSecondary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : CustomerAppColors.textSecondary,
                             ),
                           ),
                         ],

@@ -15,15 +15,18 @@ class ShopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double shopRating = shop.rating;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12.w).copyWith(bottom: 16.h),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16.r),
+        border: isDark ? Border.all(color: CustomerAppColors.darkBorder) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.07),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.07),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -76,7 +79,9 @@ class ShopCard extends StatelessWidget {
                           vertical: 5.h,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark
+                              ? CustomerAppColors.darkSurface
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(20.r),
                           boxShadow: [
                             BoxShadow(
@@ -102,7 +107,9 @@ class ShopCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w700,
-                                color: CustomerAppColors.textPrimary,
+                                color: isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary,
                               ),
                             ),
                           ],
@@ -129,7 +136,9 @@ class ShopCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
-                              color: CustomerAppColors.textPrimary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextPrimary
+                                  : CustomerAppColors.textPrimary,
                               letterSpacing: -0.2,
                             ),
                             maxLines: 1,
@@ -144,7 +153,11 @@ class ShopCard extends StatelessWidget {
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: CustomerAppColors.primaryLight,
+                            color: isDark
+                                ? CustomerAppColors.primary.withValues(
+                                    alpha: 0.15,
+                                  )
+                                : CustomerAppColors.primaryLight,
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
@@ -167,7 +180,9 @@ class ShopCard extends StatelessWidget {
                           : 'Quality products and artisanal goods crafted for the modern individual.',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: CustomerAppColors.textSecondary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : CustomerAppColors.textSecondary,
                         height: 1.5,
                       ),
                       maxLines: 2,
@@ -181,7 +196,9 @@ class ShopCard extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                           size: 13.sp,
-                          color: CustomerAppColors.textSecondary,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : CustomerAppColors.textSecondary,
                         ),
                         SizedBox(width: 3.w),
                         Expanded(
@@ -191,7 +208,9 @@ class ShopCard extends StatelessWidget {
                                 : shop.fullAddress,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: CustomerAppColors.textSecondary,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextSecondary
+                                  : CustomerAppColors.textSecondary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

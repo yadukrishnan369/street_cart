@@ -8,6 +8,8 @@ class WishlistEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -24,14 +26,19 @@ class WishlistEmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: CustomerAppColors.textSecondary,
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : CustomerAppColors.textSecondary,
             ),
           ),
           SizedBox(height: 8.h),
           // Subtitle
           Text(
             'Explore products to add them to your wishlist.',
-            style: TextStyle(fontSize: 13.sp, color: Colors.grey[500]),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark ? Colors.grey[500] : Colors.grey[500],
+            ),
           ),
           SizedBox(height: 24.h),
           // Button for navigate to Products Page

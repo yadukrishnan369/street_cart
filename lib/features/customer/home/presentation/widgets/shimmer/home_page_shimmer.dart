@@ -5,11 +5,15 @@ import 'banner_shimmer.dart';
 import 'category_shimmer.dart';
 import 'shop_list_shimmer.dart';
 
+// Home Page Shimmer
 class HomePageShimmer extends StatelessWidget {
   const HomePageShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
@@ -37,7 +41,7 @@ class HomePageShimmer extends StatelessWidget {
                   width: 150.w,
                   height: 18.h,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: baseColor,
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                 ),
@@ -45,7 +49,7 @@ class HomePageShimmer extends StatelessWidget {
                   width: 100.w,
                   height: 14.h,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: baseColor,
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                 ),

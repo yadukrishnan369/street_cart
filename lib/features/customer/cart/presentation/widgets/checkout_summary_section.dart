@@ -20,12 +20,21 @@ class CheckoutSummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: isDark
+            ? CustomerAppColors.darkSurface
+            : CustomerAppColors.surface,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+        border: Border.all(
+          color: isDark
+              ? CustomerAppColors.darkBorder
+              : Colors.grey.withValues(alpha: 0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.01),
@@ -42,7 +51,9 @@ class CheckoutSummarySection extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: CustomerAppColors.textPrimary,
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 12.h),
@@ -61,7 +72,9 @@ class CheckoutSummarySection extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: CustomerAppColors.textSecondary,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : CustomerAppColors.textSecondary,
                         ),
                       ),
                     ),
@@ -71,7 +84,9 @@ class CheckoutSummarySection extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w500,
-                        color: CustomerAppColors.textSecondary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : CustomerAppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -79,15 +94,23 @@ class CheckoutSummarySection extends StatelessWidget {
               );
             }).toList(),
           ),
-          const Divider(color: CustomerAppColors.border),
+          Divider(
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : CustomerAppColors.border,
+          ),
           SizedBox(height: 12.h),
           // Product Section
-          _buildRow('Product Types', '$productTypesCount'),
+          _buildRow(context, 'Product Types', '$productTypesCount'),
           SizedBox(height: 8.h),
           // Total Quantity Section
-          _buildRow('Total Quantity', '$totalProductsCount'),
+          _buildRow(context, 'Total Quantity', '$totalProductsCount'),
           SizedBox(height: 12.h),
-          const Divider(color: CustomerAppColors.border),
+          Divider(
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : CustomerAppColors.border,
+          ),
           SizedBox(height: 12.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,7 +120,9 @@ class CheckoutSummarySection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: CustomerAppColors.textPrimary,
+                  color: isDark
+                      ? CustomerAppColors.darkTextPrimary
+                      : CustomerAppColors.textPrimary,
                 ),
               ),
               Text(
@@ -115,7 +140,8 @@ class CheckoutSummarySection extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(String label, String value) {
+  Widget _buildRow(BuildContext context, String label, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -123,7 +149,9 @@ class CheckoutSummarySection extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: CustomerAppColors.textSecondary,
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : CustomerAppColors.textSecondary,
           ),
         ),
         Text(
@@ -131,7 +159,9 @@ class CheckoutSummarySection extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: CustomerAppColors.textPrimary,
+            color: isDark
+                ? CustomerAppColors.darkTextPrimary
+                : CustomerAppColors.textPrimary,
           ),
         ),
       ],

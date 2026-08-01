@@ -18,8 +18,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: CustomerAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       title: isLoading
@@ -54,7 +57,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       Text(
                         'Delivering to',
-                        style: TextStyle(fontSize: 10.sp, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: isDark
+                              ? CustomerAppColors.darkTextSecondary
+                              : CustomerAppColors.textSecondary,
+                        ),
                       ),
                       Text(
                         hasLocation
@@ -65,7 +73,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                           color: hasLocation
-                              ? Colors.black87
+                              ? (isDark
+                                    ? CustomerAppColors.darkTextPrimary
+                                    : CustomerAppColors.textPrimary)
                               : CustomerAppColors.primary,
                           decoration: hasLocation
                               ? TextDecoration.none
@@ -79,7 +89,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.notifications_none, color: Colors.black87),
+          icon: Icon(
+            Icons.notifications_none,
+            color: isDark
+                ? CustomerAppColors.primary
+                : CustomerAppColors.textPrimary,
+          ),
           onPressed: () {
             // notification
           },

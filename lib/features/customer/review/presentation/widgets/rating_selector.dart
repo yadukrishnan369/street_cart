@@ -16,13 +16,17 @@ class RatingSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         // Title
         Text(
           'HOW WOULD YOU RATE IT?',
           style: TextStyle(
-            color: const Color(0xFF64748B),
+            color: isDark
+                ? CustomerAppColors.darkTextSecondary
+                : const Color(0xFF64748B),
             fontSize: 12.sp,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
@@ -43,7 +47,7 @@ class RatingSelector extends StatelessWidget {
                   isFilled ? Icons.star_rounded : Icons.star_outline_rounded,
                   color: isFilled
                       ? CustomerAppColors.primary
-                      : const Color(0xFFCBD5E1),
+                      : (isDark ? Colors.grey[700] : const Color(0xFFCBD5E1)),
                   size: 44.sp,
                 ),
               ),
@@ -56,7 +60,9 @@ class RatingSelector extends StatelessWidget {
           Text(
             ReviewHelper.getRatingText(rating),
             style: TextStyle(
-              color: const Color(0xFF64748B),
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : const Color(0xFF64748B),
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),

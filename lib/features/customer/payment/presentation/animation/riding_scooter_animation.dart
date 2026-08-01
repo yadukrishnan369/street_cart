@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/payment/presentation/animation/animated_delivery_boy.dart';
 
+// Riding Scooter Animation
 class RidingScooterAnimation extends StatefulWidget {
   const RidingScooterAnimation({super.key});
 
@@ -37,13 +39,21 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       height: 180.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F4F8),
+        color: isDark ? CustomerAppColors.darkSurface : const Color(0xFFF0F4F8),
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+        border: Border.all(
+          color: isDark
+              ? CustomerAppColors.darkBorder
+              : Colors.grey.withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24.r),
@@ -57,14 +67,22 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
                 Positioned(
                   top: 20.h,
                   left: (350.w - (t * 450.w)) % 450.w - 80.w,
-                  child: Icon(Icons.cloud, color: Colors.white, size: 48.sp),
+                  child: Icon(
+                    Icons.cloud,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.15)
+                        : Colors.white,
+                    size: 48.sp,
+                  ),
                 ),
                 Positioned(
                   top: 45.h,
                   left: (150.w - (t * 450.w)) % 450.w - 80.w,
                   child: Icon(
                     Icons.cloud,
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.1)
+                        : Colors.white.withValues(alpha: 0.7),
                     size: 32.sp,
                   ),
                 ),
@@ -74,7 +92,7 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
                   left: (300.w - (t * 600.w)) % 600.w - 50.w,
                   child: Icon(
                     Icons.park,
-                    color: Colors.green[200],
+                    color: isDark ? const Color(0xFF1E3A2B) : Colors.green[200],
                     size: 36.sp,
                   ),
                 ),
@@ -83,7 +101,7 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
                   left: (550.w - (t * 600.w)) % 600.w - 50.w,
                   child: Icon(
                     Icons.park,
-                    color: Colors.green[100],
+                    color: isDark ? const Color(0xFF14291E) : Colors.green[100],
                     size: 42.sp,
                   ),
                 ),
@@ -94,7 +112,9 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
                   right: 0,
                   child: Container(
                     height: 35.h,
-                    color: const Color(0xFFE2E8F0),
+                    color: isDark
+                        ? const Color(0xFF2D3748)
+                        : const Color(0xFFE2E8F0),
                   ),
                 ),
                 // Sliding road dashed lines
@@ -107,7 +127,7 @@ class _RidingScooterAnimationState extends State<RidingScooterAnimation>
                         margin: EdgeInsets.only(right: 60.w),
                         width: 30.w,
                         height: 4.h,
-                        color: Colors.white,
+                        color: isDark ? Colors.grey[500] : Colors.white,
                       );
                     }),
                   ),

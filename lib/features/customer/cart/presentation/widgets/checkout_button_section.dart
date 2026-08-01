@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_state.dart';
 import 'package:street_cart/features/customer/cart/presentation/utils/checkout_helper.dart';
@@ -30,9 +29,9 @@ class CheckoutButtonSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: CustomerAppColors.surface,
+        color: Theme.of(context).cardColor,
         border: Border(
-          top: BorderSide(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+          top: BorderSide(color: Theme.of(context).dividerColor, width: 1),
         ),
       ),
       child: SafeArea(

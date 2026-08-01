@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:street_cart/core/theme/customer/Customer_app_colors.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 
 class SocialButton extends StatelessWidget {
@@ -12,15 +12,25 @@ class SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return SizedBox(
       width: double.infinity,
       height: 56.h,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
+          backgroundColor: isDark
+              ? CustomerAppColors.darkSurface
+              : Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
-          side: const BorderSide(color: CustomerAppColors.border),
+          side: BorderSide(
+            color: isDark
+                ? CustomerAppColors.darkBorder
+                : CustomerAppColors.border,
+          ),
         ),
         onPressed: onPressed,
         child: Row(
@@ -37,6 +47,9 @@ class SocialButton extends StatelessWidget {
               text,
               style: CustomerAppTextStyles.body.copyWith(
                 fontWeight: FontWeight.w600,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.textPrimary,
               ),
             ),
           ],

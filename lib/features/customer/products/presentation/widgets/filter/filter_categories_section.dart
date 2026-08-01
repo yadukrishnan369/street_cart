@@ -24,6 +24,7 @@ class FilterCategoriesSection extends StatelessWidget {
       state,
       displayCats,
     );
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Limit List to 7 items
     final catsToRender =
@@ -36,11 +37,7 @@ class FilterCategoriesSection extends StatelessWidget {
       children: [
         Text(
           'Categories',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10.h),
         // Category Search Field
@@ -60,7 +57,9 @@ class FilterCategoriesSection extends StatelessWidget {
         Container(
           constraints: BoxConstraints(maxHeight: 180.h),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? const Color(0xFF2D2D2D) : Colors.grey[200]!,
+            ),
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: ListView.builder(
@@ -76,7 +75,9 @@ class FilterCategoriesSection extends StatelessWidget {
                   cat,
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: isSelected ? Colors.black87 : Colors.grey[700],
+                    color: isSelected
+                        ? (isDark ? Colors.white : Colors.black87)
+                        : (isDark ? Colors.grey[400] : Colors.grey[700]),
                   ),
                 ),
                 trailing: GestureDetector(

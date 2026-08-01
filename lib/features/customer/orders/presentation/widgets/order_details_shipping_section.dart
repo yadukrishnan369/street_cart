@@ -19,6 +19,8 @@ class OrderDetailsShippingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final status = order.status.toLowerCase();
     // Address not changable if shipped, delivered, or cancelled
     final isLocked =
@@ -36,7 +38,9 @@ class OrderDetailsShippingSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w900,
-                color: Colors.grey[600],
+                color: isDark
+                    ? CustomerAppColors.darkTextSecondary
+                    : Colors.grey[600],
                 letterSpacing: 0.8,
               ),
             ),
@@ -81,7 +85,11 @@ class OrderDetailsShippingSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: isLocked ? Colors.grey[400] : const Color(0xFF5E5CE6),
+                  color: isLocked
+                      ? (isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : Colors.grey[400])
+                      : const Color(0xFF5E5CE6),
                 ),
               ),
             ),
@@ -94,7 +102,9 @@ class OrderDetailsShippingSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w500,
-              color: Colors.grey[500],
+              color: isDark
+                  ? CustomerAppColors.darkTextSecondary
+                  : Colors.grey[500],
             ),
           ),
         ],
@@ -103,11 +113,14 @@ class OrderDetailsShippingSection extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(16.r),
+            border: isDark
+                ? Border.all(color: CustomerAppColors.darkBorder)
+                : null,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -130,7 +143,9 @@ class OrderDetailsShippingSection extends StatelessWidget {
                     Text(
                       order.deliveryAddress.fullName,
                       style: TextStyle(
-                        color: CustomerAppColors.textPrimary,
+                        color: isDark
+                            ? CustomerAppColors.darkTextPrimary
+                            : CustomerAppColors.textPrimary,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -143,7 +158,9 @@ class OrderDetailsShippingSection extends StatelessWidget {
                       '${order.deliveryAddress.state.isNotEmpty ? ", ${order.deliveryAddress.state}" : ""}'
                       ' - ${order.deliveryAddress.pincode}',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : Colors.grey[600],
                         fontSize: 13.sp,
                         height: 1.4,
                       ),
@@ -153,7 +170,9 @@ class OrderDetailsShippingSection extends StatelessWidget {
                     Text(
                       'Phone: ${order.deliveryAddress.phone}',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: isDark
+                            ? CustomerAppColors.darkTextSecondary
+                            : Colors.grey[600],
                         fontSize: 13.sp,
                       ),
                     ),
