@@ -7,11 +7,13 @@ import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 class AdminProfileMetrics extends StatelessWidget {
   final int approvedShopsCount;
   final int ordersTrackedCount;
+  final int reviewsCount;
 
   const AdminProfileMetrics({
     super.key,
     required this.approvedShopsCount,
     required this.ordersTrackedCount,
+    required this.reviewsCount,
   });
 
   @override
@@ -63,10 +65,10 @@ class AdminProfileMetrics extends StatelessWidget {
               Expanded(
                 child: _buildMetricTile(
                   icon: Icons.rate_review_outlined,
-                  value: '450',
+                  value: reviewsCount.toString(),
                   label: 'Reviews',
                   iconBgColor: const Color.fromARGB(255, 219, 203, 176),
-                  iconColor: Colors.orange,
+                  iconColor: AdminAppColors.warningColor,
                 ),
               ),
               SizedBox(width: 16.w),
@@ -77,7 +79,7 @@ class AdminProfileMetrics extends StatelessWidget {
                   value: ordersTrackedCount.toString(),
                   label: 'Order Tracked',
                   iconBgColor: const Color.fromARGB(255, 190, 219, 218),
-                  iconColor: Colors.teal,
+                  iconColor: AdminAppColors.successColor,
                 ),
               ),
             ],

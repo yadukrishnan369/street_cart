@@ -98,7 +98,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         SizedBox(height: 24.h),
                         // Footer Content
                         Text(
-                          '© ${_appInfoService.currentYear} Hyperlocal Marketplace. All systems operational.',
+                          '© ${_appInfoService.currentYear} ${_appInfoService.appName} Marketplace. All systems operational.',
                           textAlign: TextAlign.center,
                           style: AdminAppTextStyles.caption.copyWith(
                             color: AdminAppColors.textSecondary,

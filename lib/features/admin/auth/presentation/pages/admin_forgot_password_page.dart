@@ -106,7 +106,7 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                         SizedBox(height: 40.h),
                         // Footer Content
                         Text(
-                          'STREETCART MARKETPLACE',
+                          '${_appInfoService.appName.toUpperCase()} MARKETPLACE',
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
@@ -116,7 +116,7 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          '© ${_appInfoService.currentYear} Streetcart Marketplace. All systems operational.',
+                          '© ${_appInfoService.currentYear} ${_appInfoService.appName} Marketplace. All systems operational.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 11.sp,

@@ -68,6 +68,7 @@ class AdminProfilePage extends StatelessWidget {
                       AdminProfileMetrics(
                         approvedShopsCount: profile.approvedShopsCount,
                         ordersTrackedCount: profile.ordersTrackedCount,
+                        reviewsCount: profile.reviewsCount,
                       ),
                     ];
 

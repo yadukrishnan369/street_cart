@@ -7,6 +7,7 @@ class AdminProfileModel {
   final DateTime? lastLogout;
   final int approvedShopsCount;
   final int ordersTrackedCount;
+  final int reviewsCount;
 
   AdminProfileModel({
     required this.uid,
@@ -17,6 +18,7 @@ class AdminProfileModel {
     this.lastLogout,
     required this.approvedShopsCount,
     required this.ordersTrackedCount,
+    required this.reviewsCount,
   });
 
   AdminProfileModel copyWith({
@@ -28,6 +30,7 @@ class AdminProfileModel {
     DateTime? lastLogout,
     int? approvedShopsCount,
     int? ordersTrackedCount,
+    int? reviewsCount,
   }) {
     return AdminProfileModel(
       uid: uid ?? this.uid,
@@ -38,6 +41,7 @@ class AdminProfileModel {
       lastLogout: lastLogout ?? this.lastLogout,
       approvedShopsCount: approvedShopsCount ?? this.approvedShopsCount,
       ordersTrackedCount: ordersTrackedCount ?? this.ordersTrackedCount,
+      reviewsCount: reviewsCount ?? this.reviewsCount,
     );
   }
 }

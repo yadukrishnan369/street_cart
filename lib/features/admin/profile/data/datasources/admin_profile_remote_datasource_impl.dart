@@ -104,6 +104,10 @@ class AdminProfileRemoteDataSourceImpl
     final ordersSnap = await _firestore.collection('orders').get();
     final ordersCount = ordersSnap.docs.length;
 
+    // Count all reviews
+    final reviewsSnap = await _firestore.collection('reviews').get();
+    final reviewsCount = reviewsSnap.docs.length;
+
     return AdminProfileModel(
       uid: uid,
       fullName: fullName,
@@ -113,6 +117,7 @@ class AdminProfileRemoteDataSourceImpl
       lastLogout: lastLogout,
       approvedShopsCount: approvedCount,
       ordersTrackedCount: ordersCount,
+      reviewsCount: reviewsCount,
     );
   }
 

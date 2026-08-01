@@ -20,7 +20,23 @@ class AppInfoService implements IAppInfoService {
   }
 
   @override
-  String get appName => _packageInfo?.appName ?? 'Street Cart';
+  String get appName {
+    final name = _packageInfo?.appName;
+    if (name == null || name.isEmpty || name == 'street_cart') {
+      return 'Street Cart';
+    }
+    if (name.contains('_')) {
+      return name
+          .split('_')
+          .map(
+            (word) => word.isNotEmpty
+                ? '${word[0].toUpperCase()}${word.substring(1)}'
+                : '',
+          )
+          .join(' ');
+    }
+    return name;
+  }
 
   @override
   String get packageName => _packageInfo?.packageName ?? '';
