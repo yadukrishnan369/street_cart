@@ -17,6 +17,8 @@ class RadiusSliderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         Row(
@@ -30,7 +32,9 @@ class RadiusSliderSection extends StatelessWidget {
                   'Delivery Radius',
                   style: ShopAppTextStyles.bodyMediumBold.copyWith(
                     fontSize: 16.sp,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -38,7 +42,9 @@ class RadiusSliderSection extends StatelessWidget {
                 Text(
                   'Set the maximum distance for orders',
                   style: ShopAppTextStyles.bodySmall.copyWith(
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     fontSize: 12.sp,
                   ),
                 ),
@@ -67,9 +73,11 @@ class RadiusSliderSection extends StatelessWidget {
           data: SliderTheme.of(context).copyWith(
             trackHeight: 6.h,
             activeTrackColor: ShopAppColors.primary,
-            inactiveTrackColor: const Color(0xFFD2E7E2),
+            inactiveTrackColor: isDark
+                ? ShopAppColors.darkInputBackground
+                : const Color(0xFFD2E7E2),
             thumbShape: GreenBorderThumbShape(thumbRadius: 10.r),
-            overlayColor: ShopAppColors.primary.withAlpha(30),
+            overlayColor: ShopAppColors.primary.withValues(alpha: 0.12),
             overlayShape: RoundSliderOverlayShape(overlayRadius: 20.r),
           ),
           child: Slider(
@@ -87,21 +95,27 @@ class RadiusSliderSection extends StatelessWidget {
               Text(
                 '0 KM',
                 style: ShopAppTextStyles.bodySmallBold.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   fontSize: 10.sp,
                 ),
               ),
               Text(
                 '250 KM',
                 style: ShopAppTextStyles.bodySmallBold.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   fontSize: 10.sp,
                 ),
               ),
               Text(
                 '500 KM',
                 style: ShopAppTextStyles.bodySmallBold.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   fontSize: 10.sp,
                 ),
               ),

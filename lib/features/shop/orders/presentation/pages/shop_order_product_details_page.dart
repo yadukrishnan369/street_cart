@@ -13,23 +13,41 @@ class ShopOrderProductDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
+        elevation: isDark ? null : 1.0,
         centerTitle: true,
         // Page Header
         title: Text(
           'Product Info',
           style: TextStyle(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.0),
+            width: 0.5,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),

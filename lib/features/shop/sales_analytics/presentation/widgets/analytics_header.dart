@@ -26,8 +26,11 @@ class AnalyticsHeader extends StatelessWidget {
   // Time Frame Menu Bottomsheet
   void _showTimeframeMenu(BuildContext context) {
     final bloc = context.read<SalesAnalyticsBloc>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
+      backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
@@ -43,6 +46,9 @@ class AnalyticsHeader extends StatelessWidget {
                 'Select Timeframe',
                 style: ShopAppTextStyles.bodyLargeBold.copyWith(
                   fontSize: 18.sp,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
               // Time Frames
@@ -64,7 +70,9 @@ class AnalyticsHeader extends StatelessWidget {
                           : FontWeight.normal,
                       color: isSelected
                           ? ShopAppColors.primary
-                          : ShopAppColors.textPrimary,
+                          : (isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : ShopAppColors.textPrimary),
                     ),
                   ),
                   trailing: isSelected
@@ -90,12 +98,16 @@ class AnalyticsHeader extends StatelessWidget {
                         : FontWeight.normal,
                     color: selectedTimeframe == 'Custom'
                         ? ShopAppColors.primary
-                        : ShopAppColors.textPrimary,
+                        : (isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary),
                   ),
                 ),
-                trailing: const Icon(
+                trailing: Icon(
                   Icons.date_range_outlined,
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                 ),
                 // Showing Date Range Picker
                 onTap: () async {
@@ -114,11 +126,18 @@ class AnalyticsHeader extends StatelessWidget {
                     builder: (context, child) {
                       return Theme(
                         data: Theme.of(context).copyWith(
-                          colorScheme: const ColorScheme.light(
-                            primary: ShopAppColors.primary,
-                            onPrimary: Colors.white,
-                            onSurface: ShopAppColors.textPrimary,
-                          ),
+                          colorScheme: isDark
+                              ? ColorScheme.dark(
+                                  primary: ShopAppColors.primary,
+                                  onPrimary: Colors.white,
+                                  surface: ShopAppColors.darkSurface,
+                                  onSurface: ShopAppColors.darkTextPrimary,
+                                )
+                              : const ColorScheme.light(
+                                  primary: ShopAppColors.primary,
+                                  onPrimary: Colors.white,
+                                  onSurface: ShopAppColors.textPrimary,
+                                ),
                         ),
                         child: child!,
                       );
@@ -141,8 +160,11 @@ class AnalyticsHeader extends StatelessWidget {
   // Product Category Menu Bottomsheet
   void _showCategoryMenu(BuildContext context) {
     final bloc = context.read<SalesAnalyticsBloc>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
+      backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
@@ -158,6 +180,9 @@ class AnalyticsHeader extends StatelessWidget {
                 'Select Product Category',
                 style: ShopAppTextStyles.bodyLargeBold.copyWith(
                   fontSize: 18.sp,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 16.h),
@@ -178,7 +203,9 @@ class AnalyticsHeader extends StatelessWidget {
                               : FontWeight.normal,
                           color: isSelected
                               ? ShopAppColors.primary
-                              : ShopAppColors.textPrimary,
+                              : (isDark
+                                    ? ShopAppColors.darkTextPrimary
+                                    : ShopAppColors.textPrimary),
                         ),
                       ),
                       trailing: isSelected
@@ -205,6 +232,8 @@ class AnalyticsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -224,12 +253,16 @@ class AnalyticsHeader extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? ShopAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  border: Border.all(
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : const Color(0xFFE2E8F0),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -261,12 +294,16 @@ class AnalyticsHeader extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? ShopAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  border: Border.all(
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : const Color(0xFFE2E8F0),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),

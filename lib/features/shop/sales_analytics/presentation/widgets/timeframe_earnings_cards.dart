@@ -23,6 +23,7 @@ class TimeframeEarningsCards extends StatelessWidget {
       children: [
         Expanded(
           child: _buildTimeframeCard(
+            context,
             'TODAY',
             todayEarnings,
             const Color(0xFF0369A1),
@@ -31,6 +32,7 @@ class TimeframeEarningsCards extends StatelessWidget {
         SizedBox(width: 12.w),
         Expanded(
           child: _buildTimeframeCard(
+            context,
             'WEEK',
             weekEarnings,
             ShopAppColors.primary,
@@ -39,6 +41,7 @@ class TimeframeEarningsCards extends StatelessWidget {
         SizedBox(width: 12.w),
         Expanded(
           child: _buildTimeframeCard(
+            context,
             'MONTH',
             monthEarnings,
             const Color(0xFF6D28D9),
@@ -48,16 +51,25 @@ class TimeframeEarningsCards extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeframeCard(String label, double val, Color color) {
+  Widget _buildTimeframeCard(
+    BuildContext context,
+    String label,
+    double val,
+    Color color,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFE2E8F0),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.01),
+            color: Colors.black.withValues(alpha: 0.01),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -69,7 +81,9 @@ class TimeframeEarningsCards extends StatelessWidget {
           Text(
             label,
             style: ShopAppTextStyles.caption.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontWeight: FontWeight.bold,
             ),
           ),

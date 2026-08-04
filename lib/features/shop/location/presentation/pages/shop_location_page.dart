@@ -26,6 +26,9 @@ class _ShopLocationPermissionPageState
     extends State<ShopLocationPermissionPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (_) => sl<ShopLocationBloc>(),
       child: BlocListener<ShopLocationBloc, ShopLocationState>(
@@ -65,7 +68,7 @@ class _ShopLocationPermissionPageState
           }
         },
         child: Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -74,7 +77,9 @@ class _ShopLocationPermissionPageState
             title: Text(
               'Location Setup',
               style: TextStyle(
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -101,7 +106,9 @@ class _ShopLocationPermissionPageState
                         style: TextStyle(
                           fontSize: 28.sp,
                           fontWeight: FontWeight.bold,
-                          color: ShopAppColors.textPrimary,
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
                           height: 1.1,
                         ),
                       ),
@@ -112,7 +119,9 @@ class _ShopLocationPermissionPageState
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15.sp,
-                          color: ShopAppColors.textSecondary,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textSecondary,
                           height: 1.5,
                         ),
                       ),
@@ -149,7 +158,9 @@ class _ShopLocationPermissionPageState
                           child: Text(
                             'Skip for Now',
                             style: TextStyle(
-                              color: ShopAppColors.textSecondary,
+                              color: isDark
+                                  ? ShopAppColors.darkTextSecondary
+                                  : ShopAppColors.textSecondary,
                               fontWeight: FontWeight.bold,
                               fontSize: 14.sp,
                             ),

@@ -92,17 +92,32 @@ class _ShopSignupPageState extends State<ShopSignupPage> {
         }
       },
       builder: (context, state) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
         return Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: ShopAppColors.primary),
+              icon: Icon(
+                Icons.arrow_back,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             // Page Title
-            title: Text('Shop Signup', style: ShopAppTextStyles.heading4),
+            title: Text(
+              'Shop Signup',
+              style: ShopAppTextStyles.heading4.copyWith(
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
+              ),
+            ),
             centerTitle: true,
           ),
           body: SingleChildScrollView(

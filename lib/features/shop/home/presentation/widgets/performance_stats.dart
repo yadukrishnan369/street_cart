@@ -16,6 +16,9 @@ class PerformanceStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocBuilder<ShopHomeBloc, ShopHomeState>(
       builder: (context, state) {
         int todayOrdersCount = 0;
@@ -57,7 +60,11 @@ class PerformanceStats extends StatelessWidget {
                 // Title
                 Text(
                   'Performance Today',
-                  style: ShopAppTextStyles.bodyLargeBold,
+                  style: ShopAppTextStyles.bodyLargeBold.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
                 ),
                 // Live Updates Label
                 Container(
@@ -66,7 +73,9 @@ class PerformanceStats extends StatelessWidget {
                     vertical: 4.h,
                   ),
                   decoration: BoxDecoration(
-                    color: ShopAppColors.successBg,
+                    color: isDark
+                        ? ShopAppColors.primary.withValues(alpha: 0.2)
+                        : ShopAppColors.successBg,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
@@ -88,6 +97,7 @@ class PerformanceStats extends StatelessWidget {
                   child: _buildStatCard(
                     'TODAY ORDERS',
                     todayOrdersCount.toString().padLeft(2, '0'),
+                    isDark,
                   ),
                 ),
                 SizedBox(width: 16.w),
@@ -96,6 +106,7 @@ class PerformanceStats extends StatelessWidget {
                   child: _buildStatCard(
                     'TODAY SALES',
                     PriceUtils.formatPrice(todaySales),
+                    isDark,
                   ),
                 ),
               ],
@@ -105,6 +116,7 @@ class PerformanceStats extends StatelessWidget {
             _buildPendingCard(
               'PENDING DELIVERIES',
               pendingDeliveriesCount.toString().padLeft(2, '0'),
+              isDark,
             ),
           ],
         );
@@ -112,14 +124,16 @@ class PerformanceStats extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String label, String value) {
+  Widget _buildStatCard(String label, String value, bool isDark) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
-        color: ShopAppColors.primaryLight,
+        color: isDark ? ShopAppColors.darkSurface : ShopAppColors.primaryLight,
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
-          color: ShopAppColors.primary.withOpacity(0.1),
+          color: isDark
+              ? ShopAppColors.darkBorder
+              : ShopAppColors.primary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -129,7 +143,9 @@ class PerformanceStats extends StatelessWidget {
           Text(
             label,
             style: ShopAppTextStyles.caption.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               letterSpacing: 0.5.sp,
             ),
           ),
@@ -138,7 +154,9 @@ class PerformanceStats extends StatelessWidget {
             value,
             style: ShopAppTextStyles.heading2.copyWith(
               fontSize: 22.sp,
-              color: ShopAppColors.textPrimary,
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
           ),
         ],
@@ -146,14 +164,16 @@ class PerformanceStats extends StatelessWidget {
     );
   }
 
-  Widget _buildPendingCard(String label, String value) {
+  Widget _buildPendingCard(String label, String value, bool isDark) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
-        color: ShopAppColors.primaryLight,
+        color: isDark ? ShopAppColors.darkSurface : ShopAppColors.primaryLight,
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
-          color: ShopAppColors.primary.withOpacity(0.1),
+          color: isDark
+              ? ShopAppColors.darkBorder
+              : ShopAppColors.primary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -166,7 +186,9 @@ class PerformanceStats extends StatelessWidget {
               Text(
                 label,
                 style: ShopAppTextStyles.caption.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   letterSpacing: 0.5.sp,
                 ),
               ),
@@ -175,7 +197,9 @@ class PerformanceStats extends StatelessWidget {
                 value,
                 style: ShopAppTextStyles.heading2.copyWith(
                   fontSize: 22.sp,
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
             ],
@@ -183,7 +207,7 @@ class PerformanceStats extends StatelessWidget {
           Icon(
             Icons.local_shipping_outlined,
             size: 28.sp,
-            color: ShopAppColors.primary.withOpacity(0.4),
+            color: ShopAppColors.primary.withValues(alpha: 0.4),
           ),
         ],
       ),

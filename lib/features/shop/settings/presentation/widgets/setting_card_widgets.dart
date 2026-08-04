@@ -11,11 +11,16 @@ class SettingSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(children: children),
     );
@@ -45,6 +50,8 @@ class SettingRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16.r),
@@ -55,7 +62,11 @@ class SettingRowItem extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: iconBgColor ?? const Color(0xFFE8F5E9),
+                color:
+                    iconBgColor ??
+                    (isDark
+                        ? ShopAppColors.darkInputBackground
+                        : const Color(0xFFE8F5E9)),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -70,7 +81,11 @@ class SettingRowItem extends StatelessWidget {
               child: Text(
                 title,
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                  color: titleColor ?? ShopAppColors.textPrimary,
+                  color:
+                      titleColor ??
+                      (isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary),
                   fontSize: 14.sp,
                 ),
               ),
@@ -89,8 +104,10 @@ class SettingRowDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Divider(
-      color: const Color(0xFFECEFF1),
+      color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
       height: 1,
       thickness: 0.8,
       indent: 56.w,
@@ -135,6 +152,8 @@ class SettingCustomSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       height: 24.h,
       child: Transform.scale(
@@ -146,7 +165,9 @@ class SettingCustomSwitch extends StatelessWidget {
           activeThumbColor: Colors.white,
           activeTrackColor: ShopAppColors.primary,
           inactiveThumbColor: Colors.white,
-          inactiveTrackColor: const Color(0xFFCFD8DC),
+          inactiveTrackColor: isDark
+              ? ShopAppColors.darkInputBackground
+              : const Color(0xFFCFD8DC),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
 // Shop Products Shimmer
 class ShopProductsShimmer extends StatelessWidget {
@@ -10,6 +11,11 @@ class ShopProductsShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final skeletonColor = isDark ? Colors.grey[700]! : Colors.white;
+
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.all(16.w),
@@ -19,19 +25,19 @@ class ShopProductsShimmer extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 16.h),
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
+            baseColor: baseColor,
+            highlightColor: highlightColor,
             child: Row(
               children: [
                 // Product Image
@@ -39,7 +45,7 @@ class ShopProductsShimmer extends StatelessWidget {
                   width: 70.w,
                   height: 70.w,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: skeletonColor,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
@@ -53,7 +59,7 @@ class ShopProductsShimmer extends StatelessWidget {
                         width: 150.w,
                         height: 14.h,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: skeletonColor,
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                       ),
@@ -63,7 +69,7 @@ class ShopProductsShimmer extends StatelessWidget {
                         width: 60.w,
                         height: 16.h,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: skeletonColor,
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                       ),
@@ -74,8 +80,8 @@ class ShopProductsShimmer extends StatelessWidget {
                           Container(
                             width: 8.w,
                             height: 8.w,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                            decoration: BoxDecoration(
+                              color: skeletonColor,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -84,7 +90,7 @@ class ShopProductsShimmer extends StatelessWidget {
                             width: 50.w,
                             height: 12.h,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: skeletonColor,
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                           ),
@@ -93,7 +99,7 @@ class ShopProductsShimmer extends StatelessWidget {
                             width: 60.w,
                             height: 12.h,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: skeletonColor,
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                           ),
@@ -103,7 +109,10 @@ class ShopProductsShimmer extends StatelessWidget {
                   ),
                 ),
                 // Trailing popup menu dots
-                Icon(Icons.more_vert, color: Colors.grey[300]),
+                Icon(
+                  Icons.more_vert,
+                  color: isDark ? Colors.grey[700] : Colors.grey[300],
+                ),
               ],
             ),
           ),

@@ -14,6 +14,9 @@ class OrderTimelineTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final status = order.status.toLowerCase();
     final bool isDone =
         status == 'delivered' || status == 'cancelled' || status == 'returned';
@@ -53,9 +56,11 @@ class OrderTimelineTracker extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 16.w),
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
           ),
           child: Column(
             children: [
@@ -65,6 +70,7 @@ class OrderTimelineTracker extends StatelessWidget {
                 subtitle: placedTime,
                 state: TimelineStepState.completed,
                 isLast: false,
+                isDark: isDark,
               ),
               // Order Confirmed Step
               _buildTimelineStep(
@@ -80,6 +86,7 @@ class OrderTimelineTracker extends StatelessWidget {
                     ? TimelineStepState.active
                     : TimelineStepState.inactive,
                 isLast: false,
+                isDark: isDark,
               ),
               // Order Packed/Shipped Step
               _buildTimelineStep(
@@ -95,6 +102,7 @@ class OrderTimelineTracker extends StatelessWidget {
                     ? TimelineStepState.active
                     : TimelineStepState.inactive,
                 isLast: false,
+                isDark: isDark,
               ),
               // Order Deliverd Step
               _buildTimelineStep(
@@ -110,6 +118,7 @@ class OrderTimelineTracker extends StatelessWidget {
                     ? TimelineStepState.active
                     : TimelineStepState.inactive,
                 isLast: true,
+                isDark: isDark,
               ),
             ],
           ),
@@ -123,8 +132,9 @@ class OrderTimelineTracker extends StatelessWidget {
     required String subtitle,
     required TimelineStepState state,
     required bool isLast,
+    required bool isDark,
   }) {
-    Color nodeColor = Colors.grey[300]!;
+    Color nodeColor = isDark ? ShopAppColors.darkBorder : Colors.grey[300]!;
     Widget nodeIcon = Container();
 
     if (state == TimelineStepState.completed) {
@@ -155,7 +165,7 @@ class OrderTimelineTracker extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: state == TimelineStepState.completed
                       ? ShopAppColors.primary
-                      : Colors.white,
+                      : (isDark ? ShopAppColors.darkSurface : Colors.white),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: nodeColor,
@@ -170,7 +180,9 @@ class OrderTimelineTracker extends StatelessWidget {
                     width: 2.w,
                     color: state == TimelineStepState.completed
                         ? ShopAppColors.primary
-                        : Colors.grey[200],
+                        : (isDark
+                              ? ShopAppColors.darkBorder
+                              : Colors.grey[200]),
                   ),
                 ),
             ],
@@ -194,8 +206,12 @@ class OrderTimelineTracker extends StatelessWidget {
                           ? FontWeight.bold
                           : FontWeight.w500,
                       color: state != TimelineStepState.inactive
-                          ? const Color(0xFF1E293B)
-                          : Colors.grey[400],
+                          ? (isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : ShopAppColors.textPrimary)
+                          : (isDark
+                                ? ShopAppColors.darkTextSecondary
+                                : Colors.grey[400]),
                     ),
                   ),
                   if (subtitle.isNotEmpty) ...[
@@ -205,7 +221,9 @@ class OrderTimelineTracker extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: Colors.grey[500],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[500],
                       ),
                     ),
                   ],

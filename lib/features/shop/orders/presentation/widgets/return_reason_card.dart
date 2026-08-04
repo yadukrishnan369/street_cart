@@ -17,6 +17,9 @@ class ReturnReasonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Get Returned Items
     final returnedItems = ShopOrdersHelper.getReturnedItems(
       order: order,
@@ -46,9 +49,11 @@ class ReturnReasonCard extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +64,9 @@ class ReturnReasonCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -67,7 +74,12 @@ class ReturnReasonCard extends StatelessWidget {
                   returnedItems.first.returnReason ??
                       order.returnReason ??
                       'No reason provided',
-                  style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : Colors.grey[700],
+                  ),
                 ),
                 if ((returnedItems.first.returnDetails != null &&
                         returnedItems.first.returnDetails!.isNotEmpty) ||
@@ -79,13 +91,20 @@ class ReturnReasonCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.bold,
-                      color: ShopAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     returnedItems.first.returnDetails ?? order.returnDetails!,
-                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : Colors.grey[700],
+                    ),
                   ),
                 ],
               ] else ...[
@@ -110,7 +129,9 @@ class ReturnReasonCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
-                          color: ShopAppColors.textPrimary,
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -118,7 +139,9 @@ class ReturnReasonCard extends StatelessWidget {
                         item.returnReason ?? 'No reason provided',
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: Colors.grey[700],
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : Colors.grey[700],
                         ),
                       ),
                       if (item.returnDetails != null &&
@@ -130,7 +153,9 @@ class ReturnReasonCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
-                            color: ShopAppColors.textPrimary,
+                            color: isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : ShopAppColors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -138,13 +163,21 @@ class ReturnReasonCard extends StatelessWidget {
                           item.returnDetails!,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: Colors.grey[700],
+                            color: isDark
+                                ? ShopAppColors.darkTextSecondary
+                                : Colors.grey[700],
                           ),
                         ),
                       ],
                       if (index < returnedItems.length - 1) ...[
                         SizedBox(height: 12.h),
-                        const Divider(height: 1.0, thickness: 0.2),
+                        Divider(
+                          height: 1.0,
+                          thickness: 0.2,
+                          color: isDark
+                              ? ShopAppColors.darkBorder
+                              : Colors.grey[300],
+                        ),
                         SizedBox(height: 12.h),
                       ],
                     ],

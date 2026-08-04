@@ -21,6 +21,8 @@ class ShopProfileActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -84,8 +86,15 @@ class ShopProfileActionButtons extends StatelessWidget {
                 ),
               ),
               style: OutlinedButton.styleFrom(
-                backgroundColor: const Color(0xFFF4F7F6),
-                side: const BorderSide(color: Color(0xFFE2EBE9), width: 1),
+                backgroundColor: isDark
+                    ? ShopAppColors.darkInputBackground
+                    : const Color(0xFFF4F7F6),
+                side: BorderSide(
+                  color: isDark
+                      ? ShopAppColors.darkBorder
+                      : const Color(0xFFE2EBE9),
+                  width: 1,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24.r),
                 ),

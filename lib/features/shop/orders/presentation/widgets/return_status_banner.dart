@@ -48,9 +48,9 @@ class ReturnStatusBanner extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: mainColor.withOpacity(0.08),
+        color: mainColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: mainColor.withOpacity(0.2)),
+        border: Border.all(color: mainColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [

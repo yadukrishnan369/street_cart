@@ -42,6 +42,14 @@ class EditStep3Verification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final inputFillColor = isDark
+        ? ShopAppColors.darkInputBackground
+        : ShopAppColors.surface;
+    final inputBorderColor = isDark
+        ? ShopAppColors.darkBorder
+        : ShopAppColors.border;
+
     return Form(
       key: formKey,
       child: Column(
@@ -72,13 +80,23 @@ class EditStep3Verification extends StatelessWidget {
               Icons.email_outlined,
               color: ShopAppColors.primary,
             ),
-            labelStyle: ShopAppTextStyles.bodyMediumBold,
-            textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textTertiary,
+            labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
-            fillColor: ShopAppColors.surface,
-            borderColor: ShopAppColors.border,
+            textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textTertiary,
+            ),
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 20.h),
@@ -93,13 +111,23 @@ class EditStep3Verification extends StatelessWidget {
               Icons.phone_outlined,
               color: ShopAppColors.primary,
             ),
-            labelStyle: ShopAppTextStyles.bodyMediumBold,
-            textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textTertiary,
+            labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
-            fillColor: ShopAppColors.surface,
-            borderColor: ShopAppColors.border,
+            textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textTertiary,
+            ),
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 32.h),
@@ -127,13 +155,23 @@ class EditStep3Verification extends StatelessWidget {
               Icons.description_outlined,
               color: ShopAppColors.primary,
             ),
-            labelStyle: ShopAppTextStyles.bodyMediumBold,
-            textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textTertiary,
+            labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
-            fillColor: ShopAppColors.surface,
-            borderColor: ShopAppColors.border,
+            textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textTertiary,
+            ),
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 24.h),

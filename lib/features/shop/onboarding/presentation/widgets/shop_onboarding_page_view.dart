@@ -18,6 +18,9 @@ class ShopOnboardingPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Expanded(
       child: PageView.builder(
         controller: controller,
@@ -47,7 +50,9 @@ class ShopOnboardingPageView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28.sp,
                     fontWeight: FontWeight.bold,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -57,7 +62,9 @@ class ShopOnboardingPageView extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),

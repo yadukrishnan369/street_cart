@@ -9,13 +9,19 @@ class EmptyRecentOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 36.h, horizontal: 24.w),
       decoration: BoxDecoration(
-        color: ShopAppColors.surface,
+        color: isDark ? ShopAppColors.darkSurface : ShopAppColors.surface,
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: ShopAppColors.border, width: 1.w),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : ShopAppColors.border,
+          width: 1.w,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -23,7 +29,9 @@ class EmptyRecentOrdersView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
-              color: ShopAppColors.primaryLight,
+              color: isDark
+                  ? ShopAppColors.primary.withValues(alpha: 0.2)
+                  : ShopAppColors.primaryLight,
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -37,7 +45,9 @@ class EmptyRecentOrdersView extends StatelessWidget {
           Text(
             'No New Orders Yet',
             style: ShopAppTextStyles.bodyMediumBold.copyWith(
-              color: ShopAppColors.textPrimary,
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
               fontSize: 16.sp,
             ),
           ),
@@ -47,7 +57,9 @@ class EmptyRecentOrdersView extends StatelessWidget {
             'When customers place orders, they will show up here.',
             textAlign: TextAlign.center,
             style: ShopAppTextStyles.caption.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontSize: 12.sp,
             ),
           ),

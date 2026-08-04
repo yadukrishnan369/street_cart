@@ -18,10 +18,20 @@ class QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Quick Actions', style: ShopAppTextStyles.bodyLargeBold),
+        Text(
+          'Quick Actions',
+          style: ShopAppTextStyles.bodyLargeBold.copyWith(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+        ),
         SizedBox(height: 12.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -31,6 +41,7 @@ class QuickActions extends StatelessWidget {
               'Add Product',
               Icons.inventory_2_outlined,
               true,
+              isDark: isDark,
               onTap: onAddProductTap,
             ),
             // View Order
@@ -38,6 +49,7 @@ class QuickActions extends StatelessWidget {
               'View Orders',
               Icons.widgets_outlined,
               false,
+              isDark: isDark,
               onTap: onViewOrdersTap,
             ),
             // Edit Profile
@@ -45,6 +57,7 @@ class QuickActions extends StatelessWidget {
               'Edit Profile',
               Icons.edit_square,
               false,
+              isDark: isDark,
               onTap: onEditProfileTap,
             ),
           ],
@@ -57,6 +70,7 @@ class QuickActions extends StatelessWidget {
     String title,
     IconData icon,
     bool isPrimary, {
+    required bool isDark,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -65,22 +79,26 @@ class QuickActions extends StatelessWidget {
         width: 90.w,
         padding: EdgeInsets.symmetric(vertical: 18.h),
         decoration: BoxDecoration(
-          color: isPrimary ? ShopAppColors.primary : ShopAppColors.surface,
+          color: isPrimary
+              ? ShopAppColors.primary
+              : (isDark ? ShopAppColors.darkSurface : ShopAppColors.surface),
           borderRadius: BorderRadius.circular(28.r),
           border: Border.all(
-            color: isPrimary ? ShopAppColors.primary : ShopAppColors.border,
+            color: isPrimary
+                ? ShopAppColors.primary
+                : (isDark ? ShopAppColors.darkBorder : ShopAppColors.border),
             width: 1.5.w,
           ),
           boxShadow: [
             if (isPrimary)
               BoxShadow(
-                color: ShopAppColors.primary.withOpacity(0.25),
+                color: ShopAppColors.primary.withValues(alpha: 0.25),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               )
             else
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.02),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -98,7 +116,11 @@ class QuickActions extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: ShopAppTextStyles.bodySmallBold.copyWith(
-                color: isPrimary ? Colors.white : ShopAppColors.textSecondary,
+                color: isPrimary
+                    ? Colors.white
+                    : (isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary),
                 fontSize: 10.sp,
               ),
             ),

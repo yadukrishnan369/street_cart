@@ -19,6 +19,7 @@ class ShopVerificationDocsCard extends StatelessWidget {
         // Business Licence
         children: [
           _buildDocVerificationItem(
+            context: context,
             title: 'Business License',
             icon: Icons.description_outlined,
             isUploaded: profile.businessLicenseUrl.isNotEmpty,
@@ -26,6 +27,7 @@ class ShopVerificationDocsCard extends StatelessWidget {
           // GST ID
           SizedBox(height: 12.h),
           _buildDocVerificationItem(
+            context: context,
             title: 'GST Number',
             icon: Icons.article_outlined,
             isUploaded: profile.gstNumber.isNotEmpty,
@@ -33,6 +35,7 @@ class ShopVerificationDocsCard extends StatelessWidget {
           SizedBox(height: 12.h),
           // Owner ID
           _buildDocVerificationItem(
+            context: context,
             title: 'Owner ID Proof',
             icon: Icons.badge_outlined,
             isUploaded: profile.ownerIdUrl.isNotEmpty,
@@ -43,27 +46,41 @@ class ShopVerificationDocsCard extends StatelessWidget {
   }
 
   Widget _buildDocVerificationItem({
+    required BuildContext context,
     required String title,
     required IconData icon,
     required bool isUploaded,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkInputBackground : Colors.white,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: ShopAppColors.border, width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : ShopAppColors.border,
+          width: 0.8,
+        ),
       ),
       child: Row(
         children: [
-          Icon(icon, color: ShopAppColors.textSecondary, size: 20.sp),
+          Icon(
+            icon,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
+            size: 20.sp,
+          ),
           SizedBox(width: 12.w),
           Expanded(
             // Title
             child: Text(
               title,
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
                 fontSize: 13.sp,
               ),
             ),
@@ -72,8 +89,12 @@ class ShopVerificationDocsCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: isUploaded
-                  ? const Color(0xFFE8F5E9)
-                  : const Color(0xFFECEFF1),
+                  ? (isDark
+                        ? ShopAppColors.primary.withValues(alpha: 0.15)
+                        : const Color(0xFFE8F5E9))
+                  : (isDark
+                        ? ShopAppColors.darkSurface
+                        : const Color(0xFFECEFF1)),
               borderRadius: BorderRadius.circular(4.r),
             ),
             // Label
@@ -82,7 +103,9 @@ class ShopVerificationDocsCard extends StatelessWidget {
               style: ShopAppTextStyles.bodySmallBold.copyWith(
                 color: isUploaded
                     ? ShopAppColors.primary
-                    : const Color(0xFF546E7A),
+                    : (isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : const Color(0xFF546E7A)),
                 fontSize: 10.sp,
               ),
             ),

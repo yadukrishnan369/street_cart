@@ -25,6 +25,9 @@ class ProductSizeSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,29 +37,37 @@ class ProductSizeSelection extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
           ),
         ),
         8.verticalSpace,
         // Dropdown for Select Sizes
         DropdownButtonFormField<String>(
-          value: selectedSizeStandard,
+          initialValue: selectedSizeStandard,
           isExpanded: true,
-          dropdownColor: Colors.white,
+          dropdownColor: isDark ? ShopAppColors.darkSurface : Colors.white,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: isDark
+                ? ShopAppColors.darkInputBackground
+                : Colors.white,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
               vertical: 16.h,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300]!,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300]!,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
@@ -73,7 +84,12 @@ class ProductSizeSelection extends StatelessWidget {
               value: std,
               child: Text(
                 std,
-                style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
               ),
             );
           }).toList(),
@@ -93,9 +109,15 @@ class ProductSizeSelection extends StatelessWidget {
                   child: ChoiceChip(
                     label: Text(size),
                     selected: isSelected,
-                    selectedColor: ShopAppColors.primary.withOpacity(0.2),
+                    selectedColor: ShopAppColors.primary.withValues(
+                      alpha: isDark ? 0.3 : 0.2,
+                    ),
                     labelStyle: TextStyle(
-                      color: isSelected ? ShopAppColors.primary : Colors.black,
+                      color: isSelected
+                          ? ShopAppColors.primary
+                          : (isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : ShopAppColors.textPrimary),
                       fontWeight: isSelected
                           ? FontWeight.bold
                           : FontWeight.normal,

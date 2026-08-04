@@ -10,6 +10,8 @@ class OverallStockDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isInStock = totalStock > 0;
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -17,10 +19,12 @@ class OverallStockDisplay extends StatelessWidget {
         gradient: LinearGradient(
           colors: isInStock
               ? [
-                  ShopAppColors.success.withValues(alpha: 0.08),
-                  ShopAppColors.success.withValues(alpha: 0.03),
+                  ShopAppColors.success.withValues(alpha: isDark ? 0.2 : 0.08),
+                  ShopAppColors.success.withValues(alpha: isDark ? 0.1 : 0.03),
                 ]
-              : [Colors.grey[100]!, Colors.grey[50]!],
+              : (isDark
+                    ? [ShopAppColors.darkSurface, ShopAppColors.darkBackground]
+                    : [Colors.grey[100]!, Colors.grey[50]!]),
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -28,7 +32,7 @@ class OverallStockDisplay extends StatelessWidget {
         border: Border.all(
           color: isInStock
               ? ShopAppColors.success.withValues(alpha: 0.3)
-              : Colors.grey[300]!,
+              : (isDark ? ShopAppColors.darkBorder : Colors.grey[300]!),
         ),
       ),
       child: Row(
@@ -38,14 +42,16 @@ class OverallStockDisplay extends StatelessWidget {
             decoration: BoxDecoration(
               color: isInStock
                   ? ShopAppColors.success.withValues(alpha: 0.15)
-                  : Colors.grey[200],
+                  : (isDark ? ShopAppColors.darkBorder : Colors.grey[200]),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.inventory_2_outlined,
               color: isInStock
                   ? ShopAppColors.success
-                  : ShopAppColors.textSecondary,
+                  : (isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary),
               size: 20.sp,
             ),
           ),
@@ -59,7 +65,9 @@ class OverallStockDisplay extends StatelessWidget {
                   'Overall Product Stock',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -72,7 +80,9 @@ class OverallStockDisplay extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: isInStock
                         ? ShopAppColors.success
-                        : ShopAppColors.textSecondary,
+                        : (isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textSecondary),
                   ),
                 ),
               ],

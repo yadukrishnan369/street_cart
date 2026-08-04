@@ -17,17 +17,30 @@ class ContactSupportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final comms = sl<CommunicationService>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: isDark
+          ? ShopAppColors.darkBackground
+          : const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
+        elevation: isDark ? null : 1.5,
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.5),
+            width: 0.5,
+          ),
+        ),
         // Page Header
         title: Text(
           'Contact Support',
           style: ShopAppTextStyles.heading4.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -44,11 +57,20 @@ class ContactSupportPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: ShopAppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(24.r),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient: isDark
+                    ? LinearGradient(
+                        colors: [
+                          ShopAppColors.primary.withValues(alpha: 0.2),
+                          ShopAppColors.primary.withValues(alpha: 0.08),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : const LinearGradient(
+                        colors: [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
               ),
               child: Center(
                 child: Icon(
@@ -58,7 +80,7 @@ class ContactSupportPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 32.h),
+            SizedBox(height: 6.h),
 
             // Welcome & Description Header
             Text(
@@ -66,6 +88,9 @@ class ContactSupportPage extends StatelessWidget {
               style: ShopAppTextStyles.heading2.copyWith(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -73,7 +98,9 @@ class ContactSupportPage extends StatelessWidget {
             Text(
               'Our dedicated Street Cart support team is available Monday to Friday, 9:00 AM - 6:00 PM EST to help you grow your business and resolve any issues.',
               style: ShopAppTextStyles.bodyMedium.copyWith(
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -102,7 +129,9 @@ class ContactSupportPage extends StatelessWidget {
             Text(
               '${_appInfoService.appName} Seller App v${_appInfoService.version}',
               style: ShopAppTextStyles.bodySmall.copyWith(
-                color: ShopAppColors.textTertiary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textTertiary,
                 fontSize: 11.sp,
               ),
             ),

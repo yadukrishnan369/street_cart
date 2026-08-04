@@ -113,7 +113,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
           ),
         ],
         child: Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           drawer: const ShopSupportDrawer(),
           appBar: const ShopHomeAppBar(),
           body: BlocBuilder<ShopHomeBloc, ShopHomeState>(

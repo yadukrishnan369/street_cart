@@ -18,11 +18,16 @@ class AboutAppActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: ListTile(
         onTap: onTap,
@@ -32,7 +37,9 @@ class AboutAppActionCard extends StatelessWidget {
         title: Text(
           title,
           style: ShopAppTextStyles.bodyMediumBold.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontSize: 14.sp,
           ),
         ),
@@ -40,7 +47,9 @@ class AboutAppActionCard extends StatelessWidget {
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 14.sp,
-          color: ShopAppColors.textSecondary,
+          color: isDark
+              ? ShopAppColors.darkTextSecondary
+              : ShopAppColors.textSecondary,
         ),
       ),
     );

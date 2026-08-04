@@ -10,6 +10,9 @@ class SizeQtyGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final sizes = controllers.keys.toList();
     // Grid View
     return GridView.builder(
@@ -26,9 +29,11 @@ class SizeQtyGrid extends StatelessWidget {
         final size = sizes[i];
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: Colors.grey[300]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[300]!,
+            ),
           ),
           child: Row(
             children: [
@@ -36,7 +41,9 @@ class SizeQtyGrid extends StatelessWidget {
                 width: 38.w,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: ShopAppColors.primary.withValues(alpha: 0.08),
+                  color: ShopAppColors.primary.withValues(
+                    alpha: isDark ? 0.2 : 0.08,
+                  ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12.r),
                     bottomLeft: Radius.circular(12.r),
@@ -67,7 +74,9 @@ class SizeQtyGrid extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
               ),

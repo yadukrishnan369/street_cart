@@ -36,11 +36,14 @@ class _CategoryFilterBottomSheetState extends State<CategoryFilterBottomSheet> {
       value: widget.productsBloc,
       child: BlocBuilder<ShopProductsBloc, ShopProductsState>(
         builder: (context, state) {
+          final theme = Theme.of(context);
+          final isDark = theme.brightness == Brightness.dark;
           final tempSelected = state.tempSelectedCategories;
           final isFiltered =
               tempSelected.isNotEmpty && !tempSelected.contains('All');
 
           return Container(
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             padding: EdgeInsets.all(20.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -52,7 +55,11 @@ class _CategoryFilterBottomSheetState extends State<CategoryFilterBottomSheet> {
                     // Title
                     Text(
                       'Filter by Category',
-                      style: ShopAppTextStyles.heading3,
+                      style: isDark
+                          ? ShopAppTextStyles.heading3.copyWith(
+                              color: ShopAppColors.darkTextPrimary,
+                            )
+                          : ShopAppTextStyles.heading3,
                     ),
                     if (isFiltered)
                       TextButton(
@@ -89,7 +96,9 @@ class _CategoryFilterBottomSheetState extends State<CategoryFilterBottomSheet> {
                       labelStyle: TextStyle(
                         color: isSelected
                             ? ShopAppColors.primary
-                            : Colors.black,
+                            : (isDark
+                                  ? ShopAppColors.darkTextPrimary
+                                  : ShopAppColors.textPrimary),
                         fontWeight: isSelected
                             ? FontWeight.bold
                             : FontWeight.normal,

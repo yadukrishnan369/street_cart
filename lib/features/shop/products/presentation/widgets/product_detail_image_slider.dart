@@ -21,6 +21,8 @@ class ProductDetailImageSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final validImages = images.whereType<String>().toList();
     final bool hasMultipleImages = validImages.length > 1;
 
@@ -31,7 +33,7 @@ class ProductDetailImageSlider extends StatelessWidget {
         height: 320.h,
         iconSize: 80.sp,
         borderRadius: BorderRadius.circular(16.r),
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
       );
     }
 
@@ -71,7 +73,7 @@ class ProductDetailImageSlider extends StatelessWidget {
                   },
                   child: Container(
                     width: double.infinity,
-                    color: Colors.white,
+                    color: isDark ? ShopAppColors.darkBackground : Colors.white,
                     padding: EdgeInsets.all(12.w),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.r),
@@ -104,7 +106,7 @@ class ProductDetailImageSlider extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4.r),
                   color: currentImageIndex == entry.key
                       ? ShopAppColors.primary
-                      : Colors.grey[300],
+                      : (isDark ? ShopAppColors.darkBorder : Colors.grey[300]),
                 ),
               );
             }).toList(),

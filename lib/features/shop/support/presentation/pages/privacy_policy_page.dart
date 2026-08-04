@@ -10,16 +10,28 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
+        elevation: isDark ? null : 1.5,
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.5),
+            width: 0.5,
+          ),
+        ),
         // Page Header
         title: Text(
           'Privacy Policy',
           style: ShopAppTextStyles.heading4.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -34,7 +46,9 @@ class PrivacyPolicyPage extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F5E9),
+                color: isDark
+                    ? ShopAppColors.primary.withValues(alpha: 0.15)
+                    : const Color(0xFFE8F5E9),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Row(
@@ -64,6 +78,9 @@ class PrivacyPolicyPage extends StatelessWidget {
               style: ShopAppTextStyles.heading2.copyWith(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 24.h),
@@ -80,7 +97,9 @@ class PrivacyPolicyPage extends StatelessWidget {
             Text(
               'At Street Cart, we are committed to protecting the privacy and security of our merchant partners. This privacy policy outlines how we handle your personal and business data when you use our mobile application and commerce services.',
               style: ShopAppTextStyles.bodyMedium.copyWith(
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 height: 1.5,
                 fontSize: 13.sp,
               ),
@@ -103,7 +122,9 @@ class PrivacyPolicyPage extends StatelessWidget {
             Text(
               'Your data is primarily used to provide and improve Street Cart services. This includes processing orders, calculating analytics for your dashboard, and providing customer support. We never sell your personal data to third-party advertisers.',
               style: ShopAppTextStyles.bodyMedium.copyWith(
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 height: 1.5,
                 fontSize: 13.sp,
               ),
@@ -122,7 +143,9 @@ class PrivacyPolicyPage extends StatelessWidget {
             Text(
               'We implement industry-standard encryption (AES-256) for all data at rest and in transit. Access to merchant data is strictly limited to authorized personnel only.',
               style: ShopAppTextStyles.bodyMedium.copyWith(
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 height: 1.5,
                 fontSize: 13.sp,
               ),

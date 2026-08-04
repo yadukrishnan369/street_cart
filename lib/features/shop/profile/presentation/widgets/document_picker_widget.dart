@@ -26,6 +26,7 @@ class DocumentPickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasDocument =
         isPicked || (existingUrl != null && existingUrl!.isNotEmpty);
 
@@ -35,10 +36,14 @@ class DocumentPickerWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF9FBFB),
+          color: isDark
+              ? ShopAppColors.darkInputBackground
+              : const Color(0xFFF9FBFB),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: hasDocument ? ShopAppColors.primary : ShopAppColors.border,
+            color: hasDocument
+                ? ShopAppColors.primary
+                : (isDark ? ShopAppColors.darkBorder : ShopAppColors.border),
             width: hasDocument ? 2 : 1.w,
           ),
         ),
@@ -48,15 +53,19 @@ class DocumentPickerWidget extends StatelessWidget {
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
                 color: hasDocument
-                    ? ShopAppColors.primary.withOpacity(0.08)
-                    : Colors.grey.shade100,
+                    ? ShopAppColors.primary.withValues(alpha: 0.08)
+                    : (isDark
+                          ? ShopAppColors.darkSurface
+                          : Colors.grey.shade100),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
                 hasDocument ? Icons.check_circle : icon,
                 color: hasDocument
                     ? ShopAppColors.primary
-                    : Colors.grey.shade600,
+                    : (isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : Colors.grey.shade600),
                 size: 24.sp,
               ),
             ),
@@ -67,13 +76,22 @@ class DocumentPickerWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 // Title
                 children: [
-                  Text(title, style: ShopAppTextStyles.bodyMediumBold),
+                  Text(
+                    title,
+                    style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
+                    ),
+                  ),
                   SizedBox(height: 2.h),
                   // Subtitle
                   Text(
                     subtitle,
                     style: ShopAppTextStyles.bodySmall.copyWith(
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                     ),
                   ),
                   if (hasDocument && onClear != null) ...[
@@ -98,7 +116,9 @@ class DocumentPickerWidget extends StatelessWidget {
               size: 20.sp,
               color: hasDocument
                   ? ShopAppColors.primary
-                  : ShopAppColors.textTertiary,
+                  : (isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary),
             ),
           ],
         ),

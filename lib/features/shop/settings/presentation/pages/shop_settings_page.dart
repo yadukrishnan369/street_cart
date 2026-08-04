@@ -40,23 +40,24 @@ class ShopSettingsPage extends StatelessWidget {
         }
       },
       builder: (context, profileState) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
         if (profileState.status == ShopProfileStatus.error &&
             profileState.profile == null) {
           return Scaffold(
-            backgroundColor: const Color(0xFFF8F9FA),
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : const Color(0xFFF8F9FA),
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.5,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: ShopAppColors.primary,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: const Text(
+              backgroundColor: isDark
+                  ? ShopAppColors.darkBackground
+                  : Colors.white,
+              elevation: isDark ? null : 1.5,
+              title: Text(
                 'Settings',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: isDark ? ShopAppColors.darkTextPrimary : Colors.black,
+                ),
               ),
             ),
             // Showing Error View
@@ -77,19 +78,29 @@ class ShopSettingsPage extends StatelessWidget {
         }
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF8F9FA),
+          backgroundColor: isDark
+              ? ShopAppColors.darkBackground
+              : const Color(0xFFF8F9FA),
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0.5,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
-              onPressed: () => Navigator.pop(context),
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : Colors.white,
+            elevation: isDark ? null : 1.5,
+            shape: Border(
+              bottom: BorderSide(
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border.withValues(alpha: 1.5),
+                width: 0.5,
+              ),
             ),
             // Page Header
             title: Text(
               'Settings',
               style: ShopAppTextStyles.heading4.copyWith(
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -122,7 +133,9 @@ class ShopSettingsPage extends StatelessWidget {
                       child: Text(
                         '${_appInfoService.appName} Seller App v${_appInfoService.version}',
                         style: ShopAppTextStyles.bodySmall.copyWith(
-                          color: ShopAppColors.textTertiary,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textTertiary,
                           fontSize: 11.sp,
                         ),
                       ),

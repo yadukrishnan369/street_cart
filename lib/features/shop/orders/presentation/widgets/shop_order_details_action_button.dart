@@ -47,10 +47,12 @@ class ShopOrderDetailsActionButton extends StatelessWidget {
 
     return BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
       builder: (context, state) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
         final paymentReceived = state.isPaymentReceived;
 
         return Container(
-          color: Colors.white,
+          color: isDark ? ShopAppColors.darkSurface : Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -75,7 +77,9 @@ class ShopOrderDetailsActionButton extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: ShopAppColors.textPrimary,
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
                         ),
                       ),
                     ),

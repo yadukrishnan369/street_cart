@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/core/utils/validators.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/settings/presentation/utils/shop_settings_helper.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
@@ -36,6 +37,14 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final inputFillColor = isDark
+        ? ShopAppColors.darkInputBackground
+        : const Color(0xFFF8F9FA);
+    final inputBorderColor = isDark
+        ? ShopAppColors.darkBorder
+        : ShopAppColors.border;
+
     return Form(
       key: _formKey,
       child: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
@@ -51,27 +60,32 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                 controller: _passwordController,
                 hintText: 'Enter your password',
                 isPassword: uiState.obscureDeletePassword,
-                labelStyle: ShopAppTextStyles.bodyMediumBold,
-                textStyle: ShopAppTextStyles.bodyMedium,
-                fillColor: const Color(0xFFF8F9FA),
-                borderColor: ShopAppColors.border,
+                labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                fillColor: inputFillColor,
+                borderColor: inputBorderColor,
                 focusedBorderColor: const Color(0xFFD32F2F),
                 suffixIcon: IconButton(
                   icon: Icon(
                     uiState.obscureDeletePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: ShopAppColors.textTertiary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
                   onPressed: () => bloc.add(ToggleObscureDeletePasswordEvent()),
                 ),
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return 'Password verification is required';
-                  }
-                  return null;
-                },
+                validator: Validators.validatePasswordVerification,
               ),
               SizedBox(height: 40.h),
 

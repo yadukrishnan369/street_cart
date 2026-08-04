@@ -18,13 +18,16 @@ class AddEditProductSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: EdgeInsets.all(8.r),
           decoration: BoxDecoration(
-            color: ShopAppColors.primaryLight,
+            color: ShopAppColors.primary.withValues(alpha: isDark ? 0.2 : 0.08),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Icon(icon, color: ShopAppColors.primary, size: 18.sp),
@@ -35,14 +38,23 @@ class AddEditProductSectionHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title
-              Text(title, style: ShopAppTextStyles.heading3),
+              Text(
+                title,
+                style: isDark
+                    ? ShopAppTextStyles.heading3.copyWith(
+                        color: ShopAppColors.darkTextPrimary,
+                      )
+                    : ShopAppTextStyles.heading3,
+              ),
               SizedBox(height: 2.h),
               // Subtitle
               Text(
                 subtitle,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                 ),
               ),
             ],

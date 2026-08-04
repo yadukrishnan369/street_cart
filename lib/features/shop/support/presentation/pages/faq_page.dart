@@ -33,16 +33,28 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
+        elevation: isDark ? null : 1.5,
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.5),
+            width: 0.5,
+          ),
+        ),
         // Page Header
         title: Text(
           'FAQs',
           style: ShopAppTextStyles.heading4.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -55,7 +67,9 @@ class _FAQPageState extends State<FAQPage> with SingleTickerProviderStateMixin {
           indicatorColor: ShopAppColors.primary,
           indicatorWeight: 3.h,
           labelColor: ShopAppColors.primary,
-          unselectedLabelColor: Colors.grey[500],
+          unselectedLabelColor: isDark
+              ? ShopAppColors.darkTextSecondary
+              : Colors.grey[500],
           labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
             fontSize: 13.sp,
           ),

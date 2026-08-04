@@ -18,16 +18,31 @@ class AboutAppPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: isDark
+          ? ShopAppColors.darkBackground
+          : const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
+        elevation: isDark ? null : 1.5,
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.5),
+            width: 0.5,
+          ),
+        ),
+        // Page Header
         title: Text(
           'About App',
           style: ShopAppTextStyles.heading2.copyWith(
             fontSize: 18.sp,
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
           ),
         ),
         centerTitle: true,
@@ -53,7 +68,9 @@ class AboutAppPage extends StatelessWidget {
                 _appInfoService.appName,
                 style: ShopAppTextStyles.heading2.copyWith(
                   fontSize: 20.sp,
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -69,7 +86,9 @@ class AboutAppPage extends StatelessWidget {
               Text(
                 'Empowering local commerce',
                 style: ShopAppTextStyles.bodyMedium.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   fontSize: 13.sp,
                 ),
               ),
@@ -80,10 +99,12 @@ class AboutAppPage extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.all(20.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? ShopAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(20.r),
                   border: Border.all(
-                    color: const Color(0xFFECEFF1),
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : const Color(0xFFECEFF1),
                     width: 0.8,
                   ),
                 ),
@@ -111,7 +132,9 @@ class AboutAppPage extends StatelessWidget {
                     Text(
                       ShopConstants.aboutAppDescription,
                       style: ShopAppTextStyles.bodyMedium.copyWith(
-                        color: ShopAppColors.textSecondary,
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textSecondary,
                         height: 1.5,
                         fontSize: 13.sp,
                       ),
@@ -151,7 +174,9 @@ class AboutAppPage extends StatelessWidget {
               Text(
                 _appInfoService.getCopyrightText(''),
                 style: ShopAppTextStyles.bodySmall.copyWith(
-                  color: ShopAppColors.textTertiary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textTertiary,
                   fontSize: 11.sp,
                 ),
                 textAlign: TextAlign.center,

@@ -12,6 +12,9 @@ class ShopReturnProgressTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final returnStatus = (order.returnStatus ?? '').toLowerCase();
     // Steps
     final isStep1Completed = returnStatus.isNotEmpty;
@@ -97,12 +100,18 @@ class ShopReturnProgressTracker extends StatelessWidget {
                           width: 28.w,
                           height: 28.w,
                           decoration: BoxDecoration(
-                            color: isCompleted ? activeColor : Colors.white,
+                            color: isCompleted
+                                ? activeColor
+                                : (isDark
+                                      ? ShopAppColors.darkSurface
+                                      : Colors.white),
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isCompleted
                                   ? activeColor
-                                  : const Color(0xFF1E293B),
+                                  : (isDark
+                                        ? ShopAppColors.darkBorder
+                                        : ShopAppColors.textPrimary),
                               width: 2.w,
                             ),
                           ),
@@ -116,7 +125,9 @@ class ShopReturnProgressTracker extends StatelessWidget {
                               ? Icon(
                                   Icons.assignment_return_outlined,
                                   size: 14.sp,
-                                  color: const Color(0xFF1E293B),
+                                  color: isDark
+                                      ? ShopAppColors.darkTextPrimary
+                                      : ShopAppColors.textPrimary,
                                 )
                               : null,
                         ),
@@ -126,7 +137,9 @@ class ShopReturnProgressTracker extends StatelessWidget {
                               width: 2.w,
                               color: isCompleted && index < activeIndex
                                   ? activeColor
-                                  : Colors.grey[300],
+                                  : (isDark
+                                        ? ShopAppColors.darkBorder
+                                        : Colors.grey[300]),
                             ),
                           ),
                       ],
@@ -147,7 +160,9 @@ class ShopReturnProgressTracker extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: isCompleted
                                     ? activeColor
-                                    : const Color(0xFF1E293B),
+                                    : (isDark
+                                          ? ShopAppColors.darkTextPrimary
+                                          : ShopAppColors.textPrimary),
                               ),
                             ),
                             SizedBox(height: 2.h),
@@ -158,7 +173,10 @@ class ShopReturnProgressTracker extends StatelessWidget {
                                 fontSize: 12.sp,
                                 color: isCompleted
                                     ? activeColor.withAlpha(180)
-                                    : const Color(0xFF1E293B).withOpacity(0.6),
+                                    : (isDark
+                                          ? ShopAppColors.darkTextSecondary
+                                          : ShopAppColors.textPrimary
+                                                .withValues(alpha: 0.6)),
                               ),
                             ),
                           ],

@@ -12,6 +12,8 @@ class TransactionCustomerInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,15 +35,19 @@ class TransactionCustomerInfo extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
           ),
           child: Row(
             children: [
               CircleAvatar(
                 radius: 24.r,
-                backgroundColor: const Color(0xFFE2E8F0),
+                backgroundColor: isDark
+                    ? ShopAppColors.darkInputBackground
+                    : const Color(0xFFE2E8F0),
                 child: Icon(
                   Icons.person,
                   color: ShopAppColors.primary,
@@ -59,7 +65,9 @@ class TransactionCustomerInfo extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E293B),
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -68,7 +76,9 @@ class TransactionCustomerInfo extends StatelessWidget {
                       order.deliveryAddress.phone,
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[600],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[600],
                       ),
                     ),
                   ],
@@ -99,17 +109,21 @@ class TransactionCustomerInfo extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.all(8.w),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF1F5F9),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? ShopAppColors.darkInputBackground
+                      : const Color(0xFFF1F5F9),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -129,7 +143,9 @@ class TransactionCustomerInfo extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[400],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[400],
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -139,7 +155,9 @@ class TransactionCustomerInfo extends StatelessWidget {
                       '${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.addressLine2.isNotEmpty ? "${order.deliveryAddress.addressLine2}, " : ""}${order.deliveryAddress.city} - ${order.deliveryAddress.pincode}',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF1E293B),
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                         height: 1.35,
                       ),
                     ),

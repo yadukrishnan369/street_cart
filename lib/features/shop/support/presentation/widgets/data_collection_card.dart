@@ -10,13 +10,20 @@ class DataCollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 240, 241, 241),
+        color: isDark
+            ? ShopAppColors.darkSurface
+            : const Color.fromARGB(255, 240, 241, 241),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +50,9 @@ class DataCollectionCard extends StatelessWidget {
           Text(
             'We collect information necessary to operate your digital storefront, including:',
             style: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontSize: 13.sp,
               height: 1.4,
             ),

@@ -17,6 +17,9 @@ class WeeklySalesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocBuilder<ShopHomeBloc, ShopHomeState>(
       builder: (context, state) {
         double weeklySales = 0.0;
@@ -36,10 +39,14 @@ class WeeklySalesCard extends StatelessWidget {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
           decoration: BoxDecoration(
-            color: ShopAppColors.primaryLight,
+            color: isDark
+                ? ShopAppColors.darkSurface
+                : ShopAppColors.primaryLight,
             borderRadius: BorderRadius.circular(24.r),
             border: Border.all(
-              color: ShopAppColors.primary.withOpacity(0.1),
+              color: isDark
+                  ? ShopAppColors.darkBorder
+                  : ShopAppColors.primary.withValues(alpha: 0.1),
               width: 1,
             ),
           ),
@@ -53,7 +60,9 @@ class WeeklySalesCard extends StatelessWidget {
                   Text(
                     'TOTAL SALES',
                     style: ShopAppTextStyles.bodySmallBold.copyWith(
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                       letterSpacing: 0.5.sp,
                     ),
                   ),
@@ -61,7 +70,9 @@ class WeeklySalesCard extends StatelessWidget {
                   Text(
                     PriceUtils.formatPrice(totalSales),
                     style: ShopAppTextStyles.bodySmallBold.copyWith(
-                      color: ShopAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                       letterSpacing: 0.5.sp,
                     ),
                   ),
@@ -79,7 +90,9 @@ class WeeklySalesCard extends StatelessWidget {
                       Text(
                         'WEEKLY SALES',
                         style: ShopAppTextStyles.caption.copyWith(
-                          color: ShopAppColors.textSecondary,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textSecondary,
                         ),
                       ),
                       SizedBox(height: 4.h),

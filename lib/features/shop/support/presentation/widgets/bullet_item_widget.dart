@@ -11,6 +11,8 @@ class BulletItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(left: 12.w, bottom: 8.h),
       child: Row(
@@ -20,8 +22,10 @@ class BulletItemWidget extends StatelessWidget {
             margin: EdgeInsets.only(top: 6.h),
             width: 5.r,
             height: 5.r,
-            decoration: const BoxDecoration(
-              color: ShopAppColors.textSecondary,
+            decoration: BoxDecoration(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               shape: BoxShape.circle,
             ),
           ),
@@ -30,7 +34,9 @@ class BulletItemWidget extends StatelessWidget {
             child: Text(
               text,
               style: ShopAppTextStyles.bodyMedium.copyWith(
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 fontSize: 13.sp,
                 height: 1.4,
               ),

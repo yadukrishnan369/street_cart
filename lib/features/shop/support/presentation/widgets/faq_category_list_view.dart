@@ -20,6 +20,8 @@ class FAQCategoryListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
       children: [
@@ -37,7 +39,9 @@ class FAQCategoryListView extends StatelessWidget {
         Text(
           categoryDesc,
           style: ShopAppTextStyles.bodySmall.copyWith(
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
             fontSize: 12.sp,
           ),
         ),
@@ -56,9 +60,16 @@ class FAQCategoryListView extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: const Color(0xFFE8F5E9),
+            color: isDark
+                ? ShopAppColors.primary.withValues(alpha: 0.15)
+                : const Color(0xFFE8F5E9),
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFC8E6C9), width: 0.8),
+            border: Border.all(
+              color: isDark
+                  ? ShopAppColors.darkBorder
+                  : const Color(0xFFC8E6C9),
+              width: 0.8,
+            ),
           ),
           child: Row(
             children: [
@@ -90,7 +101,9 @@ class FAQCategoryListView extends StatelessWidget {
                     Text(
                       'Our support team is available 24/7',
                       style: ShopAppTextStyles.bodySmall.copyWith(
-                        color: ShopAppColors.textSecondary,
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textSecondary,
                         fontSize: 11.sp,
                       ),
                     ),

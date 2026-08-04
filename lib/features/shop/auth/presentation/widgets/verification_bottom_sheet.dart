@@ -34,13 +34,15 @@ class ShopVerificationBottomSheet extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
         final secondsRemaining = state.secondsRemaining;
 
         return SafeArea(
           child: Container(
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? ShopAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
             ),
             child: SingleChildScrollView(
@@ -51,7 +53,9 @@ class ShopVerificationBottomSheet extends StatelessWidget {
                     width: 40.w,
                     height: 4.h,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(2.r),
                     ),
                   ),
@@ -68,7 +72,9 @@ class ShopVerificationBottomSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
-                      color: ShopAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -78,7 +84,9 @@ class ShopVerificationBottomSheet extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                       height: 1.5,
                     ),
                   ),
@@ -92,7 +100,9 @@ class ShopVerificationBottomSheet extends StatelessWidget {
                         child: CircularProgressIndicator(
                           value: secondsRemaining / 80,
                           strokeWidth: 4,
-                          backgroundColor: Colors.grey.shade100,
+                          backgroundColor: isDark
+                              ? ShopAppColors.darkBorder
+                              : Colors.grey.shade100,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             secondsRemaining > 20
                                 ? ShopAppColors.primary

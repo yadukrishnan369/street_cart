@@ -16,14 +16,18 @@ class SalesItemsCountCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFE2E8F0),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.01),
+            color: Colors.black.withValues(alpha: 0.01),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -34,6 +38,7 @@ class SalesItemsCountCards extends StatelessWidget {
           // Sales Count
           Expanded(
             child: _buildCountCell(
+              context: context,
               title: 'Sales Count',
               value: salesCount.toString(),
               icon: Icons.shopping_bag_rounded,
@@ -41,10 +46,15 @@ class SalesItemsCountCards extends StatelessWidget {
             ),
           ),
           // Divider
-          Container(width: 1, height: 54.h, color: const Color(0xFFE2E8F0)),
+          Container(
+            width: 1,
+            height: 54.h,
+            color: isDark ? ShopAppColors.darkBorder : const Color(0xFFE2E8F0),
+          ),
           // Items Sold
           Expanded(
             child: _buildCountCell(
+              context: context,
               title: 'Items Sold',
               value: itemsCount.toString(),
               icon: Icons.inventory_2_rounded,
@@ -57,11 +67,14 @@ class SalesItemsCountCards extends StatelessWidget {
   }
 
   Widget _buildCountCell({
+    required BuildContext context,
     required String title,
     required String value,
     required IconData icon,
     required Color iconColor,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
@@ -69,7 +82,7 @@ class SalesItemsCountCards extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(6.w),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
+              color: iconColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: iconColor, size: 16.sp),
@@ -83,7 +96,9 @@ class SalesItemsCountCards extends StatelessWidget {
                 Text(
                   title,
                   style: ShopAppTextStyles.caption.copyWith(
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     fontWeight: FontWeight.bold,
                     fontSize: 11.sp,
                   ),
@@ -94,7 +109,9 @@ class SalesItemsCountCards extends StatelessWidget {
                 Text(
                   value,
                   style: ShopAppTextStyles.heading2.copyWith(
-                    color: const Color(0xFF0F172A),
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
                   ),

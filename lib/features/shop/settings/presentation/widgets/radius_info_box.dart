@@ -11,12 +11,18 @@ class RadiusInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: ShopAppColors.primary.withAlpha(38)),
+        border: Border.all(
+          color: isDark
+              ? ShopAppColors.darkBorder
+              : ShopAppColors.primary.withValues(alpha: 0.15),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,7 +34,9 @@ class RadiusInfoBox extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                 style: ShopAppTextStyles.bodyMedium.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   height: 1.4,
                   fontSize: 12.sp,
                 ),

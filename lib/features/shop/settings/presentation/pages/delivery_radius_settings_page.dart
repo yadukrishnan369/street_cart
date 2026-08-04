@@ -50,33 +50,36 @@ class _DeliveryRadiusSettingsPageState
         ? widget.profile.fullAddress
         : '...';
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocProvider.value(
       value: widget.settingsBloc,
       child: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
         builder: (context, uiState) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : Colors.white,
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.5,
-              leading: Padding(
-                padding: EdgeInsets.all(8.r),
-                child: InkWell(
-                  onTap: () => Navigator.pop(context),
-                  borderRadius: BorderRadius.circular(20.r),
-                  child: Container(
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: ShopAppColors.primary,
-                    ),
-                  ),
+              backgroundColor: isDark
+                  ? ShopAppColors.darkBackground
+                  : Colors.white,
+              elevation: isDark ? null : 1.5,
+              shape: Border(
+                bottom: BorderSide(
+                  color: isDark
+                      ? ShopAppColors.darkBorder
+                      : ShopAppColors.border.withValues(alpha: 1.5),
+                  width: 0.5,
                 ),
               ),
               // Page Header
               title: Text(
                 'Delivery Settings',
                 style: ShopAppTextStyles.heading4.copyWith(
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -98,7 +101,9 @@ class _DeliveryRadiusSettingsPageState
                             'Shop Location',
                             style: ShopAppTextStyles.bodyMediumBold.copyWith(
                               fontSize: 18.sp,
-                              color: ShopAppColors.textPrimary,
+                              color: isDark
+                                  ? ShopAppColors.darkTextPrimary
+                                  : ShopAppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 2.h),

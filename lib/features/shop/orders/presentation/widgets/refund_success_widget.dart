@@ -16,6 +16,9 @@ class RefundSuccessWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -25,13 +28,13 @@ class RefundSuccessWidget extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 24.w),
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(24.r),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Colors.black26,
+                color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.26),
                 blurRadius: 20,
-                offset: Offset(0, 8),
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -41,8 +44,10 @@ class RefundSuccessWidget extends StatelessWidget {
               Container(
                 width: 72.w,
                 height: 72.w,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE8F5E9),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? ShopAppColors.primary.withValues(alpha: 0.2)
+                      : const Color(0xFFE8F5E9),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -57,7 +62,9 @@ class RefundSuccessWidget extends StatelessWidget {
                 'Refund Initiated Successfully',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -67,7 +74,12 @@ class RefundSuccessWidget extends StatelessWidget {
               Text(
                 'A refund of ₹${PriceUtils.formatPrice(amount)} has been successfully processed for this order.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[600], fontSize: 13.sp),
+                style: TextStyle(
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : Colors.grey[600],
+                  fontSize: 13.sp,
+                ),
               ),
               SizedBox(height: 24.h),
               ElevatedButton(

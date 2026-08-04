@@ -17,11 +17,21 @@ class ShopProfileHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasImage = profile.profileImageUrl.isNotEmpty;
 
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        border: isDark
+            ? Border.all(
+                color: ShopAppColors.darkBorder.withValues(alpha: 0.8),
+                width: 0.8,
+              )
+            : null,
+      ),
       padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 24.w),
       child: Column(
         children: [
@@ -30,7 +40,12 @@ class ShopProfileHeaderCard extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade100, width: 3),
+                  border: Border.all(
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : Colors.grey.shade100,
+                    width: 3,
+                  ),
                 ),
                 // Shop Profile Image
                 child: CircleAvatar(
@@ -75,6 +90,9 @@ class ShopProfileHeaderCard extends StatelessWidget {
             style: ShopAppTextStyles.heading2.copyWith(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -114,14 +132,18 @@ class ShopProfileHeaderCard extends StatelessWidget {
                   Icon(
                     Icons.location_on_outlined,
                     size: 14.sp,
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                   ),
                   SizedBox(width: 4.w),
                   // Shop Location/Address
                   Text(
                     '${profile.city.isNotEmpty ? profile.city : 'Location'}, ${profile.state.isNotEmpty ? profile.state : 'State'}',
                     style: ShopAppTextStyles.bodySmall.copyWith(
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -134,9 +156,16 @@ class ShopProfileHeaderCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFE8F5E9),
+              color: isDark
+                  ? ShopAppColors.primary.withValues(alpha: 0.15)
+                  : const Color(0xFFE8F5E9),
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: const Color(0xFFC8E6C9), width: 1),
+              border: Border.all(
+                color: isDark
+                    ? ShopAppColors.primary.withValues(alpha: 0.4)
+                    : const Color(0xFFC8E6C9),
+                width: 1,
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

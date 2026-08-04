@@ -15,6 +15,7 @@ class AddVariantButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -23,8 +24,8 @@ class AddVariantButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
           color: hasVariants
-              ? ShopAppColors.primaryLight
-              : ShopAppColors.primary.withValues(alpha: 0.06),
+              ? ShopAppColors.primary.withValues(alpha: isDark ? 0.2 : 0.08)
+              : ShopAppColors.primary.withValues(alpha: isDark ? 0.15 : 0.06),
           borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
             color: ShopAppColors.primary.withValues(alpha: 0.5),

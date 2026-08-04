@@ -20,6 +20,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Get returned item Data
     final returnedData = ShopOrdersHelper.getReturnedItemCardData(
       order: order,
@@ -53,9 +56,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: badgeColor.withOpacity(0.08),
+                  color: badgeColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: badgeColor.withOpacity(0.15)),
+                  border: Border.all(color: badgeColor.withValues(alpha: 0.15)),
                 ),
                 child: Text(
                   paymentLabel,
@@ -73,9 +76,11 @@ class ReturnedItemInfoCard extends StatelessWidget {
           width: double.infinity,
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
           ),
           child: Column(
             children: [
@@ -121,7 +126,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: ShopAppColors.textPrimary,
+                                    color: isDark
+                                        ? ShopAppColors.darkTextPrimary
+                                        : ShopAppColors.textPrimary,
                                   ),
                                 ),
                                 SizedBox(height: 4.h),
@@ -134,7 +141,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
                                       '${item.selectedSize ?? "Default Size"}, ${item.selectedColor ?? "Default Color"}',
                                       style: TextStyle(
                                         fontSize: 12.sp,
-                                        color: Colors.grey[500],
+                                        color: isDark
+                                            ? ShopAppColors.darkTextSecondary
+                                            : Colors.grey[500],
                                       ),
                                     ),
                                     if (item.returnStatus != null &&
@@ -150,11 +159,23 @@ class ReturnedItemInfoCard extends StatelessWidget {
                                                       'return_picked' ||
                                                   item.returnStatus ==
                                                       'returned'
-                                              ? const Color(0xFFE8F5E9)
+                                              ? (isDark
+                                                    ? const Color(
+                                                        0xFF1B5E20,
+                                                      ).withValues(alpha: 0.3)
+                                                    : const Color(0xFFE8F5E9))
                                               : item.returnStatus ==
                                                     'return_confirmed'
-                                              ? const Color(0xFFE3F2FD)
-                                              : const Color(0xFFFFF3E0),
+                                              ? (isDark
+                                                    ? const Color(
+                                                        0xFF0D47A1,
+                                                      ).withValues(alpha: 0.3)
+                                                    : const Color(0xFFE3F2FD))
+                                              : (isDark
+                                                    ? const Color(
+                                                        0xFFE65100,
+                                                      ).withValues(alpha: 0.3)
+                                                    : const Color(0xFFFFF3E0)),
                                           borderRadius: BorderRadius.circular(
                                             6.r,
                                           ),
@@ -207,7 +228,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
                                       'Qty: ${item.quantity.toString().padLeft(2, '0')}',
                                       style: TextStyle(
                                         fontSize: 12.sp,
-                                        color: Colors.grey[500],
+                                        color: isDark
+                                            ? ShopAppColors.darkTextSecondary
+                                            : Colors.grey[500],
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -220,11 +243,21 @@ class ReturnedItemInfoCard extends StatelessWidget {
                       ),
                     ),
                     if (index < returnedItems.length - 1)
-                      const Divider(height: 1.0, thickness: 0.2),
+                      Divider(
+                        height: 1.0,
+                        thickness: 0.2,
+                        color: isDark
+                            ? ShopAppColors.darkBorder
+                            : Colors.grey[300],
+                      ),
                   ],
                 );
               }),
-              const Divider(height: 1.0, thickness: 0.2),
+              Divider(
+                height: 1.0,
+                thickness: 0.2,
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Row(
@@ -235,7 +268,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
                       'Items Total',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[500],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[500],
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -244,18 +279,26 @@ class ReturnedItemInfoCard extends StatelessWidget {
                       '₹${PriceUtils.formatPrice(totalAmount)}',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: ShopAppColors.textPrimary,
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1.0, thickness: 0.2),
+              Divider(
+                height: 1.0,
+                thickness: 0.2,
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
+              ),
               Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
+                  color: isDark
+                      ? ShopAppColors.darkBackground
+                      : const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(20.r),
                   ),
@@ -268,7 +311,9 @@ class ReturnedItemInfoCard extends StatelessWidget {
                       'Total Amount',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[600],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[600],
                         fontWeight: FontWeight.bold,
                       ),
                     ),

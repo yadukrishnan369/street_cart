@@ -20,6 +20,7 @@ class RecentTransactionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final displayList = transactions;
     // Transaction Empty State
     if (displayList.isEmpty) {
@@ -30,9 +31,13 @@ class RecentTransactionsList extends StatelessWidget {
           height: 300.h,
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            border: Border.all(
+              color: isDark
+                  ? ShopAppColors.darkBorder
+                  : const Color(0xFFE2E8F0),
+            ),
           ),
           child: Center(
             child: Column(
@@ -77,9 +82,13 @@ class RecentTransactionsList extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? ShopAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : const Color(0xFFE2E8F0),
+              ),
             ),
             child: Row(
               children: [
@@ -89,7 +98,9 @@ class RecentTransactionsList extends StatelessWidget {
                   child: Container(
                     width: 48.r,
                     height: 48.r,
-                    color: const Color(0xFFF1F5F9),
+                    color: isDark
+                        ? ShopAppColors.darkInputBackground
+                        : const Color(0xFFF1F5F9),
                     child: tx.productImage.isNotEmpty
                         ? CachedNetworkImage(
                             imageUrl: tx.productImage,
@@ -117,7 +128,9 @@ class RecentTransactionsList extends StatelessWidget {
                       Text(
                         tx.productName,
                         style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                          color: const Color(0xFF0F172A),
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -130,7 +143,9 @@ class RecentTransactionsList extends StatelessWidget {
                           tx.date,
                         ),
                         style: ShopAppTextStyles.caption.copyWith(
-                          color: ShopAppColors.textSecondary,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textSecondary,
                         ),
                       ),
                     ],

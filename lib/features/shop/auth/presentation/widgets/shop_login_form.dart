@@ -25,6 +25,9 @@ class ShopLoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Form(
@@ -35,11 +38,22 @@ class ShopLoginForm extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               // Welcome Contents
               children: [
-                Text('Welcome back', style: ShopAppTextStyles.heading1),
+                Text(
+                  'Welcome back',
+                  style: ShopAppTextStyles.heading1.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
+                ),
                 SizedBox(height: 8.h),
                 Text(
                   'Log in to manage your shop and reach millions of customers across our network.',
-                  style: ShopAppTextStyles.bodyMedium,
+                  style: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
+                  ),
                 ),
                 SizedBox(height: 24.h),
                 // Email Field
@@ -49,17 +63,33 @@ class ShopLoginForm extends StatelessWidget {
                   hintText: 'e.g. name@business.com',
                   keyboardType: TextInputType.emailAddress,
                   validator: Validators.validateEmail,
-                  labelStyle: ShopAppTextStyles.bodyMediumBold,
-                  textStyle: ShopAppTextStyles.bodyMedium,
-                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-                    color: ShopAppColors.textTertiary,
+                  labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
-                  fillColor: ShopAppColors.surface,
-                  borderColor: ShopAppColors.border,
+                  textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
+                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
+                  ),
+                  fillColor: isDark
+                      ? ShopAppColors.darkInputBackground
+                      : ShopAppColors.surface,
+                  borderColor: isDark
+                      ? ShopAppColors.darkBorder
+                      : ShopAppColors.border,
                   focusedBorderColor: ShopAppColors.primary,
                   prefixIcon: Icon(
                     Icons.email_outlined,
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     size: 20.sp,
                   ),
                 ),
@@ -71,17 +101,33 @@ class ShopLoginForm extends StatelessWidget {
                   hintText: 'Enter your password',
                   isPassword: !state.isPasswordVisible,
                   validator: Validators.validateShopLoginPassword,
-                  labelStyle: ShopAppTextStyles.bodyMediumBold,
-                  textStyle: ShopAppTextStyles.bodyMedium,
-                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-                    color: ShopAppColors.textTertiary,
+                  labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
-                  fillColor: ShopAppColors.surface,
-                  borderColor: ShopAppColors.border,
+                  textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
+                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
+                  ),
+                  fillColor: isDark
+                      ? ShopAppColors.darkInputBackground
+                      : ShopAppColors.surface,
+                  borderColor: isDark
+                      ? ShopAppColors.darkBorder
+                      : ShopAppColors.border,
                   focusedBorderColor: ShopAppColors.primary,
                   prefixIcon: Icon(
                     Icons.lock_outline,
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     size: 20.sp,
                   ),
                   suffixIcon: IconButton(
@@ -89,7 +135,9 @@ class ShopLoginForm extends StatelessWidget {
                       state.isPasswordVisible
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                       size: 20.sp,
                     ),
                     onPressed: () {
@@ -139,7 +187,14 @@ class ShopLoginForm extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('New seller? ', style: ShopAppTextStyles.bodyMedium),
+                    Text(
+                      'New seller? ',
+                      style: ShopAppTextStyles.bodyMedium.copyWith(
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textSecondary,
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         // Navigate to Signup Page
@@ -167,14 +222,18 @@ class ShopLoginForm extends StatelessWidget {
                       Icon(
                         Icons.lock_person_outlined,
                         size: 14.sp,
-                        color: ShopAppColors.textTertiary,
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textTertiary,
                       ),
                       SizedBox(width: 8.w),
                       // Bottom Content
                       Text(
                         'SECURE MERCHANT AUTHENTICATION',
                         style: ShopAppTextStyles.caption.copyWith(
-                          color: ShopAppColors.textTertiary,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textTertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

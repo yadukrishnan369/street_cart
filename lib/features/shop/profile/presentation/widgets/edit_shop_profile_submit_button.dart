@@ -57,8 +57,8 @@ class EditShopProfileSubmitButton extends StatelessWidget {
       text: isUploadingAny
           ? 'Uploading...'
           : (isSaving
-              ? 'Saving...'
-              : (uiState.currentStep == 3 ? 'Save Changes' : 'Next')),
+                ? 'Saving...'
+                : (uiState.currentStep == 3 ? 'Save Changes' : 'Next')),
       backgroundColor: isBusy ? Colors.grey : ShopAppColors.primary,
       textStyle: ShopAppTextStyles.buttonText,
       suffixIcon: isBusy

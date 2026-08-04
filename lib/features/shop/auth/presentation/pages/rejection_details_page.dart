@@ -15,8 +15,11 @@ class RejectionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: ShopAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -29,7 +32,9 @@ class RejectionDetailsPage extends StatelessWidget {
         title: Text(
           'Rejection Details',
           style: ShopAppTextStyles.heading4.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
           ),
         ),
       ),
@@ -42,9 +47,14 @@ class RejectionDetailsPage extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: Colors.red.shade50,
+                color: isDark
+                    ? Colors.red.shade900.withValues(alpha: 0.25)
+                    : Colors.red.shade50,
                 borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: Colors.red.shade200, width: 1.5.w),
+                border: Border.all(
+                  color: isDark ? Colors.red.shade700 : Colors.red.shade200,
+                  width: 1.5.w,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +63,9 @@ class RejectionDetailsPage extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.error_outline_rounded,
-                        color: Colors.red.shade700,
+                        color: isDark
+                            ? Colors.red.shade300
+                            : Colors.red.shade700,
                         size: 24.sp,
                       ),
                       SizedBox(width: 12.w),
@@ -61,7 +73,9 @@ class RejectionDetailsPage extends StatelessWidget {
                       Text(
                         'Reason for Rejection',
                         style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                          color: Colors.red.shade700,
+                          color: isDark
+                              ? Colors.red.shade300
+                              : Colors.red.shade700,
                         ),
                       ),
                     ],
@@ -73,7 +87,7 @@ class RejectionDetailsPage extends StatelessWidget {
                         ? shop.rejectionReason
                         : 'No specific reason provided. Please verify all details and documents before resubmitting.',
                     style: ShopAppTextStyles.bodyMedium.copyWith(
-                      color: Colors.red.shade900,
+                      color: isDark ? Colors.red.shade200 : Colors.red.shade900,
                       height: 1.5,
                     ),
                   ),

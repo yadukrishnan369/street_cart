@@ -1,7 +1,6 @@
 import 'package:street_cart/features/admin/revenue/domain/repositories/i_admin_revenue_repository.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 
-/// Use case: fetch all products from the revenue repository.
 class GetRevenueProducts {
   final IAdminRevenueRepository repository;
 

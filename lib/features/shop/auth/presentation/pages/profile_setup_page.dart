@@ -26,6 +26,9 @@ class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocListener<ShopAuthBloc, ShopAuthState>(
       listener: (context, state) {
         final bool isSuccess =
@@ -50,7 +53,7 @@ class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: ShopAppColors.background,
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -59,7 +62,14 @@ class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
             onPressed: () => Navigator.pop(context),
           ),
           // Page Header
-          title: Text('Profile Setup', style: ShopAppTextStyles.heading4),
+          title: Text(
+            'Profile Setup',
+            style: ShopAppTextStyles.heading4.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+          ),
           centerTitle: true,
         ),
         body: SingleChildScrollView(

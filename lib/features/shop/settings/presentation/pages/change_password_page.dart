@@ -32,22 +32,30 @@ class ChangePasswordPage extends StatelessWidget {
       builder: (BuildContext context, ShopSettingsState state) {
         final bool isLoading = state.status == ShopSettingsStatus.loading;
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : Colors.white,
+            elevation: isDark ? null : 1.5,
+            shape: Border(
+              bottom: BorderSide(
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border.withValues(alpha: 1.5),
+                width: 0.5,
+              ),
             ),
             // Page Header
             title: Text(
               'Change Password',
               style: ShopAppTextStyles.heading4.copyWith(
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -64,13 +72,18 @@ class ChangePasswordPage extends StatelessWidget {
                   style: ShopAppTextStyles.heading2.copyWith(
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   'Enter your current password and choose a new strong password to update your shop owner credentials.',
                   style: ShopAppTextStyles.bodyMedium.copyWith(
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -87,10 +100,14 @@ class ChangePasswordPage extends StatelessWidget {
                     vertical: 16.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8F9FA),
+                    color: isDark
+                        ? ShopAppColors.darkSurface
+                        : const Color(0xFFF8F9FA),
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: const Color(0xFFECEFF1),
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : const Color(0xFFECEFF1),
                       width: 0.8,
                     ),
                   ),
@@ -118,7 +135,9 @@ class ChangePasswordPage extends StatelessWidget {
                             Text(
                               'Mix uppercase letters, numbers, and symbols to create a strong password. Avoid using common words or birthdates.',
                               style: ShopAppTextStyles.bodySmall.copyWith(
-                                color: ShopAppColors.textSecondary,
+                                color: isDark
+                                    ? ShopAppColors.darkTextSecondary
+                                    : ShopAppColors.textSecondary,
                                 height: 1.4,
                                 fontSize: 11.sp,
                               ),

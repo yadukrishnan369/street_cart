@@ -52,6 +52,8 @@ class _RecentTransactionsSectionState extends State<RecentTransactionsSection> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -65,7 +67,9 @@ class _RecentTransactionsSectionState extends State<RecentTransactionsSection> {
                 'Sales Transactions',
                 style: ShopAppTextStyles.bodyLargeBold.copyWith(
                   fontSize: 16.sp,
-                  color: const Color(0xFF0F172A),
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
               // Icon for move Top of the page

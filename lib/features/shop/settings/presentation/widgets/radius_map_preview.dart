@@ -10,12 +10,17 @@ class RadiusMapPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: 200.h,
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.r),

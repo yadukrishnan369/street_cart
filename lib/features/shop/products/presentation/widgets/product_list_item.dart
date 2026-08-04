@@ -27,6 +27,9 @@ class ProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final bool isOutOfStock = product.stockQuantity <= 0;
     final bool isDisabledByAdmin = product.disabledByAdmin;
 
@@ -50,11 +53,14 @@ class ProductListItem extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 16.h),
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -67,7 +73,9 @@ class ProductListItem extends StatelessWidget {
                 child: Container(
                   width: 70.w,
                   height: 70.w,
-                  color: Colors.grey[100],
+                  color: isDark
+                      ? ShopAppColors.darkInputBackground
+                      : Colors.grey[100],
                   // Product Image
                   child: product.images.isNotEmpty
                       ? CachedNetworkImage(
@@ -89,7 +97,11 @@ class ProductListItem extends StatelessWidget {
                     // Product Name
                     Text(
                       product.name,
-                      style: ShopAppTextStyles.bodyMediumBold,
+                      style: isDark
+                          ? ShopAppTextStyles.bodyMediumBold.copyWith(
+                              color: ShopAppColors.darkTextPrimary,
+                            )
+                          : ShopAppTextStyles.bodyMediumBold,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

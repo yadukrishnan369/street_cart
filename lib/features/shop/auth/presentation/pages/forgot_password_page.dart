@@ -15,13 +15,21 @@ class ShopForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: ShopAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: ShopAppColors.textPrimary),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -66,11 +74,21 @@ class ShopForgotPasswordPage extends StatelessWidget {
                       "Street Cart",
                       style: ShopAppTextStyles.heading2.copyWith(
                         fontSize: 20.sp,
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                       ),
                     ),
                     40.verticalSpace,
                     // Page Title and Contents
-                    Text("Forgot Password", style: ShopAppTextStyles.heading1),
+                    Text(
+                      "Forgot Password",
+                      style: ShopAppTextStyles.heading1.copyWith(
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
+                      ),
+                    ),
                     16.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -78,7 +96,9 @@ class ShopForgotPasswordPage extends StatelessWidget {
                         "Enter your registered business email address to receive a password reset link",
                         textAlign: TextAlign.center,
                         style: ShopAppTextStyles.bodyMedium.copyWith(
-                          color: ShopAppColors.textSecondary,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textSecondary,
                           height: 1.5,
                         ),
                       ),

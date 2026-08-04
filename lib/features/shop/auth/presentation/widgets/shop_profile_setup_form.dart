@@ -47,6 +47,9 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Form(
       key: _formKey,
       child: BlocBuilder<ShopAuthBloc, ShopAuthState>(
@@ -58,11 +61,16 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
               Text(
                 'Let Street Cart know about your shop for verification',
                 textAlign: TextAlign.center,
-                style: ShopAppTextStyles.heading2.copyWith(height: 1.2),
+                style: ShopAppTextStyles.heading2.copyWith(
+                  height: 1.2,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
               ),
               SizedBox(height: 40.h),
               // Category Section
-              _buildFieldLabel('Business Category'),
+              _buildFieldLabel('Business Category', isDark),
               state.categoriesLoading
                   ? const Center(
                       child: CircularProgressIndicator(
@@ -71,22 +79,35 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                     )
                   : DropdownButtonFormField<String>(
                       isExpanded: true,
+                      dropdownColor: isDark
+                          ? ShopAppColors.darkSurface
+                          : ShopAppColors.surface,
                       hint: Text(
                         'Select a category...',
-                        style: ShopAppTextStyles.bodyMedium,
+                        style: ShopAppTextStyles.bodyMedium.copyWith(
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : ShopAppColors.textSecondary,
+                        ),
                       ),
-                      value: state.selectedCategory,
-                      decoration: _inputDecoration(),
-                      icon: const Icon(
+                      initialValue: state.selectedCategory,
+                      decoration: _inputDecoration(isDark),
+                      icon: Icon(
                         Icons.keyboard_arrow_down,
-                        color: ShopAppColors.textSecondary,
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textSecondary,
                       ),
                       items: state.categories.map((String category) {
                         return DropdownMenuItem<String>(
                           value: category,
                           child: Text(
                             category,
-                            style: ShopAppTextStyles.bodyMediumBold,
+                            style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                              color: isDark
+                                  ? ShopAppColors.darkTextPrimary
+                                  : ShopAppColors.textPrimary,
+                            ),
                           ),
                         );
                       }).toList(),
@@ -107,13 +128,27 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 hintText: 'Tell us about your unique shop...',
                 maxLines: 4,
                 validator: Validators.validateDescription,
-                labelStyle: ShopAppTextStyles.bodyMediumBold,
-                textStyle: ShopAppTextStyles.bodyMedium,
-                hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-                  color: ShopAppColors.textTertiary,
+                labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
-                fillColor: ShopAppColors.surface,
-                borderColor: ShopAppColors.border,
+                textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textTertiary,
+                ),
+                fillColor: isDark
+                    ? ShopAppColors.darkInputBackground
+                    : ShopAppColors.surface,
+                borderColor: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border,
                 focusedBorderColor: ShopAppColors.primary,
               ),
               SizedBox(height: 20.h),
@@ -123,18 +158,32 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 controller: _gstController,
                 hintText: '22AAAAA0000A1Z5',
                 validator: Validators.validateGST,
-                labelStyle: ShopAppTextStyles.bodyMediumBold,
-                textStyle: ShopAppTextStyles.bodyMedium,
-                hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-                  color: ShopAppColors.textTertiary,
+                labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
-                fillColor: ShopAppColors.surface,
-                borderColor: ShopAppColors.border,
+                textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textTertiary,
+                ),
+                fillColor: isDark
+                    ? ShopAppColors.darkInputBackground
+                    : ShopAppColors.surface,
+                borderColor: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border,
                 focusedBorderColor: ShopAppColors.primary,
               ),
               SizedBox(height: 32.h),
               // Documents Section
-              _buildFieldLabel('REQUIRED DOCUMENTS'),
+              _buildFieldLabel('REQUIRED DOCUMENTS', isDark),
               // Business Licence Document Selector
               _buildDocumentPicker(
                 'Business License',
@@ -142,6 +191,7 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 Icons.description_outlined,
                 state.businessLicense != null,
                 () => _pickImage(context, true),
+                isDark,
               ),
               SizedBox(height: 16.h),
               // Owner ID Proof Document Selector
@@ -151,6 +201,7 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 Icons.badge_outlined,
                 state.ownerId != null,
                 () => _pickImage(context, false),
+                isDark,
               ),
               SizedBox(height: 48.h),
               // Save and Continue button
@@ -194,7 +245,11 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
                 child: Text(
                   'You can change these settings at any time in your shop dashboard.',
                   textAlign: TextAlign.center,
-                  style: ShopAppTextStyles.bodySmall,
+                  style: ShopAppTextStyles.bodySmall.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
+                  ),
                 ),
               ),
               SizedBox(height: 40.h),
@@ -205,25 +260,38 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
     );
   }
 
-  Widget _buildFieldLabel(String label) {
+  Widget _buildFieldLabel(String label, bool isDark) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
-      child: Text(label, style: ShopAppTextStyles.bodyMediumBold),
+      child: Text(
+        label,
+        style: ShopAppTextStyles.bodyMediumBold.copyWith(
+          color: isDark
+              ? ShopAppColors.darkTextPrimary
+              : ShopAppColors.textPrimary,
+        ),
+      ),
     );
   }
 
-  InputDecoration _inputDecoration() {
+  InputDecoration _inputDecoration(bool isDark) {
     return InputDecoration(
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-      fillColor: ShopAppColors.surface,
+      fillColor: isDark
+          ? ShopAppColors.darkInputBackground
+          : ShopAppColors.surface,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: ShopAppColors.border),
+        borderSide: BorderSide(
+          color: isDark ? ShopAppColors.darkBorder : ShopAppColors.border,
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: ShopAppColors.border),
+        borderSide: BorderSide(
+          color: isDark ? ShopAppColors.darkBorder : ShopAppColors.border,
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
@@ -241,6 +309,7 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
     IconData icon,
     bool isPicked,
     VoidCallback onTap,
+    bool isDark,
   ) {
     return InkWell(
       onTap: onTap,
@@ -248,10 +317,12 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: ShopAppColors.surface,
+          color: isDark ? ShopAppColors.darkSurface : ShopAppColors.surface,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isPicked ? ShopAppColors.primary : ShopAppColors.border,
+            color: isPicked
+                ? ShopAppColors.primary
+                : (isDark ? ShopAppColors.darkBorder : ShopAppColors.border),
             width: isPicked ? 2 : 1.w,
           ),
         ),
@@ -270,8 +341,22 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: ShopAppTextStyles.bodyMediumBold),
-                  Text(subtitle, style: ShopAppTextStyles.bodySmall),
+                  Text(
+                    title,
+                    style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: ShopAppTextStyles.bodySmall.copyWith(
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -284,7 +369,9 @@ class _ShopProfileSetupFormState extends State<ShopProfileSetupForm> {
             else
               Icon(
                 Icons.file_upload_outlined,
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 size: 20.sp,
               ),
           ],

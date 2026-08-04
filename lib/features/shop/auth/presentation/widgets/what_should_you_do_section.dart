@@ -11,10 +11,20 @@ class WhatShouldYouDoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('What should you do?', style: ShopAppTextStyles.heading3),
+        Text(
+          'What should you do?',
+          style: ShopAppTextStyles.heading3.copyWith(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+        ),
         SizedBox(height: 16.h),
         // Guidence info 1
         _buildStepRow(
@@ -22,6 +32,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
           title: 'Correct Information',
           description:
               'Tap the button below to update your documents or fields matching the feedback.',
+          isDark: isDark,
         ),
         SizedBox(height: 16.h),
         // Guidence info 2
@@ -30,6 +41,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
           title: 'Resubmit Application',
           description:
               'After editing, save changes to resubmit your profile for review.',
+          isDark: isDark,
         ),
         SizedBox(height: 48.h),
         // Primary Button for Submit Details Again
@@ -52,6 +64,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
     required IconData icon,
     required String title,
     required String description,
+    required bool isDark,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,12 +82,21 @@ class WhatShouldYouDoSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: ShopAppTextStyles.bodyMediumBold),
+              Text(
+                title,
+                style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+              ),
               SizedBox(height: 4.h),
               Text(
                 description,
                 style: ShopAppTextStyles.bodySmall.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   height: 1.4,
                 ),
               ),

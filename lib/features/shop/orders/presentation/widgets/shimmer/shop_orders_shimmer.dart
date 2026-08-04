@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
 // Shop Orders Shimmer
 class ShopOrdersShimmer extends StatelessWidget {
@@ -8,6 +9,11 @@ class ShopOrdersShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final containerColor = isDark ? Colors.grey[850]! : Colors.white;
+
     return ListView.builder(
       itemCount: 4,
       padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -17,19 +23,19 @@ class ShopOrdersShimmer extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
+            baseColor: baseColor,
+            highlightColor: highlightColor,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -38,7 +44,7 @@ class ShopOrdersShimmer extends StatelessWidget {
                   width: 72.w,
                   height: 72.w,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
@@ -55,12 +61,12 @@ class ShopOrdersShimmer extends StatelessWidget {
                           Container(
                             width: 60.w,
                             height: 12.h,
-                            color: Colors.white,
+                            color: containerColor,
                           ),
                           Container(
                             width: 40.w,
                             height: 10.h,
-                            color: Colors.white,
+                            color: containerColor,
                           ),
                         ],
                       ),
@@ -68,13 +74,13 @@ class ShopOrdersShimmer extends StatelessWidget {
                       Container(
                         width: 140.w,
                         height: 14.h,
-                        color: Colors.white,
+                        color: containerColor,
                       ),
                       SizedBox(height: 4.h),
                       Container(
                         width: 100.w,
                         height: 12.h,
-                        color: Colors.white,
+                        color: containerColor,
                       ),
                       SizedBox(height: 12.h),
                       Row(
@@ -83,7 +89,7 @@ class ShopOrdersShimmer extends StatelessWidget {
                           Container(
                             width: 50.w,
                             height: 16.h,
-                            color: Colors.white,
+                            color: containerColor,
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -91,14 +97,14 @@ class ShopOrdersShimmer extends StatelessWidget {
                               Container(
                                 width: 60.w,
                                 height: 12.h,
-                                color: Colors.white,
+                                color: containerColor,
                               ),
                               SizedBox(width: 8.w),
                               Container(
                                 width: 40.w,
                                 height: 18.h,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: containerColor,
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                               ),

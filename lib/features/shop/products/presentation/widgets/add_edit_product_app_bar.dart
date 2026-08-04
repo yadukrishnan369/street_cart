@@ -20,17 +20,29 @@ class AddEditProductAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: ShopAppColors.textPrimary),
+        icon: Icon(
+          Icons.arrow_back,
+          color: isDark
+              ? ShopAppColors.darkTextPrimary
+              : ShopAppColors.textPrimary,
+        ),
         onPressed: () => Navigator.pop(context),
       ),
       // App Bar Title
       title: Text(
         !isEdit ? 'Add Product' : 'Edit Product',
-        style: ShopAppTextStyles.heading3,
+        style: isDark
+            ? ShopAppTextStyles.heading3.copyWith(
+                color: ShopAppColors.darkTextPrimary,
+              )
+            : ShopAppTextStyles.heading3,
       ),
       actions: [
         BlocBuilder<AddEditProductBloc, AddEditProductState>(
@@ -42,7 +54,9 @@ class AddEditProductAppBar extends StatelessWidget
                 !isEdit ? 'PUBLISH' : 'SAVE',
                 style: TextStyle(
                   color: state.isPublishing
-                      ? ShopAppColors.textSecondary
+                      ? (isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textSecondary)
                       : ShopAppColors.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 14.sp,

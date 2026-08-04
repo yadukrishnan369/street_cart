@@ -12,14 +12,27 @@ class ShopDeliveryRadiusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        border: isDark
+            ? Border.all(
+                color: ShopAppColors.darkBorder.withValues(alpha: 0.5),
+                width: 0.8,
+              )
+            : null,
+      ),
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF4F7F6),
+          color: isDark
+              ? ShopAppColors.darkInputBackground
+              : const Color(0xFFF4F7F6),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
@@ -38,7 +51,9 @@ class ShopDeliveryRadiusCard extends StatelessWidget {
                 Text(
                   'Delivery Radius',
                   style: ShopAppTextStyles.bodySmall.copyWith(
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -47,7 +62,9 @@ class ShopDeliveryRadiusCard extends StatelessWidget {
                 Text(
                   '${profile.deliveryRadius.toStringAsFixed(0)} km coverage',
                   style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                     fontSize: 14.sp,
                   ),
                 ),

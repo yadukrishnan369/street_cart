@@ -24,17 +24,36 @@ class ShopSalesTransactionDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final orderIdPrefix = SalesAnalyticsHelper.formatTransID(order.id);
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: isDark
+          ? ShopAppColors.darkBackground
+          : const Color(0xFFF8FAFC),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
         centerTitle: true,
+        leading: BackButton(
+          color: isDark
+              ? ShopAppColors.darkTextPrimary
+              : ShopAppColors.textPrimary,
+        ),
+        elevation: isDark ? null : 1.5,
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.0),
+            width: 0.5,
+          ),
+        ),
         // Page Header
         title: Text(
           'Transaction #$orderIdPrefix',
           style: TextStyle(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),

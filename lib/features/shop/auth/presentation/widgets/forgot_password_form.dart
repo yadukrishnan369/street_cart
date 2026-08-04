@@ -33,6 +33,9 @@ class _ShopForgotPasswordFormState extends State<ShopForgotPasswordForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -45,13 +48,27 @@ class _ShopForgotPasswordFormState extends State<ShopForgotPasswordForm> {
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             validator: Validators.validateEmail,
-            labelStyle: ShopAppTextStyles.bodyMediumBold,
-            textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textTertiary,
+            labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
-            fillColor: ShopAppColors.surface,
-            borderColor: ShopAppColors.border,
+            textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textTertiary,
+            ),
+            fillColor: isDark
+                ? ShopAppColors.darkInputBackground
+                : ShopAppColors.surface,
+            borderColor: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border,
             focusedBorderColor: ShopAppColors.primary,
             prefixIcon: Icon(
               Icons.email_outlined,

@@ -16,26 +16,35 @@ class FAQExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: ExpansionTile(
         // Expansion FAQ Question
         title: Text(
           question,
           style: ShopAppTextStyles.bodyMediumBold.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontSize: 14.sp,
           ),
         ),
         shape: const RoundedRectangleBorder(side: BorderSide.none),
         collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
         iconColor: ShopAppColors.primary,
-        collapsedIconColor: ShopAppColors.textTertiary,
+        collapsedIconColor: isDark
+            ? ShopAppColors.darkTextSecondary
+            : ShopAppColors.textTertiary,
         childrenPadding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
         expandedAlignment: Alignment.topLeft,
         children: [
@@ -43,7 +52,9 @@ class FAQExpansionTile extends StatelessWidget {
           Text(
             answer,
             style: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontSize: 13.sp,
               height: 1.4,
             ),

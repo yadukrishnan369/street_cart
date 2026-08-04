@@ -16,9 +16,20 @@ class ShopProfileSectionBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        border: isDark
+            ? Border.all(
+                color: ShopAppColors.darkBorder.withValues(alpha: 0.8),
+                width: 0.8,
+              )
+            : null,
+      ),
       padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 24.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +38,9 @@ class ShopProfileSectionBlock extends StatelessWidget {
           Text(
             title,
             style: ShopAppTextStyles.bodySmall.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontWeight: FontWeight.bold,
               fontSize: 12.sp,
               letterSpacing: 0.5.sp,
@@ -56,6 +69,8 @@ class ShopProfileGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -63,7 +78,9 @@ class ShopProfileGridItem extends StatelessWidget {
         Text(
           label,
           style: ShopAppTextStyles.bodySmall.copyWith(
-            color: ShopAppColors.textTertiary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textTertiary,
             fontSize: 11.sp,
           ),
         ),
@@ -71,7 +88,11 @@ class ShopProfileGridItem extends StatelessWidget {
         Text(
           value,
           style: ShopAppTextStyles.bodyMediumBold.copyWith(
-            color: valueColor ?? ShopAppColors.textPrimary,
+            color:
+                valueColor ??
+                (isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary),
             fontSize: 13.sp,
           ),
         ),

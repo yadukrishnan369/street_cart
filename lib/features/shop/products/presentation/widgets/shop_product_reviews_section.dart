@@ -43,6 +43,9 @@ class ShopProductReviewsSection extends StatelessWidget {
           }
 
           if (state is ShopReviewsLoaded) {
+            final theme = Theme.of(context);
+            final isDark = theme.brightness == Brightness.dark;
+
             final reviews = state.reviews;
             // Empty State
             if (reviews.isEmpty) {
@@ -53,7 +56,9 @@ class ShopProductReviewsSection extends StatelessWidget {
                   Text(
                     'Customer Reviews',
                     style: TextStyle(
-                      color: CustomerAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : CustomerAppColors.textPrimary,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -63,14 +68,20 @@ class ShopProductReviewsSection extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? ShopAppColors.darkSurface : Colors.white,
                       borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      border: Border.all(
+                        color: isDark
+                            ? ShopAppColors.darkBorder
+                            : const Color(0xFFE2E8F0),
+                      ),
                     ),
                     child: Text(
                       'No reviews yet for this product.',
                       style: TextStyle(
-                        color: const Color(0xFF64748B),
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : const Color(0xFF64748B),
                         fontSize: 13.sp,
                       ),
                     ),
@@ -92,7 +103,9 @@ class ShopProductReviewsSection extends StatelessWidget {
                     Text(
                       'Product Ratings & Reviews',
                       style: TextStyle(
-                        color: CustomerAppColors.textPrimary,
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : CustomerAppColors.textPrimary,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -109,7 +122,9 @@ class ShopProductReviewsSection extends StatelessWidget {
                         Text(
                           averageRating.toStringAsFixed(1),
                           style: TextStyle(
-                            color: CustomerAppColors.textPrimary,
+                            color: isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : CustomerAppColors.textPrimary,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                           ),
@@ -118,7 +133,9 @@ class ShopProductReviewsSection extends StatelessWidget {
                         Text(
                           ' (${reviews.length})',
                           style: TextStyle(
-                            color: const Color(0xFF64748B),
+                            color: isDark
+                                ? ShopAppColors.darkTextSecondary
+                                : const Color(0xFF64748B),
                             fontSize: 13.sp,
                           ),
                         ),

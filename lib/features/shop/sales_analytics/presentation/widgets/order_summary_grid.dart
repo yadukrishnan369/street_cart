@@ -11,6 +11,7 @@ class OrderSummaryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final total = orderSummary['total'] ?? 0;
     final completed = orderSummary['completed'] ?? 0;
     final pending = orderSummary['pending'] ?? 0;
@@ -24,18 +25,24 @@ class OrderSummaryGrid extends StatelessWidget {
           'Order Summary',
           style: ShopAppTextStyles.bodyLargeBold.copyWith(
             fontSize: 16.sp,
-            color: const Color(0xFF0F172A),
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
           ),
         ),
         SizedBox(height: 12.h),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            border: Border.all(
+              color: isDark
+                  ? ShopAppColors.darkBorder
+                  : const Color(0xFFE2E8F0),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.01),
+                color: Colors.black.withValues(alpha: 0.01),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -48,18 +55,24 @@ class OrderSummaryGrid extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildSummaryCell(
+                      context: context,
                       title: 'Total Orders',
                       value: total.toString(),
-                      valueColor: const Color(0xFF0F172A),
+                      valueColor: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                     ),
                   ),
                   Container(
                     width: 1,
                     height: 80.h,
-                    color: const Color(0xFFE2E8F0),
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : const Color(0xFFE2E8F0),
                   ),
                   Expanded(
                     child: _buildSummaryCell(
+                      context: context,
                       title: 'Completed',
                       value: completed.toString(),
                       valueColor: ShopAppColors.success,
@@ -67,11 +80,17 @@ class OrderSummaryGrid extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(height: 1, color: const Color(0xFFE2E8F0)),
+              Container(
+                height: 1,
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : const Color(0xFFE2E8F0),
+              ),
               Row(
                 children: [
                   Expanded(
                     child: _buildSummaryCell(
+                      context: context,
                       title: 'Pending',
                       value: pending.toString(),
                       valueColor: ShopAppColors.warning,
@@ -80,10 +99,13 @@ class OrderSummaryGrid extends StatelessWidget {
                   Container(
                     width: 1,
                     height: 80.h,
-                    color: const Color(0xFFE2E8F0),
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : const Color(0xFFE2E8F0),
                   ),
                   Expanded(
                     child: _buildSummaryCell(
+                      context: context,
                       title: 'Cancelled/Returned',
                       value: cancelled.toString(),
                       valueColor: ShopAppColors.error,
@@ -99,10 +121,13 @@ class OrderSummaryGrid extends StatelessWidget {
   }
 
   Widget _buildSummaryCell({
+    required BuildContext context,
     required String title,
     required String value,
     required Color valueColor,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: Column(
@@ -112,7 +137,9 @@ class OrderSummaryGrid extends StatelessWidget {
           Text(
             title,
             style: ShopAppTextStyles.caption.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontWeight: FontWeight.bold,
             ),
           ),

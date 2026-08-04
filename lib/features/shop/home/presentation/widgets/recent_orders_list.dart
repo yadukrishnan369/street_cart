@@ -25,6 +25,9 @@ class RecentOrdersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocBuilder<ShopHomeBloc, ShopHomeState>(
       builder: (context, state) {
         final displayOrders = state is ShopHomeDataLoaded
@@ -41,7 +44,14 @@ class RecentOrdersList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // title
               children: [
-                Text('New Orders', style: ShopAppTextStyles.bodyLargeBold),
+                Text(
+                  'New Orders',
+                  style: ShopAppTextStyles.bodyLargeBold.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
+                ),
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 10.w,
@@ -101,6 +111,7 @@ class RecentOrdersList extends StatelessWidget {
                     uiData['paymentMethodLabel'] as String,
                     uiData['productImage'],
                     uiData['badgeColor'] as Color,
+                    isDark,
                   ),
                 );
               }),
@@ -132,17 +143,21 @@ class RecentOrdersList extends StatelessWidget {
     String method,
     String imageUrl,
     Color methodColor,
+    bool isDark,
   ) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: ShopAppColors.surface,
+        color: isDark ? ShopAppColors.darkSurface : ShopAppColors.surface,
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: ShopAppColors.border, width: 1.w),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : ShopAppColors.border,
+          width: 1.w,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.01),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.01),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -179,7 +194,9 @@ class RecentOrdersList extends StatelessWidget {
                 Text(
                   product,
                   style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -187,7 +204,9 @@ class RecentOrdersList extends StatelessWidget {
                 Text(
                   name,
                   style: ShopAppTextStyles.bodySmall.copyWith(
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -201,7 +220,9 @@ class RecentOrdersList extends StatelessWidget {
               Text(
                 price,
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 2.h),

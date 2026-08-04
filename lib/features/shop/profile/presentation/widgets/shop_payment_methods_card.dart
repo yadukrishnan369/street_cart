@@ -13,6 +13,8 @@ class ShopPaymentMethodsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return ShopProfileSectionBlock(
       // Title
       title: 'PAYMENT METHODS',
@@ -21,7 +23,11 @@ class ShopPaymentMethodsCard extends StatelessWidget {
             ? [
                 Text(
                   'No payment methods selected',
-                  style: ShopAppTextStyles.bodyMedium,
+                  style: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textPrimary,
+                  ),
                 ),
               ]
             : profile.paymentMethods.map((method) {
@@ -36,10 +42,14 @@ class ShopPaymentMethodsCard extends StatelessWidget {
                     vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF4F7F6),
+                    color: isDark
+                        ? ShopAppColors.darkInputBackground
+                        : const Color(0xFFF4F7F6),
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
-                      color: const Color(0xFFE2EBE9),
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : const Color(0xFFE2EBE9),
                       width: 1,
                     ),
                   ),

@@ -21,6 +21,9 @@ class ImagePickerArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,7 +33,9 @@ class ImagePickerArea extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 14.h),
             decoration: BoxDecoration(
-              color: ShopAppColors.primaryLight,
+              color: ShopAppColors.primary.withValues(
+                alpha: isDark ? 0.2 : 0.08,
+              ),
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: ShopAppColors.primary.withValues(alpha: 0.4),
@@ -128,7 +133,9 @@ class ImagePickerArea extends StatelessWidget {
             '${images.length} image${images.length == 1 ? '' : 's'} selected',
             style: TextStyle(
               fontSize: 11.sp,
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
             ),
           ),
         ],

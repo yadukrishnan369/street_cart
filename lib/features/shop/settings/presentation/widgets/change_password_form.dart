@@ -45,6 +45,14 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final inputFillColor = isDark
+        ? ShopAppColors.darkInputBackground
+        : const Color(0xFFF8F9FA);
+    final inputBorderColor = isDark
+        ? ShopAppColors.darkBorder
+        : ShopAppColors.border;
+
     return Form(
       key: _formKey,
       child: BlocBuilder<ShopSettingsBloc, ShopSettingsState>(
@@ -60,17 +68,27 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 controller: _currentPasswordController,
                 hintText: 'Enter current password',
                 isPassword: uiState.obscureCurrent,
-                labelStyle: ShopAppTextStyles.bodyMediumBold,
-                textStyle: ShopAppTextStyles.bodyMedium,
-                fillColor: const Color(0xFFF8F9FA),
-                borderColor: ShopAppColors.border,
+                labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                fillColor: inputFillColor,
+                borderColor: inputBorderColor,
                 focusedBorderColor: ShopAppColors.primary,
                 suffixIcon: IconButton(
                   icon: Icon(
                     uiState.obscureCurrent
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: ShopAppColors.textTertiary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
                   onPressed: () => bloc.add(ToggleObscureCurrentEvent()),
@@ -85,17 +103,27 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 controller: _newPasswordController,
                 hintText: 'Enter new password',
                 isPassword: uiState.obscureNew,
-                labelStyle: ShopAppTextStyles.bodyMediumBold,
-                textStyle: ShopAppTextStyles.bodyMedium,
-                fillColor: const Color(0xFFF8F9FA),
-                borderColor: ShopAppColors.border,
+                labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                fillColor: inputFillColor,
+                borderColor: inputBorderColor,
                 focusedBorderColor: ShopAppColors.primary,
                 suffixIcon: IconButton(
                   icon: Icon(
                     uiState.obscureNew
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: ShopAppColors.textTertiary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
                   onPressed: () => bloc.add(ToggleObscureNewEvent()),
@@ -110,17 +138,27 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 controller: _confirmPasswordController,
                 hintText: 'Re-enter new password',
                 isPassword: uiState.obscureConfirm,
-                labelStyle: ShopAppTextStyles.bodyMediumBold,
-                textStyle: ShopAppTextStyles.bodyMedium,
-                fillColor: const Color(0xFFF8F9FA),
-                borderColor: ShopAppColors.border,
+                labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+                fillColor: inputFillColor,
+                borderColor: inputBorderColor,
                 focusedBorderColor: ShopAppColors.primary,
                 suffixIcon: IconButton(
                   icon: Icon(
                     uiState.obscureConfirm
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: ShopAppColors.textTertiary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
                     size: 20.sp,
                   ),
                   onPressed: () => bloc.add(ToggleObscureConfirmEvent()),
@@ -138,14 +176,18 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 children: [
                   Icon(
                     Icons.info_outline_rounded,
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     size: 14.sp,
                   ),
                   SizedBox(width: 6.w),
                   Text(
                     'Password must be at least 8 characters long',
                     style: ShopAppTextStyles.bodySmall.copyWith(
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                       fontSize: 11.sp,
                     ),
                   ),

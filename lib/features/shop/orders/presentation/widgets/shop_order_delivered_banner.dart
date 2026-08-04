@@ -12,6 +12,9 @@ class ShopOrderDeliveredBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final isDelivered = order.status.toLowerCase() == 'delivered';
     if (!isDelivered) return const SizedBox.shrink();
 
@@ -19,9 +22,11 @@ class ShopOrderDeliveredBanner extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: ShopAppColors.primary.withOpacity(0.08),
+        color: ShopAppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: ShopAppColors.primary.withOpacity(0.2)),
+        border: Border.all(
+          color: ShopAppColors.primary.withValues(alpha: isDark ? 0.3 : 0.2),
+        ),
       ),
       child: Row(
         children: [
@@ -56,7 +61,12 @@ class ShopOrderDeliveredBanner extends StatelessWidget {
                 // Delivered Date
                 Text(
                   'Delivered on: ${DateFormatter.formatToOrderDateTime(order.deliveredAt ?? order.createdAt)}',
-                  style: TextStyle(fontSize: 13.sp, color: Colors.grey[700]),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : Colors.grey[700],
+                  ),
                 ),
               ],
             ),

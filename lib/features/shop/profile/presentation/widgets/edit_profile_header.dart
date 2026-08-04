@@ -21,6 +21,7 @@ class ShopEditProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasImage = profileImageUrl != null && profileImageUrl!.isNotEmpty;
 
     return Center(
@@ -35,7 +36,12 @@ class ShopEditProfileHeader extends StatelessWidget {
                   padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade200, width: 2),
+                    border: Border.all(
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : Colors.grey.shade200,
+                      width: 2,
+                    ),
                   ),
                   // Shop Profile Image
                   child: CircleAvatar(
@@ -79,7 +85,12 @@ class ShopEditProfileHeader extends StatelessWidget {
 
           Text(
             'Shop Profile Picture',
-            style: ShopAppTextStyles.bodyMediumBold.copyWith(fontSize: 16.sp),
+            style: ShopAppTextStyles.bodyMediumBold.copyWith(
+              fontSize: 16.sp,
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
           ),
 
           SizedBox(height: 16.h),
@@ -106,7 +117,9 @@ class ShopEditProfileHeader extends StatelessWidget {
                   Container(
                     width: 1.w,
                     height: 14.h,
-                    color: Colors.grey.shade400,
+                    color: isDark
+                        ? ShopAppColors.darkBorder
+                        : Colors.grey.shade400,
                   ),
 
                   SizedBox(width: 8.w),

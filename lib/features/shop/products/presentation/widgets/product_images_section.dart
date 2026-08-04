@@ -26,6 +26,9 @@ class ProductImagesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final bool hasNoImages = images.every((img) => img == null);
     final dynamic activeImage = images[focusedImageIndex];
 
@@ -49,10 +52,10 @@ class ProductImagesSection extends StatelessWidget {
               width: double.infinity,
               height: 180.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? ShopAppColors.darkSurface : Colors.white,
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: ShopAppColors.primary.withOpacity(0.3),
+                  color: ShopAppColors.primary.withValues(alpha: 0.3),
                   style: BorderStyle.solid,
                   width: 1.5.w,
                 ),
@@ -70,14 +73,18 @@ class ProductImagesSection extends StatelessWidget {
                     'Upload Product Images (Select up to 10)',
                     style: ShopAppTextStyles.bodyLarge.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: ShopAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 6.h),
                   Text(
                     'Primary image is mandatory, other 9 are optional',
                     style: ShopAppTextStyles.bodySmall.copyWith(
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -92,10 +99,10 @@ class ProductImagesSection extends StatelessWidget {
               width: double.infinity,
               height: 180.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? ShopAppColors.darkSurface : Colors.white,
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: ShopAppColors.primary.withOpacity(0.3),
+                  color: ShopAppColors.primary.withValues(alpha: 0.3),
                   style: BorderStyle.solid,
                   width: 1.5.w,
                 ),
@@ -135,7 +142,7 @@ class ProductImagesSection extends StatelessWidget {
                               vertical: 4.h,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.6),
+                              color: Colors.black.withValues(alpha: 0.6),
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Text(
@@ -184,7 +191,11 @@ class ProductImagesSection extends StatelessWidget {
                           focusedImageIndex == 0
                               ? 'Upload Primary Image (Mandatory)'
                               : 'Upload Image #${focusedImageIndex + 1} (Optional)',
-                          style: ShopAppTextStyles.bodyMedium,
+                          style: ShopAppTextStyles.bodyMedium.copyWith(
+                            color: isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : ShopAppColors.textPrimary,
+                          ),
                         ),
                       ],
                     ),
@@ -208,18 +219,22 @@ class ProductImagesSection extends StatelessWidget {
                     width: 75.w,
                     height: 75.w,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? ShopAppColors.darkSurface : Colors.white,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
                         color: isSelected
                             ? ShopAppColors.primary
-                            : Colors.grey[300]!,
+                            : (isDark
+                                  ? ShopAppColors.darkBorder
+                                  : Colors.grey[300]!),
                         width: isSelected ? 2.5.w : 1.5.w,
                       ),
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: ShopAppColors.primary.withOpacity(0.2),
+                                color: ShopAppColors.primary.withValues(
+                                  alpha: 0.2,
+                                ),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -257,8 +272,10 @@ class ProductImagesSection extends StatelessWidget {
                               index == 0 ? Icons.star_border : Icons.add,
                               size: 20.sp,
                               color: index == 0
-                                  ? ShopAppColors.primary.withOpacity(0.5)
-                                  : Colors.grey[400],
+                                  ? ShopAppColors.primary.withValues(alpha: 0.5)
+                                  : (isDark
+                                        ? ShopAppColors.darkTextSecondary
+                                        : Colors.grey[400]),
                             ),
                           ),
                         // Number indicator
@@ -272,7 +289,9 @@ class ProductImagesSection extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               color: image != null
                                   ? Colors.white
-                                  : Colors.grey[500],
+                                  : (isDark
+                                        ? ShopAppColors.darkTextSecondary
+                                        : Colors.grey[500]),
                               shadows: image != null
                                   ? const [
                                       Shadow(

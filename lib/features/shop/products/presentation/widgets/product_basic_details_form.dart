@@ -39,6 +39,16 @@ class ProductBasicDetailsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final inputFillColor = isDark
+        ? ShopAppColors.darkInputBackground
+        : Colors.white;
+    final inputBorderColor = isDark
+        ? ShopAppColors.darkBorder
+        : Colors.grey[300];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -64,10 +74,12 @@ class ProductBasicDetailsForm extends StatelessWidget {
           labelStyle: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
           ),
-          fillColor: Colors.white,
-          borderColor: Colors.grey[300],
+          fillColor: inputFillColor,
+          borderColor: inputBorderColor,
           focusedBorderColor: ShopAppColors.primary,
           validator: Validators.validateProductName,
           onChanged: (val) =>
@@ -94,10 +106,12 @@ class ProductBasicDetailsForm extends StatelessWidget {
                 labelStyle: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                 ),
-                fillColor: Colors.white,
-                borderColor: Colors.grey[300],
+                fillColor: inputFillColor,
+                borderColor: inputBorderColor,
                 focusedBorderColor: ShopAppColors.primary,
                 validator: Validators.validateProductOriginalPrice,
                 onChanged: (val) => context.read<AddEditProductBloc>().add(
@@ -122,10 +136,12 @@ class ProductBasicDetailsForm extends StatelessWidget {
                 labelStyle: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                 ),
-                fillColor: Colors.white,
-                borderColor: Colors.grey[300],
+                fillColor: inputFillColor,
+                borderColor: inputBorderColor,
                 focusedBorderColor: ShopAppColors.primary,
                 validator: (val) => Validators.validateProductOfferPrice(
                   val,
@@ -142,7 +158,12 @@ class ProductBasicDetailsForm extends StatelessWidget {
         // Info
         Text(
           'Leave offer price empty if no discount available',
-          style: TextStyle(fontSize: 11.sp, color: ShopAppColors.textSecondary),
+          style: TextStyle(
+            fontSize: 11.sp,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
+          ),
         ),
         SizedBox(height: 16.h),
 
@@ -160,10 +181,12 @@ class ProductBasicDetailsForm extends StatelessWidget {
           labelStyle: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
           ),
-          fillColor: Colors.white,
-          borderColor: Colors.grey[300],
+          fillColor: inputFillColor,
+          borderColor: inputBorderColor,
           focusedBorderColor: ShopAppColors.primary,
           validator: Validators.validateProductDescription,
           onChanged: (val) => context.read<AddEditProductBloc>().add(
@@ -178,19 +201,37 @@ class ProductBasicDetailsForm extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
           ),
         ),
         SizedBox(height: 8.h),
         DropdownButtonFormField<String>(
-          value: categories.contains(selectedCategory)
+          initialValue: categories.contains(selectedCategory)
               ? selectedCategory
               : (categories.isNotEmpty ? categories.first : null),
           isExpanded: true,
-          dropdownColor: Colors.white,
-          decoration: _dropdownDecoration(Icons.category_outlined),
+          dropdownColor: isDark ? ShopAppColors.darkSurface : Colors.white,
+          decoration: _dropdownDecoration(
+            Icons.category_outlined,
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
+          ),
           items: categories
-              .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+              .map(
+                (c) => DropdownMenuItem(
+                  value: c,
+                  child: Text(
+                    c,
+                    style: TextStyle(
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
+                    ),
+                  ),
+                ),
+              )
               .toList(),
           onChanged: onCategoryChanged,
         ),
@@ -202,24 +243,47 @@ class ProductBasicDetailsForm extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
           ),
         ),
         SizedBox(height: 4.h),
         Text(
           'Changing this updates the available sizes for all variants.',
-          style: TextStyle(fontSize: 11.sp, color: ShopAppColors.textSecondary),
+          style: TextStyle(
+            fontSize: 11.sp,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
+          ),
         ),
         SizedBox(height: 8.h),
         DropdownButtonFormField<String>(
-          value: sizeStandards.contains(selectedSizeStandard)
+          initialValue: sizeStandards.contains(selectedSizeStandard)
               ? selectedSizeStandard
               : (sizeStandards.isNotEmpty ? sizeStandards.first : null),
           isExpanded: true,
-          dropdownColor: Colors.white,
-          decoration: _dropdownDecoration(Icons.straighten_outlined),
+          dropdownColor: isDark ? ShopAppColors.darkSurface : Colors.white,
+          decoration: _dropdownDecoration(
+            Icons.straighten_outlined,
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
+          ),
           items: sizeStandards
-              .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+              .map(
+                (s) => DropdownMenuItem(
+                  value: s,
+                  child: Text(
+                    s,
+                    style: TextStyle(
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
+                    ),
+                  ),
+                ),
+              )
               .toList(),
           onChanged: onSizeStandardChanged,
         ),
@@ -227,18 +291,22 @@ class ProductBasicDetailsForm extends StatelessWidget {
     );
   }
 
-  InputDecoration _dropdownDecoration(IconData icon) {
+  InputDecoration _dropdownDecoration(
+    IconData icon, {
+    required Color fillColor,
+    required Color? borderColor,
+  }) {
     return InputDecoration(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: fillColor,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: Colors.grey[300]!),
+        borderSide: BorderSide(color: borderColor ?? Colors.grey[300]!),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: Colors.grey[300]!),
+        borderSide: BorderSide(color: borderColor ?? Colors.grey[300]!),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),

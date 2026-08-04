@@ -11,6 +11,7 @@ class TransactionStatusBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final status = order.status.toLowerCase();
     final isCancelled = status == 'cancelled';
     final isReturned =
@@ -34,7 +35,7 @@ class TransactionStatusBanner extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
-      color: bannerColor.withOpacity(0.08),
+      color: bannerColor.withValues(alpha: isDark ? 0.15 : 0.08),
       child: Row(
         children: [
           Icon(bannerIcon, color: bannerColor, size: 20.sp),

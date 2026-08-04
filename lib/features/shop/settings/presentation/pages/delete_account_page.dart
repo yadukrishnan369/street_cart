@@ -43,22 +43,30 @@ class DeleteAccountPage extends StatelessWidget {
       builder: (BuildContext context, ShopSettingsState state) {
         final bool isLoading = state.status == ShopSettingsStatus.loading;
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : Colors.white,
+            elevation: isDark ? null : 1.5,
+            shape: Border(
+              bottom: BorderSide(
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border.withValues(alpha: 1.5),
+                width: 0.5,
+              ),
             ),
             // Page Header
             title: Text(
               'Delete Account',
               style: ShopAppTextStyles.heading4.copyWith(
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -75,13 +83,18 @@ class DeleteAccountPage extends StatelessWidget {
                   style: ShopAppTextStyles.heading2.copyWith(
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   'For security, you must enter your current password to confirm account deletion. This process cannot be undone.',
                   style: ShopAppTextStyles.bodyMedium.copyWith(
-                    color: ShopAppColors.textSecondary,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
                     height: 1.4,
                   ),
                 ),

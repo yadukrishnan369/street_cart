@@ -13,6 +13,9 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
       builder: (context, state) {
         final orders = state.status == ShopOrdersStatus.loaded
@@ -25,7 +28,9 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
           indicatorColor: ShopAppColors.primary,
           indicatorWeight: 3.h,
           labelColor: ShopAppColors.primary,
-          unselectedLabelColor: Colors.grey[500],
+          unselectedLabelColor: isDark
+              ? ShopAppColors.darkTextSecondary
+              : Colors.grey[500],
           onTap: (index) => activeTabNotifier.value = index,
           tabs: List.generate(5, (index) {
             final tabTitles = ['NEW', 'PROCESS', 'SHIPPED', 'DONE', 'RETURNS'];
@@ -61,7 +66,9 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? ShopAppColors.primary
-                                : Colors.grey[200],
+                                : (isDark
+                                      ? ShopAppColors.darkSurface
+                                      : Colors.grey[200]),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           // Tab Orders Count
@@ -70,7 +77,9 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
                             style: TextStyle(
                               color: isSelected
                                   ? Colors.white
-                                  : Colors.grey[600],
+                                  : (isDark
+                                        ? ShopAppColors.darkTextSecondary
+                                        : Colors.grey[600]),
                               fontSize: 10.sp,
                               fontWeight: FontWeight.bold,
                             ),

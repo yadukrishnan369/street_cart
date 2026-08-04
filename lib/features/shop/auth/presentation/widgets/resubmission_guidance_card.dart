@@ -9,14 +9,17 @@ class ResubmissionGuidanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: ShopAppColors.primary.withAlpha(10),
+        color: ShopAppColors.primary.withValues(alpha: isDark ? 0.15 : 0.05),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: ShopAppColors.primary.withAlpha(38),
+          color: ShopAppColors.primary.withValues(alpha: isDark ? 0.3 : 0.15),
           width: 1.w,
         ),
       ),
@@ -44,23 +47,26 @@ class ResubmissionGuidanceCard extends StatelessWidget {
           // Info 1
           _buildGuidanceBullet(
             'Make sure the shop name matches your official documents or signboard.',
+            isDark,
           ),
           SizedBox(height: 12.h),
           // Info 2
           _buildGuidanceBullet(
             'Upload clear, high-resolution photos of government-issued owner ID and Business License.',
+            isDark,
           ),
           SizedBox(height: 12.h),
           // Info 3
           _buildGuidanceBullet(
             'Double-check your email and phone number for accuracy so we can contact you if needed.',
+            isDark,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildGuidanceBullet(String text) {
+  Widget _buildGuidanceBullet(String text, bool isDark) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -80,7 +86,9 @@ class ResubmissionGuidanceCard extends StatelessWidget {
           child: Text(
             text,
             style: ShopAppTextStyles.bodySmall.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               height: 1.4,
             ),
           ),

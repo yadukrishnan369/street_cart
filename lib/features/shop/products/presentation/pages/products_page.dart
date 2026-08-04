@@ -75,15 +75,22 @@ class _ProductsPageState extends State<ProductsPage>
         },
         child: BlocBuilder<ShopProductsBloc, ShopProductsState>(
           builder: (context, state) {
+            final theme = Theme.of(context);
+            final isDark = theme.brightness == Brightness.dark;
+
             return Scaffold(
-              backgroundColor: ShopAppColors.background,
+              backgroundColor: theme.scaffoldBackgroundColor,
               appBar: AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: isDark
+                    ? ShopAppColors.darkBackground
+                    : Colors.white,
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                   onPressed: () {
                     if (Navigator.canPop(context)) {
@@ -105,12 +112,21 @@ class _ProductsPageState extends State<ProductsPage>
                         controller: _searchController,
                         productsBloc: _productsBloc,
                       )
-                    : Text('Products', style: ShopAppTextStyles.heading3),
+                    : Text(
+                        'Products',
+                        style: isDark
+                            ? ShopAppTextStyles.heading3.copyWith(
+                                color: ShopAppColors.darkTextPrimary,
+                              )
+                            : ShopAppTextStyles.heading3,
+                      ),
                 actions: [
                   IconButton(
                     icon: Icon(
                       state.isSearching ? Icons.close : Icons.search,
-                      color: ShopAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                     ),
                     onPressed: () {
                       if (state.isSearching) {
@@ -129,7 +145,9 @@ class _ProductsPageState extends State<ProductsPage>
                           (state.selectedCategories.isNotEmpty &&
                               !state.selectedCategories.contains('All'))
                           ? ShopAppColors.primary
-                          : ShopAppColors.textPrimary,
+                          : (isDark
+                                ? ShopAppColors.darkTextPrimary
+                                : ShopAppColors.textPrimary),
                     ),
                     onPressed: () => ProductsPageHelper.showCategoryFilter(
                       context,

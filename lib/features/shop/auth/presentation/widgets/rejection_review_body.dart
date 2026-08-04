@@ -14,6 +14,9 @@ class RejectionReviewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -48,8 +51,10 @@ class RejectionReviewBody extends StatelessWidget {
                     child: Container(
                       height: 80.r,
                       width: 80.r,
-                      decoration: const BoxDecoration(
-                        color: ShopAppColors.surface,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? ShopAppColors.darkSurface
+                            : ShopAppColors.surface,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -84,17 +89,19 @@ class RejectionReviewBody extends StatelessWidget {
                 Text(
                   'Action Required',
                   style: ShopAppTextStyles.heading1.copyWith(
-                    color: ShopAppColors.error,
+                    color: isDark ? Colors.red.shade300 : ShopAppColors.error,
                   ),
                 ),
                 SizedBox(height: 32.h),
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: ShopAppColors.surface,
+                    color: isDark
+                        ? ShopAppColors.darkSurface
+                        : ShopAppColors.surface,
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
-                      color: Colors.red.shade200,
+                      color: isDark ? Colors.red.shade700 : Colors.red.shade200,
                       width: 1.5.w,
                     ),
                   ),
@@ -103,12 +110,16 @@ class RejectionReviewBody extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(10.w),
                         decoration: BoxDecoration(
-                          color: Colors.red.shade50,
+                          color: isDark
+                              ? Colors.red.shade900.withValues(alpha: 0.3)
+                              : Colors.red.shade50,
                           borderRadius: BorderRadius.circular(50.r),
                         ),
                         child: Icon(
                           Icons.assignment_late_outlined,
-                          color: ShopAppColors.error,
+                          color: isDark
+                              ? Colors.red.shade300
+                              : ShopAppColors.error,
                           size: 20.sp,
                         ),
                       ),
@@ -120,12 +131,20 @@ class RejectionReviewBody extends StatelessWidget {
                           children: [
                             Text(
                               'Verification Feedback',
-                              style: ShopAppTextStyles.bodyMediumBold,
+                              style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                                color: isDark
+                                    ? ShopAppColors.darkTextPrimary
+                                    : ShopAppColors.textPrimary,
+                              ),
                             ),
                             SizedBox(height: 4.h),
                             Text(
                               'Your registration application requires changes before approval. Please view details to make the necessary corrections.',
-                              style: ShopAppTextStyles.bodySmall,
+                              style: ShopAppTextStyles.bodySmall.copyWith(
+                                color: isDark
+                                    ? ShopAppColors.darkTextSecondary
+                                    : ShopAppColors.textSecondary,
+                              ),
                             ),
                           ],
                         ),

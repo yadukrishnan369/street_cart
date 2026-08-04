@@ -8,12 +8,17 @@ class ShopHomePageShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDark ? Colors.grey[700]! : Colors.grey[100]!;
+    final containerColor = isDark ? Colors.grey[900]! : Colors.white;
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: baseColor,
+        highlightColor: highlightColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,7 +32,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   width: 140.w,
                   height: 18.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                 ),
@@ -35,7 +40,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   width: 80.w,
                   height: 20.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                 ),
@@ -50,7 +55,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   child: Container(
                     height: 104.h,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: containerColor,
                       borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
@@ -60,7 +65,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   child: Container(
                     height: 104.h,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: containerColor,
                       borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
@@ -73,7 +78,7 @@ class ShopHomePageShimmer extends StatelessWidget {
             Container(
               height: 84.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: containerColor,
                 borderRadius: BorderRadius.circular(28.r),
               ),
             ),
@@ -84,7 +89,7 @@ class ShopHomePageShimmer extends StatelessWidget {
               width: 160.w,
               height: 18.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: containerColor,
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
@@ -94,7 +99,7 @@ class ShopHomePageShimmer extends StatelessWidget {
             Container(
               height: 180.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: containerColor,
                 borderRadius: BorderRadius.circular(24.r),
               ),
             ),
@@ -105,7 +110,7 @@ class ShopHomePageShimmer extends StatelessWidget {
               width: 110.w,
               height: 18.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: containerColor,
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
@@ -118,7 +123,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   child: Container(
                     height: 90.h,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: containerColor,
                       borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
@@ -128,7 +133,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   child: Container(
                     height: 90.h,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: containerColor,
                       borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
@@ -138,7 +143,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   child: Container(
                     height: 90.h,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: containerColor,
                       borderRadius: BorderRadius.circular(28.r),
                     ),
                   ),
@@ -155,7 +160,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   width: 120.w,
                   height: 18.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                 ),
@@ -163,7 +168,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   width: 60.w,
                   height: 18.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                 ),
@@ -178,7 +183,7 @@ class ShopHomePageShimmer extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: 12.h),
                   height: 78.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(24.r),
                   ),
                 );

@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
+import 'package:street_cart/core/theme/shop/shop_theme_cubit.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/setting_card_widgets.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/delivery_radius_settings_page.dart';
@@ -94,10 +95,13 @@ class PreferencesSection extends StatelessWidget {
               title: 'App Theme',
               // Theme Switch
               trailing: SettingCustomSwitch(
-                value: uiState.appTheme,
-                onChanged: (val) => context.read<ShopSettingsBloc>().add(
-                  ToggleAppThemeEvent(val),
-                ),
+                value: Theme.of(context).brightness == Brightness.dark,
+                onChanged: (val) {
+                  context.read<ShopSettingsBloc>().add(
+                    ToggleAppThemeEvent(val),
+                  );
+                  context.read<ShopThemeCubit>().toggleTheme(val);
+                },
               ),
             ),
           ],
@@ -201,6 +205,7 @@ class AccountManagementSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -210,7 +215,9 @@ class AccountManagementSection extends StatelessWidget {
           children: [
             SettingRowItem(
               icon: Icons.block_outlined,
-              iconBgColor: const Color(0xFFFFEBEE),
+              iconBgColor: isDark
+                  ? ShopAppColors.darkBorder
+                  : const Color(0xFFFFEBEE),
               iconColor: const Color(0xFFD32F2F),
               // Title
               title: 'Delete Account',
@@ -252,7 +259,7 @@ class AccountManagementSection extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => BlocProvider.value(
                       value: settingsBloc,
-                      child: const ClearDataPage(),
+                      child: ClearDataPage(),
                     ),
                   ),
                 );

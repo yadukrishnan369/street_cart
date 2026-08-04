@@ -25,6 +25,8 @@ class ShopOrderDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final orderIdPrefix = ShopOrdersHelper.getOrderIdPrefix(order.id);
 
     return BlocListener<ShopOrdersBloc, ShopOrdersState>(
@@ -56,22 +58,39 @@ class ShopOrderDetailsPage extends StatelessWidget {
           );
 
           return Scaffold(
-            backgroundColor: const Color(0xFFF8FAFC),
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.5,
+              backgroundColor: isDark
+                  ? ShopAppColors.darkBackground
+                  : Colors.white,
               centerTitle: true,
+              elevation: isDark ? null : 1.0,
+              shape: Border(
+                bottom: BorderSide(
+                  color: isDark
+                      ? ShopAppColors.darkBorder
+                      : ShopAppColors.border.withValues(alpha: 1.0),
+                  width: 0.5,
+                ),
+              ),
               // Page Header with Order ID
               title: Text(
                 'Order #ORD-$orderIdPrefix',
                 style: TextStyle(
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
                 onPressed: () => Navigator.pop(context),
               ),
             ),

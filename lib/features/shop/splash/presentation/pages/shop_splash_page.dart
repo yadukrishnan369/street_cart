@@ -48,6 +48,9 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider.value(
       value: _splashBloc,
       child: BlocListener<ShopSplashBloc, ShopSplashState>(
@@ -101,7 +104,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
           }
         },
         child: Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: theme.scaffoldBackgroundColor,
           body: Stack(
             children: [
               Center(
@@ -112,7 +115,9 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                       width: 180.r,
                       height: 180.r,
                       decoration: BoxDecoration(
-                        color: ShopAppColors.primary.withOpacity(0.08),
+                        color: ShopAppColors.primary.withValues(
+                          alpha: isDark ? 0.15 : 0.08,
+                        ),
                         borderRadius: BorderRadius.circular(48.r),
                       ),
                       child: Center(
@@ -131,6 +136,9 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                       style: ShopAppTextStyles.heading1.copyWith(
                         fontSize: 32.sp,
                         letterSpacing: -0.5,
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -143,7 +151,11 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                     SizedBox(height: 8.h),
                     Text(
                       'Reach nearby customers effortlessly.',
-                      style: ShopAppTextStyles.bodyMedium,
+                      style: ShopAppTextStyles.bodyMedium.copyWith(
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textSecondary,
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     SizedBox(
@@ -153,8 +165,8 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                         // Linear Progress Line to 100
                         child: LinearProgressIndicator(
                           minHeight: 6.h,
-                          backgroundColor: ShopAppColors.primary.withOpacity(
-                            0.1,
+                          backgroundColor: ShopAppColors.primary.withValues(
+                            alpha: isDark ? 0.2 : 0.1,
                           ),
                           valueColor: const AlwaysStoppedAnimation<Color>(
                             ShopAppColors.primary,
@@ -167,7 +179,9 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                     Text(
                       'Connecting to local marketplace...',
                       style: ShopAppTextStyles.bodySmall.copyWith(
-                        color: ShopAppColors.textTertiary,
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textTertiary,
                       ),
                     ),
                   ],

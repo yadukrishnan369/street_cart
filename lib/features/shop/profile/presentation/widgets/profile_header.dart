@@ -18,6 +18,7 @@ class ShopProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasImage = profile.profileImageUrl.isNotEmpty;
 
     return Container(
@@ -25,11 +26,11 @@ class ShopProfileHeader extends StatelessWidget {
       margin: EdgeInsets.all(16.w),
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: ShopAppColors.surface,
+        color: isDark ? ShopAppColors.darkSurface : ShopAppColors.surface,
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             spreadRadius: 2,
             offset: const Offset(0, 4),
@@ -42,7 +43,10 @@ class ShopProfileHeader extends StatelessWidget {
             padding: EdgeInsets.all(4.w),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade200, width: 2),
+              border: Border.all(
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey.shade200,
+                width: 2,
+              ),
             ),
             // Shop Profile Image
             child: CircleAvatar(
@@ -65,7 +69,12 @@ class ShopProfileHeader extends StatelessWidget {
           Text(
             profile.shopName.isEmpty ? 'Shop Name' : profile.shopName,
             textAlign: TextAlign.center,
-            style: ShopAppTextStyles.heading2.copyWith(fontSize: 22.sp),
+            style: ShopAppTextStyles.heading2.copyWith(
+              fontSize: 22.sp,
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
           ),
           SizedBox(height: 4.h),
           // Shop Category
@@ -77,16 +86,24 @@ class ShopProfileHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          const Divider(color: ShopAppColors.border),
+          Divider(
+            color: isDark ? ShopAppColors.darkBorder : ShopAppColors.border,
+          ),
           SizedBox(height: 16.h),
           // Owner Name Section
-          _buildInfoRow(Icons.person_outline, 'Owner', profile.ownerName),
+          _buildInfoRow(
+            context,
+            Icons.person_outline,
+            'Owner',
+            profile.ownerName,
+          ),
           SizedBox(height: 12.h),
           // Email Section
-          _buildInfoRow(Icons.email_outlined, 'Email', profile.email),
+          _buildInfoRow(context, Icons.email_outlined, 'Email', profile.email),
           SizedBox(height: 12.h),
           // Phone Number Section
           _buildInfoRow(
+            context,
             Icons.phone_outlined,
             'Phone',
             profile.phone.isNotEmpty ? profile.phone : 'Not added',
@@ -94,6 +111,7 @@ class ShopProfileHeader extends StatelessWidget {
           SizedBox(height: 12.h),
           // Verification Badge Section
           _buildInfoRow(
+            context,
             Icons.verified_user_outlined,
             'Status',
             profile.isApproved ? 'Approved Merchant' : 'Verification Pending',
@@ -124,20 +142,31 @@ class ShopProfileHeader extends StatelessWidget {
   }
 
   Widget _buildInfoRow(
+    BuildContext context,
     IconData icon,
     String label,
     String value, {
     Color? valueColor,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
-        Icon(icon, size: 18.sp, color: ShopAppColors.textSecondary),
+        Icon(
+          icon,
+          size: 18.sp,
+          color: isDark
+              ? ShopAppColors.darkTextSecondary
+              : ShopAppColors.textSecondary,
+        ),
         SizedBox(width: 12.w),
         // Label
         Text(
           '$label:',
           style: ShopAppTextStyles.bodySmall.copyWith(
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -146,7 +175,11 @@ class ShopProfileHeader extends StatelessWidget {
           child: Text(
             value,
             style: ShopAppTextStyles.bodySmall.copyWith(
-              color: valueColor ?? ShopAppColors.textPrimary,
+              color:
+                  valueColor ??
+                  (isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary),
               fontWeight: valueColor != null
                   ? FontWeight.bold
                   : FontWeight.normal,

@@ -19,11 +19,16 @@ class ShopBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BottomNavigationBar(
       currentIndex: currentIndex,
       type: BottomNavigationBarType.fixed,
+      backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
       selectedItemColor: ShopAppColors.primary,
-      unselectedItemColor: ShopAppColors.textTertiary,
+      unselectedItemColor: isDark
+          ? ShopAppColors.darkTextSecondary
+          : ShopAppColors.textTertiary,
       selectedLabelStyle: TextStyle(
         fontSize: 8.sp,
         fontWeight: FontWeight.w900,
@@ -108,9 +113,9 @@ class ShopBottomNavigation extends StatelessWidget {
           ),
           label: 'ORDERS',
         ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.person_outline),
-          activeIcon: const Icon(Icons.person),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
           label: 'PROFILE',
         ),
       ],

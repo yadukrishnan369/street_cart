@@ -37,7 +37,7 @@ class ColorSelector extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: row1Colors
-                .map((colorName) => _buildColorChip(colorName))
+                .map((colorName) => _buildColorChip(context, colorName))
                 .toList(),
           ),
         ),
@@ -48,7 +48,7 @@ class ColorSelector extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: row2Colors
-                  .map((colorName) => _buildColorChip(colorName))
+                  .map((colorName) => _buildColorChip(context, colorName))
                   .toList(),
             ),
           ),
@@ -57,13 +57,14 @@ class ColorSelector extends StatelessWidget {
     );
   }
 
-  Widget _buildColorChip(String colorName) {
+  Widget _buildColorChip(BuildContext context, String colorName) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hexCode = availableColors[colorName] ?? '';
     final color = ShopAppColors.getColorFromName(
       hexCode.isNotEmpty ? hexCode : colorName,
     );
     final isSelected = colorName == selectedColor;
-    final isWhite = color.value == 0xFFFFFFFF;
+    final isWhite = color.toARGB32() == 0xFFFFFFFF;
     return GestureDetector(
       onTap: () => onSelected(colorName),
       child: AnimatedContainer(
@@ -72,13 +73,15 @@ class ColorSelector extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? ShopAppColors.primary.withValues(alpha: 0.08)
-              : Colors.white,
+              ? ShopAppColors.primary.withValues(alpha: isDark ? 0.2 : 0.08)
+              : (isDark ? ShopAppColors.darkSurface : Colors.white),
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: isSelected
                 ? ShopAppColors.primary
-                : (isWhite ? Colors.grey[300]! : Colors.grey[200]!),
+                : (isDark
+                      ? ShopAppColors.darkBorder
+                      : (isWhite ? Colors.grey[300]! : Colors.grey[200]!)),
             width: isSelected ? 2 : 1.5,
           ),
           boxShadow: isSelected
@@ -115,7 +118,9 @@ class ColorSelector extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected
                     ? ShopAppColors.primary
-                    : ShopAppColors.textPrimary,
+                    : (isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary),
               ),
             ),
             if (isSelected) ...[

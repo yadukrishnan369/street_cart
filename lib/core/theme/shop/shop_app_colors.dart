@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ShopAppColors {
   // Primary Theme Colors
-  static const Color primary = Color(0xFF00674F); // Deep Emerald/Teal
+  static const Color primary = Color(0xFF00674F);
   static const Color primaryLight = Color(
     0xFFE6F2F0,
   ); // Very light teal for cards
@@ -26,6 +26,14 @@ class ShopAppColors {
 
   // Border & Divider
   static const Color border = Color(0xFFE2E8F0);
+
+  // Dark Mode Background & Surface
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkTextPrimary = Color(0xFFF3F4F6);
+  static const Color darkTextSecondary = Color(0xFF9CA3AF);
+  static const Color darkBorder = Color(0xFF2D2D2D);
+  static const Color darkInputBackground = Color(0xFF242424);
 
   static Color getColorFromName(String name) {
     switch (name.toLowerCase().trim()) {
@@ -73,7 +81,8 @@ class ShopAppColors {
           hexStr = hexStr.substring(2);
         }
         final hexRegex = RegExp(r'^[0-9a-fA-F]+$');
-        if ((hexStr.length == 6 || hexStr.length == 8) && hexRegex.hasMatch(hexStr)) {
+        if ((hexStr.length == 6 || hexStr.length == 8) &&
+            hexRegex.hasMatch(hexStr)) {
           try {
             if (hexStr.length == 6) {
               hexStr = 'FF$hexStr';

@@ -102,13 +102,33 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
         }
       },
       builder: (context, uiState) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
         return Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: isDark
+              ? ShopAppColors.darkBackground
+              : ShopAppColors.background,
           appBar: AppBar(
-            backgroundColor: ShopAppColors.background,
-            elevation: 0,
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : ShopAppColors.background,
+            elevation: isDark ? null : 1.0,
+            shape: Border(
+              bottom: BorderSide(
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border.withValues(alpha: 1.0),
+                width: 0.5,
+              ),
+            ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: ShopAppColors.primary),
+              icon: Icon(
+                Icons.arrow_back,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
+              ),
               onPressed: () {
                 if (uiState.currentStep == 3) {
                   context.read<ShopProfileBloc>().add(const UpdateStepEvent(2));
@@ -123,7 +143,9 @@ class _EditShopProfilePageState extends State<EditShopProfilePage> {
             title: Text(
               'Edit Profile',
               style: ShopAppTextStyles.heading4.copyWith(
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
               ),
             ),
             centerTitle: true,

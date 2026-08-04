@@ -21,6 +21,9 @@ class ProductDetailSizesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     if (product.allSizes.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -29,7 +32,11 @@ class ProductDetailSizesSection extends StatelessWidget {
         // Title
         Text(
           'Available Sizes (Standard: ${product.sizeStandard})',
-          style: ShopAppTextStyles.bodyMediumBold,
+          style: isDark
+              ? ShopAppTextStyles.bodyMediumBold.copyWith(
+                  color: ShopAppColors.darkTextPrimary,
+                )
+              : ShopAppTextStyles.bodyMediumBold,
         ),
         SizedBox(height: 8.h),
         Wrap(
@@ -46,10 +53,16 @@ class ProductDetailSizesSection extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: isSelected ? ShopAppColors.primary : Colors.white,
+                  color: isSelected
+                      ? ShopAppColors.primary
+                      : (isDark ? ShopAppColors.darkSurface : Colors.white),
                   borderRadius: BorderRadius.circular(8.r),
                   border: Border.all(
-                    color: isSelected ? Colors.transparent : Colors.grey[300]!,
+                    color: isSelected
+                        ? Colors.transparent
+                        : (isDark
+                              ? ShopAppColors.darkBorder
+                              : Colors.grey[300]!),
                   ),
                 ),
                 // Size

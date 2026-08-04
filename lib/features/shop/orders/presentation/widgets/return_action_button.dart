@@ -51,8 +51,9 @@ class ReturnActionButton extends StatelessWidget {
     } else if (returnStatus == 'return_confirmed') {
       return BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
         builder: (context, state) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
           return Container(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             child: SafeArea(
               child: Column(
@@ -75,7 +76,9 @@ class ReturnActionButton extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
-                          color: ShopAppColors.textPrimary,
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -144,9 +147,10 @@ class ReturnActionButton extends StatelessWidget {
     required Widget icon,
     required VoidCallback onPressed,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(16.w),
-      color: Colors.white,
+      color: isDark ? ShopAppColors.darkSurface : Colors.white,
       child: SafeArea(
         child: PrimaryButton(
           prefixIcon: icon,

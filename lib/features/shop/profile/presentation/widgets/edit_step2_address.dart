@@ -47,6 +47,14 @@ class EditStep2Address extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final inputFillColor = isDark
+        ? ShopAppColors.darkInputBackground
+        : ShopAppColors.surface;
+    final inputBorderColor = isDark
+        ? ShopAppColors.darkBorder
+        : ShopAppColors.border;
+
     return Form(
       key: formKey,
       child: Column(
@@ -55,14 +63,21 @@ class EditStep2Address extends StatelessWidget {
           // Title
           Text(
             'Address Details',
-            style: ShopAppTextStyles.heading1.copyWith(fontSize: 22.sp),
+            style: ShopAppTextStyles.heading1.copyWith(
+              fontSize: 22.sp,
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
           ),
           SizedBox(height: 8.h),
           // Subtitle
           Text(
             'Please provide the physical location of your business for customers to find you.',
             style: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
             ),
           ),
           SizedBox(height: 24.h),
@@ -77,13 +92,23 @@ class EditStep2Address extends StatelessWidget {
               Icons.location_on_outlined,
               color: ShopAppColors.primary,
             ),
-            labelStyle: ShopAppTextStyles.bodyMediumBold,
-            textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textTertiary,
+            labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
-            fillColor: ShopAppColors.surface,
-            borderColor: ShopAppColors.border,
+            textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textTertiary,
+            ),
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 20.h),
@@ -97,13 +122,23 @@ class EditStep2Address extends StatelessWidget {
               Icons.signpost_outlined,
               color: ShopAppColors.primary,
             ),
-            labelStyle: ShopAppTextStyles.bodyMediumBold,
-            textStyle: ShopAppTextStyles.bodyMedium,
-            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-              color: ShopAppColors.textTertiary,
+            labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
             ),
-            fillColor: ShopAppColors.surface,
-            borderColor: ShopAppColors.border,
+            textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+            hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textTertiary,
+            ),
+            fillColor: inputFillColor,
+            borderColor: inputBorderColor,
             focusedBorderColor: ShopAppColors.primary,
           ),
           SizedBox(height: 20.h),
@@ -121,13 +156,23 @@ class EditStep2Address extends StatelessWidget {
                     Icons.location_city,
                     color: ShopAppColors.primary,
                   ),
-                  labelStyle: ShopAppTextStyles.bodyMediumBold,
-                  textStyle: ShopAppTextStyles.bodyMedium,
-                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-                    color: ShopAppColors.textTertiary,
+                  labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
-                  fillColor: ShopAppColors.surface,
-                  borderColor: ShopAppColors.border,
+                  textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
+                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
+                  ),
+                  fillColor: inputFillColor,
+                  borderColor: inputBorderColor,
                   focusedBorderColor: ShopAppColors.primary,
                 ),
               ),
@@ -144,13 +189,23 @@ class EditStep2Address extends StatelessWidget {
                     Icons.markunread_mailbox_outlined,
                     color: ShopAppColors.primary,
                   ),
-                  labelStyle: ShopAppTextStyles.bodyMediumBold,
-                  textStyle: ShopAppTextStyles.bodyMedium,
-                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
-                    color: ShopAppColors.textTertiary,
+                  labelStyle: ShopAppTextStyles.bodyMediumBold.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
-                  fillColor: ShopAppColors.surface,
-                  borderColor: ShopAppColors.border,
+                  textStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
+                  hintStyle: ShopAppTextStyles.bodyMedium.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textTertiary,
+                  ),
+                  fillColor: inputFillColor,
+                  borderColor: inputBorderColor,
                   focusedBorderColor: ShopAppColors.primary,
                 ),
               ),
@@ -169,19 +224,33 @@ class EditStep2Address extends StatelessWidget {
                       // Select District Dropdown
                       child: Text(
                         'District',
-                        style: ShopAppTextStyles.bodyMediumBold,
+                        style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
+                        ),
                       ),
                     ),
                     DropdownButtonFormField<String>(
                       isExpanded: true,
                       initialValue: selectedDistrict,
-                      decoration: _buildDropdownDecoration(),
+                      dropdownColor: isDark
+                          ? ShopAppColors.darkSurface
+                          : Colors.white,
+                      decoration: _buildDropdownDecoration(
+                        inputFillColor,
+                        inputBorderColor,
+                      ),
                       items: districts.map((String district) {
                         return DropdownMenuItem<String>(
                           value: district,
                           child: Text(
                             district,
-                            style: ShopAppTextStyles.bodyMedium,
+                            style: ShopAppTextStyles.bodyMedium.copyWith(
+                              color: isDark
+                                  ? ShopAppColors.darkTextPrimary
+                                  : ShopAppColors.textPrimary,
+                            ),
                           ),
                         );
                       }).toList(),
@@ -200,19 +269,33 @@ class EditStep2Address extends StatelessWidget {
                       // Select State Dropdown
                       child: Text(
                         'State',
-                        style: ShopAppTextStyles.bodyMediumBold,
+                        style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
+                        ),
                       ),
                     ),
                     DropdownButtonFormField<String>(
                       isExpanded: true,
-                      value: selectedState,
-                      decoration: _buildDropdownDecoration(),
+                      initialValue: selectedState,
+                      dropdownColor: isDark
+                          ? ShopAppColors.darkSurface
+                          : Colors.white,
+                      decoration: _buildDropdownDecoration(
+                        inputFillColor,
+                        inputBorderColor,
+                      ),
                       items: states.map((String state) {
                         return DropdownMenuItem<String>(
                           value: state,
                           child: Text(
                             state,
-                            style: ShopAppTextStyles.bodyMedium,
+                            style: ShopAppTextStyles.bodyMedium.copyWith(
+                              color: isDark
+                                  ? ShopAppColors.darkTextPrimary
+                                  : ShopAppColors.textPrimary,
+                            ),
                           ),
                         );
                       }).toList(),
@@ -228,12 +311,18 @@ class EditStep2Address extends StatelessWidget {
           if (enableCod || enableOnline) ...[
             Text(
               'Payment Methods',
-              style: ShopAppTextStyles.heading1.copyWith(fontSize: 18.sp),
+              style: ShopAppTextStyles.heading1.copyWith(
+                fontSize: 18.sp,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
+              ),
             ),
             SizedBox(height: 12.h),
           ],
           if (enableOnline) ...[
             _buildPaymentOption(
+              context: context,
               title: 'Google Pay',
               icon: Icons.account_balance_wallet_outlined,
               value: 'Google Pay',
@@ -242,6 +331,7 @@ class EditStep2Address extends StatelessWidget {
           ],
           if (enableCod) ...[
             _buildPaymentOption(
+              context: context,
               title: 'Cash on Delivery',
               icon: Icons.money_outlined,
               value: 'Cash on Delivery',
@@ -252,19 +342,19 @@ class EditStep2Address extends StatelessWidget {
     );
   }
 
-  InputDecoration _buildDropdownDecoration() {
+  InputDecoration _buildDropdownDecoration(Color fillColor, Color borderColor) {
     return InputDecoration(
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-      fillColor: ShopAppColors.surface,
+      fillColor: fillColor,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: ShopAppColors.border),
+        borderSide: BorderSide(color: borderColor),
       ),
       prefixIcon: const Icon(Icons.map_outlined, color: ShopAppColors.primary),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: ShopAppColors.border),
+        borderSide: BorderSide(color: borderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
@@ -274,11 +364,13 @@ class EditStep2Address extends StatelessWidget {
   }
 
   Widget _buildPaymentOption({
+    required BuildContext context,
     required String title,
     required IconData icon,
     required String value,
   }) {
     final isSelected = selectedPaymentMethods.contains(value);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
       onTap: () {
@@ -288,10 +380,14 @@ class EditStep2Address extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: ShopAppColors.surface,
+          color: isDark
+              ? ShopAppColors.darkInputBackground
+              : ShopAppColors.surface,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected ? ShopAppColors.primary : ShopAppColors.border,
+            color: isSelected
+                ? ShopAppColors.primary
+                : (isDark ? ShopAppColors.darkBorder : ShopAppColors.border),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -301,7 +397,9 @@ class EditStep2Address extends StatelessWidget {
               icon,
               color: isSelected
                   ? ShopAppColors.primary
-                  : ShopAppColors.textSecondary,
+                  : (isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary),
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -310,7 +408,9 @@ class EditStep2Address extends StatelessWidget {
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
                   color: isSelected
                       ? ShopAppColors.primary
-                      : ShopAppColors.textPrimary,
+                      : (isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary),
                 ),
               ),
             ),

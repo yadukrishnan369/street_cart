@@ -23,6 +23,7 @@ class ShopSalesAnalyticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final shopId = context.read<ShopAuthBloc>().state.shop?.uid ?? '';
     final scrollController = ScrollController();
 
@@ -38,21 +39,39 @@ class ShopSalesAnalyticsPage extends StatelessWidget {
           }
         },
         child: Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: isDark
+              ? ShopAppColors.darkBackground
+              : ShopAppColors.background,
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0.5,
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : Colors.white,
             // Page Header
             title: Text(
               'Sales Analytics',
               style: TextStyle(
-                color: const Color(0xFF0F172A),
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            elevation: isDark ? null : 1.0,
+            shape: Border(
+              bottom: BorderSide(
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.border.withValues(alpha: 1.5),
+                width: 0.5,
+              ),
+            ),
             centerTitle: true,
-            leading: const BackButton(color: Colors.black),
+            leading: BackButton(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
           ),
           body: SafeArea(
             child: BlocBuilder<SalesAnalyticsBloc, SalesAnalyticsState>(

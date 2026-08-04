@@ -21,6 +21,9 @@ class ProductDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,7 +34,9 @@ class ProductDetailHeader extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                 decoration: BoxDecoration(
-                  color: ShopAppColors.primaryLight,
+                  color: ShopAppColors.primary.withValues(
+                    alpha: isDark ? 0.2 : 0.08,
+                  ),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
@@ -69,7 +74,9 @@ class ProductDetailHeader extends StatelessWidget {
                       '₹${PriceUtils.formatPrice(originalPrice)}',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: ShopAppColors.textTertiary,
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : ShopAppColors.textTertiary,
                         decoration: TextDecoration.lineThrough,
                       ),
                       maxLines: 1,
@@ -81,7 +88,14 @@ class ProductDetailHeader extends StatelessWidget {
           ],
         ),
         SizedBox(height: 8.h),
-        Text(name, style: ShopAppTextStyles.heading2),
+        Text(
+          name,
+          style: isDark
+              ? ShopAppTextStyles.heading2.copyWith(
+                  color: ShopAppColors.darkTextPrimary,
+                )
+              : ShopAppTextStyles.heading2,
+        ),
       ],
     );
   }

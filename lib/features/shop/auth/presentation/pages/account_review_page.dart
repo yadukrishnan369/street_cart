@@ -25,14 +25,24 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: ShopAppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         // Page Header
-        title: Text('Account Status', style: ShopAppTextStyles.heading4),
+        title: Text(
+          'Account Status',
+          style: ShopAppTextStyles.heading4.copyWith(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+        ),
       ),
       body: BlocListener<ShopAuthBloc, ShopAuthState>(
         listener: (context, state) {

@@ -75,6 +75,9 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
 
     return BlocBuilder<AddEditProductBloc, AddEditProductState>(
       builder: (context, state) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
         final draft = state.editingVariant ?? const VariantDraft(colorName: '');
         final errorMessage = state.variantErrorMessage;
 
@@ -83,7 +86,9 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
           child: Container(
             height: MediaQuery.of(context).size.height * 0.92 - bottomInset,
             decoration: BoxDecoration(
-              color: ShopAppColors.background,
+              color: isDark
+                  ? ShopAppColors.darkBackground
+                  : ShopAppColors.background,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
             ),
             child: Column(
@@ -146,7 +151,9 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
                             'Enter the number of items available for each size.',
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: ShopAppColors.textSecondary,
+                              color: isDark
+                                  ? ShopAppColors.darkTextSecondary
+                                  : ShopAppColors.textSecondary,
                             ),
                           ),
                           SizedBox(height: 14.h),
@@ -206,14 +213,17 @@ class _SheetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -225,7 +235,7 @@ class _SheetHeader extends StatelessWidget {
             width: 40.w,
             height: 4.h,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -236,12 +246,23 @@ class _SheetHeader extends StatelessWidget {
                 onTap: onClose,
                 child: Icon(
                   Icons.close_rounded,
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                   size: 22.sp,
                 ),
               ),
               SizedBox(width: 12.w),
-              Expanded(child: Text(title, style: ShopAppTextStyles.heading3)),
+              Expanded(
+                child: Text(
+                  title,
+                  style: isDark
+                      ? ShopAppTextStyles.heading3.copyWith(
+                          color: ShopAppColors.darkTextPrimary,
+                        )
+                      : ShopAppTextStyles.heading3,
+                ),
+              ),
               ElevatedButton(
                 onPressed: onSave,
                 style: ElevatedButton.styleFrom(

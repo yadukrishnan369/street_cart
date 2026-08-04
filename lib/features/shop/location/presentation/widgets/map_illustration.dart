@@ -8,11 +8,13 @@ class MapIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: 240.h,
       width: 240.h,
       decoration: BoxDecoration(
-        color: ShopAppColors.primary.withAlpha(26),
+        color: ShopAppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -38,7 +40,10 @@ class MapIllustration extends StatelessWidget {
               decoration: BoxDecoration(
                 color: ShopAppColors.primary,
                 borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: Colors.white, width: 2),
+                border: Border.all(
+                  color: isDark ? ShopAppColors.darkSurface : Colors.white,
+                  width: 2,
+                ),
               ),
               child: Icon(Icons.storefront, color: Colors.white, size: 24.sp),
             ),

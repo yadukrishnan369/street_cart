@@ -10,14 +10,18 @@ class ProductsTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      color: Colors.white,
+      color: isDark ? ShopAppColors.darkBackground : Colors.white,
       child: TabBar(
         controller: controller,
         indicatorColor: ShopAppColors.primary,
         indicatorWeight: 3.h,
         labelColor: ShopAppColors.primary,
-        unselectedLabelColor: ShopAppColors.textTertiary,
+        unselectedLabelColor: isDark
+            ? ShopAppColors.darkTextSecondary
+            : ShopAppColors.textTertiary,
         labelStyle: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
         unselectedLabelStyle: TextStyle(
           fontSize: 14.sp,

@@ -13,6 +13,9 @@ class NormalReviewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -47,8 +50,10 @@ class NormalReviewBody extends StatelessWidget {
                     child: Container(
                       height: 80.r,
                       width: 80.r,
-                      decoration: const BoxDecoration(
-                        color: ShopAppColors.surface,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? ShopAppColors.darkSurface
+                            : ShopAppColors.surface,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -83,16 +88,24 @@ class NormalReviewBody extends StatelessWidget {
                 // Approved/ Waiting Label
                 Text(
                   isApproved ? "You're All Set!" : 'Account Under Review',
-                  style: ShopAppTextStyles.heading1,
+                  style: ShopAppTextStyles.heading1.copyWith(
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
+                  ),
                 ),
                 SizedBox(height: 32.h),
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: ShopAppColors.surface,
+                    color: isDark
+                        ? ShopAppColors.darkSurface
+                        : ShopAppColors.surface,
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
-                      color: ShopAppColors.border,
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : ShopAppColors.border,
                       width: 1.5.w,
                     ),
                   ),
@@ -123,14 +136,22 @@ class NormalReviewBody extends StatelessWidget {
                               isApproved
                                   ? 'Account Approved'
                                   : 'Reviewing Credentials',
-                              style: ShopAppTextStyles.bodyMediumBold,
+                              style: ShopAppTextStyles.bodyMediumBold.copyWith(
+                                color: isDark
+                                    ? ShopAppColors.darkTextPrimary
+                                    : ShopAppColors.textPrimary,
+                              ),
                             ),
                             SizedBox(height: 4.h),
                             Text(
                               isApproved
                                   ? 'Your shop is now live! Click below to enter.'
                                   : 'We are currently verifying your business documentation and identity. Expected time: 24-48 hours.',
-                              style: ShopAppTextStyles.bodySmall,
+                              style: ShopAppTextStyles.bodySmall.copyWith(
+                                color: isDark
+                                    ? ShopAppColors.darkTextSecondary
+                                    : ShopAppColors.textSecondary,
+                              ),
                             ),
                           ],
                         ),

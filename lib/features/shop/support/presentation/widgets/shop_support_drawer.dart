@@ -17,8 +17,10 @@ class ShopSupportDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
       child: SafeArea(
         child: Column(
           children: [
@@ -30,7 +32,9 @@ class ShopSupportDrawer extends StatelessWidget {
                   // App Logo
                   AppLogo(
                     size: 40.r,
-                    backgroundColor: const Color(0xFFE8F5E9),
+                    backgroundColor: isDark
+                        ? ShopAppColors.primary.withValues(alpha: 0.15)
+                        : const Color(0xFFE8F5E9),
                     logoColor: ShopAppColors.primary,
                   ),
                   SizedBox(width: 14.w),
@@ -99,7 +103,11 @@ class ShopSupportDrawer extends StatelessWidget {
 
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.h),
-                    child: const Divider(color: ShopAppColors.border),
+                    child: Divider(
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : ShopAppColors.border,
+                    ),
                   ),
                   // About App Section
                   _buildDrawerItem(
@@ -172,7 +180,9 @@ class ShopSupportDrawer extends StatelessWidget {
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF1F3F4),
+                    backgroundColor: isDark
+                        ? ShopAppColors.darkInputBackground
+                        : const Color(0xFFF1F3F4),
                     side: BorderSide.none,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
@@ -193,6 +203,8 @@ class ShopSupportDrawer extends StatelessWidget {
     required String title,
     required VoidCallback onTap,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.only(bottom: 4.h),
       decoration: BoxDecoration(
@@ -202,11 +214,19 @@ class ShopSupportDrawer extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         dense: true,
-        leading: Icon(icon, color: ShopAppColors.textSecondary, size: 20.sp),
+        leading: Icon(
+          icon,
+          color: isDark
+              ? ShopAppColors.darkTextSecondary
+              : ShopAppColors.textSecondary,
+          size: 20.sp,
+        ),
         title: Text(
           title,
           style: ShopAppTextStyles.bodyMediumBold.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontSize: 16.sp,
           ),
         ),

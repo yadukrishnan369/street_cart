@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/add_edit_product_event.dart';
@@ -111,7 +110,7 @@ class _AddEditProductPageState extends State<AddEditProductPage> {
           }
         },
         child: Scaffold(
-          backgroundColor: ShopAppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: Builder(

@@ -32,19 +32,36 @@ class ShopProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (context) => sl<ShopProfileBloc>()..add(FetchShopProfileData()),
       child: Builder(
         builder: (context) {
           return Scaffold(
-            backgroundColor: const Color(0xFFF8F9FA),
+            backgroundColor: isDark
+                ? ShopAppColors.darkBackground
+                : const Color(0xFFF8F9FA),
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0.5,
+              backgroundColor: isDark
+                  ? ShopAppColors.darkBackground
+                  : Colors.white,
+              elevation: isDark ? null : 1.0,
+              shape: Border(
+                bottom: BorderSide(
+                  color: isDark
+                      ? ShopAppColors.darkBorder
+                      : ShopAppColors.border.withValues(alpha: 1.0),
+                  width: 0.5,
+                ),
+              ),
               leading: IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back,
-                  color: ShopAppColors.primary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
                 onPressed: () {
                   Navigator.pushReplacement(
@@ -60,7 +77,9 @@ class ShopProfilePage extends StatelessWidget {
               title: Text(
                 'Shop Profile',
                 style: ShopAppTextStyles.heading4.copyWith(
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -68,9 +87,11 @@ class ShopProfilePage extends StatelessWidget {
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.settings_outlined,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                   onPressed: () {
                     final profileBloc = context.read<ShopProfileBloc>();
@@ -130,6 +151,7 @@ class ShopProfilePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Shop Profile Header Card
+                        SizedBox(height: 8.h),
                         ShopProfileHeaderCard(profile: profile),
                         SizedBox(height: 8.h),
                         // Shop Owner Info Card

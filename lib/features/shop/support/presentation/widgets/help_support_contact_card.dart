@@ -10,12 +10,17 @@ class HelpSupportContactCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: ShopAppColors.primary,
+        color: isDark ? ShopAppColors.darkSurface : ShopAppColors.primary,
         borderRadius: BorderRadius.circular(20.r),
+        border: isDark
+            ? Border.all(color: ShopAppColors.darkBorder, width: 0.8)
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +29,7 @@ class HelpSupportContactCard extends StatelessWidget {
           Text(
             'Still need help?',
             style: ShopAppTextStyles.heading4.copyWith(
-              color: Colors.white,
+              color: isDark ? ShopAppColors.darkTextPrimary : Colors.white,
               fontSize: 18.sp,
             ),
           ),
@@ -33,7 +38,9 @@ class HelpSupportContactCard extends StatelessWidget {
           Text(
             'Our support team is available 24/7 for street cart owners.',
             style: ShopAppTextStyles.bodySmall.copyWith(
-              color: Colors.white.withAlpha(217),
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : Colors.white.withValues(alpha: 0.85),
               fontSize: 12.sp,
               height: 1.4,
             ),
@@ -49,8 +56,8 @@ class HelpSupportContactCard extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: ShopAppColors.primary,
+              backgroundColor: isDark ? ShopAppColors.primary : Colors.white,
+              foregroundColor: isDark ? Colors.white : ShopAppColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.r),
               ),
@@ -60,7 +67,7 @@ class HelpSupportContactCard extends StatelessWidget {
             child: Text(
               'Contact Us',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                color: ShopAppColors.primary,
+                color: isDark ? Colors.white : ShopAppColors.primary,
               ),
             ),
           ),

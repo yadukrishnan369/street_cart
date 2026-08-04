@@ -13,23 +13,49 @@ class ProductDialogs {
     required ShopProductsBloc productsBloc,
     required Function(String) onSizeAdded,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final textController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Size to $selectedSizeStandard'),
+        backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
+        title: Text(
+          'Add Size to $selectedSizeStandard',
+          style: TextStyle(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+        ),
         content: TextField(
           controller: textController,
-          decoration: const InputDecoration(
+          style: TextStyle(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+          decoration: InputDecoration(
             hintText: 'e.g. XXXL, 12, 38',
-            border: OutlineInputBorder(),
+            hintStyle: TextStyle(
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
+            ),
+            border: const OutlineInputBorder(),
           ),
           textCapitalization: TextCapitalization.characters,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -62,6 +88,7 @@ class ProductDialogs {
     required ShopProductsBloc productsBloc,
     required Function(String) onColorAdded,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final List<String> palette = [
       'Black',
       'Blue',
@@ -81,13 +108,28 @@ class ProductDialogs {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Add Color'),
+        backgroundColor: isDark ? ShopAppColors.darkSurface : Colors.white,
+        title: Text(
+          'Add Color',
+          style: TextStyle(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Select a predefined color:'),
+              Text(
+                'Select a predefined color:',
+                style: TextStyle(
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
+                ),
+              ),
               SizedBox(height: 12.h),
               SizedBox(
                 width: double.maxFinite,
@@ -104,7 +146,7 @@ class ProductDialogs {
                   itemBuilder: (context, index) {
                     final colorName = palette[index];
                     final color = ShopAppColors.getColorFromName(colorName);
-                    final isWhite = color.value == 0xFFFFFFFF;
+                    final isWhite = color.toARGB32() == 0xFFFFFFFF;
                     return GestureDetector(
                       onTap: () {
                         productsBloc.add(
@@ -118,9 +160,15 @@ class ProductDialogs {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: isDark
+                              ? ShopAppColors.darkInputBackground
+                              : Colors.grey[100],
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: Colors.grey[300]!),
+                          border: Border.all(
+                            color: isDark
+                                ? ShopAppColors.darkBorder
+                                : Colors.grey[300]!,
+                          ),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +190,12 @@ class ProductDialogs {
                             SizedBox(height: 4.h),
                             Text(
                               colorName,
-                              style: TextStyle(fontSize: 10.sp),
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: isDark
+                                    ? ShopAppColors.darkTextPrimary
+                                    : ShopAppColors.textPrimary,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -159,7 +212,14 @@ class ProductDialogs {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
+              ),
+            ),
           ),
         ],
       ),

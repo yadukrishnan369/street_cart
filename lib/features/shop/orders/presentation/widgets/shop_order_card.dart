@@ -23,6 +23,9 @@ class ShopOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Get orders Data
     final cardData = ShopOrdersHelper.getShopOrderCardData(
       order: order,
@@ -78,11 +81,14 @@ class ShopOrderCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+        ),
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -134,7 +140,9 @@ class ShopOrderCard extends StatelessWidget {
                     Text(
                       timeAgo,
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[400],
                         fontSize: 11.sp,
                       ),
                     ),
@@ -145,7 +153,9 @@ class ShopOrderCard extends StatelessWidget {
                 Text(
                   productNameText,
                   style: TextStyle(
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -156,7 +166,12 @@ class ShopOrderCard extends StatelessWidget {
                 // Order Delivery Address
                 Text(
                   order.deliveryAddress.fullName,
-                  style: TextStyle(color: Colors.grey[500], fontSize: 13.sp),
+                  style: TextStyle(
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : Colors.grey[500],
+                    fontSize: 13.sp,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -168,7 +183,9 @@ class ShopOrderCard extends StatelessWidget {
                     Text(
                       '₹${PriceUtils.formatPrice(totalAmount)}',
                       style: TextStyle(
-                        color: ShopAppColors.textPrimary,
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                         fontSize: 17.sp,
                         fontWeight: FontWeight.w900,
                       ),
@@ -187,10 +204,14 @@ class ShopOrderCard extends StatelessWidget {
                                   vertical: 4.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: returnStatusColor.withOpacity(0.08),
+                                  color: returnStatusColor.withValues(
+                                    alpha: 0.08,
+                                  ),
                                   borderRadius: BorderRadius.circular(12.r),
                                   border: Border.all(
-                                    color: returnStatusColor.withOpacity(0.15),
+                                    color: returnStatusColor.withValues(
+                                      alpha: 0.15,
+                                    ),
                                   ),
                                 ),
                                 child: Text(
@@ -227,10 +248,10 @@ class ShopOrderCard extends StatelessWidget {
                                 vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
-                                color: badgeColor.withOpacity(0.08),
+                                color: badgeColor.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(
-                                  color: badgeColor.withOpacity(0.15),
+                                  color: badgeColor.withValues(alpha: 0.15),
                                 ),
                               ),
                               // Selected Payment Method Label

@@ -15,6 +15,9 @@ class EmptyShopProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     IconData icon;
     String title;
     String description;
@@ -60,7 +63,9 @@ class EmptyShopProductsView extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
-                    color: ShopAppColors.primary.withOpacity(0.08),
+                    color: ShopAppColors.primary.withValues(
+                      alpha: isDark ? 0.2 : 0.08,
+                    ),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, size: 64.sp, color: ShopAppColors.primary),
@@ -72,7 +77,9 @@ class EmptyShopProductsView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -83,7 +90,9 @@ class EmptyShopProductsView extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: Colors.grey[500],
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : Colors.grey[500],
                     height: 1.5,
                   ),
                 ),

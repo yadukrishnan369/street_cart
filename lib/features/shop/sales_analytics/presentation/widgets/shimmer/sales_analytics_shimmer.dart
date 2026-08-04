@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
 // Sales Analytics Shimmer
 class SalesAnalyticsShimmer extends StatelessWidget {
@@ -8,12 +9,21 @@ class SalesAnalyticsShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : const Color(0xFFE2E8F0);
+    final highlightColor = isDark ? Colors.grey[700]! : const Color(0xFFF1F5F9);
+    final cardBg = isDark ? ShopAppColors.darkSurface : Colors.white;
+    final cardBorder = isDark
+        ? ShopAppColors.darkBorder
+        : const Color(0xFFE2E8F0);
+    final blockColor = isDark ? Colors.grey[850]! : Colors.white;
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Shimmer.fromColors(
-        baseColor: const Color(0xFFE2E8F0),
-        highlightColor: const Color(0xFFF1F5F9),
+        baseColor: baseColor,
+        highlightColor: highlightColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -25,7 +35,7 @@ class SalesAnalyticsShimmer extends StatelessWidget {
                   width: 100.w,
                   height: 16.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: blockColor,
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                 ),
@@ -35,7 +45,7 @@ class SalesAnalyticsShimmer extends StatelessWidget {
                       width: 80.w,
                       height: 32.h,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: blockColor,
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                     ),
@@ -44,7 +54,7 @@ class SalesAnalyticsShimmer extends StatelessWidget {
                       width: 80.w,
                       height: 32.h,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: blockColor,
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                     ),
@@ -59,9 +69,9 @@ class SalesAnalyticsShimmer extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
+                color: cardBg.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: cardBorder),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -156,9 +166,9 @@ class SalesAnalyticsShimmer extends StatelessWidget {
             // Sales and Items Count Card Shimmer
             Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
+                color: cardBg.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: cardBorder),
               ),
               child: Row(
                 children: [
@@ -276,9 +286,9 @@ class SalesAnalyticsShimmer extends StatelessWidget {
             // Order Summary Grid
             Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
+                color: cardBg.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: cardBorder),
               ),
               child: Column(
                 children: [
@@ -432,9 +442,9 @@ class SalesAnalyticsShimmer extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: 12.h),
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.4),
+                    color: cardBg.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    border: Border.all(color: cardBorder),
                   ),
                   child: Row(
                     children: [

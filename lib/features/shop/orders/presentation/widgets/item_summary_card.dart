@@ -17,6 +17,9 @@ class ItemSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final summaryData = ShopOrdersHelper.getItemSummaryCardData(
       order: order,
       shopId: shopId,
@@ -53,9 +56,9 @@ class ItemSummaryCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: badgeColor.withOpacity(0.08),
+                  color: badgeColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: badgeColor.withOpacity(0.15)),
+                  border: Border.all(color: badgeColor.withValues(alpha: 0.15)),
                 ),
                 // Payment Label
                 child: Text(
@@ -74,9 +77,11 @@ class ItemSummaryCard extends StatelessWidget {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.grey[200]!),
+            border: Border.all(
+              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+            ),
           ),
           child: Column(
             children: [
@@ -130,7 +135,9 @@ class ItemSummaryCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1E293B),
+                                  color: isDark
+                                      ? ShopAppColors.darkTextPrimary
+                                      : ShopAppColors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 4.h),
@@ -139,7 +146,9 @@ class ItemSummaryCard extends StatelessWidget {
                                 '${item.selectedSize ?? "Default Size"}, ${item.selectedColor ?? "Default Color"}',
                                 style: TextStyle(
                                   fontSize: 12.sp,
-                                  color: Colors.grey[500],
+                                  color: isDark
+                                      ? ShopAppColors.darkTextSecondary
+                                      : Colors.grey[500],
                                 ),
                               ),
                               SizedBox(height: 6.h),
@@ -161,7 +170,9 @@ class ItemSummaryCard extends StatelessWidget {
                                     'Qty: ${item.quantity.toString().padLeft(2, '0')}',
                                     style: TextStyle(
                                       fontSize: 12.sp,
-                                      color: Colors.grey[500],
+                                      color: isDark
+                                          ? ShopAppColors.darkTextSecondary
+                                          : Colors.grey[500],
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -176,7 +187,11 @@ class ItemSummaryCard extends StatelessWidget {
                 ),
               ),
 
-              const Divider(height: 1.0, thickness: 0.2),
+              Divider(
+                height: 1.0,
+                thickness: 0.2,
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
+              ),
 
               // Items Total
               Padding(
@@ -188,7 +203,9 @@ class ItemSummaryCard extends StatelessWidget {
                       'Items Total',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[500],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[500],
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -196,7 +213,9 @@ class ItemSummaryCard extends StatelessWidget {
                       '₹${PriceUtils.formatPrice(totalAmount)}',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF1E293B),
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -204,7 +223,11 @@ class ItemSummaryCard extends StatelessWidget {
                 ),
               ),
 
-              const Divider(height: 1.0, thickness: 0.2),
+              Divider(
+                height: 1.0,
+                thickness: 0.2,
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
+              ),
 
               // Commission Amount
               Padding(
@@ -216,7 +239,9 @@ class ItemSummaryCard extends StatelessWidget {
                       'Commission (${commissionPercentage.toStringAsFixed(0)}%)',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[500],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[500],
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -224,7 +249,9 @@ class ItemSummaryCard extends StatelessWidget {
                       '₹-${PriceUtils.formatPrice(commission)}',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF1E293B),
+                        color: isDark
+                            ? ShopAppColors.darkTextPrimary
+                            : ShopAppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -232,13 +259,19 @@ class ItemSummaryCard extends StatelessWidget {
                 ),
               ),
 
-              const Divider(height: 1.0, thickness: 0.2),
+              Divider(
+                height: 1.0,
+                thickness: 0.2,
+                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
+              ),
 
               // Total Amount
               Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
+                  color: isDark
+                      ? ShopAppColors.darkBackground
+                      : const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(20.r),
                   ),
@@ -250,7 +283,9 @@ class ItemSummaryCard extends StatelessWidget {
                       'Total Amount (Exclude comm)',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[600],
+                        color: isDark
+                            ? ShopAppColors.darkTextSecondary
+                            : Colors.grey[600],
                         fontWeight: FontWeight.bold,
                       ),
                     ),

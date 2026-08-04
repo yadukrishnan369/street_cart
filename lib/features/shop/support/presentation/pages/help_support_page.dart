@@ -15,16 +15,30 @@ class HelpSupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: isDark
+          ? ShopAppColors.darkBackground
+          : const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
+        elevation: isDark ? null : 1.5,
+        shape: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? ShopAppColors.darkBorder
+                : ShopAppColors.border.withValues(alpha: 1.5),
+            width: 0.5,
+          ),
+        ),
         // Page Header
         title: Text(
           'Help & Support',
           style: ShopAppTextStyles.heading4.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -40,7 +54,9 @@ class HelpSupportPage extends StatelessWidget {
               'Common Topics',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
                 fontSize: 16.sp,
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 12.h),
@@ -97,7 +113,9 @@ class HelpSupportPage extends StatelessWidget {
               'Help Categories',
               style: ShopAppTextStyles.bodyMediumBold.copyWith(
                 fontSize: 16.sp,
-                color: ShopAppColors.textPrimary,
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 12.h),

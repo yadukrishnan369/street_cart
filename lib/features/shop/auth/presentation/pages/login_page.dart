@@ -30,6 +30,9 @@ class _ShopLoginPageState extends State<ShopLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocListener<ShopAuthBloc, ShopAuthState>(
       listener: (context, state) {
         if (state.status == ShopAuthStatus.authenticated) {
@@ -49,13 +52,20 @@ class _ShopLoginPageState extends State<ShopLoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: ShopAppColors.background,
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
           // Page Header
-          title: Text('Shop Login', style: ShopAppTextStyles.heading4),
+          title: Text(
+            'Shop Login',
+            style: ShopAppTextStyles.heading4.copyWith(
+              color: isDark
+                  ? ShopAppColors.darkTextPrimary
+                  : ShopAppColors.textPrimary,
+            ),
+          ),
           centerTitle: true,
         ),
         body: SingleChildScrollView(

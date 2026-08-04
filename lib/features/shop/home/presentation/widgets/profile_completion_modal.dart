@@ -17,17 +17,20 @@ class ProfileCompletionModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Container(
         padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: ShopAppColors.surface,
+          color: isDark ? ShopAppColors.darkSurface : ShopAppColors.surface,
           borderRadius: BorderRadius.circular(32.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -39,7 +42,7 @@ class ProfileCompletionModal extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: ShopAppColors.primary.withOpacity(0.12),
+                color: ShopAppColors.primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               // Icon
@@ -53,14 +56,22 @@ class ProfileCompletionModal extends StatelessWidget {
             // Title
             Text(
               'Complete Your Profile',
-              style: ShopAppTextStyles.heading3,
+              style: ShopAppTextStyles.heading3.copyWith(
+                color: isDark
+                    ? ShopAppColors.darkTextPrimary
+                    : ShopAppColors.textPrimary,
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 12.h),
             // Subtitle
             Text(
               'Your shop is almost ready! Finish setting up your business profile to start receiving orders.',
-              style: ShopAppTextStyles.bodyMedium,
+              style: ShopAppTextStyles.bodyMedium.copyWith(
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 32.h),
@@ -77,7 +88,9 @@ class ProfileCompletionModal extends StatelessWidget {
               child: Text(
                 'Maybe Later',
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                 ),
               ),
             ),

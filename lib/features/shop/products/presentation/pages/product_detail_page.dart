@@ -52,25 +52,49 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             uiState.selectedColor,
           );
 
+          final theme = Theme.of(context);
+          final isDark = theme.brightness == Brightness.dark;
+
           return Scaffold(
-            backgroundColor: ShopAppColors.background,
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
+              backgroundColor: isDark
+                  ? ShopAppColors.darkBackground
+                  : Colors.white,
+              elevation: isDark ? null : 1.0,
+              shape: Border(
+                bottom: BorderSide(
+                  color: isDark
+                      ? ShopAppColors.darkBorder
+                      : ShopAppColors.border.withValues(alpha: 1.0),
+                  width: 0.5,
+                ),
+              ),
               leading: IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back,
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
               // Page Header
-              title: Text('Product Details', style: ShopAppTextStyles.heading3),
+              title: Text(
+                'Product Details',
+                style: isDark
+                    ? ShopAppTextStyles.heading3.copyWith(
+                        color: ShopAppColors.darkTextPrimary,
+                      )
+                    : ShopAppTextStyles.heading3,
+              ),
               actions: [
                 PopupMenuButton<String>(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.more_vert,
-                    color: ShopAppColors.textPrimary,
+                    color: isDark
+                        ? ShopAppColors.darkTextPrimary
+                        : ShopAppColors.textPrimary,
                   ),
                   onSelected: (val) {
                     // Product Delete
@@ -147,17 +171,31 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         // Product Description
                         Text(
                           'Product Description',
-                          style: ShopAppTextStyles.bodyMediumBold,
+                          style: isDark
+                              ? ShopAppTextStyles.bodyMediumBold.copyWith(
+                                  color: ShopAppColors.darkTextPrimary,
+                                )
+                              : ShopAppTextStyles.bodyMediumBold,
                         ),
                         SizedBox(height: 8.h),
                         Text(
                           currentProduct.description,
-                          style: ShopAppTextStyles.bodyMedium.copyWith(
-                            height: 1.5,
-                          ),
+                          style: isDark
+                              ? ShopAppTextStyles.bodyMedium.copyWith(
+                                  color: ShopAppColors.darkTextSecondary,
+                                  height: 1.5,
+                                )
+                              : ShopAppTextStyles.bodyMedium.copyWith(
+                                  height: 1.5,
+                                ),
                         ),
                         SizedBox(height: 24.h),
-                        const Divider(height: 1, color: Color(0xFFE2E8F0)),
+                        Divider(
+                          height: 1,
+                          color: isDark
+                              ? ShopAppColors.darkBorder
+                              : const Color(0xFFE2E8F0),
+                        ),
                         SizedBox(height: 24.h),
                         // Shop Product Reviews Section
                         ShopProductReviewsSection(

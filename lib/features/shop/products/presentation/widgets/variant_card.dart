@@ -22,22 +22,29 @@ class VariantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final color = ShopAppColors.getColorFromName(variant.colorName);
-    final isWhite = color.value == 0xFFFFFFFF;
+    final isWhite = color.toARGB32() == 0xFFFFFFFF;
 
     return Container(
       margin: EdgeInsets.only(bottom: 14.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: ShopAppColors.border.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: isDark
+              ? ShopAppColors.darkBorder
+              : ShopAppColors.border.withValues(alpha: 0.6),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +53,9 @@ class VariantCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             decoration: BoxDecoration(
-              color: ShopAppColors.primary.withValues(alpha: 0.05),
+              color: ShopAppColors.primary.withValues(
+                alpha: isDark ? 0.15 : 0.05,
+              ),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(16.r),
                 topRight: Radius.circular(16.r),
@@ -84,7 +93,9 @@ class VariantCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: ShopAppColors.textPrimary,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
                     ),
                   ),
                 ),
@@ -97,7 +108,9 @@ class VariantCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: variant.totalStock > 0
                         ? ShopAppColors.successBg
-                        : Colors.grey[100],
+                        : (isDark
+                              ? ShopAppColors.darkInputBackground
+                              : Colors.grey[100]),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   // Varient Total Stock
@@ -108,7 +121,9 @@ class VariantCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: variant.totalStock > 0
                           ? ShopAppColors.success
-                          : ShopAppColors.textSecondary,
+                          : (isDark
+                                ? ShopAppColors.darkTextSecondary
+                                : ShopAppColors.textSecondary),
                     ),
                   ),
                 ),
@@ -148,7 +163,9 @@ class VariantCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w600,
-                      color: ShopAppColors.textSecondary,
+                      color: isDark
+                          ? ShopAppColors.darkTextSecondary
+                          : ShopAppColors.textSecondary,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -165,13 +182,19 @@ class VariantCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: hasStock
-                              ? ShopAppColors.primaryLight
-                              : Colors.grey[100],
+                              ? ShopAppColors.primary.withValues(
+                                  alpha: isDark ? 0.2 : 0.08,
+                                )
+                              : (isDark
+                                    ? ShopAppColors.darkInputBackground
+                                    : Colors.grey[100]),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
                             color: hasStock
                                 ? ShopAppColors.primary.withValues(alpha: 0.3)
-                                : Colors.grey[300]!,
+                                : (isDark
+                                      ? ShopAppColors.darkBorder
+                                      : Colors.grey[300]!),
                           ),
                         ),
                         child: Text(
@@ -181,7 +204,9 @@ class VariantCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: hasStock
                                 ? ShopAppColors.primary
-                                : ShopAppColors.textSecondary,
+                                : (isDark
+                                      ? ShopAppColors.darkTextSecondary
+                                      : ShopAppColors.textSecondary),
                           ),
                         ),
                       );

@@ -20,11 +20,16 @@ class ContactSupportRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? ShopAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? ShopAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       // List Tile
       child: ListTile(
@@ -32,8 +37,10 @@ class ContactSupportRow extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         leading: Container(
           padding: EdgeInsets.all(10.w),
-          decoration: const BoxDecoration(
-            color: Color(0xFFE8F5E9),
+          decoration: BoxDecoration(
+            color: isDark
+                ? ShopAppColors.primary.withValues(alpha: 0.15)
+                : const Color(0xFFE8F5E9),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: ShopAppColors.primary, size: 22.sp),
@@ -42,7 +49,9 @@ class ContactSupportRow extends StatelessWidget {
         title: Text(
           title,
           style: ShopAppTextStyles.bodyMediumBold.copyWith(
-            color: ShopAppColors.textPrimary,
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
             fontSize: 14.sp,
           ),
         ),
@@ -52,7 +61,9 @@ class ContactSupportRow extends StatelessWidget {
           child: Text(
             subtitle,
             style: ShopAppTextStyles.bodySmall.copyWith(
-              color: ShopAppColors.textSecondary,
+              color: isDark
+                  ? ShopAppColors.darkTextSecondary
+                  : ShopAppColors.textSecondary,
               fontSize: 12.sp,
             ),
           ),
@@ -61,7 +72,9 @@ class ContactSupportRow extends StatelessWidget {
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 14.sp,
-          color: ShopAppColors.textSecondary,
+          color: isDark
+              ? ShopAppColors.darkTextSecondary
+              : ShopAppColors.textSecondary,
         ),
       ),
     );

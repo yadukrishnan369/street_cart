@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 
 // Sales Transaction Details Shimmer
 class SalesTransactionDetailsShimmer extends StatelessWidget {
@@ -8,11 +9,19 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.grey[800]! : const Color(0xFFE2E8F0);
+    final highlightColor = isDark ? Colors.grey[700]! : const Color(0xFFF1F5F9);
+    final cardBg = isDark ? ShopAppColors.darkSurface : Colors.white;
+    final cardBorder = isDark
+        ? ShopAppColors.darkBorder
+        : const Color(0xFFE2E8F0);
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Shimmer.fromColors(
-        baseColor: const Color(0xFFE2E8F0),
-        highlightColor: const Color(0xFFF1F5F9),
+        baseColor: baseColor,
+        highlightColor: highlightColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -20,14 +29,14 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
-              color: Colors.white.withOpacity(0.4),
+              color: cardBg.withOpacity(0.4),
               child: Row(
                 children: [
                   Container(
                     width: 20.r,
                     height: 20.r,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: cardBg,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -36,7 +45,7 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
                     width: 180.w,
                     height: 14.h,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: cardBg,
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                   ),
@@ -52,7 +61,7 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
                 width: 150.w,
                 height: 14.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: cardBg,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
               ),
@@ -63,9 +72,9 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
+                color: cardBg.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: cardBorder),
               ),
               child: Row(
                 children: [

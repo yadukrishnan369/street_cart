@@ -12,6 +12,7 @@ class ShopDescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ShopProfileSectionBlock(
       // Title
       title: 'SHOP DESCRIPTION',
@@ -21,7 +22,9 @@ class ShopDescriptionCard extends StatelessWidget {
             ? profile.description
             : 'No description provided.',
         style: ShopAppTextStyles.bodyMedium.copyWith(
-          color: ShopAppColors.textPrimary,
+          color: isDark
+              ? ShopAppColors.darkTextPrimary
+              : ShopAppColors.textPrimary,
           height: 1.4,
         ),
       ),

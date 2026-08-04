@@ -19,6 +19,9 @@ class ProductColorSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,7 +31,9 @@ class ProductColorSelection extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: ShopAppColors.textSecondary,
+            color: isDark
+                ? ShopAppColors.darkTextSecondary
+                : ShopAppColors.textSecondary,
           ),
         ),
         SizedBox(height: 8.h),
@@ -40,7 +45,7 @@ class ProductColorSelection extends StatelessWidget {
               ...availableColors.map((colorName) {
                 final isSelected = selectedColors.contains(colorName);
                 final color = ShopAppColors.getColorFromName(colorName);
-                final isWhite = color.value == 0xFFFFFFFF;
+                final isWhite = color.toARGB32() == 0xFFFFFFFF;
                 return Padding(
                   padding: EdgeInsets.only(right: 8.w),
                   child: GestureDetector(
@@ -52,13 +57,19 @@ class ProductColorSelection extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? ShopAppColors.primary.withOpacity(0.1)
-                            : Colors.white,
+                            ? ShopAppColors.primary.withValues(
+                                alpha: isDark ? 0.2 : 0.1,
+                              )
+                            : (isDark
+                                  ? ShopAppColors.darkSurface
+                                  : Colors.white),
                         borderRadius: BorderRadius.circular(20.r),
                         border: Border.all(
                           color: isSelected
                               ? ShopAppColors.primary
-                              : Colors.grey[300]!,
+                              : (isDark
+                                    ? ShopAppColors.darkBorder
+                                    : Colors.grey[300]!),
                           width: 1.5.w,
                         ),
                       ),
@@ -90,7 +101,9 @@ class ProductColorSelection extends StatelessWidget {
                                   : FontWeight.normal,
                               color: isSelected
                                   ? ShopAppColors.primary
-                                  : Colors.black,
+                                  : (isDark
+                                        ? ShopAppColors.darkTextPrimary
+                                        : ShopAppColors.textPrimary),
                             ),
                           ),
                         ],

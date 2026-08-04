@@ -27,7 +27,7 @@ class EarningsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF045C3A).withOpacity(0.2),
+            color: const Color(0xFF045C3A).withValues(alpha: 0.2),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -44,7 +44,7 @@ class EarningsCard extends StatelessWidget {
                 Text(
                   'Total Earnings',
                   style: ShopAppTextStyles.caption.copyWith(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5.sp,
                   ),
@@ -64,7 +64,7 @@ class EarningsCard extends StatelessWidget {
                 Text(
                   'Total earnings from completed orders',
                   style: ShopAppTextStyles.caption.copyWith(
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withValues(alpha: 0.6),
                     fontSize: 11.sp,
                   ),
                 ),
@@ -75,7 +75,7 @@ class EarningsCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(

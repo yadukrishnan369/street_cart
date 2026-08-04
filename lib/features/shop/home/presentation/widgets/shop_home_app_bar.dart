@@ -12,8 +12,11 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? ShopAppColors.darkBackground : Colors.white,
       elevation: 0,
       centerTitle: false,
       titleSpacing: 0,
@@ -48,7 +51,14 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             // Shop name
             children: [
-              Text(shopName, style: ShopAppTextStyles.heading4),
+              Text(
+                shopName,
+                style: ShopAppTextStyles.heading4.copyWith(
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
+                ),
+              ),
               Text('Street Cart Partner', style: ShopAppTextStyles.labelBold),
             ],
           );
@@ -62,7 +72,9 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               icon: Icon(
                 Icons.notifications_none_rounded,
-                color: ShopAppColors.textSecondary,
+                color: isDark
+                    ? ShopAppColors.darkTextSecondary
+                    : ShopAppColors.textSecondary,
                 size: 26.sp,
               ),
               onPressed: () {},

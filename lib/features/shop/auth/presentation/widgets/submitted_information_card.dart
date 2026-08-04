@@ -12,27 +12,39 @@ class SubmittedInformationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Title
-        Text('Submitted Information', style: ShopAppTextStyles.heading3),
+        Text(
+          'Submitted Information',
+          style: ShopAppTextStyles.heading3.copyWith(
+            color: isDark
+                ? ShopAppColors.darkTextPrimary
+                : ShopAppColors.textPrimary,
+          ),
+        ),
         SizedBox(height: 16.h),
         Container(
           width: double.infinity,
           padding: EdgeInsets.all(20.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? ShopAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(10),
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
                 blurRadius: 10.r,
                 offset: const Offset(0, 4),
               ),
             ],
             border: Border.all(
-              color: ShopAppColors.textSecondary.withAlpha(26),
+              color: isDark
+                  ? ShopAppColors.darkBorder
+                  : ShopAppColors.textSecondary.withValues(alpha: 0.1),
             ),
           ),
           child: Column(
@@ -42,36 +54,46 @@ class SubmittedInformationCard extends StatelessWidget {
                 Icons.storefront_outlined,
                 'Shop Name',
                 shop.shopName,
+                isDark,
               ),
               Divider(
                 height: 24.h,
-                color: ShopAppColors.textSecondary.withAlpha(26),
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.textSecondary.withValues(alpha: 0.1),
               ),
               // Owner name
               _buildDetailRow(
                 Icons.person_outline_rounded,
                 'Owner Name',
                 shop.ownerName,
+                isDark,
               ),
               Divider(
                 height: 24.h,
-                color: ShopAppColors.textSecondary.withAlpha(26),
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.textSecondary.withValues(alpha: 0.1),
               ),
               // Email Address
               _buildDetailRow(
                 Icons.mail_outline_rounded,
                 'Email Address',
                 shop.email,
+                isDark,
               ),
               Divider(
                 height: 24.h,
-                color: ShopAppColors.textSecondary.withAlpha(26),
+                color: isDark
+                    ? ShopAppColors.darkBorder
+                    : ShopAppColors.textSecondary.withValues(alpha: 0.1),
               ),
               // Business category
               _buildDetailRow(
                 Icons.category_outlined,
                 'Category',
                 shop.category,
+                isDark,
               ),
             ],
           ),
@@ -80,10 +102,21 @@ class SubmittedInformationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value) {
+  Widget _buildDetailRow(
+    IconData icon,
+    String label,
+    String value,
+    bool isDark,
+  ) {
     return Row(
       children: [
-        Icon(icon, color: ShopAppColors.textSecondary, size: 20.sp),
+        Icon(
+          icon,
+          color: isDark
+              ? ShopAppColors.darkTextSecondary
+              : ShopAppColors.textSecondary,
+          size: 20.sp,
+        ),
         SizedBox(width: 12.w),
         Expanded(
           child: Column(
@@ -92,14 +125,18 @@ class SubmittedInformationCard extends StatelessWidget {
               Text(
                 label,
                 style: ShopAppTextStyles.bodySmall.copyWith(
-                  color: ShopAppColors.textSecondary,
+                  color: isDark
+                      ? ShopAppColors.darkTextSecondary
+                      : ShopAppColors.textSecondary,
                 ),
               ),
               SizedBox(height: 4.h),
               Text(
                 value,
                 style: ShopAppTextStyles.bodyMediumBold.copyWith(
-                  color: ShopAppColors.textPrimary,
+                  color: isDark
+                      ? ShopAppColors.darkTextPrimary
+                      : ShopAppColors.textPrimary,
                 ),
               ),
             ],

@@ -43,7 +43,7 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
         },
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: ShopAppColors.background,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: SafeArea(
               child: Column(
                 children: [
