@@ -13,12 +13,16 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,20 +41,28 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w800,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
-          Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
-          // Shop Description
+          Divider(
+            height: 32.h,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            thickness: 1.2,
+          ),
+          // Shop Description label
           Text(
             'DESCRIPTION',
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w800,
               letterSpacing: 0.5,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
           ),
           SizedBox(height: 8.h),
@@ -60,7 +72,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                 : 'No description provided.',
             style: TextStyle(
               fontSize: 13.sp,
-              color: const Color(0xFF6C6C80),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
               height: 1.5,
             ),
           ),
@@ -79,7 +93,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -91,7 +107,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                           Icon(
                             Icons.mail_outline,
                             size: 14.sp,
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                           ),
                           SizedBox(width: 8.w),
                           Expanded(
@@ -120,14 +138,18 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                         Icon(
                           Icons.phone_outlined,
                           size: 14.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                         SizedBox(width: 8.w),
                         Text(
                           shop.phone.isNotEmpty ? shop.phone : 'N/A',
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: const Color(0xFF6C6C80),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF6C6C80),
                           ),
                         ),
                       ],
@@ -139,14 +161,18 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                         Icon(
                           Icons.person_outline,
                           size: 14.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                         SizedBox(width: 8.w),
                         Text(
                           shop.ownerName,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: const Color(0xFF6C6C80),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF6C6C80),
                           ),
                         ),
                       ],
@@ -166,7 +192,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -177,7 +205,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -193,7 +223,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
               fontSize: 10.sp,
               fontWeight: FontWeight.w800,
               letterSpacing: 0.5,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
           ),
           SizedBox(height: 8.h),
@@ -218,7 +250,9 @@ class AdminShopBusinessDetailsCard extends StatelessWidget {
             }(),
             style: TextStyle(
               fontSize: 13.sp,
-              color: const Color(0xFF6C6C80),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
               height: 1.4,
             ),
           ),

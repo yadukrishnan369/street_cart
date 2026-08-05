@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/constants/admin_constants.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/theme/admin/admin_text_styles.dart';
 
 // Admin Profile About Card
@@ -9,13 +10,17 @@ class AdminProfileAboutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +30,9 @@ class AdminProfileAboutCard extends StatelessWidget {
             AdminConstants.aboutTitle,
             style: AdminAppTextStyles.heading3.copyWith(
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 16.h),
@@ -33,7 +40,9 @@ class AdminProfileAboutCard extends StatelessWidget {
           Text(
             AdminConstants.aboutContent,
             style: AdminAppTextStyles.bodyMedium.copyWith(
-              color: const Color(0xFF4A4A68),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF4A4A68),
               height: 1.5,
             ),
           ),

@@ -21,11 +21,14 @@ class AdminReviewDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) =>
           sl<AdminReviewDetailBloc>()..add(LoadReviewDetail(reviewId)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: SafeArea(
           child: BlocConsumer<AdminReviewDetailBloc, AdminReviewDetailState>(
             listener: (context, state) {

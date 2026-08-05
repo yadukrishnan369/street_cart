@@ -15,12 +15,17 @@ class RecentOrdersTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFF0EFF5), width: 1),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +39,9 @@ class RecentOrdersTable extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               TextButton(
@@ -44,7 +51,7 @@ class RecentOrdersTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF9D4EDD),
+                    color: AdminAppColors.primaryColor,
                   ),
                 ),
               ),
@@ -66,20 +73,25 @@ class RecentOrdersTable extends StatelessWidget {
                 children: [
                   // Table Header
                   TableRow(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : const Color(0xFFF4F5F7),
                       border: Border(
                         bottom: BorderSide(
-                          color: Color(0xFFF0EFF5),
-                          width: 1.5,
+                          color: isDark
+                              ? AdminAppColors.darkBorder
+                              : const Color(0xFFF0EFF5),
+                          width: 2,
                         ),
                       ),
                     ),
                     children: [
-                      _buildHeaderCell('ORDER ID'),
-                      _buildHeaderCell('CUSTOMER'),
-                      _buildHeaderCell('AMOUNT'),
-                      _buildHeaderCell('STATUS'),
-                      _buildHeaderCell('ACTIONS'),
+                      _buildHeaderCell(context, 'ORDER ID'),
+                      _buildHeaderCell(context, 'CUSTOMER'),
+                      _buildHeaderCell(context, 'AMOUNT'),
+                      _buildHeaderCell(context, 'STATUS'),
+                      _buildHeaderCell(context, 'ACTIONS'),
                     ],
                   ),
                   ...orders.map((order) {
@@ -89,18 +101,21 @@ class RecentOrdersTable extends StatelessWidget {
                     );
 
                     return TableRow(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: Color(0xFFF0EFF5),
+                            color: isDark
+                                ? AdminAppColors.darkBorder
+                                : const Color(0xFFF0EFF5),
                             width: 1,
                           ),
                         ),
                       ),
                       children: [
-                        _buildDataCell(displayId, isBold: true),
-                        _buildDataCell(order.customerName),
+                        _buildDataCell(context, displayId, isBold: true),
+                        _buildDataCell(context, order.customerName),
                         _buildDataCell(
+                          context,
                           '₹${order.amount.toStringAsFixed(2)}',
                           isBold: true,
                         ),
@@ -143,7 +158,9 @@ class RecentOrdersTable extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCell(String label) {
+  Widget _buildHeaderCell(BuildContext context, String label) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Text(
@@ -152,13 +169,21 @@ class RecentOrdersTable extends StatelessWidget {
           fontSize: 11.sp,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );
   }
 
-  Widget _buildDataCell(String value, {bool isBold = false}) {
+  Widget _buildDataCell(
+    BuildContext context,
+    String value, {
+    bool isBold = false,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.h),
       child: Text(
@@ -166,7 +191,9 @@ class RecentOrdersTable extends StatelessWidget {
         style: TextStyle(
           fontSize: 13.sp,
           fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-          color: const Color(0xFF1E1E2F),
+          color: isDark
+              ? AdminAppColors.darkTextPrimary
+              : AdminAppColors.textPrimary,
         ),
       ),
     );

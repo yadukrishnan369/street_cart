@@ -79,16 +79,20 @@ class RevenueFilterBar extends StatelessWidget {
     required List<String> items,
     required ValueChanged<String?> onChanged,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: 44.h,
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkInputBackground : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE0E0E0),
+        ),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          dropdownColor: isDark ? AdminAppColors.darkSurface : Colors.white,
           value: items.contains(value) ? value : items.first,
           items: items
               .map(
@@ -98,7 +102,9 @@ class RevenueFilterBar extends StatelessWidget {
                     e,
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: AdminAppColors.textPrimary,
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                 ),
@@ -108,13 +114,17 @@ class RevenueFilterBar extends StatelessWidget {
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
             size: 18.sp,
-            color: AdminAppColors.textSecondary,
+            color: isDark
+                ? AdminAppColors.darkTextSecondary
+                : AdminAppColors.textSecondary,
           ),
           hint: Text(
             label,
             style: TextStyle(
               fontSize: 13.sp,
-              color: AdminAppColors.textSecondary,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : AdminAppColors.textSecondary,
             ),
           ),
         ),
@@ -170,6 +180,7 @@ class RevenueFilterBar extends StatelessWidget {
   // Date Picker Modal
   void _pickDateRange(BuildContext context, AdminRevenueLoaded state) async {
     final bloc = context.read<AdminRevenueBloc>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime(2020),
@@ -179,7 +190,24 @@ class RevenueFilterBar extends StatelessWidget {
           : null,
       builder: (ctx, child) => Theme(
         data: Theme.of(ctx).copyWith(
-          colorScheme: ColorScheme.light(primary: AdminAppColors.primaryColor),
+          colorScheme: isDark
+              ? const ColorScheme.dark(
+                  primary: AdminAppColors.primaryColor,
+                  onPrimary: Colors.white,
+                  surface: AdminAppColors.darkSurface,
+                  onSurface: AdminAppColors.darkTextPrimary,
+                )
+              : const ColorScheme.light(
+                  primary: AdminAppColors.primaryColor,
+                  onPrimary: Colors.white,
+                  surface: Colors.white,
+                  onSurface: AdminAppColors.textPrimary,
+                ),
+          dialogTheme: DialogThemeData(
+            backgroundColor: isDark
+                ? AdminAppColors.darkInputBackground
+                : Colors.white,
+          ),
         ),
         child: Dialog(
           insetPadding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.h),

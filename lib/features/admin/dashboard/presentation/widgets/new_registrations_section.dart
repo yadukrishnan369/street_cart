@@ -19,12 +19,17 @@ class NewRegistrationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFF0EFF5), width: 1),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +43,9 @@ class NewRegistrationsSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               Text(
@@ -46,7 +53,7 @@ class NewRegistrationsSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF9D4EDD),
+                  color: AdminAppColors.primaryColor,
                 ),
               ),
             ],
@@ -89,10 +96,14 @@ class NewRegistrationsSection extends StatelessWidget {
                 return Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFC),
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: const Color(0xFFF0EFF5),
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFF0EFF5),
                       width: 1,
                     ),
                   ),
@@ -101,12 +112,16 @@ class NewRegistrationsSection extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(10.w),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF3E8FF),
+                          color: isDark
+                              ? AdminAppColors.primaryColor.withValues(
+                                  alpha: 0.15,
+                                )
+                              : const Color(0xFFF3E8FF),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Icon(
                           Icons.storefront_outlined,
-                          color: const Color(0xFF9D4EDD),
+                          color: AdminAppColors.primaryColor,
                           size: 20.sp,
                         ),
                       ),
@@ -124,7 +139,9 @@ class NewRegistrationsSection extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF1E1E2F),
+                                      color: isDark
+                                          ? AdminAppColors.darkTextPrimary
+                                          : AdminAppColors.textPrimary,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -138,10 +155,14 @@ class NewRegistrationsSection extends StatelessWidget {
                                       vertical: 2.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFFF3CD),
+                                      color: isDark
+                                          ? const Color(0xFF423715)
+                                          : const Color(0xFFFFF3CD),
                                       borderRadius: BorderRadius.circular(4.r),
                                       border: Border.all(
-                                        color: const Color(0xFFFFEBAA),
+                                        color: isDark
+                                            ? const Color(0xFF63521D)
+                                            : const Color(0xFFFFEBAA),
                                         width: 1,
                                       ),
                                     ),
@@ -150,7 +171,9 @@ class NewRegistrationsSection extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 9.sp,
                                         fontWeight: FontWeight.w800,
-                                        color: const Color(0xFF856404),
+                                        color: isDark
+                                            ? const Color(0xFFFFD54F)
+                                            : const Color(0xFF856404),
                                       ),
                                     ),
                                   ),
@@ -162,7 +185,9 @@ class NewRegistrationsSection extends StatelessWidget {
                               AdminDashboardHelper.getRegistrationSubtitle(reg),
                               style: TextStyle(
                                 fontSize: 12.sp,
-                                color: const Color(0xFF8A8A9E),
+                                color: isDark
+                                    ? AdminAppColors.darkTextSecondary
+                                    : const Color(0xFF8A8A9E),
                               ),
                             ),
                           ],
@@ -171,7 +196,7 @@ class NewRegistrationsSection extends StatelessWidget {
                       IconButton(
                         icon: Icon(
                           Icons.arrow_forward,
-                          color: const Color(0xFF9D4EDD),
+                          color: AdminAppColors.primaryColor,
                           size: 20.sp,
                         ),
                         onPressed: () => onApprove?.call(reg.id),
@@ -191,7 +216,7 @@ class NewRegistrationsSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF9D4EDD),
+                    color: AdminAppColors.primaryColor,
                   ),
                 ),
               ),

@@ -21,12 +21,16 @@ class AdminProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(
         children: [
@@ -60,7 +64,9 @@ class AdminProfileHeader extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 50.r,
-                          backgroundColor: Colors.white,
+                          backgroundColor: isDark
+                              ? AdminAppColors.darkSurface
+                              : Colors.white,
                           child: CircleAvatar(
                             radius: 46.r,
                             backgroundColor: AdminAppColors.primaryColor,
@@ -90,7 +96,9 @@ class AdminProfileHeader extends StatelessWidget {
                                       style: AdminAppTextStyles.heading2
                                           .copyWith(
                                             fontWeight: FontWeight.bold,
-                                            color: const Color(0xFF1E1E2F),
+                                            color: isDark
+                                                ? AdminAppColors.darkTextPrimary
+                                                : AdminAppColors.textPrimary,
                                           ),
                                     ),
                                     SizedBox(width: 12.w),
@@ -134,7 +142,9 @@ class AdminProfileHeader extends StatelessWidget {
                                     Icon(
                                       Icons.mail_outline,
                                       size: 14.sp,
-                                      color: const Color(0xFF8A8A9E),
+                                      color: isDark
+                                          ? AdminAppColors.darkTextSecondary
+                                          : const Color(0xFF8A8A9E),
                                     ),
                                     SizedBox(width: 6.w),
                                     // Email
@@ -142,7 +152,10 @@ class AdminProfileHeader extends StatelessWidget {
                                       profile.email,
                                       style: AdminAppTextStyles.bodySmall
                                           .copyWith(
-                                            color: const Color(0xFF8A8A9E),
+                                            color: isDark
+                                                ? AdminAppColors
+                                                      .darkTextSecondary
+                                                : const Color(0xFF8A8A9E),
                                           ),
                                     ),
                                   ],
@@ -157,7 +170,11 @@ class AdminProfileHeader extends StatelessWidget {
                           child: OutlinedButton(
                             onPressed: onEditProfilePressed,
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFFECEFF1)),
+                              side: BorderSide(
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : const Color(0xFFECEFF1),
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
@@ -171,7 +188,9 @@ class AdminProfileHeader extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1E1E2F),
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
                               ),
                             ),
                           ),
@@ -183,7 +202,9 @@ class AdminProfileHeader extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 50.r,
-                          backgroundColor: Colors.white,
+                          backgroundColor: isDark
+                              ? AdminAppColors.darkSurface
+                              : Colors.white,
                           child: CircleAvatar(
                             radius: 46.r,
                             backgroundColor: AdminAppColors.primaryColor,
@@ -206,7 +227,9 @@ class AdminProfileHeader extends StatelessWidget {
                               profile.fullName,
                               style: AdminAppTextStyles.heading2.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1E1E2F),
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -247,13 +270,17 @@ class AdminProfileHeader extends StatelessWidget {
                                 Icon(
                                   Icons.mail_outline,
                                   size: 14.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                                 SizedBox(width: 6.w),
                                 Text(
                                   profile.email,
                                   style: AdminAppTextStyles.bodySmall.copyWith(
-                                    color: const Color(0xFF8A8A9E),
+                                    color: isDark
+                                        ? AdminAppColors.darkTextSecondary
+                                        : const Color(0xFF8A8A9E),
                                   ),
                                 ),
                               ],
@@ -265,7 +292,11 @@ class AdminProfileHeader extends StatelessWidget {
                         OutlinedButton(
                           onPressed: onEditProfilePressed,
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Color(0xFFECEFF1)),
+                            side: BorderSide(
+                              color: isDark
+                                  ? AdminAppColors.darkBorder
+                                  : const Color(0xFFECEFF1),
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.r),
                             ),
@@ -279,7 +310,9 @@ class AdminProfileHeader extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1E1E2F),
+                              color: isDark
+                                  ? AdminAppColors.darkTextPrimary
+                                  : AdminAppColors.textPrimary,
                             ),
                           ),
                         ),

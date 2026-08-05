@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/theme/admin/admin_theme_cubit.dart';
 
 // Appearance Card
 class AppearanceCard extends StatelessWidget {
@@ -9,11 +10,17 @@ class AppearanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeCubit = context.read<AdminThemeCubit>();
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,13 +41,18 @@ class AppearanceCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
               ],
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFF0EFF5)),
+          Divider(
+            height: 1,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+          ),
           Padding(
             padding: EdgeInsets.all(24.w),
             child: Row(
@@ -56,7 +68,9 @@ class AppearanceCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -64,7 +78,9 @@ class AppearanceCard extends StatelessWidget {
                         'Choose how you want the dashboard to look.',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
                     ],
@@ -77,34 +93,60 @@ class AppearanceCard extends StatelessWidget {
                     children: [
                       // Light Mode button
                       Expanded(
-                        child: Container(
-                          height: 70.h,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: AdminAppColors.primaryColor,
-                              width: 1.5,
+                        child: InkWell(
+                          onTap: () {
+                            if (isDark) {
+                              themeCubit.toggleTheme(false);
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: Container(
+                            height: 70.h,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: !isDark
+                                    ? AdminAppColors.primaryColor
+                                    : (isDark
+                                          ? AdminAppColors.borderLight
+                                          : const Color(0xFFE8E7ED)),
+                                width: !isDark ? 2.0 : 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: !isDark
+                                  ? (isDark
+                                        ? AdminAppColors.darkSurface
+                                        : Colors.white)
+                                  : (isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : AdminAppColors.backgroundLight),
                             ),
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.wb_sunny_outlined,
-                                color: AdminAppColors.primaryColor,
-                                size: 20.sp,
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                'Light Mode',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AdminAppColors.primaryColor,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.wb_sunny_outlined,
+                                  color: !isDark
+                                      ? AdminAppColors.primaryColor
+                                      : (isDark
+                                            ? AdminAppColors.darkTextSecondary
+                                            : const Color(0xFF8A8A9E)),
+                                  size: 20.sp,
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 4.h),
+                                Text(
+                                  'Light Mode',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: !isDark
+                                        ? AdminAppColors.primaryColor
+                                        : (isDark
+                                              ? AdminAppColors.darkTextSecondary
+                                              : const Color(0xFF8A8A9E)),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -113,26 +155,33 @@ class AppearanceCard extends StatelessWidget {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            CustomSnackBar.show(
-                              context,
-                              message: 'Dark Mode is coming soon!',
-                            );
+                            if (!isDark) {
+                              themeCubit.toggleTheme(true);
+                            }
                           },
+                          borderRadius: BorderRadius.circular(10.r),
                           child: Container(
                             height: 70.h,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: const Color(0xFFE8E7ED),
+                                color: isDark
+                                    ? AdminAppColors.primaryColor
+                                    : AdminAppColors.darkBorder,
+                                width: isDark ? 2.0 : 1.0,
                               ),
                               borderRadius: BorderRadius.circular(10.r),
-                              color: const Color(0xFFF9FAFC),
+                              color: isDark
+                                  ? AdminAppColors.darkSurface
+                                  : AdminAppColors.backgroundLight,
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.nightlight_outlined,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.primaryColor
+                                      : const Color(0xFF8A8A9E),
                                   size: 20.sp,
                                 ),
                                 SizedBox(height: 4.h),
@@ -141,7 +190,9 @@ class AppearanceCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: const Color(0xFF8A8A9E),
+                                    color: isDark
+                                        ? AdminAppColors.primaryColor
+                                        : const Color(0xFF8A8A9E),
                                   ),
                                 ),
                               ],

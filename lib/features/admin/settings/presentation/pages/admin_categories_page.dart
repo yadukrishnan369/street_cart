@@ -36,7 +36,9 @@ class AdminCategoriesPage extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        backgroundColor: AdminAppColors.backgroundLight,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: BlocListener<AdminSettingsBloc, AdminSettingsState>(
           listener: (context, state) {
             if (state is AdminSettingsActionSuccess) {
@@ -217,10 +219,20 @@ class AdminCategoriesPage extends StatelessWidget {
     );
   }
 
-  Text _activeCategoryCount(List<CategoryModel> categoriesList) {
-    return Text(
-      'Showing ${categoriesList.where((e) => e.isVisible).length} active configurations',
-      style: TextStyle(fontSize: 12.sp, color: const Color(0xFF8A8A9E)),
+  Builder _activeCategoryCount(List<CategoryModel> categoriesList) {
+    return Builder(
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return Text(
+          'Showing ${categoriesList.where((e) => e.isVisible).length} active configurations',
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: isDark
+                ? AdminAppColors.darkTextSecondary
+                : const Color(0xFF8A8A9E),
+          ),
+        );
+      },
     );
   }
 }

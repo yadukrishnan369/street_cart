@@ -8,6 +8,7 @@ import 'package:street_cart/features/admin/products/domain/repositories/admin_pr
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_bloc.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_event.dart';
+import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 // Products Table
 class ProductsTable extends StatelessWidget {
@@ -24,6 +25,7 @@ class ProductsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(2.2),
@@ -36,20 +38,27 @@ class ProductsTable extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF4F5F7),
             border: Border(
-              bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+              bottom: BorderSide(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
           ),
           // Table Titles
           children: [
-            _buildTableHeaderCell('PRODUCT NAME'),
-            _buildTableHeaderCell('SHOP NAME'),
-            _buildTableHeaderCell('CATEGORY'),
-            _buildTableHeaderCell('PRICE'),
-            _buildTableHeaderCell('STATUS'),
-            _buildTableHeaderCell('ACTIONS'),
+            _buildTableHeaderCell(context, 'PRODUCT NAME'),
+            _buildTableHeaderCell(context, 'SHOP NAME'),
+            _buildTableHeaderCell(context, 'CATEGORY'),
+            _buildTableHeaderCell(context, 'PRICE'),
+            _buildTableHeaderCell(context, 'STATUS'),
+            _buildTableHeaderCell(context, 'ACTIONS'),
           ],
         ),
         ...products.map((item) => _buildTableRow(context, item)),
@@ -57,7 +66,7 @@ class ProductsTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeaderCell(String text) {
+  Widget _buildTableHeaderCell(BuildContext context, String text) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
       child: Text(
@@ -73,6 +82,7 @@ class ProductsTable extends StatelessWidget {
   }
 
   TableRow _buildTableRow(BuildContext context, AdminProductItem item) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final p = item.product;
     final bool isOutOfStock = p.stockQuantity == 0;
 
@@ -99,9 +109,12 @@ class ProductsTable extends StatelessWidget {
         : '₹${p.originalPrice.toStringAsFixed(2)}';
 
     return TableRow(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.2),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.2,
+          ),
         ),
       ),
       children: [
@@ -114,7 +127,9 @@ class ProductsTable extends StatelessWidget {
                 width: 36.r,
                 height: 36.r,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3E8FF),
+                  color: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : const Color(0xFFF3E8FF),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: ClipRRect(
@@ -124,26 +139,23 @@ class ProductsTable extends StatelessWidget {
                       ? CachedNetworkImage(
                           imageUrl: p.images.first,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => const Center(
-                            child: SizedBox(
-                              width: 14,
-                              height: 14,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 1.5,
-                                color: AdminAppColors.primaryColor,
+                          placeholder: (context, url) =>
+                              ProductImagePlaceholder(
+                                iconSize: 35,
+                                width: 35,
+                                height: 35,
                               ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.image_not_supported_outlined,
-                            size: 16,
-                            color: Color(0xFF8A8A9E),
-                          ),
+                          errorWidget: (context, url, error) =>
+                              ProductImagePlaceholder(
+                                iconSize: 30,
+                                width: 30,
+                                height: 30,
+                              ),
                         )
-                      : const Icon(
-                          Icons.inventory_2_outlined,
-                          color: AdminAppColors.primaryColor,
-                          size: 16,
+                      : ProductImagePlaceholder(
+                          iconSize: 30,
+                          width: 30,
+                          height: 30,
                         ),
                 ),
               ),
@@ -158,7 +170,9 @@ class ProductsTable extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -169,7 +183,9 @@ class ProductsTable extends StatelessWidget {
                       'ID: #${p.id.substring(0, p.id.length > 8 ? 8 : p.id.length).toUpperCase()}',
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -192,7 +208,9 @@ class ProductsTable extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: item.isShopSuspended
                       ? AdminAppColors.errorColor
-                      : const Color(0xFF1E1E2F),
+                      : (isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary),
                   decoration: item.isShopSuspended
                       ? TextDecoration.lineThrough
                       : TextDecoration.none,
@@ -234,7 +252,9 @@ class ProductsTable extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
+                color: isDark
+                    ? AdminAppColors.darkInputBackground
+                    : const Color(0xFFF3F4F6),
                 borderRadius: BorderRadius.circular(6.r),
               ),
               child: Text(
@@ -242,7 +262,9 @@ class ProductsTable extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF4B5563),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : const Color(0xFF4B5563),
                 ),
               ),
             ),
@@ -260,7 +282,9 @@ class ProductsTable extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               if (p.offerPrice != null)
@@ -268,7 +292,9 @@ class ProductsTable extends StatelessWidget {
                   '₹${p.originalPrice.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),

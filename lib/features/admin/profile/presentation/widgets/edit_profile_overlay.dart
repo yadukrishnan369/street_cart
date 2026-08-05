@@ -41,8 +41,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.15),
       width: double.infinity,
       height: double.infinity,
       child: Center(
@@ -53,11 +54,17 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                 : double.infinity,
             margin: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AdminAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : AdminAppColors.borderLight,
+                width: 1,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.12),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -76,17 +83,29 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                         'Edit Profile',
                         style: AdminAppTextStyles.heading2.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, color: Color(0xFF8A8A9E)),
+                        icon: Icon(
+                          Icons.close,
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
+                        ),
                         onPressed: widget.onClose,
                       ),
                     ],
                   ),
                 ),
-                const Divider(color: Color(0xFFECEFF1), height: 1),
+                Divider(
+                  color: isDark
+                      ? AdminAppColors.darkBorder
+                      : const Color(0xFFECEFF1),
+                  height: 1,
+                ),
 
                 // Form Content
                 Padding(
@@ -100,7 +119,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                         Text(
                           'Update your personal information below. Please note that security credentials cannot be changed directly.',
                           style: AdminAppTextStyles.bodySmall.copyWith(
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                           ),
                         ),
                         SizedBox(height: 24.h),
@@ -111,7 +132,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -119,7 +142,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                         TextFormField(
                           controller: _nameController,
                           style: AdminAppTextStyles.bodyMedium.copyWith(
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Enter full name',
@@ -129,14 +154,18 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFECEFF1),
+                              borderSide: BorderSide(
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : const Color(0xFFECEFF1),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFECEFF1),
+                              borderSide: BorderSide(
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : const Color(0xFFECEFF1),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -163,7 +192,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF8A8A9E),
+                                color: isDark
+                                    ? AdminAppColors.darkTextSecondary
+                                    : const Color(0xFF8A8A9E),
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -174,30 +205,42 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                               child: Icon(
                                 Icons.info_outline,
                                 size: 14.sp,
-                                color: const Color(0xFF8A8A9E),
+                                color: isDark
+                                    ? AdminAppColors.darkTextSecondary
+                                    : const Color(0xFF8A8A9E),
                               ),
                             ),
                           ],
                         ),
                         SizedBox(height: 8.h),
                         // Email Field
-                        TextFormField(
-                          initialValue: widget.email,
-                          enabled: false,
-                          style: AdminAppTextStyles.bodyMedium.copyWith(
-                            color: const Color(0xFF8A8A9E),
-                          ),
-                          decoration: InputDecoration(
-                            fillColor: const Color(0xFFF5F7F8),
-                            filled: true,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                              vertical: 14.h,
+                        Tooltip(
+                          message: 'Cannot edit email ID',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: TextFormField(
+                            initialValue: widget.email,
+                            enabled: false,
+                            style: AdminAppTextStyles.bodyMedium.copyWith(
+                              color: isDark
+                                  ? AdminAppColors.darkTextSecondary
+                                  : const Color(0xFF8A8A9E),
                             ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFECEFF1),
+                            decoration: InputDecoration(
+                              fillColor: isDark
+                                  ? AdminAppColors.darkInputBackground
+                                  : const Color(0xFFF5F7F8),
+                              filled: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 14.h,
+                              ),
+                              disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                                borderSide: BorderSide(
+                                  color: isDark
+                                      ? AdminAppColors.darkBorder
+                                      : const Color(0xFFECEFF1),
+                                ),
                               ),
                             ),
                           ),
@@ -211,8 +254,10 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                             OutlinedButton(
                               onPressed: widget.onClose,
                               style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: Color(0xFFECEFF1),
+                                side: BorderSide(
+                                  color: isDark
+                                      ? AdminAppColors.darkBorder
+                                      : const Color(0xFFECEFF1),
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.r),
@@ -227,7 +272,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                               ),
                             ),
@@ -244,7 +291,9 @@ class _EditProfileOverlayState extends State<EditProfileOverlay> {
                                           'Are you sure you want to save these changes?',
                                       confirmText: 'Save',
                                       confirmColor: AdminAppColors.primaryColor,
-                                      surfaceColor: Colors.white,
+                                      surfaceColor: isDark
+                                          ? AdminAppColors.darkSurface
+                                          : Colors.white,
                                       onConfirm: () {
                                         Navigator.pop(dialogContext);
                                         widget.onSave(

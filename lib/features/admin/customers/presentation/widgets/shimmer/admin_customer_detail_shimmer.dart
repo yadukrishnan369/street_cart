@@ -1,43 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
 // Admin Customer Detail Shimmer
 class AdminCustomerDetailShimmer extends StatelessWidget {
   const AdminCustomerDetailShimmer({super.key});
 
-  static const _baseColor = Color(0xFFE8E7ED);
-  static const _highlightColor = Color(0xFFF5F4F9);
+  Widget _shimmer(BuildContext context, {required Widget child}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Shimmer.fromColors(
+      baseColor: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE8E7ED),
+      highlightColor: isDark
+          ? const Color(0xFF383838)
+          : const Color(0xFFF5F4F9),
+      child: child,
+    );
+  }
 
-  Widget _shimmer({required Widget child}) => Shimmer.fromColors(
-    baseColor: _baseColor,
-    highlightColor: _highlightColor,
-    child: child,
-  );
-
-  Widget _box({
+  Widget _box(
+    BuildContext context, {
     required double width,
     required double height,
     double radius = 6,
     bool circle = false,
-  }) => Container(
-    width: width,
-    height: height,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      shape: circle ? BoxShape.circle : BoxShape.rectangle,
-      borderRadius: circle ? null : BorderRadius.circular(radius.r),
-    ),
-  );
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: isDark ? AdminAppColors.darkInputBackground : Colors.white,
+        shape: circle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: circle ? null : BorderRadius.circular(radius.r),
+      ),
+    );
+  }
 
-  Widget _card({required Widget child, EdgeInsets? padding}) {
+  Widget _card(
+    BuildContext context, {
+    required Widget child,
+    EdgeInsets? padding,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: padding ?? EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.01),
@@ -51,10 +67,12 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
   }
 
   // Header Card shimmer
-  Widget _headerCard(bool isWide) {
+  Widget _headerCard(BuildContext context, bool isWide) {
     return _card(
+      context,
       padding: EdgeInsets.all(28.w),
       child: _shimmer(
+        context,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,7 +80,7 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // CircleAvatar
-                _box(width: 80.w, height: 80.h, circle: true),
+                _box(context, width: 80.w, height: 80.h, circle: true),
                 SizedBox(width: 24.w),
                 Expanded(
                   child: Column(
@@ -71,12 +89,14 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                       Row(
                         children: [
                           _box(
+                            context,
                             width: 150.w,
                             height: 20.h,
                             radius: 5,
                           ), // full name
                           SizedBox(width: 10.w),
                           _box(
+                            context,
                             width: 60.w,
                             height: 20.h,
                             radius: 4,
@@ -85,14 +105,21 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                       ),
                       SizedBox(height: 6.h),
                       _box(
+                        context,
                         width: 110.w,
                         height: 12.h,
                         radius: 3,
                       ), // customer ID
                       SizedBox(height: 6.h),
-                      _box(width: 160.w, height: 12.h, radius: 3), // email
+                      _box(
+                        context,
+                        width: 160.w,
+                        height: 12.h,
+                        radius: 3,
+                      ), // email
                       SizedBox(height: 6.h),
                       _box(
+                        context,
                         width: 130.w,
                         height: 12.h,
                         radius: 3,
@@ -110,7 +137,7 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                   2,
                   (i) => Padding(
                     padding: EdgeInsets.only(right: 12.w),
-                    child: _box(width: 110.w, height: 38.h, radius: 8),
+                    child: _box(context, width: 110.w, height: 38.h, radius: 8),
                   ),
                 ),
               )
@@ -120,7 +147,7 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                 runSpacing: 10.h,
                 children: List.generate(
                   2,
-                  (_) => _box(width: 100.w, height: 36.h, radius: 8),
+                  (_) => _box(context, width: 100.w, height: 36.h, radius: 8),
                 ),
               ),
           ],
@@ -130,36 +157,56 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
   }
 
   // Contact Info Card shimmer
-  Widget _contactInfoCard() {
+  Widget _contactInfoCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return _card(
+      context,
       padding: EdgeInsets.all(20.w),
       child: _shimmer(
+        context,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                _box(width: 18.w, height: 18.h, radius: 3),
+                _box(context, width: 18.w, height: 18.h, radius: 3),
                 SizedBox(width: 8.w),
-                _box(width: 160.w, height: 14.h, radius: 4),
+                _box(context, width: 160.w, height: 14.h, radius: 4),
               ],
             ),
             SizedBox(height: 16.h),
-            Divider(color: const Color(0xFFF0EFF5), height: 1, thickness: 1.2),
+            Divider(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFF0EFF5),
+              height: 1,
+              thickness: 1.2,
+            ),
             SizedBox(height: 16.h),
-            _box(width: 80.w, height: 11.h, radius: 3), // Email Address
+            _box(
+              context,
+              width: 80.w,
+              height: 11.h,
+              radius: 3,
+            ), // Email Address
             SizedBox(height: 6.h),
-            _box(width: 180.w, height: 14.h, radius: 4), // email value
+            _box(context, width: 180.w, height: 14.h, radius: 4), // email value
             SizedBox(height: 20.h),
-            _box(width: 80.w, height: 11.h, radius: 3), // Phone Number
+            _box(context, width: 80.w, height: 11.h, radius: 3), // Phone Number
             SizedBox(height: 6.h),
-            _box(width: 120.w, height: 14.h, radius: 4), // phone value
+            _box(context, width: 120.w, height: 14.h, radius: 4), // phone value
             SizedBox(height: 20.h),
-            _box(width: 90.w, height: 11.h, radius: 3), // Primary Address
+            _box(
+              context,
+              width: 90.w,
+              height: 11.h,
+              radius: 3,
+            ), // Primary Address
             SizedBox(height: 6.h),
-            _box(width: double.infinity, height: 14.h, radius: 4),
+            _box(context, width: double.infinity, height: 14.h, radius: 4),
             SizedBox(height: 4.h),
-            _box(width: 160.w, height: 14.h, radius: 4),
+            _box(context, width: 160.w, height: 14.h, radius: 4),
           ],
         ),
       ),
@@ -167,22 +214,32 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
   }
 
   // Stats Card shimmer
-  Widget _statsCard() {
+  Widget _statsCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return _card(
+      context,
       padding: EdgeInsets.all(20.w),
       child: _shimmer(
+        context,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                _box(width: 18.w, height: 18.h, radius: 3),
+                _box(context, width: 18.w, height: 18.h, radius: 3),
                 SizedBox(width: 8.w),
-                _box(width: 130.w, height: 14.h, radius: 4),
+                _box(context, width: 130.w, height: 14.h, radius: 4),
               ],
             ),
             SizedBox(height: 16.h),
-            Divider(color: const Color(0xFFF0EFF5), height: 1, thickness: 1.2),
+            Divider(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFF0EFF5),
+              height: 1,
+              thickness: 1.2,
+            ),
             SizedBox(height: 16.h),
             GridView.count(
               shrinkWrap: true,
@@ -196,15 +253,17 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                 (_) => Container(
                   padding: EdgeInsets.all(14.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _box(width: 60.w, height: 11.h, radius: 3),
+                      _box(context, width: 60.w, height: 11.h, radius: 3),
                       SizedBox(height: 6.h),
-                      _box(width: 40.w, height: 18.h, radius: 4),
+                      _box(context, width: 40.w, height: 18.h, radius: 4),
                     ],
                   ),
                 ),
@@ -217,21 +276,31 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
   }
 
   // Past Orders Card shimmer
-  Widget _pastOrdersCard() {
+  Widget _pastOrdersCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return _card(
+      context,
       child: _shimmer(
+        context,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _box(width: 100.w, height: 16.h, radius: 4),
-                _box(width: 60.w, height: 12.h, radius: 4),
+                _box(context, width: 100.w, height: 16.h, radius: 4),
+                _box(context, width: 60.w, height: 12.h, radius: 4),
               ],
             ),
             SizedBox(height: 16.h),
-            Divider(color: const Color(0xFFF0EFF5), height: 1, thickness: 1.2),
+            Divider(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFF0EFF5),
+              height: 1,
+              thickness: 1.2,
+            ),
             // Table rows
             ...List.generate(
               5,
@@ -242,33 +311,57 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                     child: Row(
                       children: [
                         Expanded(
-                          child: _box(width: 80.w, height: 13.h, radius: 3),
+                          child: _box(
+                            context,
+                            width: 80.w,
+                            height: 13.h,
+                            radius: 3,
+                          ),
                         ),
                         Expanded(
-                          child: _box(width: 90.w, height: 12.h, radius: 3),
+                          child: _box(
+                            context,
+                            width: 90.w,
+                            height: 12.h,
+                            radius: 3,
+                          ),
                         ),
                         Expanded(
-                          child: _box(width: 60.w, height: 13.h, radius: 3),
+                          child: _box(
+                            context,
+                            width: 60.w,
+                            height: 13.h,
+                            radius: 3,
+                          ),
                         ),
                         Expanded(
                           child: Container(
                             width: 65.w,
                             height: 22.h,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: isDark
+                                  ? AdminAppColors.darkSurface
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                           ),
                         ),
                         Expanded(
-                          child: _box(width: 70.w, height: 12.h, radius: 3),
+                          child: _box(
+                            context,
+                            width: 70.w,
+                            height: 12.h,
+                            radius: 3,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   if (i < 4)
                     Divider(
-                      color: const Color(0xFFF0EFF5),
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFF0EFF5),
                       height: 1,
                       thickness: 1,
                     ),
@@ -294,19 +387,20 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
             children: [
               // Go Back Row
               _shimmer(
+                context,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _box(width: 16.w, height: 16.h, radius: 3),
+                    _box(context, width: 16.w, height: 16.h, radius: 3),
                     SizedBox(width: 8.w),
-                    _box(width: 55.w, height: 13.h, radius: 3),
+                    _box(context, width: 55.w, height: 13.h, radius: 3),
                   ],
                 ),
               ),
               SizedBox(height: 16.h),
 
               // Header card
-              _headerCard(isWide),
+              _headerCard(context, isWide),
               SizedBox(height: 32.h),
 
               // Contact Info + Stats
@@ -314,23 +408,23 @@ class AdminCustomerDetailShimmer extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(flex: 5, child: _contactInfoCard()),
+                    Expanded(flex: 5, child: _contactInfoCard(context)),
                     SizedBox(width: 24.w),
-                    Expanded(flex: 5, child: _statsCard()),
+                    Expanded(flex: 5, child: _statsCard(context)),
                   ],
                 )
               else
                 Column(
                   children: [
-                    _contactInfoCard(),
+                    _contactInfoCard(context),
                     SizedBox(height: 24.h),
-                    _statsCard(),
+                    _statsCard(context),
                   ],
                 ),
               SizedBox(height: 32.h),
 
               // Past Orders card
-              _pastOrdersCard(),
+              _pastOrdersCard(context),
             ],
           );
         },

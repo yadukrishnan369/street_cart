@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
 // Review Stat Card
 class ReviewStatCard extends StatelessWidget {
@@ -20,15 +21,19 @@ class ReviewStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -46,7 +51,9 @@ class ReviewStatCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                 ),
               ),
               Container(
@@ -66,7 +73,9 @@ class ReviewStatCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
         ],

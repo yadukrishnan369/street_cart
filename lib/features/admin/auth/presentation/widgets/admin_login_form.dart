@@ -29,6 +29,8 @@ class AdminLoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<AdminAuthBloc, AdminAuthState>(
       builder: (context, state) {
         final isLoading = state is AdminAuthLoading;
@@ -41,7 +43,9 @@ class AdminLoginForm extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: AdminAppColors.primaryLight.withOpacity(0.2),
+                  color: isDark
+                      ? AdminAppColors.primaryColor.withValues(alpha: 0.2)
+                      : AdminAppColors.primaryLight.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -57,6 +61,9 @@ class AdminLoginForm extends StatelessWidget {
                 style: AdminAppTextStyles.heading2.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 22.sp,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -66,7 +73,9 @@ class AdminLoginForm extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: AdminAppTextStyles.bodyMedium.copyWith(
                   fontSize: 13.sp,
-                  color: AdminAppColors.textSecondary,
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : AdminAppColors.textSecondary,
                 ),
               ),
               SizedBox(height: 32.h),
@@ -78,11 +87,15 @@ class AdminLoginForm extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 labelStyle: AdminAppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
                 prefixIcon: Icon(
                   Icons.email_outlined,
-                  color: AdminAppColors.textSecondary,
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : AdminAppColors.textSecondary,
                   size: 20.sp,
                 ),
                 validator: Validators.validateEmail,
@@ -96,7 +109,9 @@ class AdminLoginForm extends StatelessWidget {
                 isPassword: state.obscurePassword,
                 labelStyle: AdminAppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
                 labelTrailing: InkWell(
                   // Navigate to Forgot Password Page
@@ -119,7 +134,9 @@ class AdminLoginForm extends StatelessWidget {
                 ),
                 prefixIcon: Icon(
                   Icons.lock_outline,
-                  color: AdminAppColors.textSecondary,
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : AdminAppColors.textSecondary,
                   size: 20.sp,
                 ),
                 suffixIcon: IconButton(
@@ -127,7 +144,9 @@ class AdminLoginForm extends StatelessWidget {
                     state.obscurePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: AdminAppColors.textSecondary,
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : AdminAppColors.textSecondary,
                     size: 20.sp,
                   ),
                   onPressed: () {
@@ -154,7 +173,9 @@ class AdminLoginForm extends StatelessWidget {
                   Icon(
                     Icons.security_outlined,
                     size: 14.sp,
-                    color: AdminAppColors.textSecondary,
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : AdminAppColors.textSecondary,
                   ),
                   SizedBox(width: 6.w),
                   // Footer Content
@@ -162,7 +183,9 @@ class AdminLoginForm extends StatelessWidget {
                     'SECURE ADMIN ACCESS ONLY',
                     style: AdminAppTextStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AdminAppColors.textSecondary,
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : AdminAppColors.textSecondary,
                       letterSpacing: 0.5,
                     ),
                   ),

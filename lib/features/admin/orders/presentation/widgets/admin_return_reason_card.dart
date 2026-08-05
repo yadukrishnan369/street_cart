@@ -11,6 +11,7 @@ class AdminReturnReasonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final returnedItems = order.items
         .where(
           (item) => item.returnStatus != null && item.returnStatus!.isNotEmpty,
@@ -27,9 +28,12 @@ class AdminReturnReasonCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFF0EFF5), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +44,9 @@ class AdminReturnReasonCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 16.h),
@@ -51,13 +57,20 @@ class AdminReturnReasonCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 4.h),
             Text(
               order.returnReason ?? 'No reason provided',
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : Colors.grey[700],
+              ),
             ),
             if (order.returnDetails != null &&
                 order.returnDetails!.isNotEmpty) ...[
@@ -68,13 +81,20 @@ class AdminReturnReasonCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 4.h),
               Text(
                 order.returnDetails!,
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : Colors.grey[700],
+                ),
               ),
             ],
           ] else if (!isMultiple) ...[
@@ -83,13 +103,20 @@ class AdminReturnReasonCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 4.h),
             Text(
               returnedItems.first.returnReason ?? 'No reason provided',
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : Colors.grey[700],
+              ),
             ),
             if (returnedItems.first.returnDetails != null &&
                 returnedItems.first.returnDetails!.isNotEmpty) ...[
@@ -99,13 +126,20 @@ class AdminReturnReasonCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 4.h),
               Text(
                 returnedItems.first.returnDetails!,
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : Colors.grey[700],
+                ),
               ),
             ],
           ] else ...[
@@ -119,7 +153,7 @@ class AdminReturnReasonCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w900,
-                      color: AdminAppColors.primaryColor.withOpacity(0.8),
+                      color: AdminAppColors.primaryColor.withValues(alpha: 0.8),
                     ),
                   ),
                   SizedBox(height: 6.h),
@@ -128,13 +162,20 @@ class AdminReturnReasonCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     item.returnReason ?? 'No reason provided',
-                    style: TextStyle(fontSize: 13.sp, color: Colors.grey[700]),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : Colors.grey[700],
+                    ),
                   ),
                   if (item.returnDetails != null &&
                       item.returnDetails!.isNotEmpty) ...[
@@ -144,7 +185,9 @@ class AdminReturnReasonCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -152,13 +195,21 @@ class AdminReturnReasonCard extends StatelessWidget {
                       item.returnDetails!,
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey[700],
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : Colors.grey[700],
                       ),
                     ),
                   ],
                   if (index < returnedItems.length - 1) ...[
                     SizedBox(height: 12.h),
-                    const Divider(height: 1.0, thickness: 0.2),
+                    Divider(
+                      height: 1.0,
+                      thickness: 0.2,
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
+                    ),
                     SizedBox(height: 12.h),
                   ],
                 ],

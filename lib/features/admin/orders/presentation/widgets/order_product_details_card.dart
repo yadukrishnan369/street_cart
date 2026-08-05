@@ -15,11 +15,15 @@ class OrderProductDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +36,9 @@ class OrderProductDetailsCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
           ),
@@ -46,19 +52,31 @@ class OrderProductDetailsCard extends StatelessWidget {
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: [
               TableRow(
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF9FAFC),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : const Color(0xFFF9FAFC),
                   border: Border(
-                    top: BorderSide(color: Color(0xFFE8E7ED), width: 1),
-                    bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1),
+                    top: BorderSide(
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
+                      width: 1,
+                    ),
+                    bottom: BorderSide(
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
+                      width: 1,
+                    ),
                   ),
                 ),
                 // Table Titles
                 children: [
-                  _buildHeaderCell('PRODUCT'),
-                  _buildHeaderCell('QUANTITY'),
-                  _buildHeaderCell('PRICE'),
-                  _buildHeaderCell('TOTAL'),
+                  _buildHeaderCell(context, 'PRODUCT'),
+                  _buildHeaderCell(context, 'QUANTITY'),
+                  _buildHeaderCell(context, 'PRICE'),
+                  _buildHeaderCell(context, 'TOTAL'),
                 ],
               ),
               ...order.items.map((item) => _buildProductRow(context, item)),
@@ -70,7 +88,8 @@ class OrderProductDetailsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCell(String text) {
+  Widget _buildHeaderCell(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Text(
@@ -80,19 +99,27 @@ class OrderProductDetailsCard extends StatelessWidget {
         style: TextStyle(
           fontSize: 11.sp,
           fontWeight: FontWeight.w800,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );
   }
 
   TableRow _buildProductRow(BuildContext context, OrderItemModel item) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final priceStr = '₹${PriceUtils.formatPrice(item.price)}';
     final totalStr = '₹${PriceUtils.formatPrice(item.price * item.quantity)}';
 
     return TableRow(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1)),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1,
+          ),
+        ),
       ),
       children: [
         // Product name with image
@@ -131,7 +158,9 @@ class OrderProductDetailsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -141,7 +170,9 @@ class OrderProductDetailsCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
                     ],
@@ -159,7 +190,12 @@ class OrderProductDetailsCard extends StatelessWidget {
             item.quantity.toString().padLeft(2, '0'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
 
@@ -170,7 +206,12 @@ class OrderProductDetailsCard extends StatelessWidget {
             priceStr,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
 

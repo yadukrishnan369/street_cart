@@ -23,6 +23,7 @@ class ShopsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Shops Table
     return Table(
       columnWidths: const {
@@ -36,20 +37,27 @@ class ShopsTable extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF4F5F7),
             border: Border(
-              bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+              bottom: BorderSide(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
           ),
           // Table Title
           children: [
-            _buildTableHeaderCell('SHOP NAME'),
-            _buildTableHeaderCell('CATEGORY'),
-            _buildTableHeaderCell('LOCATION'),
-            _buildTableHeaderCell('DELIVERY RADIUS'),
-            _buildTableHeaderCell('STATUS'),
-            _buildTableHeaderCell('ACTIONS'),
+            _buildTableHeaderCell(context, 'SHOP NAME'),
+            _buildTableHeaderCell(context, 'CATEGORY'),
+            _buildTableHeaderCell(context, 'LOCATION'),
+            _buildTableHeaderCell(context, 'DELIVERY RADIUS'),
+            _buildTableHeaderCell(context, 'STATUS'),
+            _buildTableHeaderCell(context, 'ACTIONS'),
           ],
         ),
         ...shops.map((shop) => _buildTableRow(context, shop)),
@@ -57,7 +65,7 @@ class ShopsTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeaderCell(String text) {
+  Widget _buildTableHeaderCell(BuildContext context, String text) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
       child: Text(
@@ -73,12 +81,16 @@ class ShopsTable extends StatelessWidget {
   }
 
   TableRow _buildTableRow(BuildContext context, ShopProfileModel shop) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSuspended = shop.isSuspended;
 
     return TableRow(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.2),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.2,
+          ),
         ),
       ),
       children: [
@@ -89,7 +101,9 @@ class ShopsTable extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3E8FF),
+                  color: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : const Color(0xFFF3E8FF),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Icon(
@@ -109,7 +123,9 @@ class ShopsTable extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -120,7 +136,9 @@ class ShopsTable extends StatelessWidget {
                       'ID: #${shop.uid.substring(0, shop.uid.length > 8 ? 8 : shop.uid.length).toUpperCase()}',
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -137,7 +155,9 @@ class ShopsTable extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
         ),
@@ -155,7 +175,12 @@ class ShopsTable extends StatelessWidget {
               ];
               return parts.isEmpty ? 'Not provided' : parts.join(', ');
             }(),
-            style: TextStyle(fontSize: 13.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -168,7 +193,9 @@ class ShopsTable extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
         ),

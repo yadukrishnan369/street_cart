@@ -16,6 +16,7 @@ class AdminPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final list = <Widget>[];
 
     list.add(
@@ -23,7 +24,10 @@ class AdminPagination extends StatelessWidget {
         icon: Icon(Icons.chevron_left, size: 20.sp),
         color: currentPage > 1
             ? AdminAppColors.primaryColor
-            : const Color(0xFF8A8A9E).withValues(alpha: 0.5),
+            : (isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E))
+                  .withValues(alpha: 0.5),
         onPressed: currentPage > 1
             ? () => onPageChanged(currentPage - 1)
             : null,
@@ -58,7 +62,9 @@ class AdminPagination extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF6C6C80),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : const Color(0xFF6C6C80),
               ),
             ),
           ),
@@ -81,14 +87,23 @@ class AdminPagination extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
                 border: isSelected
                     ? null
-                    : Border.all(color: const Color(0xFFE8E7ED), width: 1),
+                    : Border.all(
+                        color: isDark
+                            ? AdminAppColors.darkBorder
+                            : const Color(0xFFE8E7ED),
+                        width: 1,
+                      ),
               ),
               child: Text(
                 '$pageNum',
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : const Color(0xFF6C6C80),
+                  color: isSelected
+                      ? Colors.white
+                      : (isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : const Color(0xFF6C6C80)),
                 ),
               ),
             ),
@@ -105,7 +120,10 @@ class AdminPagination extends StatelessWidget {
         icon: Icon(Icons.chevron_right, size: 20.sp),
         color: currentPage < totalPages
             ? AdminAppColors.primaryColor
-            : const Color(0xFF8A8A9E).withValues(alpha: 0.5),
+            : (isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E))
+                  .withValues(alpha: 0.5),
         onPressed: currentPage < totalPages
             ? () => onPageChanged(currentPage + 1)
             : null,

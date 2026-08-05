@@ -14,6 +14,7 @@ class SizeGroupsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<AdminProductConfigBloc, AdminProductConfigState>(
       builder: (context, state) {
         final config = _resolveConfig(state);
@@ -35,7 +36,9 @@ class SizeGroupsTab extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -43,7 +46,9 @@ class SizeGroupsTab extends StatelessWidget {
                       '${groups.length} group${groups.length == 1 ? '' : 's'} configured',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -73,7 +78,7 @@ class SizeGroupsTab extends StatelessWidget {
 
             // List or empty
             if (groups.isEmpty)
-              _emptyState()
+              _emptyState(context)
             else
               ListView.separated(
                 shrinkWrap: true,
@@ -90,7 +95,8 @@ class SizeGroupsTab extends StatelessWidget {
   }
 
   // Empty State
-  Widget _emptyState() {
+  Widget _emptyState(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 60.h),
@@ -99,7 +105,9 @@ class SizeGroupsTab extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: const Color(0xFFF4EBFF),
+                color: isDark
+                    ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                    : const Color(0xFFF4EBFF),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -114,13 +122,20 @@ class SizeGroupsTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 6.h),
             Text(
               'Create reusable size groups like Clothing, Shoes, Pants.',
-              style: TextStyle(fontSize: 13.sp, color: const Color(0xFF8A8A9E)),
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
+              ),
             ),
           ],
         ),
@@ -144,14 +159,18 @@ class _SizeGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -168,7 +187,9 @@ class _SizeGroupCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF4EBFF),
+                    color: isDark
+                        ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                        : const Color(0xFFF4EBFF),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Icon(
@@ -187,14 +208,18 @@ class _SizeGroupCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                       Text(
                         '${group.sizes.length} size${group.sizes.length == 1 ? '' : 's'}',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
                     ],
@@ -210,7 +235,9 @@ class _SizeGroupCard extends StatelessWidget {
                 SizedBox(width: 4.w),
                 _iconBtn(
                   Icons.edit_outlined,
-                  const Color(0xFF8A8A9E),
+                  isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   () => SizeGroupDialogs.showEdit(context, group),
                   'Edit group',
                 ),
@@ -227,7 +254,12 @@ class _SizeGroupCard extends StatelessWidget {
 
           // Sizes wrap
           if (group.sizes.isNotEmpty) ...[
-            Divider(height: 1, color: const Color(0xFFE8E7ED)),
+            Divider(
+              height: 1,
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFE8E7ED),
+            ),
             Padding(
               padding: EdgeInsets.all(16.w),
               child: Wrap(
@@ -246,14 +278,18 @@ class _SizeGroupCard extends StatelessWidget {
                   Icon(
                     Icons.info_outline,
                     size: 14.sp,
-                    color: const Color(0xFFB0B0C0),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFFB0B0C0),
                   ),
                   SizedBox(width: 6.w),
                   Text(
                     'No sizes yet. Tap + to add.',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: const Color(0xFFB0B0C0),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFFB0B0C0),
                     ),
                   ),
                 ],
@@ -293,12 +329,20 @@ class _SizeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF4EBFF),
+        color: isDark
+            ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+            : const Color(0xFFF4EBFF),
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: const Color(0xFFE1BEE7), width: 1),
+        border: Border.all(
+          color: isDark
+              ? AdminAppColors.primaryColor.withValues(alpha: 0.3)
+              : const Color(0xFFE1BEE7),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -308,7 +352,9 @@ class _SizeChip extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
-              color: AdminAppColors.primaryDark,
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.primaryDark,
             ),
           ),
           SizedBox(width: 8.w),
@@ -322,7 +368,7 @@ class _SizeChip extends StatelessWidget {
             child: Icon(
               Icons.close,
               size: 13.sp,
-              color: AdminAppColors.primaryColor,
+              color: AdminAppColors.errorColor,
             ),
           ),
         ],

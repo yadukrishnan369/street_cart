@@ -27,10 +27,13 @@ class AdminOrderDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) => sl<AdminOrdersBloc>()..add(LoadAdminOrders()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child: BlocBuilder<AdminOrdersBloc, AdminOrdersState>(
             builder: (context, state) {
@@ -206,7 +209,12 @@ class AdminOrderDetailPage extends StatelessWidget {
                 return Center(
                   child: Text(
                     'Failed to load details: ${state.message}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
+                    ),
                   ),
                 );
               }

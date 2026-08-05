@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
@@ -202,12 +203,12 @@ class AdminOrdersHelper {
       case 'shipped':
         return const Color(0xFF7B2CBF);
       case 'delivered':
-        return const Color(0xFF137333);
+        return AdminAppColors.successColor;
       case 'cancelled':
-        return const Color(0xFFC5221F);
+        return AdminAppColors.errorColor;
       case 'returned':
       case 'return_picked':
-        return const Color(0xFFE65100);
+        return AdminAppColors.warningColor;
       case 'return_requested':
         return const Color(0xFFF59F00);
       case 'return_confirmed':

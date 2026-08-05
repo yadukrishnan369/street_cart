@@ -83,11 +83,17 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
         final enableOnline =
             state.draftEnableOnline ?? widget.settings?.enableOnline ?? true;
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? AdminAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+            border: Border.all(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFE8E7ED),
+              width: 1.5,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,13 +114,20 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1, color: Color(0xFFF0EFF5)),
+              Divider(
+                height: 1,
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFF0EFF5),
+              ),
 
               Padding(
                 padding: EdgeInsets.all(24.w),
@@ -135,7 +148,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 4.h),
@@ -143,7 +158,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                 'Global percentage taken from each completed transaction (0-100%).',
                                 style: TextStyle(
                                   fontSize: 12.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                             ],
@@ -158,10 +175,14 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                               Container(
                                 height: 48.h,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF9FAFC),
+                                  color: isDark
+                                      ? AdminAppColors.darkInputBackground
+                                      : const Color(0xFFF9FAFC),
                                   borderRadius: BorderRadius.circular(10.r),
                                   border: Border.all(
-                                    color: const Color(0xFFE8E7ED),
+                                    color: isDark
+                                        ? AdminAppColors.borderLight
+                                        : AdminAppColors.darkBorder,
                                   ),
                                 ),
                                 child: Row(
@@ -183,7 +204,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                           style: TextStyle(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: const Color(0xFF1E1E2F),
+                                            color: isDark
+                                                ? AdminAppColors.darkTextPrimary
+                                                : AdminAppColors.textPrimary,
                                           ),
                                           onChanged: (_) {
                                             if (state.percentageError != null) {
@@ -198,10 +221,12 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                     Container(
                                       width: 48.w,
                                       alignment: Alignment.center,
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         border: Border(
                                           left: BorderSide(
-                                            color: Color(0xFFE8E7ED),
+                                            color: isDark
+                                                ? AdminAppColors.darkBorder
+                                                : const Color(0xFFE8E7ED),
                                           ),
                                         ),
                                       ),
@@ -210,7 +235,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
-                                          color: const Color(0xFF8A8A9E),
+                                          color: isDark
+                                              ? AdminAppColors.darkTextSecondary
+                                              : const Color(0xFF8A8A9E),
                                         ),
                                       ),
                                     ),
@@ -310,7 +337,12 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                       ],
                     ),
                     SizedBox(height: 25.h),
-                    const Divider(height: 1, color: Color(0xFFF0EFF5)),
+                    Divider(
+                      height: 1,
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFF0EFF5),
+                    ),
                     SizedBox(height: 25.h),
 
                     // Payment Method Controls
@@ -319,7 +351,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 16.h),
@@ -337,7 +371,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -345,7 +381,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                 'Allow customers to pay physically upon delivery.',
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                             ],
@@ -377,7 +415,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -385,7 +425,9 @@ class _PlatformBusinessSettingsState extends State<PlatformBusinessSettings> {
                                 'Process credit cards and digital wallets.',
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                             ],

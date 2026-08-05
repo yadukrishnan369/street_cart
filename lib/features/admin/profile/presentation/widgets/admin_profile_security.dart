@@ -16,13 +16,17 @@ class AdminProfileSecurity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +44,9 @@ class AdminProfileSecurity extends StatelessWidget {
                 'Security & Access',
                 style: AdminAppTextStyles.heading3.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
@@ -55,7 +61,9 @@ class AdminProfileSecurity extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   letterSpacing: 0.5,
                 ),
               ),
@@ -64,13 +72,17 @@ class AdminProfileSecurity extends StatelessWidget {
                 lastLoginStr,
                 style: AdminAppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
           SizedBox(height: 16.h),
-          const Divider(color: Color(0xFFECEFF1)),
+          Divider(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFECEFF1),
+          ),
           SizedBox(height: 16.h),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +93,9 @@ class AdminProfileSecurity extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   letterSpacing: 0.5,
                 ),
               ),
@@ -90,7 +104,9 @@ class AdminProfileSecurity extends StatelessWidget {
                 lastLogoutStr,
                 style: AdminAppTextStyles.bodyMedium.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
@@ -99,8 +115,14 @@ class AdminProfileSecurity extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFE8F5E9),
+              color: isDark
+                  ? AdminAppColors.successColor.withValues(alpha: 0.15)
+                  : const Color(0xFFE8F5E9),
               borderRadius: BorderRadius.circular(4.r),
+              border: Border.all(
+                color: AdminAppColors.successColor,
+                width: 0.5,
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -108,8 +130,8 @@ class AdminProfileSecurity extends StatelessWidget {
                 Container(
                   width: 6.r,
                   height: 6.r,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF2E7D32),
+                  decoration: BoxDecoration(
+                    color: AdminAppColors.successColor,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -119,7 +141,7 @@ class AdminProfileSecurity extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF2E7D32),
+                    color: AdminAppColors.successColor,
                   ),
                 ),
               ],

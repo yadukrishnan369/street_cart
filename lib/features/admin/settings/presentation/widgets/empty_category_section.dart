@@ -8,6 +8,7 @@ class EmptyCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 60.h),
@@ -17,7 +18,9 @@ class EmptyCategory extends StatelessWidget {
             Icon(
               Icons.category_outlined,
               size: 64.sp,
-              color: const Color(0xFFB0B0C3),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFFB0B0C3),
             ),
             SizedBox(height: 16.h),
             // Title
@@ -26,7 +29,9 @@ class EmptyCategory extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF4A4A68),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : const Color(0xFF4A4A68),
               ),
             ),
             SizedBox(height: 8.h),

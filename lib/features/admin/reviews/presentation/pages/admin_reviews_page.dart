@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/reviews/presentation/widgets/reviews_header_stats.dart';
 import 'package:street_cart/features/admin/reviews/presentation/widgets/reviews_list_container.dart';
@@ -24,11 +25,14 @@ class _AdminReviewsPageState extends State<AdminReviewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) =>
           sl<AdminReviewsBloc>()..add(LoadAdminReviewsRequested()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: SafeArea(
           child: BlocConsumer<AdminReviewsBloc, AdminReviewsState>(
             listener: (context, state) {

@@ -11,12 +11,16 @@ class AdminShopDeliveryRadiusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +42,9 @@ class AdminShopDeliveryRadiusCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w800,
-                      color: AdminAppColors.textPrimary,
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -51,7 +57,9 @@ class AdminShopDeliveryRadiusCard extends StatelessWidget {
                     vertical: 4.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3E8FF),
+                    color: isDark
+                        ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                        : const Color(0xFFF3E8FF),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Text(
@@ -68,7 +76,11 @@ class AdminShopDeliveryRadiusCard extends StatelessWidget {
               ),
             ],
           ),
-          Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
+          Divider(
+            height: 32.h,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            thickness: 1.2,
+          ),
 
           // Map Preview image container
           Container(

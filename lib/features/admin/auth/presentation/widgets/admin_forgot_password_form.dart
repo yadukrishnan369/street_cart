@@ -26,6 +26,8 @@ class AdminForgotPasswordForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<AdminAuthBloc, AdminAuthState>(
       builder: (context, state) {
         final isLoading = state is AdminAuthLoading;
@@ -37,8 +39,10 @@ class AdminForgotPasswordForm extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.all(16.w),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF3E8FF),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AdminAppColors.primaryColor.withValues(alpha: 0.2)
+                      : const Color(0xFFF3E8FF),
                   shape: BoxShape.circle,
                 ),
                 child: AppLogo(
@@ -54,7 +58,9 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 style: AdminAppTextStyles.heading3.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.sp,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 10.h),
@@ -65,7 +71,9 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   height: 1.5,
-                  color: const Color(0xFF6C6C80),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF6C6C80),
                 ),
               ),
               SizedBox(height: 32.h),
@@ -78,11 +86,15 @@ class AdminForgotPasswordForm extends StatelessWidget {
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 13.sp,
-                  color: const Color(0xFF4A4A68),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : const Color(0xFF4A4A68),
                 ),
                 prefixIcon: Icon(
                   Icons.email_outlined,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   size: 20.sp,
                 ),
                 validator: Validators.validateEmail,

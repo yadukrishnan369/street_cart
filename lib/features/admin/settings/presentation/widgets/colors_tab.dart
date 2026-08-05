@@ -13,6 +13,7 @@ class ColorsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<AdminProductConfigBloc, AdminProductConfigState>(
       builder: (context, state) {
         final config = _resolveConfig(state);
@@ -34,7 +35,9 @@ class ColorsTab extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -42,7 +45,9 @@ class ColorsTab extends StatelessWidget {
                       '${colors.length} color${colors.length == 1 ? '' : 's'} available globally',
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -71,7 +76,10 @@ class ColorsTab extends StatelessWidget {
             SizedBox(height: 24.h),
 
             // Empty state
-            if (colors.isEmpty) _emptyState() else _colorGrid(context, colors),
+            if (colors.isEmpty)
+              _emptyState(context)
+            else
+              _colorGrid(context, colors),
           ],
         );
       },
@@ -87,7 +95,8 @@ class ColorsTab extends StatelessWidget {
   }
 
   // Empty State
-  Widget _emptyState() {
+  Widget _emptyState(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 60.h),
@@ -96,7 +105,9 @@ class ColorsTab extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: const Color(0xFFF4EBFF),
+                color: isDark
+                    ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                    : const Color(0xFFF4EBFF),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -111,13 +122,20 @@ class ColorsTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 6.h),
             Text(
               'Add your first product color to get started.',
-              style: TextStyle(fontSize: 13.sp, color: const Color(0xFF8A8A9E)),
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
+              ),
             ),
           ],
         ),
@@ -151,15 +169,19 @@ class _ColorChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -177,12 +199,14 @@ class _ColorChip extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: _parsedColor == Colors.white
-                    ? const Color(0xFFE8E7ED)
+                    ? (isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED))
                     : Colors.transparent,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: _parsedColor.withOpacity(0.35),
+                  color: _parsedColor.withValues(alpha: 0.35),
                   blurRadius: 5,
                   offset: const Offset(0, 1),
                 ),
@@ -200,7 +224,9 @@ class _ColorChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               // Color HEX Code
@@ -208,7 +234,9 @@ class _ColorChip extends StatelessWidget {
                 color.hexCode.toUpperCase(),
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   fontFamily: 'monospace',
                 ),
               ),

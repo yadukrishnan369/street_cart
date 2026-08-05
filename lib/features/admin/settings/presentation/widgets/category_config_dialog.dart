@@ -64,9 +64,18 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Dialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      backgroundColor: isDark ? AdminAppColors.darkSurface : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        side: BorderSide(
+          color: isDark
+              ? AdminAppColors.primaryColor
+              : AdminAppColors.borderLight,
+          width: 1,
+        ),
+      ),
       child: Container(
         width: 650.w,
         constraints: BoxConstraints(
@@ -87,7 +96,9 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -96,7 +107,9 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                   widget.description,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                     height: 1.4,
                   ),
                 ),
@@ -113,19 +126,55 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 6.h),
                         TextField(
                           controller: _nameController,
+                          style: TextStyle(
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
+                          ),
                           onChanged: (val) =>
                               bloc.add(UpdateCategoryFormName(val)),
                           decoration: InputDecoration(
                             hintText: 'e.g. Footwear',
+                            hintStyle: TextStyle(
+                              color: isDark
+                                  ? AdminAppColors.darkTextSecondary
+                                  : const Color(0xFF8A8A9E),
+                            ),
                             errorText: state.formNameError,
+                            fillColor: isDark
+                                ? AdminAppColors.darkInputBackground
+                                : const Color(0xFFF9FAFC),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : const Color(0xFFE8E7ED),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: const BorderSide(
+                                color: AdminAppColors.primaryColor,
+                                width: 1.5,
+                              ),
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : const Color(0xFFE8E7ED),
+                              ),
                             ),
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: 12.w,
@@ -139,7 +188,9 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 6.h),
@@ -148,11 +199,45 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                             Expanded(
                               child: TextField(
                                 controller: _prodCatController,
+                                style: TextStyle(
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
+                                ),
                                 decoration: InputDecoration(
                                   hintText: 'Add product category (e.g. Shoes)',
+                                  hintStyle: TextStyle(
+                                    color: isDark
+                                        ? AdminAppColors.darkTextSecondary
+                                        : const Color(0xFF8A8A9E),
+                                  ),
                                   errorText: state.formProductCategoryError,
+                                  fillColor: isDark
+                                      ? AdminAppColors.darkInputBackground
+                                      : const Color(0xFFF9FAFC),
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: BorderSide(
+                                      color: isDark
+                                          ? AdminAppColors.darkBorder
+                                          : const Color(0xFFE8E7ED),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: const BorderSide(
+                                      color: AdminAppColors.primaryColor,
+                                      width: 1.5,
+                                    ),
+                                  ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: BorderSide(
+                                      color: isDark
+                                          ? AdminAppColors.darkBorder
+                                          : const Color(0xFFE8E7ED),
+                                    ),
                                   ),
                                   contentPadding: EdgeInsets.symmetric(
                                     horizontal: 12.w,
@@ -204,10 +289,19 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                                     cat,
                                     style: TextStyle(
                                       fontSize: 12.sp,
-                                      color: Colors.black87,
+                                      color: isDark
+                                          ? AdminAppColors.darkTextPrimary
+                                          : AdminAppColors.textPrimary,
                                     ),
                                   ),
-                                  backgroundColor: Colors.grey[100],
+                                  backgroundColor: isDark
+                                      ? AdminAppColors.darkInputBackground
+                                      : Colors.grey[100],
+                                  side: isDark
+                                      ? BorderSide(
+                                          color: AdminAppColors.darkBorder,
+                                        )
+                                      : BorderSide.none,
                                   onDeleted: () => bloc.add(
                                     RemoveProductCategoryFromForm(index),
                                   ),
@@ -227,7 +321,9 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 6.h),
@@ -257,13 +353,27 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                                     fontSize: 12.sp,
                                     color: isSelected
                                         ? Colors.white
-                                        : Colors.black87,
+                                        : (isDark
+                                              ? AdminAppColors.darkTextPrimary
+                                              : AdminAppColors.textPrimary),
                                   ),
                                 ),
                                 selected: isSelected,
                                 selectedColor: AdminAppColors.primaryColor,
                                 checkmarkColor: Colors.white,
-                                backgroundColor: Colors.grey[200],
+                                backgroundColor: isDark
+                                    ? AdminAppColors.darkInputBackground
+                                    : Colors.grey[200],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  side: BorderSide(
+                                    color: isSelected
+                                        ? AdminAppColors.primaryColor
+                                        : (isDark
+                                              ? AdminAppColors.darkBorder
+                                              : Colors.transparent),
+                                  ),
+                                ),
                                 onSelected: (_) =>
                                     bloc.add(ToggleSizeGroupInForm(name)),
                               );
@@ -281,7 +391,14 @@ class _CategoryConfigDialogState extends State<CategoryConfigDialog> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
+                        ),
+                      ),
                     ),
                     SizedBox(width: 12.w),
                     ElevatedButton(

@@ -15,20 +15,29 @@ class OrdersTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          // Tab Titles
-          children: [
-            _buildTab(context, label: 'All Orders', index: 0),
-            _buildTab(context, label: 'Processing', index: 1),
-            _buildTab(context, label: 'Packed/Shipped', index: 2),
-            _buildTab(context, label: 'Completed', index: 3),
-            _buildTab(context, label: 'Cancelled/Returned', index: 4),
-          ],
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            // Tab Titles
+            children: [
+              _buildTab(context, label: 'All Orders', index: 0),
+              _buildTab(context, label: 'Processing', index: 1),
+              _buildTab(context, label: 'Packed/Shipped', index: 2),
+              _buildTab(context, label: 'Completed', index: 3),
+              _buildTab(context, label: 'Cancelled/Returned', index: 4),
+            ],
+          ),
         ),
-        const Divider(height: 1, thickness: 1.5, color: Color(0xFFE8E7ED)),
+        Divider(
+          height: 1,
+          thickness: 1.5,
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+        ),
       ],
     );
   }
@@ -38,6 +47,7 @@ class OrdersTabBar extends StatelessWidget {
     required String label,
     required int index,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = index == activeTab;
     return GestureDetector(
       onTap: () => onTabChanged(index),
@@ -61,7 +71,9 @@ class OrdersTabBar extends StatelessWidget {
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
             color: isSelected
                 ? AdminAppColors.primaryColor
-                : const Color(0xFF6C6C80),
+                : (isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF6C6C80)),
           ),
         ),
       ),

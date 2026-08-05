@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/debouncer.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/products/presentation/bloc/admin_product_bloc.dart';
@@ -35,12 +36,15 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) =>
           sl<AdminProductBloc>()
             ..add(LoadAdminProducts(page: 1, limit: _perPage)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child: BlocListener<AdminProductBloc, AdminProductState>(
             listener: (context, state) {

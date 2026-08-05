@@ -13,13 +13,17 @@ class AdminProfileLogout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +41,9 @@ class AdminProfileLogout extends StatelessWidget {
                 'Account Actions',
                 style: AdminAppTextStyles.heading3.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
@@ -47,7 +53,9 @@ class AdminProfileLogout extends StatelessWidget {
           Text(
             'Securely sign out of your administration portal session.',
             style: AdminAppTextStyles.bodySmall.copyWith(
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
           ),
           SizedBox(height: 24.h),
@@ -63,7 +71,9 @@ class AdminProfileLogout extends StatelessWidget {
                     content: 'Are you sure you want to logout?',
                     confirmText: 'Logout',
                     confirmColor: AdminAppColors.primaryColor,
-                    surfaceColor: Colors.white,
+                    surfaceColor: isDark
+                        ? AdminAppColors.darkSurface
+                        : Colors.white,
                     onConfirm: () {
                       Navigator.pop(dialogContext);
                       context.read<AdminAuthBloc>().add(AdminLogoutRequested());
@@ -73,10 +83,16 @@ class AdminProfileLogout extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFFEBEE),
+                backgroundColor: isDark
+                    ? AdminAppColors.errorColor.withValues(alpha: 0.15)
+                    : const Color(0xFFFFEBEE),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),
+                  side: BorderSide(
+                    color: AdminAppColors.errorColor..withValues(alpha: 0.5),
+                    width: 0.5,
+                  ),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 14.h),
               ),

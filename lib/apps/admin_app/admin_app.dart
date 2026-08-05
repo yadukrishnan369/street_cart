@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/router/admin/app_router.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
+import 'package:street_cart/core/theme/admin/admin_theme_cubit.dart';
 
 class AdminApp extends StatefulWidget {
   const AdminApp({super.key});
@@ -31,21 +33,37 @@ class _AdminAppState extends State<AdminApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _authBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _authBloc),
+        BlocProvider.value(value: sl<AdminThemeCubit>()),
+      ],
       child: ScreenUtilInit(
         designSize: const Size(1280, 800),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp.router(
-            title: 'Street Cart Admin',
-            debugShowCheckedModeBanner: false,
-            routerConfig: _appRouter.router,
-            theme: ThemeData(
-              primarySwatch: Colors.purple,
-              scaffoldBackgroundColor: const Color(0xFFF6F6F9),
-            ),
+          return BlocBuilder<AdminThemeCubit, ThemeMode>(
+            builder: (context, themeMode) {
+              return MaterialApp.router(
+                title: 'Street Cart Admin',
+                debugShowCheckedModeBanner: false,
+                routerConfig: _appRouter.router,
+                themeMode: themeMode,
+                theme: ThemeData(
+                  brightness: Brightness.light,
+                  primarySwatch: Colors.purple,
+                  scaffoldBackgroundColor: const Color(0xFFF6F6F9),
+                  primaryColor: AdminAppColors.primaryColor,
+                ),
+                darkTheme: ThemeData(
+                  brightness: Brightness.dark,
+                  primarySwatch: Colors.purple,
+                  scaffoldBackgroundColor: AdminAppColors.darkBackground,
+                  primaryColor: AdminAppColors.primaryColor,
+                ),
+              );
+            },
           );
         },
       ),

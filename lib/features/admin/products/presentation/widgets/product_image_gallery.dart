@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
+import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 // Product Image Gallery
 class ProductImageGallery extends StatelessWidget {
@@ -13,6 +14,7 @@ class ProductImageGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final p = product;
     final displayImagesList = p.allImages;
 
@@ -22,9 +24,12 @@ class ProductImageGallery extends StatelessWidget {
         height: 400.h,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AdminAppColors.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+          border: Border.all(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+            width: 1.5,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -32,12 +37,19 @@ class ProductImageGallery extends StatelessWidget {
             Icon(
               Icons.inventory_2_outlined,
               size: 64.sp,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
             SizedBox(height: 12.h),
             Text(
               'No product images uploaded',
-              style: TextStyle(fontSize: 14.sp, color: const Color(0xFF8A8A9E)),
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
+              ),
             ),
           ],
         ),
@@ -49,9 +61,12 @@ class ProductImageGallery extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       padding: EdgeInsets.all(24.w),
       child: ValueListenableBuilder<int>(
@@ -81,13 +96,17 @@ class ProductImageGallery extends StatelessWidget {
                     height: 380.h,
                     width: double.infinity,
                     fit: BoxFit.contain,
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(
-                        color: AdminAppColors.primaryColor,
-                      ),
+                    placeholder: (context, url) => ProductImagePlaceholder(
+                      iconSize: 60,
+                      width: 60,
+                      height: 60,
                     ),
                     errorWidget: (context, url, error) =>
-                        const Icon(Icons.image_not_supported_outlined),
+                        ProductImagePlaceholder(
+                          iconSize: 60,
+                          width: 60,
+                          height: 60,
+                        ),
                   ),
                 ),
               ),
@@ -112,7 +131,9 @@ class ProductImageGallery extends StatelessWidget {
                             border: Border.all(
                               color: isSelected
                                   ? AdminAppColors.primaryColor
-                                  : const Color(0xFFE8E7ED),
+                                  : (isDark
+                                        ? AdminAppColors.darkBorder
+                                        : const Color(0xFFE8E7ED)),
                               width: isSelected ? 2 : 1,
                             ),
                           ),
@@ -121,6 +142,18 @@ class ProductImageGallery extends StatelessWidget {
                             child: CachedNetworkImage(
                               imageUrl: displayImagesList[i],
                               fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  ProductImagePlaceholder(
+                                    iconSize: 40,
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                              errorWidget: (context, url, error) =>
+                                  ProductImagePlaceholder(
+                                    iconSize: 40,
+                                    width: 40,
+                                    height: 40,
+                                  ),
                             ),
                           ),
                         ),

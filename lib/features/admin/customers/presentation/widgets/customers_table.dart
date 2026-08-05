@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:street_cart/features/admin/customers/data/models/customer_model.
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_bloc.dart';
 import 'package:street_cart/features/admin/customers/presentation/bloc/admin_customers_event.dart';
 import 'package:street_cart/features/admin/customers/presentation/utils/admin_customers_helper.dart';
+import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 
 // Customers Table
 class CustomersTable extends StatelessWidget {
@@ -17,6 +19,8 @@ class CustomersTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(2.0),
@@ -28,19 +32,26 @@ class CustomersTable extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF4F5F7),
             border: Border(
-              bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+              bottom: BorderSide(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
           ),
           // Table Headers
           children: [
-            _buildTableHeaderCell('CUSTOMER NAME'),
-            _buildTableHeaderCell('EMAIL'),
-            _buildTableHeaderCell('TOTAL ORDERS'),
-            _buildTableHeaderCell('STATUS'),
-            _buildTableHeaderCell('ACTIONS'),
+            _buildTableHeaderCell(context, 'CUSTOMER NAME'),
+            _buildTableHeaderCell(context, 'EMAIL'),
+            _buildTableHeaderCell(context, 'TOTAL ORDERS'),
+            _buildTableHeaderCell(context, 'STATUS'),
+            _buildTableHeaderCell(context, 'ACTIONS'),
           ],
         ),
         ...customers.map((c) => _buildTableRow(context, c)),
@@ -48,7 +59,9 @@ class CustomersTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeaderCell(String text) {
+  Widget _buildTableHeaderCell(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
       child: Text(
@@ -57,20 +70,28 @@ class CustomersTable extends StatelessWidget {
           fontSize: 11.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );
   }
 
   TableRow _buildTableRow(BuildContext context, CustomerModel customer) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isBlocked = customer.isBlocked;
-    final initials = AdminCustomersHelper.getCustomerInitials(customer.fullName);
+    final initials = AdminCustomersHelper.getCustomerInitials(
+      customer.fullName,
+    );
 
     return TableRow(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.2),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.2,
+          ),
         ),
       ),
       children: [
@@ -81,20 +102,36 @@ class CustomersTable extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 18.r,
-                backgroundColor: const Color(0xFFEBE9F5),
-                backgroundImage: customer.profileImageUrl.isNotEmpty
-                    ? NetworkImage(customer.profileImageUrl)
-                    : null,
-                child: customer.profileImageUrl.isEmpty
-                    ? Text(
+                backgroundColor: isDark
+                    ? AdminAppColors.darkInputBackground
+                    : const Color(0xFFEBE9F5),
+                child: customer.profileImageUrl.isNotEmpty
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: customer.profileImageUrl,
+                          width: 36.r,
+                          height: 36.r,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              CustomerImagePlaceholder(
+                                size: 36.w,
+                                iconColor: AdminAppColors.primaryColor,
+                              ),
+                          errorWidget: (context, url, error) =>
+                              CustomerImagePlaceholder(
+                                size: 36.w,
+                                iconColor: AdminAppColors.primaryColor,
+                              ),
+                        ),
+                      )
+                    : Text(
                         initials,
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                           color: AdminAppColors.primaryColor,
                         ),
-                      )
-                    : null,
+                      ),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -104,7 +141,9 @@ class CustomersTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -119,7 +158,12 @@ class CustomersTable extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
             customer.email.isNotEmpty ? customer.email : 'Unknown',
-            style: TextStyle(fontSize: 13.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -133,7 +177,9 @@ class CustomersTable extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
         ),

@@ -26,7 +26,9 @@ class AdminSettingsPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<AdminSettingsBloc>()..add(LoadAdminSettings()),
       child: Scaffold(
-        backgroundColor: AdminAppColors.backgroundLight,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: BlocListener<AdminSettingsBloc, AdminSettingsState>(
           listener: (context, state) {
             if (state is AdminSettingsActionSuccess) {

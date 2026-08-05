@@ -18,10 +18,13 @@ class AdminRevenuePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (_) => sl<AdminRevenueBloc>()..add(const LoadAdminRevenueData()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: SafeArea(
           child: BlocBuilder<AdminRevenueBloc, AdminRevenueState>(
             builder: (context, state) {
@@ -62,7 +65,9 @@ class AdminRevenuePage extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 24.sp,
                                     fontWeight: FontWeight.w800,
-                                    color: AdminAppColors.textPrimary,
+                                    color: isDark
+                                        ? AdminAppColors.darkTextPrimary
+                                        : AdminAppColors.textPrimary,
                                   ),
                                 ),
                                 SizedBox(height: 6.h),
@@ -71,7 +76,9 @@ class AdminRevenuePage extends StatelessWidget {
                                   'Detailed overview of platform earnings and partner payouts.',
                                   style: TextStyle(
                                     fontSize: 14.sp,
-                                    color: AdminAppColors.textSecondary,
+                                    color: isDark
+                                        ? AdminAppColors.darkTextSecondary
+                                        : AdminAppColors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -79,10 +86,14 @@ class AdminRevenuePage extends StatelessWidget {
                             // Filter Refresh Button
                             final refreshBtn = Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: isDark
+                                    ? AdminAppColors.darkSurface
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(10.r),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: isDark
+                                      ? AdminAppColors.darkBorder
+                                      : AdminAppColors.borderLight,
                                 ),
                               ),
                               child: IconButton(

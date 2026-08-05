@@ -17,6 +17,7 @@ class CategoriesConfigHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -29,14 +30,21 @@ class CategoriesConfigHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
             SizedBox(height: 4.h),
             // Subtitle
             Text(
               'Configure business categories, link sub product categories, and select matching size standards.',
-              style: TextStyle(fontSize: 13.sp, color: const Color(0xFF8A8A9E)),
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
+              ),
             ),
           ],
         ),

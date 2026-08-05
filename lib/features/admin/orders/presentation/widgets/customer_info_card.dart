@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 
@@ -19,6 +20,7 @@ class CustomerInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final email = customerEmail.isNotEmpty ? customerEmail : '';
     final phone = order.deliveryAddress.phone;
     final address =
@@ -26,9 +28,12 @@ class CustomerInfoCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: InkWell(
         onTap: () {
@@ -45,7 +50,7 @@ class CustomerInfoCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.person_outline,
-                    color: const Color(0xFF7B2CBF),
+                    color: AdminAppColors.primaryColor,
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -55,7 +60,9 @@ class CustomerInfoCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -66,11 +73,16 @@ class CustomerInfoCard extends StatelessWidget {
                   Container(
                     width: 44.w,
                     height: 44.h,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFFF9FAFC),
+                      color: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : const Color(0xFFF9FAFC),
                     ),
-                    child: const CustomerImagePlaceholder(size: 50),
+                    child: const CustomerImagePlaceholder(
+                      size: 50,
+                      iconColor: AdminAppColors.primaryColor,
+                    ),
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
@@ -85,7 +97,9 @@ class CustomerInfoCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                       ],
@@ -94,13 +108,18 @@ class CustomerInfoCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 5.h),
-              const Divider(color: Color(0xFFE8E7ED), thickness: 1.2),
+              Divider(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                thickness: 1.2,
+              ),
               SizedBox(height: 20.h),
-              _buildInfoRow(Icons.mail_outlined, email),
+              _buildInfoRow(context, Icons.mail_outlined, email),
               SizedBox(height: 12.h),
-              _buildInfoRow(Icons.phone_outlined, phone),
+              _buildInfoRow(context, Icons.phone_outlined, phone),
               SizedBox(height: 12.h),
-              _buildInfoRow(Icons.location_on_outlined, address),
+              _buildInfoRow(context, Icons.location_on_outlined, address),
             ],
           ),
         ),
@@ -108,16 +127,28 @@ class CustomerInfoCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: const Color(0xFF8A8A9E), size: 16.sp),
+        Icon(
+          icon,
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
+          size: 16.sp,
+        ),
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
       ],

@@ -19,6 +19,7 @@ class ReviewsHeaderStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -30,7 +31,9 @@ class ReviewsHeaderStats extends StatelessWidget {
             value: NumberFormatter.formatNumber(totalReviews),
             icon: Icons.rate_review_outlined,
             iconColor: AdminAppColors.primaryColor,
-            iconBgColor: const Color(0xFFF4EBFF),
+            iconBgColor: isDark
+                ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                : const Color(0xFFF4EBFF),
           ),
         ),
         SizedBox(width: 20.w),
@@ -41,8 +44,10 @@ class ReviewsHeaderStats extends StatelessWidget {
             title: 'Average Rating',
             value: averageRating.toStringAsFixed(1),
             icon: Icons.star_rounded,
-            iconColor: Colors.amber,
-            iconBgColor: const Color(0xFFFFFBEB),
+            iconColor: AdminAppColors.warningColor,
+            iconBgColor: isDark
+                ? AdminAppColors.warningColor.withValues(alpha: 0.15)
+                : const Color(0xFFFFFBEB),
           ),
         ),
       ],

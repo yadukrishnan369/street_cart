@@ -14,6 +14,7 @@ class ShopInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Shop info card data
     final initials = AdminOrdersHelper.getShopInitials(shopName);
     final address = AdminOrdersHelper.getShopAddress(shop);
@@ -21,9 +22,12 @@ class ShopInfoCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: InkWell(
         onTap: () {
@@ -42,7 +46,7 @@ class ShopInfoCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.storefront_outlined,
-                    color: const Color(0xFF7B2CBF),
+                    color: AdminAppColors.primaryColor,
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -52,7 +56,9 @@ class ShopInfoCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -65,7 +71,9 @@ class ShopInfoCard extends StatelessWidget {
                     height: 44.h,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF4EBFF),
+                      color: isDark
+                          ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                          : const Color(0xFFF4EBFF),
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Text(
@@ -90,7 +98,9 @@ class ShopInfoCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -103,8 +113,8 @@ class ShopInfoCard extends StatelessWidget {
                             fontSize: 11.sp,
                             fontWeight: FontWeight.bold,
                             color: shop?.isSuspended == true
-                                ? const Color.fromARGB(255, 236, 67, 45)
-                                : const Color(0xFF137333),
+                                ? AdminAppColors.errorColor
+                                : AdminAppColors.successColor,
                           ),
                         ),
                       ],
@@ -113,11 +123,16 @@ class ShopInfoCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20.h),
-              const Divider(color: Color(0xFFE8E7ED), thickness: 1.2),
+              Divider(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                thickness: 1.2,
+              ),
               SizedBox(height: 20.h),
-              _buildInfoRow(Icons.location_on_outlined, address),
+              _buildInfoRow(context, Icons.location_on_outlined, address),
               SizedBox(height: 12.h),
-              _buildInfoRow(Icons.phone_outlined, phone),
+              _buildInfoRow(context, Icons.phone_outlined, phone),
             ],
           ),
         ),
@@ -125,16 +140,28 @@ class ShopInfoCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: const Color(0xFF8A8A9E), size: 16.sp),
+        Icon(
+          icon,
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
+          size: 16.sp,
+        ),
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
       ],

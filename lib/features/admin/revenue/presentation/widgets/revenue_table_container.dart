@@ -41,6 +41,7 @@ class _RevenueTableContainerState extends State<RevenueTableContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<AdminRevenueBloc, AdminRevenueState>(
       builder: (context, state) {
         if (state is! AdminRevenueLoaded) return const SizedBox.shrink();
@@ -48,9 +49,14 @@ class _RevenueTableContainerState extends State<RevenueTableContainer> {
 
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? AdminAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFF0EFF5), width: 1.5),
+            border: Border.all(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFF0EFF5),
+              width: 1.5,
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
@@ -89,7 +95,12 @@ class _RevenueTableContainerState extends State<RevenueTableContainer> {
                 )
               else
                 const SizedBox(height: 2),
-              const Divider(height: 1, color: Color(0xFFF0EFF5)),
+              Divider(
+                height: 1,
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFF0EFF5),
+              ),
               // Revenue Orders Table
               RevenueOrdersTable(
                 orders: state.paginatedOrders,
@@ -97,7 +108,12 @@ class _RevenueTableContainerState extends State<RevenueTableContainer> {
                 customers: state.customers,
               ),
               if (state.totalPages > 1) ...[
-                const Divider(height: 1, color: Color(0xFFF0EFF5)),
+                Divider(
+                  height: 1,
+                  color: isDark
+                      ? AdminAppColors.darkBorder
+                      : const Color(0xFFF0EFF5),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   // Admin Pagination

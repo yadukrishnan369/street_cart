@@ -29,6 +29,7 @@ class AdminErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOffline = _isNetworkError(message);
     final displayTitle =
         title ?? (isOffline ? 'Connection Timeout' : 'Unable to Load Resource');
@@ -74,7 +75,9 @@ class AdminErrorView extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
-                color: AdminAppColors.textPrimary,
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -84,7 +87,9 @@ class AdminErrorView extends StatelessWidget {
               displayMessage,
               style: TextStyle(
                 fontSize: 15.sp,
-                color: AdminAppColors.textSecondary,
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : AdminAppColors.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,

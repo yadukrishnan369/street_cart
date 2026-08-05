@@ -12,12 +12,16 @@ class AdminShopVerificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,16 +40,23 @@ class AdminShopVerificationCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w800,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
-          Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
+          Divider(
+            height: 32.h,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            thickness: 1.2,
+          ),
 
           // Shop License Document Card
           _buildDocCard(
             context: context,
+            isDark: isDark,
             icon: Icons.assignment_outlined,
             title: 'Shop License',
             subtitle: shop.gstNumber.isNotEmpty
@@ -59,6 +70,7 @@ class AdminShopVerificationCard extends StatelessWidget {
           // Owner Identity Document Card
           _buildDocCard(
             context: context,
+            isDark: isDark,
             icon: Icons.badge_outlined,
             title: 'Owner Identity',
             subtitle: 'Verified via National ID',
@@ -71,6 +83,7 @@ class AdminShopVerificationCard extends StatelessWidget {
 
   Widget _buildDocCard({
     required BuildContext context,
+    required bool isDark,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -79,16 +92,21 @@ class AdminShopVerificationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkInputBackground : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.2),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.2,
+        ),
       ),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
-              color: const Color(0xFFF3E8FF),
+              color: isDark
+                  ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                  : const Color(0xFFF3E8FF),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Icon(icon, color: AdminAppColors.primaryColor, size: 20.sp),
@@ -104,7 +122,9 @@ class AdminShopVerificationCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: AdminAppColors.textPrimary,
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -113,7 +133,9 @@ class AdminShopVerificationCard extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                   ),
                 ),
                 SizedBox(height: 8.h),

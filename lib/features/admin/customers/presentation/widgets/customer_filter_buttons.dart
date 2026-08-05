@@ -13,6 +13,7 @@ class CustomerFilterButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final filters = ['All', 'Active', 'Blocked'];
     final labels = {
       'All': 'All Customers',
@@ -32,18 +33,24 @@ class CustomerFilterButtons extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : const Color(0xFF6C6C80),
+                color: isSelected
+                    ? Colors.white
+                    : (isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF6C6C80)),
               ),
             ),
             selected: isSelected,
             selectedColor: AdminAppColors.primaryColor,
-            backgroundColor: Colors.white,
+            backgroundColor: isDark ? AdminAppColors.darkSurface : Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100.r),
               side: BorderSide(
                 color: isSelected
                     ? Colors.transparent
-                    : const Color(0xFFE8E7ED),
+                    : (isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED)),
                 width: 1.2,
               ),
             ),

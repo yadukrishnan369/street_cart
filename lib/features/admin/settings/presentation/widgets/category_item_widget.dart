@@ -20,11 +20,15 @@ class CategoryItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Column(
@@ -39,7 +43,9 @@ class CategoryItemWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
               ),
@@ -50,7 +56,9 @@ class CategoryItemWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: category.isVisible
                       ? AdminAppColors.primaryColor
-                      : const Color(0xFF8A8A9E),
+                      : (isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E)),
                 ),
               ),
               SizedBox(width: 8.w),
@@ -69,7 +77,9 @@ class CategoryItemWidget extends StatelessWidget {
                 icon: Icon(
                   Icons.edit_outlined,
                   size: 20.sp,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                 ),
               ),
               // Button for Delete
@@ -90,7 +100,9 @@ class CategoryItemWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : Colors.grey[700],
               ),
             ),
             SizedBox(height: 4.h),
@@ -104,10 +116,17 @@ class CategoryItemWidget extends StatelessWidget {
                         c,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: Colors.black87,
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
-                      backgroundColor: Colors.grey[100],
+                      backgroundColor: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : Colors.grey[100],
+                      side: isDark
+                          ? BorderSide(color: AdminAppColors.darkBorder)
+                          : BorderSide.none,
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
@@ -122,7 +141,9 @@ class CategoryItemWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : Colors.grey[700],
               ),
             ),
             SizedBox(height: 4.h),

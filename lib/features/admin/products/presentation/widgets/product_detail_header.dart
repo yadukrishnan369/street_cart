@@ -19,6 +19,7 @@ class ProductDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final p = product;
     final bool isOutOfStock = p.stockQuantity == 0;
 
@@ -50,28 +51,46 @@ class ProductDetailHeader extends StatelessWidget {
           width: 80.w,
           height: 80.h,
           decoration: BoxDecoration(
-            color: const Color(0xFFF3F2F7),
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF3F2F7),
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: const Color(0xFFE8E7ED), width: 1),
+            border: Border.all(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFE8E7ED),
+              width: 1,
+            ),
           ),
           clipBehavior: Clip.antiAlias,
           child: thumbnailUrl.isNotEmpty
               ? CachedNetworkImage(
                   imageUrl: thumbnailUrl,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  placeholder: (_, __) => Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AdminAppColors.primaryColor,
+                      ),
+                    ),
                   ),
                   errorWidget: (_, __, ___) => Icon(
                     Icons.inventory_2_outlined,
                     size: 32.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                   ),
                 )
               : Icon(
                   Icons.inventory_2_outlined,
                   size: 32.sp,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                 ),
         ),
         SizedBox(width: 24.w),
@@ -89,7 +108,9 @@ class ProductDetailHeader extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w800,
-                        color: AdminAppColors.textPrimary,
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -123,7 +144,9 @@ class ProductDetailHeader extends StatelessWidget {
                   Icon(
                     Icons.local_offer_outlined,
                     size: 14.sp,
-                    color: const Color(0xFF6C6C80),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF6C6C80),
                   ),
                   SizedBox(width: 4.w),
                   // Product Category
@@ -131,7 +154,9 @@ class ProductDetailHeader extends StatelessWidget {
                     p.category,
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: const Color(0xFF6C6C80),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF6C6C80),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -143,7 +168,9 @@ class ProductDetailHeader extends StatelessWidget {
                 'Product ID: #${p.id.substring(0, p.id.length > 8 ? 8 : p.id.length).toUpperCase()}',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -214,9 +241,12 @@ class ProductDetailHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(28.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF1E1E2F).withValues(alpha: 0.04),

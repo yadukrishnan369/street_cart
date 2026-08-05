@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
@@ -12,6 +13,7 @@ class ProfitInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final commission = AdminOrdersHelper.calculateCommission(order);
     final vendorEarnings = AdminOrdersHelper.calculateVendorEarnings(order);
 
@@ -22,9 +24,12 @@ class ProfitInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +38,7 @@ class ProfitInfoCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.account_balance_wallet_outlined,
-                color: const Color(0xFF7B2CBF),
+                color: AdminAppColors.primaryColor,
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
@@ -43,24 +48,37 @@ class ProfitInfoCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
           SizedBox(height: 20.h),
           // Total Amount Section
-          _buildProfitItem('Total Amount', totalStr, isBoldValue: true),
+          _buildProfitItem(
+            context,
+            'Total Amount',
+            totalStr,
+            isBoldValue: true,
+          ),
           SizedBox(height: 16.h),
           // Vendor Earning Section
-          _buildProfitItem('Vendor Earnings', vendorStr, isBoldValue: true),
+          _buildProfitItem(
+            context,
+            'Vendor Earnings',
+            vendorStr,
+            isBoldValue: true,
+          ),
           SizedBox(height: 16.h),
           // PlatForm Profit Section
           _buildProfitItem(
+            context,
             'Street cart Profit',
             profitStr,
             isBoldValue: true,
-            valueColor: const Color(0xFF137333),
+            valueColor: AdminAppColors.successColor,
             valueSize: 18.sp,
           ),
         ],
@@ -69,12 +87,14 @@ class ProfitInfoCard extends StatelessWidget {
   }
 
   Widget _buildProfitItem(
+    BuildContext context,
     String label,
     String value, {
     bool isBoldValue = false,
     Color? valueColor,
     double? valueSize,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -82,7 +102,9 @@ class ProfitInfoCard extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: const Color(0xFF8A8A9E),
+            color: isDark
+                ? AdminAppColors.darkTextSecondary
+                : const Color(0xFF8A8A9E),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -92,7 +114,11 @@ class ProfitInfoCard extends StatelessWidget {
           style: TextStyle(
             fontSize: valueSize ?? 15.sp,
             fontWeight: isBoldValue ? FontWeight.bold : FontWeight.normal,
-            color: valueColor ?? const Color(0xFF1E1E2F),
+            color:
+                valueColor ??
+                (isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary),
           ),
         ),
       ],

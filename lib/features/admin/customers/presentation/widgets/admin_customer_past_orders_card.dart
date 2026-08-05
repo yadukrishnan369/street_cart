@@ -27,6 +27,8 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Calculate total pages
     final totalPages = AdminCustomersHelper.getTotalPages(
       orders.length,
@@ -42,9 +44,12 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +62,9 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w800,
-                color: AdminAppColors.textPrimary,
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
           ),
@@ -88,20 +95,27 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
                 TableRow(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF4F5F7),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF4F5F7),
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+                      bottom: BorderSide(
+                        color: isDark
+                            ? AdminAppColors.darkBorder
+                            : const Color(0xFFE8E7ED),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   // Table Title
                   children: [
-                    _buildTableHeaderCell('ORDER ID'),
-                    _buildTableHeaderCell('PRODUCTS'),
-                    _buildTableHeaderCell('DATE'),
-                    _buildTableHeaderCell('AMOUNT'),
-                    _buildTableHeaderCell('STATUS'),
-                    _buildTableHeaderCell('ACTIONS'),
+                    _buildTableHeaderCell(context, 'ORDER ID'),
+                    _buildTableHeaderCell(context, 'PRODUCTS'),
+                    _buildTableHeaderCell(context, 'DATE'),
+                    _buildTableHeaderCell(context, 'AMOUNT'),
+                    _buildTableHeaderCell(context, 'STATUS'),
+                    _buildTableHeaderCell(context, 'ACTIONS'),
                   ],
                 ),
                 ...paginatedOrders.map((order) {
@@ -125,10 +139,12 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
                       AdminCustomersHelper.formatOrderItems(order.items);
 
                   return TableRow(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Color(0xFFE8E7ED),
+                          color: isDark
+                              ? AdminAppColors.darkBorder
+                              : const Color(0xFFE8E7ED),
                           width: 1.2,
                         ),
                       ),
@@ -158,7 +174,9 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -170,7 +188,9 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
                           dateStr,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: const Color(0xFF6C6C80),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF6C6C80),
                           ),
                         ),
                       ),
@@ -182,13 +202,15 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                       ),
                       // Badge Status
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
@@ -260,7 +282,9 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeaderCell(String text) {
+  Widget _buildTableHeaderCell(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
       child: Text(
@@ -269,7 +293,9 @@ class AdminCustomerPastOrdersCard extends StatelessWidget {
           fontSize: 11.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );

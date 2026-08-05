@@ -21,6 +21,8 @@ class ReviewsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Empty State
     if (reviews.isEmpty) {
       return Padding(
@@ -60,28 +62,35 @@ class ReviewsTable extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF4F5F7),
             border: Border(
-              bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+              bottom: BorderSide(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
           ),
           // Table Titles
           children: [
-            _buildTableHeaderCell('CUSTOMER'),
-            _buildTableHeaderCell('TO REVIEWED'),
-            _buildTableHeaderCell('RATING'),
-            _buildTableHeaderCell('COMMENT'),
-            _buildTableHeaderCell('DATE'),
-            _buildTableHeaderCell('ACTION'),
+            _buildTableHeaderCell('CUSTOMER', isDark),
+            _buildTableHeaderCell('TO REVIEWED', isDark),
+            _buildTableHeaderCell('RATING', isDark),
+            _buildTableHeaderCell('COMMENT', isDark),
+            _buildTableHeaderCell('DATE', isDark),
+            _buildTableHeaderCell('ACTION', isDark),
           ],
         ),
-        ...reviews.map((r) => _buildTableRow(context, r)),
+        ...reviews.map((r) => _buildTableRow(context, r, isDark)),
       ],
     );
   }
 
-  Widget _buildTableHeaderCell(String text) {
+  Widget _buildTableHeaderCell(String text, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Text(
@@ -90,21 +99,26 @@ class ReviewsTable extends StatelessWidget {
           fontSize: 11.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );
   }
 
-  TableRow _buildTableRow(BuildContext context, ReviewModel r) {
+  TableRow _buildTableRow(BuildContext context, ReviewModel r, bool isDark) {
     final formattedDate = AdminReviewHelper.getFormattedTimeAgo(r.createdAt);
     final productName = productNames[r.productId] ?? 'Unknown Product';
 
     return TableRow(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.0),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.0,
+          ),
         ),
       ),
       children: [
@@ -121,7 +135,9 @@ class ReviewsTable extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 16.r,
-                  backgroundColor: const Color(0xFFF4EBFF),
+                  backgroundColor: isDark
+                      ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                      : const Color(0xFFF4EBFF),
                   child: Text(
                     r.customerName.isNotEmpty
                         ? r.customerName[0].toUpperCase()
@@ -140,7 +156,9 @@ class ReviewsTable extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -159,7 +177,9 @@ class ReviewsTable extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -177,7 +197,7 @@ class ReviewsTable extends StatelessWidget {
                     ? Icons.star_rounded
                     : Icons.star_border_rounded,
                 size: 16.sp,
-                color: Colors.amber,
+                color: AdminAppColors.warningColor,
               );
             }),
           ),
@@ -193,7 +213,9 @@ class ReviewsTable extends StatelessWidget {
               fontSize: 13.sp,
               color: r.isHidden
                   ? AdminAppColors.errorColor
-                  : const Color(0xFF6C6C80),
+                  : (isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF6C6C80)),
               decoration: r.isHidden ? TextDecoration.lineThrough : null,
               decorationColor: AdminAppColors.errorColor,
             ),
@@ -207,7 +229,12 @@ class ReviewsTable extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           child: Text(
             formattedDate,
-            style: TextStyle(fontSize: 13.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
 

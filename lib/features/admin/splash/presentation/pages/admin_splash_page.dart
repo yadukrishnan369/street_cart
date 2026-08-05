@@ -55,140 +55,167 @@ class _AdminSplashPageState extends State<AdminSplashPage> {
             );
           }
         },
-        child: Scaffold(
-          backgroundColor: AdminAppColors.backgroundLight,
-          body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth > 800;
+        child: Builder(
+          builder: (context) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
 
-                return BlocBuilder<AdminSplashBloc, AdminSplashState>(
-                  builder: (context, state) {
-                    final progress = state is AdminSplashAnimating
-                        ? state.progress
-                        : (state is AdminSplashLoading ? 1.0 : 0.0);
-                    final loadingText = state is AdminSplashAnimating
-                        ? state.loadingText
-                        : 'Initializing secure assets';
+            return Scaffold(
+              backgroundColor: isDark
+                  ? AdminAppColors.darkBackground
+                  : AdminAppColors.backgroundLight,
+              body: SafeArea(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isDesktop = constraints.maxWidth > 800;
 
-                    return Center(
-                      child: Container(
-                        width: isDesktop ? 600.w : double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: 24.w),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const SizedBox(),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
+                    return BlocBuilder<AdminSplashBloc, AdminSplashState>(
+                      builder: (context, state) {
+                        final progress = state is AdminSplashAnimating
+                            ? state.progress
+                            : (state is AdminSplashLoading ? 1.0 : 0.0);
+                        final loadingText = state is AdminSplashAnimating
+                            ? state.loadingText
+                            : 'Initializing secure assets';
+
+                        return Center(
+                          child: Container(
+                            width: isDesktop ? 600.w : double.infinity,
+                            padding: EdgeInsets.symmetric(horizontal: 24.w),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // App logo
-                                const AppLogo(
-                                  size: 80,
-                                  backgroundColor: AdminAppColors.primaryColor,
-                                  logoColor: AdminAppColors.surfaceWhite,
-                                ),
-                                SizedBox(height: 24.h),
-                                Text(
-                                  'Street Cart Admin',
-                                  style: AdminAppTextStyles.heading1.copyWith(
-                                    color: AdminAppColors.textPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: isDesktop ? 32.sp : 26.sp,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  'Loading system...',
-                                  style: AdminAppTextStyles.bodyMedium.copyWith(
-                                    color: AdminAppColors.textSecondary,
-                                  ),
-                                ),
-                                SizedBox(height: 48.h),
-                                // Progress label
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                const SizedBox(),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      loadingText,
-                                      style: AdminAppTextStyles.bodySmall
-                                          .copyWith(
-                                            color: AdminAppColors.textSecondary,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                    Text(
-                                      '${(progress * 100).toInt()}%',
-                                      style: AdminAppTextStyles.bodySmall
-                                          .copyWith(
-                                            color: AdminAppColors.primaryColor,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8.h),
-                                // Progress bar
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(4.r),
-                                  child: LinearProgressIndicator(
-                                    value: progress,
-                                    minHeight: 8.h,
-                                    backgroundColor: AdminAppColors.primaryLight
-                                        .withValues(alpha: 0.3),
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
+                                    // App logo
+                                    const AppLogo(
+                                      size: 80,
+                                      backgroundColor:
                                           AdminAppColors.primaryColor,
-                                        ),
-                                  ),
-                                ),
-                                SizedBox(height: 32.h),
-                                // Secure environment badge
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.lock_outline,
-                                      color: AdminAppColors.primaryColor
-                                          .withValues(alpha: 0.6),
-                                      size: 14.sp,
+                                      logoColor: AdminAppColors.surfaceWhite,
                                     ),
-                                    SizedBox(width: 6.w),
+                                    SizedBox(height: 24.h),
                                     Text(
-                                      'SECURE ENVIRONMENT',
-                                      style: AdminAppTextStyles.caption
+                                      'Street Cart Admin',
+                                      style: AdminAppTextStyles.heading1
                                           .copyWith(
-                                            color: AdminAppColors.primaryColor,
+                                            color: isDark
+                                                ? AdminAppColors.darkTextPrimary
+                                                : AdminAppColors.textPrimary,
                                             fontWeight: FontWeight.bold,
-                                            letterSpacing: 1.0,
+                                            fontSize: isDesktop ? 32.sp : 26.sp,
                                           ),
                                     ),
+                                    SizedBox(height: 8.h),
+                                    Text(
+                                      'Loading system...',
+                                      style: AdminAppTextStyles.bodyMedium
+                                          .copyWith(
+                                            color: isDark
+                                                ? AdminAppColors
+                                                      .darkTextSecondary
+                                                : AdminAppColors.textSecondary,
+                                          ),
+                                    ),
+                                    SizedBox(height: 48.h),
+                                    // Progress label
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          loadingText,
+                                          style: AdminAppTextStyles.bodySmall
+                                              .copyWith(
+                                                color: isDark
+                                                    ? AdminAppColors
+                                                          .darkTextSecondary
+                                                    : AdminAppColors
+                                                          .textSecondary,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                        ),
+                                        Text(
+                                          '${(progress * 100).toInt()}%',
+                                          style: AdminAppTextStyles.bodySmall
+                                              .copyWith(
+                                                color:
+                                                    AdminAppColors.primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    // Progress bar
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4.r),
+                                      child: LinearProgressIndicator(
+                                        value: progress,
+                                        minHeight: 8.h,
+                                        backgroundColor: isDark
+                                            ? AdminAppColors.darkInputBackground
+                                            : AdminAppColors.primaryLight
+                                                  .withValues(alpha: 0.3),
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                              AdminAppColors.primaryColor,
+                                            ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 32.h),
+                                    // Secure environment badge
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.lock_outline,
+                                          color: AdminAppColors.primaryColor
+                                              .withValues(alpha: 0.6),
+                                          size: 14.sp,
+                                        ),
+                                        SizedBox(width: 6.w),
+                                        Text(
+                                          'SECURE ENVIRONMENT',
+                                          style: AdminAppTextStyles.caption
+                                              .copyWith(
+                                                color:
+                                                    AdminAppColors.primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 1.0,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
                                   ],
+                                ),
+                                // Footer
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 24.h),
+                                  child: Text(
+                                    _appInfoService.getCopyrightText(
+                                      'Systems Inc.',
+                                    ),
+                                    style: AdminAppTextStyles.caption.copyWith(
+                                      color: isDark
+                                          ? AdminAppColors.darkTextSecondary
+                                          : AdminAppColors.textSecondary,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            // Footer
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 24.h),
-                              child: Text(
-                                _appInfoService.getCopyrightText(
-                                  'Systems Inc.',
-                                ),
-                                style: AdminAppTextStyles.caption.copyWith(
-                                  color: AdminAppColors.textSecondary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

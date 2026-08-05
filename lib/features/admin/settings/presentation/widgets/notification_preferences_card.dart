@@ -21,11 +21,17 @@ class NotificationPreferencesCard extends StatelessWidget {
       builder: (context, state) {
         final bloc = context.read<AdminSettingsBloc>();
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? AdminAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+            border: Border.all(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFE8E7ED),
+              width: 1.5,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,13 +52,20 @@ class NotificationPreferencesCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1, color: Color(0xFFF0EFF5)),
+              Divider(
+                height: 1,
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFF0EFF5),
+              ),
               Padding(
                 padding: EdgeInsets.all(24.w),
                 child: Column(
@@ -70,7 +83,9 @@ class NotificationPreferencesCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -78,7 +93,9 @@ class NotificationPreferencesCard extends StatelessWidget {
                                 'Receive a notification when a new vendor applies to join.',
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                             ],
@@ -110,7 +127,9 @@ class NotificationPreferencesCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -118,7 +137,9 @@ class NotificationPreferencesCard extends StatelessWidget {
                                 'Get real-time updates for every new order placed on the platform.',
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                             ],

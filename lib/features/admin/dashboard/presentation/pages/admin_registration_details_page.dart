@@ -30,8 +30,12 @@ class AdminRegistrationDetailsPage extends StatelessWidget {
             ..add(LoadShopDetailsRequested(shopId)),
       child: Builder(
         builder: (context) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+
           return Scaffold(
-            backgroundColor: const Color(0xFFF9FAFC),
+            backgroundColor: isDark
+                ? AdminAppColors.darkBackground
+                : const Color(0xFFF9FAFC),
             body: SafeArea(
               child:
                   BlocConsumer<

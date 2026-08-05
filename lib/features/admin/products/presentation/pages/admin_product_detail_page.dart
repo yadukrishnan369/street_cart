@@ -30,7 +30,9 @@ class AdminProductDetailPage extends StatelessWidget {
           sl<AdminProductDetailBloc>()
             ..add(LoadProductDetailRequested(productId)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child: BlocConsumer<AdminProductDetailBloc, AdminProductDetailState>(
             listener: (context, state) {

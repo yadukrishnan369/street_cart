@@ -48,19 +48,30 @@ class SizeGroupDialogs {
     final formKey = GlobalKey<FormState>();
     final blocRef = context.read<AdminProductConfigBloc>();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (dialogCtx) => AlertDialog(
+        backgroundColor: isDark ? AdminAppColors.darkSurface : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
+          side: BorderSide(
+            color: isDark
+                ? AdminAppColors.primaryColor
+                : AdminAppColors.borderLight,
+            width: 1,
+          ),
         ),
+
         // Title
         title: Text(
           'Add Size to "${group.name}"',
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF1E1E2F),
+            color: isDark
+                ? AdminAppColors.darkTextPrimary
+                : AdminAppColors.textPrimary,
           ),
         ),
         // Textform Field for add Size
@@ -74,7 +85,12 @@ class SizeGroupDialogs {
                 TextFormField(
                   controller: controller,
                   autofocus: true,
-                  decoration: _inputDecoration('e.g. XL, 42, 10.5'),
+                  style: TextStyle(
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
+                  ),
+                  decoration: _inputDecoration('e.g. XL, 42, 10.5', isDark),
                   validator: (val) => (val == null || val.trim().isEmpty)
                       ? 'Size cannot be empty'
                       : group.sizes
@@ -92,7 +108,12 @@ class SizeGroupDialogs {
             onPressed: () => Navigator.pop(dialogCtx),
             child: Text(
               'Cancel',
-              style: TextStyle(color: const Color(0xFF8A8A9E), fontSize: 14.sp),
+              style: TextStyle(
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
+                fontSize: 14.sp,
+              ),
             ),
           ),
           // Button for Add Size
@@ -125,11 +146,19 @@ class SizeGroupDialogs {
     final formKey = GlobalKey<FormState>();
     final blocRef = context.read<AdminProductConfigBloc>();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (dialogCtx) => AlertDialog(
+        backgroundColor: isDark ? AdminAppColors.darkSurface : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
+          side: BorderSide(
+            color: isDark
+                ? AdminAppColors.primaryColor
+                : AdminAppColors.borderLight,
+            width: 1,
+          ),
         ),
         // Title
         title: Text(
@@ -137,7 +166,9 @@ class SizeGroupDialogs {
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF1E1E2F),
+            color: isDark
+                ? AdminAppColors.darkTextPrimary
+                : AdminAppColors.textPrimary,
           ),
         ),
         content: SizedBox(
@@ -154,7 +185,9 @@ class SizeGroupDialogs {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -162,7 +195,15 @@ class SizeGroupDialogs {
                 TextFormField(
                   controller: nameController,
                   autofocus: true,
-                  decoration: _inputDecoration('e.g. Clothing, Shoes, Pants'),
+                  style: TextStyle(
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
+                  ),
+                  decoration: _inputDecoration(
+                    'e.g. Clothing, Shoes, Pants',
+                    isDark,
+                  ),
                   validator: (val) => (val == null || val.trim().isEmpty)
                       ? 'Group name is required'
                       : null,
@@ -172,7 +213,9 @@ class SizeGroupDialogs {
                   'You can add sizes after creating the group.',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                   ),
                 ),
               ],
@@ -184,7 +227,12 @@ class SizeGroupDialogs {
             onPressed: () => Navigator.pop(dialogCtx),
             child: Text(
               'Cancel',
-              style: TextStyle(color: const Color(0xFF8A8A9E), fontSize: 14.sp),
+              style: TextStyle(
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
+                fontSize: 14.sp,
+              ),
             ),
           ),
           ElevatedButton(
@@ -222,18 +270,27 @@ class SizeGroupDialogs {
     );
   }
 
-  static InputDecoration _inputDecoration(String hint) {
+  static InputDecoration _inputDecoration(String hint, bool isDark) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(fontSize: 13.sp, color: const Color(0xFFB0B0C0)),
+      hintStyle: TextStyle(
+        fontSize: 13.sp,
+        color: isDark
+            ? AdminAppColors.darkTextSecondary
+            : const Color(0xFFB0B0C0),
+      ),
       contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.r),
-        borderSide: const BorderSide(color: Color(0xFFE8E7ED)),
+        borderSide: BorderSide(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.r),
-        borderSide: const BorderSide(color: Color(0xFFE8E7ED)),
+        borderSide: BorderSide(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.r),

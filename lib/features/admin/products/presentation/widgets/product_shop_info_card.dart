@@ -19,12 +19,16 @@ class ProductShopInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       padding: EdgeInsets.all(28.w),
       child: Column(
@@ -36,7 +40,9 @@ class ProductShopInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w900,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 20.h),
@@ -46,7 +52,9 @@ class ProductShopInfoCard extends StatelessWidget {
                 width: 48.r,
                 height: 48.r,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3E8FF),
+                  color: isDark
+                      ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                      : const Color(0xFFF3E8FF),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Icon(
@@ -66,7 +74,9 @@ class ProductShopInfoCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -75,7 +85,9 @@ class ProductShopInfoCard extends StatelessWidget {
                       shopLocation,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -93,10 +105,16 @@ class ProductShopInfoCard extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 elevation: 0,
-                backgroundColor: const Color(0xFFF3E8FF),
+                backgroundColor: isDark
+                    ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                    : const Color(0xFFF3E8FF),
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.r),
+                  side: BorderSide(
+                    color: AdminAppColors.primaryColor,
+                    width: 1,
+                  ),
                 ),
               ),
               child: Text(

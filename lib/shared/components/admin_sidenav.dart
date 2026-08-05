@@ -38,14 +38,20 @@ class AdminSidenav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final initials = _getInitials(adminName);
 
     return Container(
       width: 260.w,
       height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(right: BorderSide(color: Color(0xFFF0EFF5), width: 1.5)),
+      decoration: BoxDecoration(
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
+        border: Border(
+          right: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.5,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +64,9 @@ class AdminSidenav extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE8D5FA),
+                    color: isDark
+                        ? AdminAppColors.primaryColor.withValues(alpha: 0.2)
+                        : const Color(0xFFE8D5FA),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: AppLogo(
@@ -76,7 +84,9 @@ class AdminSidenav extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : const Color(0xFF1E1E2F),
                       ),
                     ),
                     Text(
@@ -85,7 +95,9 @@ class AdminSidenav extends StatelessWidget {
                         fontSize: 9.sp,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 1.2,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -102,44 +114,57 @@ class AdminSidenav extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.grid_view_outlined,
                     label: 'Dashboard',
                     route: '/dashboard',
                   ),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.storefront_outlined,
                     label: 'Shops',
                     route: '/shops',
                   ),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.people_outline,
                     label: 'Customers',
                     route: '/customers',
                   ),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.inventory_2_outlined,
                     label: 'Products',
                     route: '/products',
                   ),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.shopping_cart_outlined,
                     label: 'Orders',
                     route: '/orders',
                   ),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.rate_review_outlined,
                     label: 'Reviews',
                     route: '/reviews',
                   ),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.bar_chart_outlined,
                     label: 'Revenue',
                     route: '/revenue',
                   ),
                   SizedBox(height: 12.h),
-                  const Divider(color: Color(0xFFF0EFF5), height: 1),
+                  Divider(
+                    color: isDark
+                        ? AdminAppColors.darkBorder
+                        : const Color(0xFFF0EFF5),
+                    height: 1,
+                  ),
                   SizedBox(height: 12.h),
                   _buildMenuItem(
+                    context: context,
                     icon: Icons.settings_outlined,
                     label: 'Settings',
                     route: '/settings',
@@ -150,7 +175,10 @@ class AdminSidenav extends StatelessWidget {
           ),
 
           // Bottom profile badge
-          const Divider(color: Color(0xFFF0EFF5), height: 1),
+          Divider(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            height: 1,
+          ),
           Padding(
             padding: EdgeInsets.all(24.w),
             child: Row(
@@ -183,7 +211,9 @@ class AdminSidenav extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w700,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : const Color(0xFF1E1E2F),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -192,7 +222,9 @@ class AdminSidenav extends StatelessWidget {
                                 roleName,
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -208,7 +240,9 @@ class AdminSidenav extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.logout_outlined,
-                      color: const Color(0xFF8A8A9E),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF8A8A9E),
                       size: 18.sp,
                     ),
                     onPressed: onLogout,
@@ -223,10 +257,12 @@ class AdminSidenav extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required String route,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = currentRoute == route;
 
     return Padding(
@@ -237,7 +273,11 @@ class AdminSidenav extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFF4EBFF) : Colors.transparent,
+            color: isSelected
+                ? (isDark
+                      ? AdminAppColors.primaryColor.withValues(alpha: 0.2)
+                      : const Color(0xFFF4EBFF))
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Row(
@@ -246,7 +286,9 @@ class AdminSidenav extends StatelessWidget {
                 icon,
                 color: isSelected
                     ? AdminAppColors.primaryColor
-                    : const Color(0xFF6C6C80),
+                    : (isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF6C6C80)),
                 size: 20.sp,
               ),
               SizedBox(width: 16.w),
@@ -257,7 +299,9 @@ class AdminSidenav extends StatelessWidget {
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                   color: isSelected
                       ? AdminAppColors.primaryColor
-                      : const Color(0xFF6C6C80),
+                      : (isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF6C6C80)),
                 ),
               ),
             ],

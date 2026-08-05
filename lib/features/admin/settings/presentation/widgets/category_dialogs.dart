@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:street_cart/features/admin/settings/presentation/bloc/admin_product_config_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
@@ -15,50 +16,58 @@ class CategoryDialogs {
     required AdminSettingsModel settings,
     required List<SizeGroupModel> allSizeGroups,
   }) {
+    final settingsBloc = context.read<AdminSettingsBloc>();
+    final productConfigBloc = context.read<AdminProductConfigBloc>();
     showDialog(
       context: context,
-      builder: (dialogCtx) => CategoryConfigDialog(
-        title: 'Add Business Configuration',
-        description:
-            'Configure a business category name, link product categories, and select matching size standards.',
-        allSizeGroups: allSizeGroups,
-        onConfirm: (dialogCtx, name, productCats, sizeGrps) {
-          showDialog(
-            context: context,
-            builder: (confirmCtx) => CustomAlertDialog(
-              title: 'Confirm Configuration',
-              content:
-                  'Are you sure you want to add this category configuration for "$name"?',
-              secondaryActionLabel: 'Cancel',
-              primaryActionLabel: 'Confirm',
-              icon: Icons.add,
-              iconColor: AdminAppColors.primaryColor,
-              primaryActionColor: AdminAppColors.primaryColor,
-              onPrimaryAction: () {
-                Navigator.pop(confirmCtx);
-                Navigator.pop(dialogCtx);
-                final newCategory = CategoryModel(
-                  id: const Uuid().v4(),
-                  name: name,
-                  isVisible: true,
-                  productCategories: productCats,
-                  sizeGroups: sizeGrps,
-                );
+      builder: (dialogCtx) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: settingsBloc),
+          BlocProvider.value(value: productConfigBloc),
+        ],
+        child: CategoryConfigDialog(
+          title: 'Add Business Configuration',
+          description:
+              'Configure a business category name, link product categories, and select matching size standards.',
+          allSizeGroups: allSizeGroups,
+          onConfirm: (dialogCtx, name, productCats, sizeGrps) {
+            showDialog(
+              context: context,
+              builder: (confirmCtx) => CustomAlertDialog(
+                title: 'Confirm Configuration',
+                content:
+                    'Are you sure you want to add this category configuration for "$name"?',
+                secondaryActionLabel: 'Cancel',
+                primaryActionLabel: 'Confirm',
+                icon: Icons.add,
+                iconColor: AdminAppColors.primaryColor,
+                primaryActionColor: AdminAppColors.primaryColor,
+                onPrimaryAction: () {
+                  Navigator.pop(confirmCtx);
+                  Navigator.pop(dialogCtx);
+                  final newCategory = CategoryModel(
+                    id: const Uuid().v4(),
+                    name: name,
+                    isVisible: true,
+                    productCategories: productCats,
+                    sizeGroups: sizeGrps,
+                  );
 
-                final updatedBusiness = List<CategoryModel>.from(
-                  settings.businessCategories,
-                )..add(newCategory);
+                  final updatedBusiness = List<CategoryModel>.from(
+                    settings.businessCategories,
+                  )..add(newCategory);
 
-                context.read<AdminSettingsBloc>().add(
-                  UpdateCategories(
-                    productCategories: settings.productCategories,
-                    businessCategories: updatedBusiness,
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                  context.read<AdminSettingsBloc>().add(
+                    UpdateCategories(
+                      productCategories: settings.productCategories,
+                      businessCategories: updatedBusiness,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -69,51 +78,59 @@ class CategoryDialogs {
     required CategoryModel category,
     required List<SizeGroupModel> allSizeGroups,
   }) {
+    final settingsBloc = context.read<AdminSettingsBloc>();
+    final productConfigBloc = context.read<AdminProductConfigBloc>();
     showDialog(
       context: context,
-      builder: (dialogCtx) => CategoryConfigDialog(
-        title: 'Edit Business Configuration',
-        description:
-            'Update configuration details, add/remove sub product categories, and modify selected size groups.',
-        initialCategory: category,
-        allSizeGroups: allSizeGroups,
-        onConfirm: (dialogCtx, name, productCats, sizeGrps) {
-          showDialog(
-            context: context,
-            builder: (confirmCtx) => CustomAlertDialog(
-              title: 'Confirm Edit',
-              content:
-                  'Are you sure you want to update configuration details for "$name"?',
-              secondaryActionLabel: 'Cancel',
-              primaryActionLabel: 'Confirm',
-              icon: Icons.edit_outlined,
-              iconColor: AdminAppColors.primaryColor,
-              primaryActionColor: AdminAppColors.primaryColor,
-              onPrimaryAction: () {
-                Navigator.pop(confirmCtx);
-                Navigator.pop(dialogCtx);
+      builder: (dialogCtx) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: settingsBloc),
+          BlocProvider.value(value: productConfigBloc),
+        ],
+        child: CategoryConfigDialog(
+          title: 'Edit Business Configuration',
+          description:
+              'Update configuration details, add/remove sub product categories, and modify selected size groups.',
+          initialCategory: category,
+          allSizeGroups: allSizeGroups,
+          onConfirm: (dialogCtx, name, productCats, sizeGrps) {
+            showDialog(
+              context: context,
+              builder: (confirmCtx) => CustomAlertDialog(
+                title: 'Confirm Edit',
+                content:
+                    'Are you sure you want to update configuration details for "$name"?',
+                secondaryActionLabel: 'Cancel',
+                primaryActionLabel: 'Confirm',
+                icon: Icons.edit_outlined,
+                iconColor: AdminAppColors.primaryColor,
+                primaryActionColor: AdminAppColors.primaryColor,
+                onPrimaryAction: () {
+                  Navigator.pop(confirmCtx);
+                  Navigator.pop(dialogCtx);
 
-                final updatedBusiness = settings.businessCategories.map((e) {
-                  if (e.id == category.id) {
-                    return e.copyWith(
-                      name: name,
-                      productCategories: productCats,
-                      sizeGroups: sizeGrps,
-                    );
-                  }
-                  return e;
-                }).toList();
+                  final updatedBusiness = settings.businessCategories.map((e) {
+                    if (e.id == category.id) {
+                      return e.copyWith(
+                        name: name,
+                        productCategories: productCats,
+                        sizeGroups: sizeGrps,
+                      );
+                    }
+                    return e;
+                  }).toList();
 
-                context.read<AdminSettingsBloc>().add(
-                  UpdateCategories(
-                    productCategories: settings.productCategories,
-                    businessCategories: updatedBusiness,
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                  context.read<AdminSettingsBloc>().add(
+                    UpdateCategories(
+                      productCategories: settings.productCategories,
+                      businessCategories: updatedBusiness,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

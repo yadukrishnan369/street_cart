@@ -1,45 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
 // Admin Shop Page Shimmer
 class AdminShopPageShimmer extends StatelessWidget {
   const AdminShopPageShimmer({super.key});
 
-  static const _baseColor = Color(0xFFE8E7ED);
-  static const _highlightColor = Color(0xFFF5F4F9);
+  Widget _shimmer(BuildContext context, {required Widget child}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Shimmer.fromColors(
+      baseColor: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE8E7ED),
+      highlightColor: isDark
+          ? const Color(0xFF383838)
+          : const Color(0xFFF5F4F9),
+      child: child,
+    );
+  }
 
-  Widget _shimmer({required Widget child}) => Shimmer.fromColors(
-    baseColor: _baseColor,
-    highlightColor: _highlightColor,
-    child: child,
-  );
-
-  Widget _box({
+  Widget _box(
+    BuildContext context, {
     required double width,
     required double height,
     double radius = 6,
     bool circle = false,
-  }) => Container(
-    width: width,
-    height: height,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      shape: circle ? BoxShape.circle : BoxShape.rectangle,
-      borderRadius: circle ? null : BorderRadius.circular(radius.r),
-    ),
-  );
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: isDark ? AdminAppColors.darkInputBackground : Colors.white,
+        shape: circle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: circle ? null : BorderRadius.circular(radius.r),
+      ),
+    );
+  }
 
   // Shop Metric Cards
-  Widget _metricCard() {
+  Widget _metricCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(right: 16.w),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AdminAppColors.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+          border: Border.all(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.02),
@@ -49,12 +60,13 @@ class AdminShopPageShimmer extends StatelessWidget {
           ],
         ),
         child: _shimmer(
+          context,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _box(width: 70.w, height: 11.h, radius: 3), // label
+              _box(context, width: 70.w, height: 11.h, radius: 3), // label
               SizedBox(height: 8.h),
-              _box(width: 50.w, height: 22.h, radius: 5), // value
+              _box(context, width: 50.w, height: 22.h, radius: 5), // value
             ],
           ),
         ),
@@ -63,7 +75,8 @@ class AdminShopPageShimmer extends StatelessWidget {
   }
 
   // Table row shimmer
-  Widget _tableRow({bool isHeader = false}) {
+  Widget _tableRow(BuildContext context, {bool isHeader = false}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: isHeader ? 12.h : 14.h),
       child: Row(
@@ -74,10 +87,11 @@ class AdminShopPageShimmer extends StatelessWidget {
             child: Row(
               children: [
                 if (!isHeader) ...[
-                  _box(width: 32.w, height: 32.h, radius: 6),
+                  _box(context, width: 32.w, height: 32.h, radius: 6),
                   SizedBox(width: 10.w),
                 ],
                 _box(
+                  context,
                   width: isHeader ? 60.w : 100.w,
                   height: isHeader ? 11.h : 13.h,
                   radius: 3,
@@ -88,6 +102,7 @@ class AdminShopPageShimmer extends StatelessWidget {
           Expanded(
             flex: 2,
             child: _box(
+              context,
               width: isHeader ? 50.w : 80.w,
               height: isHeader ? 11.h : 12.h,
               radius: 3,
@@ -96,6 +111,7 @@ class AdminShopPageShimmer extends StatelessWidget {
           Expanded(
             flex: 2,
             child: _box(
+              context,
               width: isHeader ? 50.w : 70.w,
               height: isHeader ? 11.h : 12.h,
               radius: 3,
@@ -107,7 +123,9 @@ class AdminShopPageShimmer extends StatelessWidget {
               width: 65.w,
               height: 22.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark
+                    ? AdminAppColors.darkInputBackground
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(12.r),
               ),
             ),
@@ -115,7 +133,7 @@ class AdminShopPageShimmer extends StatelessWidget {
           // Actions column
           Expanded(
             flex: 1,
-            child: _box(width: 24.w, height: 24.h, radius: 4),
+            child: _box(context, width: 24.w, height: 24.h, radius: 4),
           ),
         ],
       ),
@@ -124,6 +142,7 @@ class AdminShopPageShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > 900;
@@ -138,7 +157,13 @@ class AdminShopPageShimmer extends StatelessWidget {
             children: [
               // metric cards
               if (isWide)
-                Row(children: [_metricCard(), _metricCard(), _metricCard()])
+                Row(
+                  children: [
+                    _metricCard(context),
+                    _metricCard(context),
+                    _metricCard(context),
+                  ],
+                )
               else
                 Column(
                   children: List.generate(
@@ -147,19 +172,24 @@ class AdminShopPageShimmer extends StatelessWidget {
                       margin: EdgeInsets.only(bottom: 12.h),
                       padding: EdgeInsets.all(16.w),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark
+                            ? AdminAppColors.darkSurface
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(10.r),
                         border: Border.all(
-                          color: const Color(0xFFE8E7ED),
+                          color: isDark
+                              ? AdminAppColors.darkBorder
+                              : const Color(0xFFE8E7ED),
                           width: 1.5,
                         ),
                       ),
                       child: _shimmer(
+                        context,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _box(width: 80.w, height: 11.h, radius: 3),
-                            _box(width: 40.w, height: 20.h, radius: 4),
+                            _box(context, width: 80.w, height: 11.h, radius: 3),
+                            _box(context, width: 40.w, height: 20.h, radius: 4),
                           ],
                         ),
                       ),
@@ -171,10 +201,12 @@ class AdminShopPageShimmer extends StatelessWidget {
               // Shops Table Container
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? AdminAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
-                    color: const Color(0xFFE8E7ED),
+                    color: isDark
+                        ? AdminAppColors.darkBorder
+                        : const Color(0xFFE8E7ED),
                     width: 1.5,
                   ),
                   boxShadow: [
@@ -195,6 +227,7 @@ class AdminShopPageShimmer extends StatelessWidget {
                         vertical: 12.h,
                       ),
                       child: _shimmer(
+                        context,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -203,7 +236,9 @@ class AdminShopPageShimmer extends StatelessWidget {
                               width: isWide ? 320.w : 200.w,
                               height: 40.h,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: isDark
+                                    ? AdminAppColors.darkInputBackground
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
@@ -216,7 +251,9 @@ class AdminShopPageShimmer extends StatelessWidget {
                                   width: 80.w,
                                   height: 36.h,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : Colors.white,
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
                                 ),
@@ -227,7 +264,9 @@ class AdminShopPageShimmer extends StatelessWidget {
                       ),
                     ),
                     Divider(
-                      color: const Color(0xFFE8E7ED),
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
                       height: 1,
                       thickness: 1,
                     ),
@@ -236,11 +275,14 @@ class AdminShopPageShimmer extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.w),
                       child: _shimmer(
+                        context,
                         child: Column(
                           children: [
-                            _tableRow(isHeader: true),
+                            _tableRow(context, isHeader: true),
                             Divider(
-                              color: const Color(0xFFE8E7ED),
+                              color: isDark
+                                  ? AdminAppColors.darkBorder
+                                  : const Color(0xFFE8E7ED),
                               height: 1,
                               thickness: 1.5,
                             ),
@@ -248,10 +290,12 @@ class AdminShopPageShimmer extends StatelessWidget {
                               6,
                               (i) => Column(
                                 children: [
-                                  _tableRow(),
+                                  _tableRow(context),
                                   if (i < 5)
                                     Divider(
-                                      color: const Color(0xFFE8E7ED),
+                                      color: isDark
+                                          ? AdminAppColors.darkBorder
+                                          : const Color(0xFFE8E7ED),
                                       height: 1,
                                       thickness: 1,
                                     ),
@@ -263,7 +307,9 @@ class AdminShopPageShimmer extends StatelessWidget {
                       ),
                     ),
                     Divider(
-                      color: const Color(0xFFE8E7ED),
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
                       height: 1,
                       thickness: 1,
                     ),
@@ -275,10 +321,16 @@ class AdminShopPageShimmer extends StatelessWidget {
                         vertical: 14.h,
                       ),
                       child: _shimmer(
+                        context,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _box(width: 100.w, height: 12.h, radius: 4),
+                            _box(
+                              context,
+                              width: 100.w,
+                              height: 12.h,
+                              radius: 4,
+                            ),
                             Row(
                               children: List.generate(
                                 4,
@@ -287,7 +339,9 @@ class AdminShopPageShimmer extends StatelessWidget {
                                   width: 32.w,
                                   height: 32.h,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : Colors.white,
                                     borderRadius: BorderRadius.circular(6.r),
                                   ),
                                 ),

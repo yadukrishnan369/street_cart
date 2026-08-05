@@ -24,6 +24,7 @@ class ReviewDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final formattedDate = AdminReviewHelper.getFormattedTimeAgo(
       review.createdAt,
     );
@@ -31,9 +32,12 @@ class ReviewDetailsCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,8 +65,12 @@ class ReviewDetailsCard extends StatelessWidget {
                         child: Container(
                           width: 48.w,
                           height: 48.h,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF4EBFF),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AdminAppColors.primaryColor.withValues(
+                                    alpha: 0.15,
+                                  )
+                                : const Color(0xFFF4EBFF),
                             shape: BoxShape.circle,
                           ),
                           alignment: Alignment.center,
@@ -93,7 +101,9 @@ class ReviewDetailsCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: const Color(0xFF1E1E2F),
+                                    color: isDark
+                                        ? AdminAppColors.darkTextPrimary
+                                        : AdminAppColors.textPrimary,
                                   ),
                                 ),
                                 // Hidden Badge
@@ -105,10 +115,16 @@ class ReviewDetailsCard extends StatelessWidget {
                                       vertical: 2.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFEF2F2),
+                                      color: isDark
+                                          ? AdminAppColors.errorColor
+                                                .withValues(alpha: 0.15)
+                                          : const Color(0xFFFEF2F2),
                                       borderRadius: BorderRadius.circular(4.r),
                                       border: Border.all(
-                                        color: const Color(0xFFFCA5A5),
+                                        color: isDark
+                                            ? AdminAppColors.errorColor
+                                                  .withValues(alpha: 0.3)
+                                            : const Color(0xFFFCA5A5),
                                       ),
                                     ),
                                     child: Text(
@@ -129,7 +145,9 @@ class ReviewDetailsCard extends StatelessWidget {
                               'ID: #${review.id.length > 6 ? review.id.substring(0, 6).toUpperCase() : review.id}',
                               style: TextStyle(
                                 fontSize: 12.sp,
-                                color: const Color(0xFF8A8A9E),
+                                color: isDark
+                                    ? AdminAppColors.darkTextSecondary
+                                    : const Color(0xFF8A8A9E),
                               ),
                             ),
                           ],
@@ -149,7 +167,9 @@ class ReviewDetailsCard extends StatelessWidget {
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.5,
-                      color: const Color(0xFF8A8A9E),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF8A8A9E),
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -158,7 +178,9 @@ class ReviewDetailsCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -166,7 +188,10 @@ class ReviewDetailsCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 24.h),
-          const Divider(color: Color(0xFFF0EFF5), height: 1),
+          Divider(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            height: 1,
+          ),
           SizedBox(height: 20.h),
 
           // Rating stars
@@ -179,7 +204,7 @@ class ReviewDetailsCard extends StatelessWidget {
                         ? Icons.star_rounded
                         : Icons.star_border_rounded,
                     size: 20.sp,
-                    color: Colors.amber,
+                    color: AdminAppColors.warningColor,
                   );
                 }),
               ),
@@ -189,7 +214,9 @@ class ReviewDetailsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
@@ -204,7 +231,9 @@ class ReviewDetailsCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 24.h),
@@ -219,7 +248,9 @@ class ReviewDetailsCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF8A8A9E),
+                color: isDark
+                    ? AdminAppColors.darkTextSecondary
+                    : const Color(0xFF8A8A9E),
                 letterSpacing: 0.5,
               ),
             ),
@@ -292,16 +323,26 @@ class ReviewDetailsCard extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
+                      color: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: const Color(0xFFE8E7ED)),
+                      border: Border.all(
+                        color: isDark
+                            ? AdminAppColors.darkBorder
+                            : const Color(0xFFE8E7ED),
+                      ),
                     ),
                     child: Row(
                       children: [
                         Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4EBFF),
+                            color: isDark
+                                ? AdminAppColors.primaryColor.withValues(
+                                    alpha: 0.15,
+                                  )
+                                : const Color(0xFFF4EBFF),
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                           child: Icon(
@@ -321,7 +362,9 @@ class ReviewDetailsCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 10.sp,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -331,7 +374,9 @@ class ReviewDetailsCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -357,16 +402,26 @@ class ReviewDetailsCard extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
+                      color: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: const Color(0xFFE8E7ED)),
+                      border: Border.all(
+                        color: isDark
+                            ? AdminAppColors.darkBorder
+                            : const Color(0xFFE8E7ED),
+                      ),
                     ),
                     child: Row(
                       children: [
                         Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4EBFF),
+                            color: isDark
+                                ? AdminAppColors.primaryColor.withValues(
+                                    alpha: 0.15,
+                                  )
+                                : const Color(0xFFF4EBFF),
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                           child: Icon(
@@ -386,7 +441,9 @@ class ReviewDetailsCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 10.sp,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF8A8A9E),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextSecondary
+                                      : const Color(0xFF8A8A9E),
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -396,7 +453,9 @@ class ReviewDetailsCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1E1E2F),
+                                  color: isDark
+                                      ? AdminAppColors.darkTextPrimary
+                                      : AdminAppColors.textPrimary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

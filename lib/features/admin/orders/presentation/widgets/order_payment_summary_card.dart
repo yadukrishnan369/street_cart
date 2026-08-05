@@ -13,6 +13,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final subtotal = AdminOrdersHelper.calculateSubtotal(order);
     final commission = AdminOrdersHelper.calculateCommission(order);
     final deduction = AdminOrdersHelper.calculateAfterDeduction(
@@ -36,9 +37,12 @@ class OrderPaymentSummaryCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFC),
+        color: isDark ? AdminAppColors.darkSurface : const Color(0xFFF9FAFC),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +55,9 @@ class OrderPaymentSummaryCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
           ),
@@ -60,19 +66,25 @@ class OrderPaymentSummaryCard extends StatelessWidget {
             child: Column(
               children: [
                 // Sub Total Section
-                _buildSummaryRow('Subtotal', subtotalStr),
+                _buildSummaryRow(context, 'Subtotal', subtotalStr),
                 SizedBox(height: 12.h),
-                // Commision Percentage Section
+                // Commission Percentage Section
                 _buildSummaryRow(
+                  context,
                   'Commission$commissionPercentStr',
                   commStr,
-                  valueColor: const Color(0xFF137333),
+                  valueColor: AdminAppColors.successColor,
                 ),
                 SizedBox(height: 12.h),
                 // After Deduction Amount
-                _buildSummaryRow('After Deduction', deductionStr),
+                _buildSummaryRow(context, 'After Deduction', deductionStr),
                 SizedBox(height: 16.h),
-                const Divider(color: Color(0xFFE8E7ED), thickness: 1.2),
+                Divider(
+                  color: isDark
+                      ? AdminAppColors.darkBorder
+                      : const Color(0xFFE8E7ED),
+                  thickness: 1.2,
+                ),
                 SizedBox(height: 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,7 +95,9 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -105,9 +119,11 @@ class OrderPaymentSummaryCard extends StatelessWidget {
               order.paymentMethod.toLowerCase() != 'cash on delivery')
             Container(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-              decoration: const BoxDecoration(
-                color: Color(0xFFF0EEFC),
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                    : const Color(0xFFF0EEFC),
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15),
                 ),
@@ -119,7 +135,9 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.payment_outlined,
-                        color: const Color(0xFF6C6C80),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF6C6C80),
                         size: 18.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -129,7 +147,9 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF6C6C80),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF6C6C80),
                         ),
                       ),
                     ],
@@ -140,14 +160,16 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(4.r),
                       border: Border.all(
                         color:
                             (isPaid
-                                    ? const Color(0xFF137333)
-                                    : const Color(0xFFE8C100))
-                                .withOpacity(0.3),
+                                    ? AdminAppColors.successColor
+                                    : AdminAppColors.warningColor)
+                                .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -156,8 +178,8 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w900,
                         color: isPaid
-                            ? const Color(0xFF137333)
-                            : const Color(0xFFB8860B),
+                            ? AdminAppColors.successColor
+                            : AdminAppColors.warningColor,
                       ),
                     ),
                   ),
@@ -168,9 +190,11 @@ class OrderPaymentSummaryCard extends StatelessWidget {
               order.paymentMethod.toLowerCase() == 'cash on delivery')
             Container(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFF8E1),
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFFFFF8E1).withValues(alpha: 0.15)
+                    : const Color(0xFFFFF8E1),
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15),
                 ),
@@ -182,7 +206,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.money_outlined,
-                        color: const Color(0xFF8B6914),
+                        color: AdminAppColors.warningColor,
                         size: 18.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -191,7 +215,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF8B6914),
+                          color: AdminAppColors.warningColor,
                         ),
                       ),
                     ],
@@ -202,14 +226,16 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark
+                          ? AdminAppColors.darkInputBackground
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(4.r),
                       border: Border.all(
                         color:
                             (isPaid
-                                    ? const Color(0xFF137333)
-                                    : const Color(0xFFE8A000))
-                                .withOpacity(0.4),
+                                    ? AdminAppColors.successColor
+                                    : AdminAppColors.warningColor)
+                                .withValues(alpha: 0.4),
                       ),
                     ),
                     child: Text(
@@ -218,8 +244,8 @@ class OrderPaymentSummaryCard extends StatelessWidget {
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w900,
                         color: isPaid
-                            ? const Color(0xFF137333)
-                            : const Color(0xFFB8860B),
+                            ? AdminAppColors.successColor
+                            : AdminAppColors.warningColor,
                       ),
                     ),
                   ),
@@ -231,7 +257,13 @@ class OrderPaymentSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {Color? valueColor}) {
+  Widget _buildSummaryRow(
+    BuildContext context,
+    String label,
+    String value, {
+    Color? valueColor,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -240,7 +272,9 @@ class OrderPaymentSummaryCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF8A8A9E),
+            color: isDark
+                ? AdminAppColors.darkTextSecondary
+                : const Color(0xFF8A8A9E),
           ),
         ),
         Text(
@@ -248,7 +282,11 @@ class OrderPaymentSummaryCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: valueColor ?? const Color(0xFF1E1E2F),
+            color:
+                valueColor ??
+                (isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary),
           ),
         ),
       ],

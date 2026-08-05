@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
+import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/features/admin/customers/presentation/utils/admin_customers_helper.dart';
 
@@ -14,6 +16,7 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final initials = AdminCustomersHelper.getCustomerInitials(
       customer.fullName,
       defaultInitials: 'AJ',
@@ -28,12 +31,15 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(28.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E1E2F).withOpacity(0.01),
+            color: const Color(0xFF1E1E2F).withValues(alpha: 0.01),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -64,20 +70,36 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                 // Customer Profile Image
                 child: CircleAvatar(
                   radius: 40.r,
-                  backgroundColor: const Color(0xFFF3E8FF),
-                  backgroundImage: customer.profileImageUrl.isNotEmpty
-                      ? NetworkImage(customer.profileImageUrl)
-                      : null,
-                  child: customer.profileImageUrl.isEmpty
-                      ? Text(
+                  backgroundColor: isDark
+                      ? AdminAppColors.primaryColor.withValues(alpha: 0.2)
+                      : const Color(0xFFF3E8FF),
+                  child: customer.profileImageUrl.isNotEmpty
+                      ? ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: customer.profileImageUrl,
+                            width: 77.r,
+                            height: 77.r,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) =>
+                                CustomerImagePlaceholder(
+                                  size: 70.w,
+                                  iconColor: AdminAppColors.primaryColor,
+                                ),
+                            errorWidget: (context, url, error) =>
+                                CustomerImagePlaceholder(
+                                  size: 70.w,
+                                  iconColor: AdminAppColors.primaryColor,
+                                ),
+                          ),
+                        )
+                      : Text(
                           initials,
                           style: TextStyle(
                             fontSize: 24.sp,
                             fontWeight: FontWeight.w800,
                             color: AdminAppColors.primaryColor,
                           ),
-                        )
-                      : null,
+                        ),
                 ),
               ),
               SizedBox(width: 24.w),
@@ -98,7 +120,9 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.w800,
-                            color: const Color(0xFF1E1E2F),
+                            color: isDark
+                                ? AdminAppColors.darkTextPrimary
+                                : AdminAppColors.textPrimary,
                           ),
                         ),
                         SizedBox(width: 12.w),
@@ -134,14 +158,18 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                         Icon(
                           Icons.calendar_today_outlined,
                           size: 14.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                         SizedBox(width: 6.w),
                         Text(
                           'Joined: $joinedDate',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                             fontWeight: FontWeight.w500,
                           ),
                         ),

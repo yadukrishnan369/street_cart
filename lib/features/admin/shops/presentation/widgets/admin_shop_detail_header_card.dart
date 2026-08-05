@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/admin/shops/presentation/utils/shop_products_card_helper.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
+import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 
 // Admin Shop Detail Header Card
 class AdminShopDetailHeaderCard extends StatelessWidget {
@@ -18,6 +20,7 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final merchantId = ShopProductsCardHelper.generateMerchantId(shop);
     final joinedDate = ShopProductsCardHelper.formatJoinedDate(shop);
 
@@ -46,23 +49,34 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
             width: 80.w,
             height: 80.h,
             decoration: BoxDecoration(
-              color: const Color(0xFFF3F2F7),
+              color: isDark
+                  ? AdminAppColors.darkInputBackground
+                  : const Color(0xFFF3F2F7),
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: const Color(0xFFE8E7ED), width: 1),
-              image: shop.profileImageUrl.isNotEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(shop.profileImageUrl),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
+              border: Border.all(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1,
+              ),
             ),
-            child: shop.profileImageUrl.isEmpty
-                ? Icon(
-                    Icons.storefront_outlined,
-                    size: 32.sp,
-                    color: const Color(0xFF8A8A9E),
+            clipBehavior: Clip.antiAlias,
+            child: shop.profileImageUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: shop.profileImageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => ShopImagePlaceholder(
+                      iconSize: 35,
+                      width: 35,
+                      height: 35,
+                    ),
+                    errorWidget: (context, url, error) => ShopImagePlaceholder(
+                      iconSize: 35,
+                      width: 35,
+                      height: 35,
+                    ),
                   )
-                : null,
+                : ShopImagePlaceholder(iconSize: 70, width: 70, height: 70),
           ),
         ),
         SizedBox(width: 24.w),
@@ -80,7 +94,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w800,
-                        color: AdminAppColors.textPrimary,
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -130,14 +146,18 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                       Icon(
                         Icons.local_offer_outlined,
                         size: 14.sp,
-                        color: const Color(0xFF6C6C80),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF6C6C80),
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         shop.category,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: const Color(0xFF6C6C80),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF6C6C80),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -147,7 +167,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                   Icon(
                     Icons.location_on_outlined,
                     size: 14.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                   ),
                   SizedBox(width: 4.w),
                   // Shop Location
@@ -157,7 +179,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                         : 'Unknown Location',
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: const Color(0xFF6C6C80),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF6C6C80),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -169,7 +193,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                 'Merchant ID: $merchantId   •   Joined: $joinedDate',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -239,9 +265,12 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(28.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF1E1E2F).withValues(alpha: 0.01),

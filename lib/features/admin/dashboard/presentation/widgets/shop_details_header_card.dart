@@ -19,6 +19,7 @@ class ShopDetailsHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final regId = AdminDashboardHelper.getRegistrationId(shop);
     final submittedTime = AdminDashboardHelper.getSubmittedTime(shop);
 
@@ -28,9 +29,12 @@ class ShopDetailsHeaderCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(28.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -45,7 +49,9 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF3E8FF),
+                      color: isDark
+                          ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                          : const Color(0xFFF3E8FF),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
@@ -66,17 +72,29 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: isSuspended
-                              ? const Color(0xFFFDE8E8)
+                              ? (isDark
+                                    ? const Color(0xFF4A1818)
+                                    : const Color(0xFFFDE8E8))
                               : !isApproved
-                              ? const Color(0xFFFFF3CD)
-                              : const Color(0xFFDEF7EC),
+                              ? (isDark
+                                    ? const Color(0xFF423715)
+                                    : const Color(0xFFFFF3CD))
+                              : (isDark
+                                    ? const Color(0xFF133829)
+                                    : const Color(0xFFDEF7EC)),
                           borderRadius: BorderRadius.circular(4.r),
                           border: Border.all(
                             color: isSuspended
-                                ? const Color(0xFFFBD5D5)
+                                ? (isDark
+                                      ? const Color(0xFF6B2121)
+                                      : const Color(0xFFFBD5D5))
                                 : !isApproved
-                                ? const Color(0xFFFFEBAA)
-                                : const Color(0xFFBCF0DA),
+                                ? (isDark
+                                      ? const Color(0xFF63521D)
+                                      : const Color(0xFFFFEBAA))
+                                : (isDark
+                                      ? const Color(0xFF1C523B)
+                                      : const Color(0xFFBCF0DA)),
                             width: 1,
                           ),
                         ),
@@ -94,10 +112,16 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                               fontSize: 9.sp,
                               fontWeight: FontWeight.w800,
                               color: isSuspended
-                                  ? const Color(0xFF9B1C1C)
+                                  ? (isDark
+                                        ? const Color(0xFFF87171)
+                                        : const Color(0xFF9B1C1C))
                                   : !isApproved
-                                  ? const Color(0xFF856404)
-                                  : const Color(0xFF03543F),
+                                  ? (isDark
+                                        ? const Color(0xFFFFD54F)
+                                        : const Color(0xFF856404))
+                                  : (isDark
+                                        ? const Color(0xFF34D399)
+                                        : const Color(0xFF03543F)),
                             ),
                           ),
                         ),
@@ -121,7 +145,9 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 22.sp,
                               fontWeight: FontWeight.w800,
-                              color: const Color(0xFF1E1E2F),
+                              color: isDark
+                                  ? AdminAppColors.darkTextPrimary
+                                  : AdminAppColors.textPrimary,
                             ),
                           ),
                         ),
@@ -132,7 +158,11 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF3E8FF),
+                            color: isDark
+                                ? AdminAppColors.primaryColor.withValues(
+                                    alpha: 0.2,
+                                  )
+                                : const Color(0xFFF3E8FF),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
                           // Registration ID
@@ -153,7 +183,9 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                         Icon(
                           Icons.calendar_today_outlined,
                           size: 14.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                         SizedBox(width: 8.w),
                         Text(
@@ -163,7 +195,9 @@ class ShopDetailsHeaderCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                           ),
                         ),
                       ],

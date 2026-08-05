@@ -18,13 +18,17 @@ class AdminRegistrationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocProvider(
       create: (_) => sl<AdminRegistrationsBloc>()
         ..add(
           const LoadPendingRegistrationsRequested(page: 1, limit: _perPage),
         ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child: BlocBuilder<AdminRegistrationsBloc, AdminRegistrationsState>(
             builder: (context, state) {

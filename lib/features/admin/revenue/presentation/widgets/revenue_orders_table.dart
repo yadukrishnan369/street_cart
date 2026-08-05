@@ -24,6 +24,8 @@ class RevenueOrdersTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Empty State
     if (orders.isEmpty) {
       return Padding(
@@ -66,29 +68,36 @@ class RevenueOrdersTable extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF4F5F7),
             border: Border(
-              bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+              bottom: BorderSide(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
           ),
           // Table Titles
           children: [
-            _headerCell('ORDER ID'),
-            _headerCell('DATE'),
-            _headerCell('CUSTOMER'),
-            _headerCell('SHOP'),
-            _headerCell('AMOUNT'),
-            _headerCell('COMMISSION'),
-            _headerCell('ACTION'),
+            _headerCell('ORDER ID', isDark),
+            _headerCell('DATE', isDark),
+            _headerCell('CUSTOMER', isDark),
+            _headerCell('SHOP', isDark),
+            _headerCell('AMOUNT', isDark),
+            _headerCell('COMMISSION', isDark),
+            _headerCell('ACTION', isDark),
           ],
         ),
-        ...orders.map((order) => _buildRow(context, order)),
+        ...orders.map((order) => _buildRow(context, order, isDark)),
       ],
     );
   }
 
-  Widget _headerCell(String text) {
+  Widget _headerCell(String text, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       child: Text(
@@ -97,22 +106,27 @@ class RevenueOrdersTable extends StatelessWidget {
           fontSize: 11.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );
   }
 
-  TableRow _buildRow(BuildContext context, OrderModel order) {
+  TableRow _buildRow(BuildContext context, OrderModel order, bool isDark) {
     final commission = AdminRevenueHelper.computeOrderCommission(order);
     final shopName = AdminRevenueHelper.getShopName(order, shops);
     final customerName = AdminRevenueHelper.getCustomerName(order, customers);
 
     return TableRow(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.0),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.0,
+          ),
         ),
       ),
       children: [
@@ -131,7 +145,12 @@ class RevenueOrdersTable extends StatelessWidget {
         _cell(
           Text(
             AdminRevenueHelper.formatDate(order.createdAt),
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
 
@@ -142,7 +161,9 @@ class RevenueOrdersTable extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
-              color: AdminAppColors.textPrimary,
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -154,7 +175,9 @@ class RevenueOrdersTable extends StatelessWidget {
             shopName,
             style: TextStyle(
               fontSize: 13.sp,
-              color: AdminAppColors.textPrimary,
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -167,7 +190,9 @@ class RevenueOrdersTable extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
-              color: AdminAppColors.textPrimary,
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
         ),

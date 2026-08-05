@@ -9,9 +9,12 @@ class AdminProductConfigShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Shimmer.fromColors(
-      baseColor: const Color(0xFFE8E8E8),
-      highlightColor: const Color(0xFFF5F5F5),
+      baseColor: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE8E8E8),
+      highlightColor: isDark
+          ? const Color(0xFF3D3D3D)
+          : const Color(0xFFF5F5F5),
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
@@ -24,7 +27,7 @@ class AdminProductConfigShimmer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Back button shimmer
-              Row(children: [_box(80.w, 16.h)]),
+              Row(children: [_box(context, 80.w, 16.h)]),
               SizedBox(height: 24.h),
 
               // Tab selector shimmer
@@ -32,7 +35,7 @@ class AdminProductConfigShimmer extends StatelessWidget {
                 height: 44.h,
                 width: 300.w,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? AdminAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
               ),
@@ -45,12 +48,12 @@ class AdminProductConfigShimmer extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _box(180.w, 22.h),
+                      _box(context, 180.w, 22.h),
                       SizedBox(height: 6.h),
-                      _box(260.w, 14.h),
+                      _box(context, 260.w, 14.h),
                     ],
                   ),
-                  _box(140.w, 40.h, radius: 10.r),
+                  _box(context, 140.w, 40.h, radius: 10.r),
                 ],
               ),
               SizedBox(height: 24.h),
@@ -59,7 +62,7 @@ class AdminProductConfigShimmer extends StatelessWidget {
               Wrap(
                 spacing: 12.w,
                 runSpacing: 12.h,
-                children: List.generate(12, (i) => _colorChipShimmer()),
+                children: List.generate(12, (i) => _colorChipShimmer(context)),
               ),
             ],
           ),
@@ -68,24 +71,30 @@ class AdminProductConfigShimmer extends StatelessWidget {
     );
   }
 
-  Widget _colorChipShimmer() {
+  Widget _colorChipShimmer(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 120.w,
       height: 48.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: AdminAppColors.borderLight),
+        border: Border.all(
+          color: isDark
+              ? AdminAppColors.darkBorder
+              : AdminAppColors.borderLight,
+        ),
       ),
     );
   }
 
-  Widget _box(double w, double h, {double? radius}) {
+  Widget _box(BuildContext context, double w, double h, {double? radius}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: w,
       height: h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(radius ?? 8.r),
       ),
     );

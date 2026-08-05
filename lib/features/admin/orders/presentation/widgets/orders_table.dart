@@ -26,6 +26,7 @@ class OrdersTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(1.2), // ORDER ID
@@ -39,21 +40,28 @@ class OrdersTable extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
-          decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AdminAppColors.darkInputBackground
+                : const Color(0xFFF4F5F7),
             border: Border(
-              bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+              bottom: BorderSide(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
           ),
           // Table Titles
           children: [
-            _buildTableHeaderCell('ORDER ID'),
-            _buildTableHeaderCell('PRODUCT'),
-            _buildTableHeaderCell('CUSTOMER'),
-            _buildTableHeaderCell('AMOUNT'),
-            _buildTableHeaderCell('STATUS'),
-            _buildTableHeaderCell('DATE'),
-            _buildTableHeaderCell('ACTIONS'),
+            _buildTableHeaderCell(context, 'ORDER ID'),
+            _buildTableHeaderCell(context, 'PRODUCT'),
+            _buildTableHeaderCell(context, 'CUSTOMER'),
+            _buildTableHeaderCell(context, 'AMOUNT'),
+            _buildTableHeaderCell(context, 'STATUS'),
+            _buildTableHeaderCell(context, 'DATE'),
+            _buildTableHeaderCell(context, 'ACTIONS'),
           ],
         ),
         ...orders.map((order) {
@@ -72,9 +80,14 @@ class OrdersTable extends StatelessWidget {
           final moreCount = order.items.length - 1;
 
           return TableRow(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.2),
+                bottom: BorderSide(
+                  color: isDark
+                      ? AdminAppColors.darkBorder
+                      : const Color(0xFFF0EFF5),
+                  width: 1.2,
+                ),
               ),
             ),
             children: [
@@ -88,7 +101,9 @@ class OrdersTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
               ),
@@ -105,7 +120,9 @@ class OrdersTable extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1E1E2F),
+                              color: isDark
+                                  ? AdminAppColors.darkTextPrimary
+                                  : AdminAppColors.textPrimary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -131,7 +148,9 @@ class OrdersTable extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
               ),
@@ -143,7 +162,9 @@ class OrdersTable extends StatelessWidget {
                   customer,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: const Color(0xFF6C6C80),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF6C6C80),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -160,7 +181,9 @@ class OrdersTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
               ),
@@ -206,7 +229,9 @@ class OrdersTable extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF6C6C80),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF6C6C80),
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -216,7 +241,11 @@ class OrdersTable extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary.withValues(
+                                alpha: 0.7,
+                              )
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ],
@@ -250,7 +279,8 @@ class OrdersTable extends StatelessWidget {
     );
   }
 
-  Widget _buildTableHeaderCell(String text) {
+  Widget _buildTableHeaderCell(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
       child: Text(
@@ -261,7 +291,9 @@ class OrdersTable extends StatelessWidget {
           fontSize: 11.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
-          color: const Color(0xFF8A8A9E),
+          color: isDark
+              ? AdminAppColors.darkTextSecondary
+              : const Color(0xFF8A8A9E),
         ),
       ),
     );

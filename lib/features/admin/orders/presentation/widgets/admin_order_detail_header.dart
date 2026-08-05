@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/admin/orders/presentation/utils/admin_orders_helper.dart';
 
@@ -19,6 +20,7 @@ class AdminOrderDetailHeader extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final returnStatus = (order.returnStatus ?? '').toLowerCase();
     final status = returnStatus.isNotEmpty ? order.returnStatus! : order.status;
 
@@ -33,7 +35,9 @@ class AdminOrderDetailHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1E1E2F),
+                color: isDark
+                    ? AdminAppColors.darkTextPrimary
+                    : AdminAppColors.textPrimary,
               ),
             ),
             SizedBox(width: 12.w),
@@ -58,7 +62,12 @@ class AdminOrderDetailHeader extends StatelessWidget {
         // Order Placed Date & Time
         Text(
           'Placed on $dateStr at $timeStr',
-          style: TextStyle(fontSize: 13.sp, color: const Color(0xFF8A8A9E)),
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: isDark
+                ? AdminAppColors.darkTextSecondary
+                : const Color(0xFF8A8A9E),
+          ),
         ),
       ],
     );

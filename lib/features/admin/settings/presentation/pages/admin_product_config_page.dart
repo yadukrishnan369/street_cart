@@ -23,7 +23,9 @@ class AdminProductConfigPage extends StatelessWidget {
       create: (context) =>
           sl<AdminProductConfigBloc>()..add(LoadProductConfig()),
       child: Scaffold(
-        backgroundColor: AdminAppColors.backgroundLight,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: BlocConsumer<AdminProductConfigBloc, AdminProductConfigState>(
           listener: (context, state) {
             if (state is ProductConfigActionSuccess) {
@@ -43,6 +45,7 @@ class AdminProductConfigPage extends StatelessWidget {
             }
             // Error State
             if (state is ProductConfigLoadFailure) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +61,9 @@ class AdminProductConfigPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 8.h),
@@ -66,7 +71,9 @@ class AdminProductConfigPage extends StatelessWidget {
                       state.message,
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -137,7 +144,12 @@ class AdminProductConfigPage extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(10.w),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4EBFF),
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? AdminAppColors.primaryColor.withValues(
+                                    alpha: 0.15,
+                                  )
+                                : const Color(0xFFF4EBFF),
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Icon(
@@ -156,7 +168,11 @@ class AdminProductConfigPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 22.sp,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1E1E2F),
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
                               ),
                             ),
                             // Subtitle
@@ -164,7 +180,11 @@ class AdminProductConfigPage extends StatelessWidget {
                               'Manage global colors and size groups for products.',
                               style: TextStyle(
                                 fontSize: 13.sp,
-                                color: const Color(0xFF8A8A9E),
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AdminAppColors.darkTextSecondary
+                                    : const Color(0xFF8A8A9E),
                               ),
                             ),
                           ],

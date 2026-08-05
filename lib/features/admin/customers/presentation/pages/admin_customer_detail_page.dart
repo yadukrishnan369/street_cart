@@ -22,12 +22,16 @@ class AdminCustomerDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocProvider(
       create: (context) =>
           sl<AdminCustomerDetailBloc>()
             ..add(LoadCustomerDetailRequested(customerId)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child:
               BlocConsumer<AdminCustomerDetailBloc, AdminCustomerDetailState>(

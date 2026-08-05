@@ -13,6 +13,8 @@ class AdminCustomerStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Total spent amount
     final totalSpent = AdminCustomersHelper.getTotalSpent(orders);
 
@@ -30,9 +32,12 @@ class AdminCustomerStatsCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,19 +56,32 @@ class AdminCustomerStatsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w800,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
-          Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
+          Divider(
+            height: 32.h,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            thickness: 1.2,
+          ),
 
           // Total Spent Amount
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: const Color(0xFFF9FAFC),
+              color: isDark
+                  ? AdminAppColors.darkInputBackground
+                  : const Color(0xFFF9FAFC),
+              border: Border.all(
+                color: isDark
+                    ? AdminAppColors.borderDark
+                    : AdminAppColors.borderLight,
+              ),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Column(
@@ -73,7 +91,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                   'Total Spent',
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -99,8 +119,15 @@ class AdminCustomerStatsCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFC),
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isDark
+                          ? AdminAppColors.borderDark
+                          : AdminAppColors.borderLight,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +136,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         'Returns',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -120,7 +149,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -134,8 +165,15 @@ class AdminCustomerStatsCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFC),
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isDark
+                          ? AdminAppColors.borderDark
+                          : AdminAppColors.borderLight,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +182,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         'Cancelled',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -155,7 +195,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -169,8 +211,15 @@ class AdminCustomerStatsCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFC),
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isDark
+                          ? AdminAppColors.borderDark
+                          : AdminAppColors.borderLight,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +228,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         'Completed',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -190,7 +241,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -204,8 +257,15 @@ class AdminCustomerStatsCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFC),
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isDark
+                          ? AdminAppColors.borderDark
+                          : AdminAppColors.borderLight,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +274,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         'Total Orders',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -225,7 +287,9 @@ class AdminCustomerStatsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                     ],

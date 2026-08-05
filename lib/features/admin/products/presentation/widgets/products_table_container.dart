@@ -39,11 +39,15 @@ class ProductsTableContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF1E1E2F).withValues(alpha: 0.02),
@@ -81,16 +85,23 @@ class ProductsTableContainer extends StatelessWidget {
                       width: 150.w,
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF9FAFC),
+                        color: isDark
+                            ? AdminAppColors.darkInputBackground
+                            : const Color(0xFFF9FAFC),
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
-                          color: const Color(0xFFE8E7ED),
+                          color: isDark
+                              ? AdminAppColors.darkBorder
+                              : const Color(0xFFE8E7ED),
                           width: 1.2,
                         ),
                       ),
                       child: DropdownButton<String>(
                         isExpanded: true,
                         menuMaxHeight: 300.h,
+                        dropdownColor: isDark
+                            ? AdminAppColors.darkSurface
+                            : null,
                         value: statusFilter == 'Category'
                             ? (categoryFilter ??
                                   (state.availableCategories.isNotEmpty
@@ -101,11 +112,15 @@ class ProductsTableContainer extends StatelessWidget {
                         icon: Icon(
                           Icons.filter_list,
                           size: 16.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                         selectedItemBuilder: (context) {

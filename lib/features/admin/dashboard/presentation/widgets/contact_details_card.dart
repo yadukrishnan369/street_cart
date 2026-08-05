@@ -14,13 +14,18 @@ class ContactDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,24 +44,33 @@ class ContactDetailsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
-          Divider(height: 32.h, color: const Color(0xFFF0EFF5)),
+          Divider(
+            height: 32.h,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+          ),
           // Owner Name
           Row(
             children: [
               Container(
                 padding: EdgeInsets.all(10.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF4F5F7),
+                  color: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : const Color(0xFFF4F5F7),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.person_outline,
-                  color: const Color(0xFF6C6C80),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF6C6C80),
                   size: 20.sp,
                 ),
               ),
@@ -70,7 +84,9 @@ class ContactDetailsCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -79,7 +95,9 @@ class ContactDetailsCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -104,13 +122,17 @@ class ContactDetailsCard extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.all(10.w),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF4F5F7),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF4F5F7),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.mail_outline,
-                    color: const Color(0xFF6C6C80),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF6C6C80),
                     size: 20.sp,
                   ),
                 ),
@@ -124,7 +146,9 @@ class ContactDetailsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
                       SizedBox(height: 4.h),

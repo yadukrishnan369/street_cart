@@ -18,10 +18,12 @@ class RevenueStatsCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Expanded(
           child: _buildCard(
+            isDark: isDark,
             icon: Icons.account_balance_wallet_outlined,
             label: 'Total Revenue',
             value: '₹${PriceUtils.formatPrice(totalRevenue)}',
@@ -31,6 +33,7 @@ class RevenueStatsCards extends StatelessWidget {
         SizedBox(width: 16.w),
         Expanded(
           child: _buildCard(
+            isDark: isDark,
             icon: Icons.today_outlined,
             label: 'Today Revenue',
             value: '₹${PriceUtils.formatPrice(todayRevenue)}',
@@ -40,6 +43,7 @@ class RevenueStatsCards extends StatelessWidget {
         SizedBox(width: 16.w),
         Expanded(
           child: _buildCard(
+            isDark: isDark,
             icon: Icons.calendar_month_outlined,
             label: 'Last Month Revenue',
             value: '₹${PriceUtils.formatPrice(lastMonthRevenue)}',
@@ -51,6 +55,7 @@ class RevenueStatsCards extends StatelessWidget {
   }
 
   Widget _buildCard({
+    required bool isDark,
     required IconData icon,
     required String label,
     required String value,
@@ -59,9 +64,12 @@ class RevenueStatsCards extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFF0EFF5), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -91,7 +99,9 @@ class RevenueStatsCards extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w700,
-                    color: AdminAppColors.textSecondary,
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : AdminAppColors.textSecondary,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -102,7 +112,9 @@ class RevenueStatsCards extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w800,
-                    color: AdminAppColors.textPrimary,
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                 ),
               ],

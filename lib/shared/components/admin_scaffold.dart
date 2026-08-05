@@ -49,6 +49,8 @@ class _AdminScaffoldState extends State<AdminScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<AdminProfileBloc, AdminProfileState>(
       builder: (context, state) {
         String adminName = '...';
@@ -60,7 +62,9 @@ class _AdminScaffoldState extends State<AdminScaffold> {
 
         return Scaffold(
           key: _scaffoldKey,
-          backgroundColor: AdminAppColors.backgroundLight,
+          backgroundColor: isDark
+              ? AdminAppColors.darkBackground
+              : AdminAppColors.backgroundLight,
           drawer: Drawer(
             child: AdminSidenav(
               currentRoute: widget.currentRoute,
@@ -195,13 +199,18 @@ class _AdminScaffoldState extends State<AdminScaffold> {
   }
 
   Widget _buildTopbar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: 70.h,
       padding: EdgeInsets.symmetric(horizontal: 24.w),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.5),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.5,
+          ),
         ),
       ),
       child: Row(
@@ -215,7 +224,9 @@ class _AdminScaffoldState extends State<AdminScaffold> {
                   icon: Icon(
                     Icons.menu,
                     size: 24.sp,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 );
@@ -238,7 +249,9 @@ class _AdminScaffoldState extends State<AdminScaffold> {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
@@ -250,7 +263,9 @@ class _AdminScaffoldState extends State<AdminScaffold> {
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: const Color(0xFFF4EBFF),
+              color: isDark
+                  ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                  : const Color(0xFFF4EBFF),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: InkWell(

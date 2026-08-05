@@ -53,21 +53,33 @@ class ColorDialogs {
 
     Color previewColor = _hexToColor(existing?.hexCode ?? '#8E24AA');
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (_) {
         return StatefulBuilder(
           builder: (ctx, setDialogState) {
             return AlertDialog(
+              backgroundColor: isDark
+                  ? AdminAppColors.darkSurface
+                  : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
+                side: BorderSide(
+                  color: isDark
+                      ? AdminAppColors.primaryColor
+                      : AdminAppColors.borderLight,
+                  width: 1,
+                ),
               ),
               title: Text(
                 existing == null ? 'Add Color' : 'Edit Color',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               content: SizedBox(
@@ -84,13 +96,23 @@ class ColorDialogs {
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF1E1E2F),
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: 8.h),
                       TextFormField(
                         controller: nameController,
-                        decoration: _inputDecoration('e.g. Crimson Red'),
+                        style: TextStyle(
+                          color: isDark
+                              ? AdminAppColors.darkTextPrimary
+                              : AdminAppColors.textPrimary,
+                        ),
+                        decoration: _inputDecoration(
+                          'e.g. Crimson Red',
+                          isDark,
+                        ),
                         validator: (val) => (val == null || val.trim().isEmpty)
                             ? 'Name is required'
                             : null,
@@ -106,7 +128,9 @@ class ColorDialogs {
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,
-                              color: const Color(0xFF1E1E2F),
+                              color: isDark
+                                  ? AdminAppColors.darkTextPrimary
+                                  : AdminAppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 4.h),
@@ -114,7 +138,9 @@ class ColorDialogs {
                             '''Don't know the hex code? Simply search the color name on Google''',
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: Colors.grey.shade600,
+                              color: isDark
+                                  ? AdminAppColors.darkTextSecondary
+                                  : Colors.grey.shade600,
                             ),
                           ),
                           SizedBox(height: 8.h),
@@ -126,6 +152,11 @@ class ColorDialogs {
                           Expanded(
                             child: TextFormField(
                               controller: hexController,
+                              style: TextStyle(
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
+                              ),
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
                                   RegExp(r'[#0-9a-fA-F]'),
@@ -139,7 +170,7 @@ class ColorDialogs {
                                   });
                                 }
                               },
-                              decoration: _inputDecoration('#FF5733'),
+                              decoration: _inputDecoration('#FF5733', isDark),
                               validator: (val) {
                                 if (val == null || val.trim().isEmpty) {
                                   return 'Hex code is required';
@@ -164,12 +195,14 @@ class ColorDialogs {
                               color: previewColor,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: AdminAppColors.borderLight,
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : AdminAppColors.borderLight,
                                 width: 2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: previewColor.withOpacity(0.4),
+                                  color: previewColor.withValues(alpha: 0.4),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -185,7 +218,9 @@ class ColorDialogs {
                         'Quick Presets',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
                       SizedBox(height: 8.h),
@@ -212,7 +247,9 @@ class ColorDialogs {
                                   color: _hexToColor(preset['hex']!),
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: AdminAppColors.borderLight,
+                                    color: isDark
+                                        ? AdminAppColors.darkBorder
+                                        : AdminAppColors.borderLight,
                                   ),
                                 ),
                               ),
@@ -230,7 +267,9 @@ class ColorDialogs {
                   child: Text(
                     'Cancel',
                     style: TextStyle(
-                      color: const Color(0xFF8A8A9E),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF8A8A9E),
                       fontSize: 14.sp,
                     ),
                   ),
@@ -276,18 +315,27 @@ class ColorDialogs {
     );
   }
 
-  static InputDecoration _inputDecoration(String hint) {
+  static InputDecoration _inputDecoration(String hint, bool isDark) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(fontSize: 13.sp, color: const Color(0xFFB0B0C0)),
+      hintStyle: TextStyle(
+        fontSize: 13.sp,
+        color: isDark
+            ? AdminAppColors.darkTextSecondary
+            : const Color(0xFFB0B0C0),
+      ),
       contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.r),
-        borderSide: const BorderSide(color: Color(0xFFE8E7ED)),
+        borderSide: BorderSide(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.r),
-        borderSide: const BorderSide(color: Color(0xFFE8E7ED)),
+        borderSide: BorderSide(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.r),

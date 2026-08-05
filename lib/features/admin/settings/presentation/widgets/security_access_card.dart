@@ -48,16 +48,27 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
     _errorTimer?.cancel();
   }
 
-  InputDecoration _buildInputDecoration(String hintText) {
+  InputDecoration _buildInputDecoration(String hintText, bool isDark) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: TextStyle(fontSize: 13.sp, color: const Color(0xFF8A8A9E)),
-      fillColor: const Color(0xFFF9FAFC),
+      hintStyle: TextStyle(
+        fontSize: 13.sp,
+        color: isDark
+            ? AdminAppColors.darkTextSecondary
+            : const Color(0xFF8A8A9E),
+      ),
+      fillColor: isDark
+          ? AdminAppColors.darkInputBackground
+          : const Color(0xFFF9FAFC),
       filled: true,
       isDense: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFE8E7ED)),
+        borderSide: BorderSide(
+          color: isDark
+              ? AdminAppColors.borderLight
+              : AdminAppColors.darkBorder,
+        ),
         borderRadius: BorderRadius.circular(10.r),
       ),
       focusedBorder: OutlineInputBorder(
@@ -83,6 +94,7 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocConsumer<AdminSettingsBloc, AdminSettingsState>(
       buildWhen: (prev, curr) =>
           prev.currentPasswordError != curr.currentPasswordError ||
@@ -126,9 +138,14 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
 
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? AdminAppColors.darkSurface : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+            border: Border.all(
+              color: isDark
+                  ? AdminAppColors.darkBorder
+                  : const Color(0xFFE8E7ED),
+              width: 1.5,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,13 +166,20 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1, color: Color(0xFFF0EFF5)),
+              Divider(
+                height: 1,
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFF0EFF5),
+              ),
 
               // Form body
               Padding(
@@ -176,7 +200,9 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1E1E2F),
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
                               ),
                             ),
                             SizedBox(height: 4.h),
@@ -184,7 +210,9 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                               'Ensure your account remains secure with a strong password.',
                               style: TextStyle(
                                 fontSize: 12.sp,
-                                color: const Color(0xFF8A8A9E),
+                                color: isDark
+                                    ? AdminAppColors.darkTextSecondary
+                                    : const Color(0xFF8A8A9E),
                               ),
                             ),
                           ],
@@ -200,8 +228,15 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                             TextFormField(
                               controller: _currentPasswordController,
                               obscureText: true,
+                              style: TextStyle(
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
+                                fontSize: 14.sp,
+                              ),
                               decoration: _buildInputDecoration(
                                 'Current Password',
+                                isDark,
                               ),
                               onChanged: (_) {
                                 if (state.currentPasswordError != null) {
@@ -227,7 +262,16 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                             TextFormField(
                               controller: _newPasswordController,
                               obscureText: true,
-                              decoration: _buildInputDecoration('New Password'),
+                              style: TextStyle(
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
+                                fontSize: 14.sp,
+                              ),
+                              decoration: _buildInputDecoration(
+                                'New Password',
+                                isDark,
+                              ),
                               validator: Validators.validateAdminPassword,
                             ),
                             SizedBox(height: 16.h),
@@ -236,8 +280,15 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                             TextFormField(
                               controller: _confirmPasswordController,
                               obscureText: true,
+                              style: TextStyle(
+                                color: isDark
+                                    ? AdminAppColors.darkTextPrimary
+                                    : AdminAppColors.textPrimary,
+                                fontSize: 14.sp,
+                              ),
                               decoration: _buildInputDecoration(
                                 'Confirm New Password',
+                                isDark,
                               ),
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
@@ -258,10 +309,14 @@ class _SecurityAccessCardState extends State<SecurityAccessCard> {
                                 OutlinedButton(
                                   onPressed: _resetForm,
                                   style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(
-                                      color: Color(0xFFE8E7ED),
+                                    side: BorderSide(
+                                      color: isDark
+                                          ? AdminAppColors.darkBorder
+                                          : const Color(0xFFE8E7ED),
                                     ),
-                                    foregroundColor: const Color(0xFF8A8A9E),
+                                    foregroundColor: isDark
+                                        ? AdminAppColors.darkTextSecondary
+                                        : const Color(0xFF8A8A9E),
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 24.w,
                                       vertical: 12.h,

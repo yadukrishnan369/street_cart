@@ -35,10 +35,12 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       elevation: 8,
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? AdminAppColors.darkSurface : Colors.white,
       child: Container(
         width: 500.w,
         padding: EdgeInsets.all(24.w),
@@ -57,12 +59,19 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close, color: Color(0xFF8A8A9E)),
+                    icon: Icon(
+                      Icons.close,
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF8A8A9E),
+                    ),
                   ),
                 ],
               ),
@@ -72,7 +81,9 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
                 'Please provide the reason for rejecting this application. The owner will see this and will be prompted to correct the errors and resubmit their details.',
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: AdminAppColors.textSecondary,
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : AdminAppColors.textSecondary,
                   height: 1.5,
                 ),
               ),
@@ -82,7 +93,9 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -93,19 +106,38 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
                 maxLength: 500,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
                 decoration: InputDecoration(
+                  fillColor: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : Colors.transparent,
+                  filled: isDark,
                   hintText:
                       'e.g., Business License is expired or Owner ID proof is blurry.',
                   hintStyle: TextStyle(
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                     fontSize: 14.sp,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFE8E7ED),
+                    borderSide: BorderSide(
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
+                      width: 1.5,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
                       width: 1.5,
                     ),
                   ),
@@ -152,8 +184,10 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
                         horizontal: 20.w,
                         vertical: 16.h,
                       ),
-                      side: const BorderSide(
-                        color: Color(0xFFE8E7ED),
+                      side: BorderSide(
+                        color: isDark
+                            ? AdminAppColors.darkBorder
+                            : const Color(0xFFE8E7ED),
                         width: 1.5,
                       ),
                       shape: RoundedRectangleBorder(
@@ -163,7 +197,9 @@ class _RejectionReasonModalState extends State<RejectionReasonModal> {
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                       ),

@@ -73,8 +73,11 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Dialog(
-      backgroundColor: AdminAppColors.surfaceWhite,
+      backgroundColor: isDark
+          ? AdminAppColors.darkSurface
+          : AdminAppColors.surfaceWhite,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: Container(
         width: 400.w,
@@ -90,8 +93,10 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                 children: [
                   Container(
                     padding: EdgeInsets.all(8.w),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF4EBFF),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                          : const Color(0xFFF4EBFF),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -108,7 +113,9 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1E1E2F),
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ),
@@ -121,7 +128,9 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                 widget.description,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: const Color(0xFF8A8A9E),
+                  color: isDark
+                      ? AdminAppColors.darkTextSecondary
+                      : const Color(0xFF8A8A9E),
                   height: 1.4,
                 ),
               ),
@@ -133,15 +142,21 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                 autofocus: true,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Enter category name',
                   hintStyle: TextStyle(
                     fontSize: 13.sp,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                   ),
-                  fillColor: const Color(0xFFF9FAFC),
+                  fillColor: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : const Color(0xFFF9FAFC),
                   filled: true,
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(
@@ -149,7 +164,11 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                     vertical: 14.h,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Color(0xFFE8E7ED)),
+                    borderSide: BorderSide(
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
+                    ),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -198,7 +217,9 @@ class _AddEditCategoryDialogState extends State<AddEditCategoryDialog> {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                   ),

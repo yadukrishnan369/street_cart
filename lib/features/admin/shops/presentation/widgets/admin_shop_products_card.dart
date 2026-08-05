@@ -9,6 +9,7 @@ import 'package:street_cart/features/admin/shops/presentation/bloc/admin_shop_de
 import 'package:street_cart/features/admin/shops/presentation/utils/shop_products_card_helper.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/shared/widgets/admin_pagination.dart';
+import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 
 // Admin Shop Products Card
 class AdminShopProductsCard extends StatelessWidget {
@@ -27,6 +28,7 @@ class AdminShopProductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final filterOptions = ShopProductsCardHelper.buildFilterOptions(products);
     final activeFilter = ShopProductsCardHelper.resolveActiveFilter(
       selectedFilter,
@@ -50,9 +52,12 @@ class AdminShopProductsCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF1E1E2F).withValues(alpha: 0.02),
@@ -83,7 +88,9 @@ class AdminShopProductsCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
-                        color: AdminAppColors.textPrimary,
+                        color: isDark
+                            ? AdminAppColors.darkTextPrimary
+                            : AdminAppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -94,26 +101,35 @@ class AdminShopProductsCard extends StatelessWidget {
                   width: 150.w,
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFC),
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF9FAFC),
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
-                      color: const Color(0xFFE8E7ED),
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFE8E7ED),
                       width: 1.2,
                     ),
                   ),
                   child: DropdownButton<String>(
                     isExpanded: true,
                     menuMaxHeight: 300.h,
+                    dropdownColor: isDark ? AdminAppColors.darkSurface : null,
                     value: activeFilter,
                     underline: const SizedBox.shrink(),
                     icon: Icon(
                       Icons.filter_list,
                       size: 16.sp,
-                      color: const Color(0xFF8A8A9E),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF8A8A9E),
                     ),
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: const Color(0xFF1E1E2F),
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                     selectedItemBuilder: (context) {
@@ -153,7 +169,10 @@ class AdminShopProductsCard extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE8E7ED)),
+          Divider(
+            height: 1,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          ),
 
           // Empty state
           if (filteredProducts.isEmpty)
@@ -165,7 +184,9 @@ class AdminShopProductsCard extends StatelessWidget {
                     Icon(
                       Icons.inventory_2_outlined,
                       size: 48.sp,
-                      color: const Color(0xFFD1D5DB),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFFD1D5DB),
                     ),
                     SizedBox(height: 12.h),
                     Text(
@@ -174,7 +195,9 @@ class AdminShopProductsCard extends StatelessWidget {
                           : 'No matching products found',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -196,20 +219,27 @@ class AdminShopProductsCard extends StatelessWidget {
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
                 TableRow(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF4F5F7),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : const Color(0xFFF4F5F7),
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFE8E7ED), width: 1.5),
+                      bottom: BorderSide(
+                        color: isDark
+                            ? AdminAppColors.darkBorder
+                            : const Color(0xFFE8E7ED),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   // Table header titles
                   children: [
-                    _headerCell('PRODUCT'),
-                    _headerCell('CATEGORY'),
-                    _headerCell('PRICE'),
-                    _headerCell('STOCK'),
-                    _headerCell('STATUS'),
-                    _headerCell('ACTIONS'),
+                    _headerCell(context, 'PRODUCT'),
+                    _headerCell(context, 'CATEGORY'),
+                    _headerCell(context, 'PRICE'),
+                    _headerCell(context, 'STOCK'),
+                    _headerCell(context, 'STATUS'),
+                    _headerCell(context, 'ACTIONS'),
                   ],
                 ),
                 ...paginatedProducts.map((p) => _buildProductRow(context, p)),
@@ -237,6 +267,7 @@ class AdminShopProductsCard extends StatelessWidget {
   }
 
   TableRow _buildProductRow(BuildContext context, ProductModel p) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final status = ShopProductsCardHelper.resolveStatus(p);
     final priceText = ShopProductsCardHelper.formatPrice(p);
     final stockText = ShopProductsCardHelper.formatStock(p);
@@ -244,9 +275,12 @@ class AdminShopProductsCard extends StatelessWidget {
     final isOutOfStock = p.stockQuantity == 0;
 
     return TableRow(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Color(0xFFF0EFF5), width: 1.2),
+          bottom: BorderSide(
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            width: 1.2,
+          ),
         ),
       ),
       children: [
@@ -259,7 +293,9 @@ class AdminShopProductsCard extends StatelessWidget {
                 width: 36.w,
                 height: 36.h,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3E8FF),
+                  color: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : const Color(0xFFF3E8FF),
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -267,16 +303,22 @@ class AdminShopProductsCard extends StatelessWidget {
                     ? CachedNetworkImage(
                         imageUrl: thumbnailUrl,
                         fit: BoxFit.cover,
-                        errorWidget: (_, __, ___) => Icon(
-                          Icons.image_not_supported_outlined,
-                          size: 16.sp,
-                          color: const Color(0xFF8A8A9E),
+                        placeholder: (context, url) => ProductImagePlaceholder(
+                          iconSize: 35,
+                          width: 35,
+                          height: 35,
                         ),
+                        errorWidget: (context, url, error) =>
+                            ProductImagePlaceholder(
+                              iconSize: 35,
+                              width: 35,
+                              height: 35,
+                            ),
                       )
-                    : Icon(
-                        Icons.inventory_2_outlined,
-                        size: 18.sp,
-                        color: AdminAppColors.primaryColor,
+                    : ProductImagePlaceholder(
+                        iconSize: 70,
+                        width: 70,
+                        height: 70,
                       ),
               ),
               SizedBox(width: 12.w),
@@ -286,7 +328,9 @@ class AdminShopProductsCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E2F),
+                    color: isDark
+                        ? AdminAppColors.darkTextPrimary
+                        : AdminAppColors.textPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -300,7 +344,12 @@ class AdminShopProductsCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
             p.category,
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF6C6C80)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF6C6C80),
+            ),
           ),
         ),
         // Price
@@ -311,7 +360,9 @@ class AdminShopProductsCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
         ),
@@ -387,7 +438,7 @@ class AdminShopProductsCard extends StatelessWidget {
     );
   }
 
-  Widget _headerCell(String text) {
+  Widget _headerCell(BuildContext context, String text) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
       child: Text(

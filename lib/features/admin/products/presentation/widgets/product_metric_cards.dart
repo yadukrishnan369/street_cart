@@ -21,13 +21,19 @@ class ProductMetricCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final List<Map<String, dynamic>> cardData = [
       {
         'title': 'Total Products',
         'value': '$totalProducts',
-        'color': AdminAppColors.textPrimary,
+        'color': isDark
+            ? AdminAppColors.darkTextPrimary
+            : AdminAppColors.textPrimary,
         'icon': Icons.inventory_2_outlined,
-        'iconBgColor': const Color(0xFFF4EBFF),
+        'iconBgColor': isDark
+            ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+            : const Color(0xFFF4EBFF),
         'iconColor': AdminAppColors.primaryColor,
       },
       {
@@ -35,7 +41,9 @@ class ProductMetricCards extends StatelessWidget {
         'value': '$activeItems',
         'color': AdminAppColors.successColor,
         'icon': Icons.check_circle_outline,
-        'iconBgColor': const Color(0xFFE6F4EA),
+        'iconBgColor': isDark
+            ? AdminAppColors.successColor.withValues(alpha: 0.15)
+            : const Color(0xFFE6F4EA),
         'iconColor': AdminAppColors.successColor,
       },
       {
@@ -43,7 +51,9 @@ class ProductMetricCards extends StatelessWidget {
         'value': '$outOfStock',
         'color': AdminAppColors.errorColor,
         'icon': Icons.warning_amber_outlined,
-        'iconBgColor': const Color(0xFFFFF4E5),
+        'iconBgColor': isDark
+            ? AdminAppColors.warningColor.withValues(alpha: 0.15)
+            : const Color(0xFFFFF4E5),
         'iconColor': AdminAppColors.warningColor,
       },
       {
@@ -51,7 +61,9 @@ class ProductMetricCards extends StatelessWidget {
         'value': '$disabledItems',
         'color': const Color(0xFF9B1C1C),
         'icon': Icons.block,
-        'iconBgColor': const Color(0xFFFDE8E8),
+        'iconBgColor': isDark
+            ? AdminAppColors.errorColor.withValues(alpha: 0.15)
+            : const Color(0xFFFDE8E8),
         'iconColor': const Color(0xFF9B1C1C),
       },
     ];
@@ -71,9 +83,14 @@ class ProductMetricCards extends StatelessWidget {
               margin: EdgeInsets.only(right: data != cardData.last ? 16.w : 0),
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AdminAppColors.darkSurface : Colors.white,
                 borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+                border: Border.all(
+                  color: isDark
+                      ? AdminAppColors.darkBorder
+                      : const Color(0xFFE8E7ED),
+                  width: 1.5,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: const Color(0xFF1E1E2F).withValues(alpha: 0.02),
@@ -97,13 +114,14 @@ class ProductMetricCards extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Title
                       Text(
                         title,
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF8A8A9E),
+                          color: isDark
+                              ? AdminAppColors.darkTextSecondary
+                              : const Color(0xFF8A8A9E),
                         ),
                       ),
                       SizedBox(height: 6.h),
@@ -137,9 +155,14 @@ class ProductMetricCards extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 12.h),
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AdminAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+              border: Border.all(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
             child: Row(
               children: [
@@ -155,13 +178,14 @@ class ProductMetricCards extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title
                     Text(
                       title,
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF8A8A9E),
+                        color: isDark
+                            ? AdminAppColors.darkTextSecondary
+                            : const Color(0xFF8A8A9E),
                       ),
                     ),
                     SizedBox(height: 4.h),

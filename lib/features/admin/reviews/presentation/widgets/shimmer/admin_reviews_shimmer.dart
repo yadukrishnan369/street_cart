@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 
 // Admin Reviews Shimmer
 class AdminReviewsShimmer extends StatelessWidget {
@@ -8,6 +9,12 @@ class AdminReviewsShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseCol = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE2E8F0);
+    final highlightCol = isDark
+        ? const Color(0xFF3D3D3D)
+        : const Color(0xFFF1F5F9);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > 900;
@@ -22,9 +29,9 @@ class AdminReviewsShimmer extends StatelessWidget {
               // Header Statistics Cards
               Row(
                 children: [
-                  _buildStatCardShimmer(isWide ? 260.w : 160.w),
+                  _buildStatCardShimmer(context, isWide ? 260.w : 160.w),
                   SizedBox(width: 20.w),
-                  _buildStatCardShimmer(isWide ? 260.w : 160.w),
+                  _buildStatCardShimmer(context, isWide ? 260.w : 160.w),
                 ],
               ),
               SizedBox(height: 32.h),
@@ -32,10 +39,12 @@ class AdminReviewsShimmer extends StatelessWidget {
               // Table list container
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? AdminAppColors.darkSurface : Colors.white,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
-                    color: const Color(0xFFE8E7ED),
+                    color: isDark
+                        ? AdminAppColors.darkBorder
+                        : const Color(0xFFE8E7ED),
                     width: 1.5,
                   ),
                   boxShadow: [
@@ -56,19 +65,26 @@ class AdminReviewsShimmer extends StatelessWidget {
                         vertical: 16.h,
                       ),
                       child: Shimmer.fromColors(
-                        baseColor: const Color(0xFFE2E8F0),
-                        highlightColor: const Color(0xFFF1F5F9),
+                        baseColor: baseCol,
+                        highlightColor: highlightCol,
                         child: Container(
                           width: isWide ? 380.w : 240.w,
                           height: 44.h,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: isDark
+                                ? AdminAppColors.darkInputBackground
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                       ),
                     ),
-                    const Divider(color: Color(0xFFF0EFF5), height: 1),
+                    Divider(
+                      color: isDark
+                          ? AdminAppColors.darkBorder
+                          : const Color(0xFFF0EFF5),
+                      height: 1,
+                    ),
 
                     // Table Rows Shimmer
                     Padding(
@@ -77,8 +93,8 @@ class AdminReviewsShimmer extends StatelessWidget {
                         vertical: 16.h,
                       ),
                       child: Shimmer.fromColors(
-                        baseColor: const Color(0xFFE2E8F0),
-                        highlightColor: const Color(0xFFF1F5F9),
+                        baseColor: baseCol,
+                        highlightColor: highlightCol,
                         child: Column(
                           children: List.generate(6, (index) {
                             return Padding(
@@ -89,8 +105,10 @@ class AdminReviewsShimmer extends StatelessWidget {
                                   Container(
                                     width: 32.r,
                                     height: 32.r,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
+                                    decoration: BoxDecoration(
+                                      color: isDark
+                                          ? AdminAppColors.darkInputBackground
+                                          : Colors.white,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -98,7 +116,9 @@ class AdminReviewsShimmer extends StatelessWidget {
                                   Container(
                                     width: 90.w,
                                     height: 14.h,
-                                    color: Colors.white,
+                                    color: isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : Colors.white,
                                   ),
                                   const Spacer(),
 
@@ -106,7 +126,9 @@ class AdminReviewsShimmer extends StatelessWidget {
                                   Container(
                                     width: 130.w,
                                     height: 14.h,
-                                    color: Colors.white,
+                                    color: isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : Colors.white,
                                   ),
                                   const Spacer(),
 
@@ -119,8 +141,11 @@ class AdminReviewsShimmer extends StatelessWidget {
                                         child: Container(
                                           width: 16.r,
                                           height: 16.r,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
+                                          decoration: BoxDecoration(
+                                            color: isDark
+                                                ? AdminAppColors
+                                                      .darkInputBackground
+                                                : Colors.white,
                                             shape: BoxShape.circle,
                                           ),
                                         ),
@@ -137,13 +162,17 @@ class AdminReviewsShimmer extends StatelessWidget {
                                       Container(
                                         width: 160.w,
                                         height: 12.h,
-                                        color: Colors.white,
+                                        color: isDark
+                                            ? AdminAppColors.darkInputBackground
+                                            : Colors.white,
                                       ),
                                       SizedBox(height: 6.h),
                                       Container(
                                         width: 100.w,
                                         height: 12.h,
-                                        color: Colors.white,
+                                        color: isDark
+                                            ? AdminAppColors.darkInputBackground
+                                            : Colors.white,
                                       ),
                                     ],
                                   ),
@@ -153,7 +182,9 @@ class AdminReviewsShimmer extends StatelessWidget {
                                   Container(
                                     width: 70.w,
                                     height: 14.h,
-                                    color: Colors.white,
+                                    color: isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : Colors.white,
                                   ),
                                   const Spacer(),
 
@@ -161,7 +192,9 @@ class AdminReviewsShimmer extends StatelessWidget {
                                   Container(
                                     width: 40.w,
                                     height: 14.h,
-                                    color: Colors.white,
+                                    color: isDark
+                                        ? AdminAppColors.darkInputBackground
+                                        : Colors.white,
                                   ),
                                 ],
                               ),
@@ -180,37 +213,58 @@ class AdminReviewsShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCardShimmer(double width) {
+  Widget _buildStatCardShimmer(BuildContext context, double width) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseCol = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE2E8F0);
+    final highlightCol = isDark
+        ? const Color(0xFF3D3D3D)
+        : const Color(0xFFF1F5F9);
+
     return Container(
       width: width,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Shimmer.fromColors(
-        baseColor: const Color(0xFFE2E8F0),
-        highlightColor: const Color(0xFFF1F5F9),
+        baseColor: baseCol,
+        highlightColor: highlightCol,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(width: 80.w, height: 12.h, color: Colors.white),
+                Container(
+                  width: 80.w,
+                  height: 12.h,
+                  color: isDark
+                      ? AdminAppColors.darkInputBackground
+                      : Colors.white,
+                ),
                 Container(
                   width: 36.w,
                   height: 36.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark
+                        ? AdminAppColors.darkInputBackground
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 12.h),
-            Container(width: 60.w, height: 24.h, color: Colors.white),
+            Container(
+              width: 60.w,
+              height: 24.h,
+              color: isDark ? AdminAppColors.darkInputBackground : Colors.white,
+            ),
           ],
         ),
       ),

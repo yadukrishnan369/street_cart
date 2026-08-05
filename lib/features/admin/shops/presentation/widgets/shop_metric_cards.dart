@@ -19,11 +19,15 @@ class ShopMetricCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final List<Map<String, dynamic>> cardData = [
       {
         'title': 'Total Shops',
         'value': '$totalShops',
-        'color': AdminAppColors.textPrimary,
+        'color': isDark
+            ? AdminAppColors.darkTextPrimary
+            : AdminAppColors.textPrimary,
       },
       {
         'title': 'Active Now',
@@ -49,9 +53,14 @@ class ShopMetricCards extends StatelessWidget {
               margin: EdgeInsets.only(right: data != cardData.last ? 16.w : 0),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AdminAppColors.darkSurface : Colors.white,
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+                border: Border.all(
+                  color: isDark
+                      ? AdminAppColors.darkBorder
+                      : const Color(0xFFE8E7ED),
+                  width: 1.5,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: const Color(0xFF1E1E2F).withValues(alpha: 0.02),
@@ -69,7 +78,9 @@ class ShopMetricCards extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF8A8A9E),
+                      color: isDark
+                          ? AdminAppColors.darkTextSecondary
+                          : const Color(0xFF8A8A9E),
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -98,9 +109,14 @@ class ShopMetricCards extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 12.h),
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AdminAppColors.darkSurface : Colors.white,
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+              border: Border.all(
+                color: isDark
+                    ? AdminAppColors.darkBorder
+                    : const Color(0xFFE8E7ED),
+                width: 1.5,
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,7 +127,9 @@ class ShopMetricCards extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF8A8A9E),
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
                   ),
                 ),
                 Text(

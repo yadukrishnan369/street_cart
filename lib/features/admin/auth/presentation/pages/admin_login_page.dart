@@ -47,6 +47,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocListener<AdminAuthBloc, AdminAuthState>(
       listener: (context, state) {
         if (state is AdminAuthSuccess) {
@@ -58,7 +60,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AdminAppColors.backgroundLight,
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : AdminAppColors.backgroundLight,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -77,9 +81,17 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       children: [
                         Card(
                           elevation: 4,
-                          color: Colors.white,
+                          color: isDark
+                              ? AdminAppColors.darkSurface
+                              : Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24.r),
+                            side: BorderSide(
+                              color: isDark
+                                  ? AdminAppColors.darkBorder
+                                  : Colors.transparent,
+                              width: 1,
+                            ),
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -101,7 +113,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                           '© ${_appInfoService.currentYear} ${_appInfoService.appName} Marketplace. All systems operational.',
                           textAlign: TextAlign.center,
                           style: AdminAppTextStyles.caption.copyWith(
-                            color: AdminAppColors.textSecondary,
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : AdminAppColors.textSecondary,
                           ),
                         ),
                       ],

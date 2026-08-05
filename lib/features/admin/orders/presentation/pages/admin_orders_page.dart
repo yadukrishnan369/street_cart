@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/debouncer.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/orders/presentation/bloc/admin_orders_bloc.dart';
@@ -36,10 +37,13 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) => sl<AdminOrdersBloc>()..add(LoadAdminOrders()),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child: BlocListener<AdminOrdersBloc, AdminOrdersState>(
             listener: (context, state) {
@@ -101,7 +105,9 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
                             style: TextStyle(
                               fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1E1E2F),
+                              color: isDark
+                                  ? AdminAppColors.darkTextPrimary
+                                  : AdminAppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 6.h),
@@ -109,7 +115,9 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
                             'Monitor customer orders across all shops in real-time.',
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: const Color(0xFF8A8A9E),
+                              color: isDark
+                                  ? AdminAppColors.darkTextSecondary
+                                  : const Color(0xFF8A8A9E),
                             ),
                           ),
                           SizedBox(height: 24.h),

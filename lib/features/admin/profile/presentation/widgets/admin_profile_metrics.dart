@@ -18,13 +18,17 @@ class AdminProfileMetrics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFECEFF1), width: 0.8),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFECEFF1),
+          width: 0.8,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +46,9 @@ class AdminProfileMetrics extends StatelessWidget {
                 'Personal Performance Metrics',
                 style: AdminAppTextStyles.heading3.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E1E2F),
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
@@ -53,6 +59,7 @@ class AdminProfileMetrics extends StatelessWidget {
               Expanded(
                 // Total Shop Approved Card
                 child: _buildMetricTile(
+                  isDark: isDark,
                   icon: Icons.check_circle_outline,
                   value: approvedShopsCount.toString(),
                   label: 'Shops Approved',
@@ -64,6 +71,7 @@ class AdminProfileMetrics extends StatelessWidget {
               // Total Review Card
               Expanded(
                 child: _buildMetricTile(
+                  isDark: isDark,
                   icon: Icons.rate_review_outlined,
                   value: reviewsCount.toString(),
                   label: 'Reviews',
@@ -75,6 +83,7 @@ class AdminProfileMetrics extends StatelessWidget {
               // Total Order Tracked Card
               Expanded(
                 child: _buildMetricTile(
+                  isDark: isDark,
                   icon: Icons.inventory_2_outlined,
                   value: ordersTrackedCount.toString(),
                   label: 'Order Tracked',
@@ -90,6 +99,7 @@ class AdminProfileMetrics extends StatelessWidget {
   }
 
   Widget _buildMetricTile({
+    required bool isDark,
     required IconData icon,
     required String value,
     required String label,
@@ -99,8 +109,11 @@ class AdminProfileMetrics extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
       decoration: BoxDecoration(
-        color: iconBgColor.withValues(alpha: 0.3),
+        color: isDark
+            ? iconColor.withValues(alpha: 0.1)
+            : iconBgColor.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: iconColor, width: 0.5),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -108,7 +121,7 @@ class AdminProfileMetrics extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: iconBgColor,
+              color: isDark ? iconColor.withValues(alpha: 0.2) : iconBgColor,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: iconColor, size: 20.sp),
@@ -119,7 +132,9 @@ class AdminProfileMetrics extends StatelessWidget {
             style: TextStyle(
               fontSize: 22.sp,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -128,7 +143,9 @@ class AdminProfileMetrics extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
             textAlign: TextAlign.center,
           ),

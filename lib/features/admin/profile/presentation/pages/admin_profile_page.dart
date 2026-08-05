@@ -23,8 +23,11 @@ class AdminProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
+      backgroundColor: isDark
+          ? AdminAppColors.darkBackground
+          : AdminAppColors.backgroundLight,
       body: BlocBuilder<AdminProfileBloc, AdminProfileState>(
         builder: (context, state) {
           if (state is AdminProfileLoading || state is AdminProfileInitial) {

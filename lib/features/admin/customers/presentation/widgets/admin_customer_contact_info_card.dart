@@ -20,6 +20,7 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Primary address
     final primaryAddressText = AdminCustomersHelper.getPrimaryAddressText(
       addresses,
@@ -28,9 +29,12 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AdminAppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE8E7ED), width: 1.5),
+        border: Border.all(
+          color: isDark ? AdminAppColors.darkBorder : const Color(0xFFE8E7ED),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,12 +53,18 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w800,
-                  color: AdminAppColors.textPrimary,
+                  color: isDark
+                      ? AdminAppColors.darkTextPrimary
+                      : AdminAppColors.textPrimary,
                 ),
               ),
             ],
           ),
-          Divider(height: 32.h, color: const Color(0xFFF0EFF5), thickness: 1.2),
+          Divider(
+            height: 32.h,
+            color: isDark ? AdminAppColors.darkBorder : const Color(0xFFF0EFF5),
+            thickness: 1.2,
+          ),
 
           // Email Address
           Text(
@@ -62,7 +72,9 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
           ),
           SizedBox(height: 6.h),
@@ -88,7 +100,9 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
           ),
           SizedBox(height: 6.h),
@@ -97,7 +111,9 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
             ),
           ),
           SizedBox(height: 20.h),
@@ -108,7 +124,9 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF8A8A9E),
+              color: isDark
+                  ? AdminAppColors.darkTextSecondary
+                  : const Color(0xFF8A8A9E),
             ),
           ),
           SizedBox(height: 6.h),
@@ -117,7 +135,9 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E2F),
+              color: isDark
+                  ? AdminAppColors.darkTextPrimary
+                  : AdminAppColors.textPrimary,
               height: 1.4,
             ),
           ),

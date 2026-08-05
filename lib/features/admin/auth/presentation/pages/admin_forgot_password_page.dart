@@ -6,6 +6,7 @@ import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_blo
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/services/app_info_service.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/auth/presentation/widgets/admin_forgot_password_form.dart';
@@ -41,6 +42,8 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocListener<AdminAuthBloc, AdminAuthState>(
       listener: (context, state) {
         if (state is AdminAuthPasswordResetSent) {
@@ -63,7 +66,9 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFC),
+        backgroundColor: isDark
+            ? AdminAppColors.darkBackground
+            : const Color(0xFFF9FAFC),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -82,11 +87,15 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                         Card(
                           elevation: 8,
                           shadowColor: Colors.black.withValues(alpha: 0.06),
-                          color: Colors.white,
+                          color: isDark
+                              ? AdminAppColors.darkSurface
+                              : Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24.r),
-                            side: const BorderSide(
-                              color: Color(0xFFF0EFF5),
+                            side: BorderSide(
+                              color: isDark
+                                  ? AdminAppColors.darkBorder
+                                  : const Color(0xFFF0EFF5),
                               width: 1,
                             ),
                           ),
@@ -111,7 +120,9 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 1.5,
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                           ),
                         ),
                         SizedBox(height: 8.h),
@@ -120,7 +131,9 @@ class _AdminForgotPasswordPageState extends State<AdminForgotPasswordPage> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: const Color(0xFF8A8A9E),
+                            color: isDark
+                                ? AdminAppColors.darkTextSecondary
+                                : const Color(0xFF8A8A9E),
                           ),
                         ),
                         SizedBox(height: 12.h),
