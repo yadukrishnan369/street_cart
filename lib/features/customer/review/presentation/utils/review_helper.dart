@@ -65,6 +65,7 @@ class ReviewHelper {
     required String shopId,
     String? reviewId,
   }) {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (formKey.currentState?.validate() ?? false) {
       showSubmitReviewDialog(
         context: context,

@@ -637,6 +637,7 @@ void _initCustomerHome() {
       auth: sl(),
       firestore: sl(),
       locationService: sl(),
+      sharedPreferences: sl(),
     ),
   );
 

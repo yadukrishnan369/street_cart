@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:street_cart/core/services/location_service.dart';
@@ -11,14 +12,17 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
   final LocationService _locationService;
+  final SharedPreferences _sharedPreferences;
 
   HomeRemoteDataSourceImpl({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
     required LocationService locationService,
+    required SharedPreferences sharedPreferences,
   }) : _auth = auth,
        _firestore = firestore,
-       _locationService = locationService;
+       _locationService = locationService,
+       _sharedPreferences = sharedPreferences;
   // Get Customer Home Data
   @override
   Future<HomeData> getHomeData() async {
@@ -30,6 +34,10 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
           categories: [],
           nearbyShops: [],
           nearbyProducts: [],
+          recommendedProducts: [],
+          popularProducts: [],
+          newArrivals: [],
+          bestSellers: [],
         );
       }
 
@@ -61,12 +69,168 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
 
       List<ShopProfileModel> nearbyShops = [];
       List<ProductModel> nearbyProducts = [];
+      List<ProductModel> recommendedProducts = [];
+      List<ProductModel> popularProducts = [];
+      List<ProductModel> newArrivals = [];
+      List<ProductModel> bestSellers = [];
 
       if (lat != null && lng != null) {
         nearbyShops = await _getNearbyShops(lat, lng);
         if (nearbyShops.isNotEmpty) {
           final shopIds = nearbyShops.map((s) => s.uid).toList();
           nearbyProducts = await _getShopsProducts(shopIds);
+
+          // Recommended Products based on recent search queries and users previous orders/categories
+          final orderCats = <String>{};
+          try {
+            final ordersSnap = await _firestore
+                .collection('orders')
+                .where('customer_id', isEqualTo: user.uid)
+                .get();
+            for (final doc in ordersSnap.docs) {
+              final items = doc.data()['items'] as List<dynamic>? ?? [];
+              for (final item in items) {
+                final pId = item['product_id'] as String?;
+                if (pId != null) {
+                  // Find product category in nearby products
+                  final matchedProduct = nearbyProducts.firstWhere(
+                    (p) => p.id == pId,
+                    orElse: () => ProductModel(
+                      id: '',
+                      shopId: '',
+                      name: '',
+                      originalPrice: 0.0,
+                      description: '',
+                      stockQuantity: 0,
+                      category: '',
+                      sizeStandard: '',
+                    ),
+                  );
+                  if (matchedProduct.id.isNotEmpty &&
+                      matchedProduct.category.isNotEmpty) {
+                    orderCats.add(matchedProduct.category);
+                  }
+                }
+              }
+            }
+          } catch (_) {}
+
+          final recentQueries =
+              _sharedPreferences.getStringList('recent_queries') ?? <String>[];
+          final recommendedSet = <String>{};
+
+          // Add products matching recent search queries first
+          if (recentQueries.isNotEmpty) {
+            for (final query in recentQueries) {
+              final keywords = <String>{};
+              final words = query.split(RegExp(r'\s+'));
+              for (final word in words) {
+                final cleaned = word.trim().toLowerCase();
+                if (cleaned.length >= 3) {
+                  keywords.add(cleaned);
+                }
+              }
+              if (keywords.isNotEmpty) {
+                final queryMatches = nearbyProducts.where((p) {
+                  if (recommendedSet.contains(p.id)) return false;
+                  final nameLower = p.name.toLowerCase();
+                  final catLower = p.category.toLowerCase();
+                  final descLower = p.description.toLowerCase();
+                  return keywords.any((kw) {
+                    return nameLower.contains(kw) ||
+                        catLower.contains(kw) ||
+                        descLower.contains(kw);
+                  });
+                }).toList();
+                for (final p in queryMatches) {
+                  recommendedProducts.add(p);
+                  recommendedSet.add(p.id);
+                }
+              }
+            }
+          }
+
+          // Add products matching previously ordered product categories
+          if (orderCats.isNotEmpty) {
+            final orderCatProducts = nearbyProducts
+                .where(
+                  (p) => orderCats.any(
+                    (cat) => cat.toLowerCase() == p.category.toLowerCase(),
+                  ),
+                )
+                .toList();
+            for (final p in orderCatProducts) {
+              if (!recommendedSet.contains(p.id)) {
+                recommendedProducts.add(p);
+                recommendedSet.add(p.id);
+              }
+            }
+          }
+
+          // Popular Products based on more sales count + rating
+          final sortedPopular = List<ProductModel>.from(nearbyProducts)
+            ..sort((a, b) {
+              final scoreA = a.salesCount + a.rating;
+              final scoreB = b.salesCount + b.rating;
+              return scoreB.compareTo(scoreA);
+            });
+          popularProducts = sortedPopular
+              .where((p) => p.rating >= 3.5 || p.salesCount > 0)
+              .toList();
+
+          // New arrivals Products based on recently added products
+          newArrivals = List<ProductModel>.from(nearbyProducts)
+            ..sort((a, b) {
+              if (a.createdAt == null && b.createdAt == null) return 0;
+              if (a.createdAt == null) return 1;
+              if (b.createdAt == null) return -1;
+              return b.createdAt!.compareTo(a.createdAt!);
+            });
+
+          // Best sellers Products based on with high sales
+          final sortedSales = List<ProductModel>.from(nearbyProducts)
+            ..sort((a, b) => b.salesCount.compareTo(a.salesCount));
+          bestSellers = sortedSales.where((p) => p.salesCount > 0).toList();
+
+          // Trending Nearby Products based on most orders product within the last 10 days
+          final recentSales = <String, int>{};
+          try {
+            final tenDaysAgo = DateTime.now().subtract(
+              const Duration(days: 10),
+            );
+            final recentOrdersSnap = await _firestore
+                .collection('orders')
+                .where(
+                  'created_at',
+                  isGreaterThanOrEqualTo: Timestamp.fromDate(tenDaysAgo),
+                )
+                .get();
+            for (final doc in recentOrdersSnap.docs) {
+              final items = doc.data()['items'] as List<dynamic>? ?? [];
+              for (final item in items) {
+                final pId = item['product_id'] as String?;
+                final qty = (item['quantity'] as num?)?.toInt() ?? 1;
+                if (pId != null) {
+                  recentSales[pId] = (recentSales[pId] ?? 0) + qty;
+                }
+              }
+            }
+          } catch (_) {}
+
+          nearbyProducts.sort((a, b) {
+            final salesA = recentSales[a.id] ?? 0;
+            final salesB = recentSales[b.id] ?? 0;
+            if (salesA != salesB) {
+              return salesB.compareTo(salesA);
+            }
+            if (a.salesCount != b.salesCount) {
+              return b.salesCount.compareTo(a.salesCount);
+            }
+            if (a.createdAt == null && b.createdAt == null) return 0;
+            if (a.createdAt == null) return 1;
+            if (b.createdAt == null) return -1;
+            return b.createdAt!.compareTo(a.createdAt!);
+          });
         }
       }
 
@@ -75,6 +239,10 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
         categories: categories,
         nearbyShops: nearbyShops,
         nearbyProducts: nearbyProducts,
+        recommendedProducts: recommendedProducts,
+        popularProducts: popularProducts,
+        newArrivals: newArrivals,
+        bestSellers: bestSellers,
       );
     } catch (e) {
       throw Exception('Failed to get home data: $e');

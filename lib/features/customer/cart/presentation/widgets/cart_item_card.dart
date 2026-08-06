@@ -12,6 +12,7 @@ class CartItemCard extends StatelessWidget {
   final VoidCallback onDecrement;
   final VoidCallback onDelete;
   final VoidCallback onBuyNow;
+  final VoidCallback onView;
 
   const CartItemCard({
     super.key,
@@ -20,6 +21,7 @@ class CartItemCard extends StatelessWidget {
     required this.onDecrement,
     required this.onDelete,
     required this.onBuyNow,
+    required this.onView,
   });
 
   @override
@@ -81,17 +83,49 @@ class CartItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.productName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                        color: isDark
-                            ? CustomerAppColors.darkTextPrimary
-                            : CustomerAppColors.textPrimary,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.productName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                              color: isDark
+                                  ? CustomerAppColors.darkTextPrimary
+                                  : CustomerAppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        GestureDetector(
+                          onTap: onView,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: CustomerAppColors.primary.withValues(
+                                alpha: 0.1,
+                              ),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Text(
+                              'View',
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.bold,
+                                color: CustomerAppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     if (variantText.isNotEmpty) ...[
                       SizedBox(height: 4.h),

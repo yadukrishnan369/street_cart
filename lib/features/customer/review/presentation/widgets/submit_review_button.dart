@@ -33,6 +33,7 @@ class SubmitReviewButton extends StatelessWidget {
           onPressed: isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: CustomerAppColors.primary,
+            disabledBackgroundColor: CustomerAppColors.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(26.r),
             ),

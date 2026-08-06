@@ -10,6 +10,7 @@ class CustomSearchBar extends StatelessWidget {
   final VoidCallback? onFilterTap;
   final bool autofocus;
   final bool showFilter;
+  final bool readOnly;
 
   const CustomSearchBar({
     super.key,
@@ -20,6 +21,7 @@ class CustomSearchBar extends StatelessWidget {
     this.onFilterTap,
     this.autofocus = false,
     this.showFilter = true,
+    this.readOnly = false,
   });
 
   @override
@@ -57,6 +59,7 @@ class CustomSearchBar extends StatelessWidget {
               onChanged: onChanged,
               onTap: onTap,
               autofocus: autofocus,
+              readOnly: readOnly,
               style: TextStyle(
                 color: isDark
                     ? CustomerAppColors.darkTextPrimary

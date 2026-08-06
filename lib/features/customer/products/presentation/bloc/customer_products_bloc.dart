@@ -49,6 +49,9 @@ class CustomerProductsBloc
       final shops = data.shops;
 
       final searchQuery = event.initialSearchQuery ?? '';
+      if (searchQuery.isNotEmpty) {
+        _saveQueryToHistory(searchQuery);
+      }
       final selectedCategories =
           event.initialSelectedCategories ?? const {'All'};
       final selectedSort = event.initialSelectedSort ?? 'Newest';
@@ -94,6 +97,9 @@ class CustomerProductsBloc
     UpdateFilters event,
     Emitter<CustomerProductsState> emit,
   ) {
+    if (event.searchQuery.isNotEmpty) {
+      _saveQueryToHistory(event.searchQuery);
+    }
     if (state is CustomerProductsLoaded) {
       final currentState = state as CustomerProductsLoaded;
       final filtered = _filterAndSort(
@@ -317,8 +323,36 @@ class CustomerProductsBloc
         final priceB = b.offerPrice ?? b.originalPrice;
         return priceB.compareTo(priceA);
       });
+    } else if (selectedSort == 'Best Sellers') {
+      filtered.sort((a, b) => b.salesCount.compareTo(a.salesCount));
     }
 
     return filtered;
+  }
+
+  // Save Query history for Recommended Products
+  void _saveQueryToHistory(String query) {
+    final trimmed = query.trim().toLowerCase();
+    if (trimmed.isEmpty) return;
+
+    final recent =
+        _sharedPreferences.getStringList('recent_queries') ?? <String>[];
+    if (recent.contains(trimmed)) {
+      recent.remove(trimmed);
+    }
+    recent.insert(0, trimmed);
+    if (recent.length > 5) {
+      recent.removeLast();
+    }
+    _sharedPreferences.setStringList('recent_queries', recent);
+  }
+
+  @override
+  Future<void> close() {
+    if (state is CustomerProductsLoaded) {
+      final query = (state as CustomerProductsLoaded).searchQuery;
+      _saveQueryToHistory(query);
+    }
+    return super.close();
   }
 }

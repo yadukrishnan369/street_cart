@@ -32,6 +32,7 @@ class FilterSortSection extends StatelessWidget {
           children: [
             _buildSortChip('Newest'),
             _buildSortChip('Popularity'),
+            _buildSortChip('Best Sellers'),
             _buildSortChip('Price: Low to High'),
             _buildSortChip('Price: High to Low'),
           ],

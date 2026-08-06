@@ -40,13 +40,14 @@ class CartError extends CartState {
 
 class CartItemUpdateError extends CartLoaded {
   final String errorMessage;
+  final DateTime timestamp;
 
-  const CartItemUpdateError({
+  CartItemUpdateError({
     required super.items,
     required this.errorMessage,
     super.isSummaryVisible = true,
-  });
+  }) : timestamp = DateTime.now();
 
   @override
-  List<Object?> get props => [items, isSummaryVisible, errorMessage];
+  List<Object?> get props => [items, isSummaryVisible, errorMessage, timestamp];
 }

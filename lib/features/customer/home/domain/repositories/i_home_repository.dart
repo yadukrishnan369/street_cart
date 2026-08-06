@@ -6,12 +6,20 @@ class HomeData {
   final List<String> categories;
   final List<ShopProfileModel> nearbyShops;
   final List<ProductModel> nearbyProducts;
+  final List<ProductModel> recommendedProducts;
+  final List<ProductModel> popularProducts;
+  final List<ProductModel> newArrivals;
+  final List<ProductModel> bestSellers;
 
   HomeData({
     this.address,
     required this.categories,
     required this.nearbyShops,
     required this.nearbyProducts,
+    required this.recommendedProducts,
+    required this.popularProducts,
+    required this.newArrivals,
+    required this.bestSellers,
   });
 }
 

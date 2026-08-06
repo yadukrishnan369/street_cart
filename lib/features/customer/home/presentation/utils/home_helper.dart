@@ -30,6 +30,31 @@ class HomeHelper {
     return products.map((p) => p.category).toSet().toList();
   }
 
+  // gets unique business categories from shop list
+  static List<String> extractBusinessCategories(List<ShopProfileModel> shops) {
+    return shops
+        .map((s) => s.category)
+        .where((c) => c.isNotEmpty)
+        .toSet()
+        .toList();
+  }
+
+  // filters list of products according to shop business category label
+  static List<ProductModel> filterProductsByBusinessCategory({
+    required List<ProductModel> products,
+    required List<ShopProfileModel> shops,
+    required String selectedCategory,
+  }) {
+    if (selectedCategory == 'All') {
+      return products;
+    }
+    final shopCats = {for (final s in shops) s.uid: s.category.toLowerCase()};
+    return products.where((p) {
+      final shopCat = shopCats[p.shopId] ?? '';
+      return shopCat == selectedCategory.toLowerCase();
+    }).toList();
+  }
+
   // sets up user blocked status change listeners
   static StreamSubscription<DocumentSnapshot>? setupBlockListener(
     BuildContext context,

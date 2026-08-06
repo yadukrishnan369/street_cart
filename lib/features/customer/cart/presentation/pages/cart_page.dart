@@ -26,6 +26,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late final ScrollController _scrollController;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
@@ -114,6 +115,10 @@ class _CartPageState extends State<CartPage> {
         },
         child: BlocBuilder<CartBloc, CartState>(
           builder: (context, state) {
+            if (_isFirstLoad) {
+              _isFirstLoad = false;
+              return const CartShimmer();
+            }
             if (state is CartLoading) {
               return const CartShimmer();
             } else if (state is CartError) {

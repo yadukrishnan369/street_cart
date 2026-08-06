@@ -30,48 +30,46 @@ class CartItemsList extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (context, index) {
           final item = items[index];
-          return GestureDetector(
-            onTap: () => CartHelper.navigateToProductDetail(context, item),
-            child: CartItemCard(
-              item: item,
-              onIncrement: () {
+          return CartItemCard(
+            item: item,
+            onIncrement: () {
+              context.read<CartBloc>().add(
+                UpdateItemQuantity(
+                  itemId: item.id,
+                  quantity: item.quantity + 1,
+                ),
+              );
+            },
+            onDecrement: () {
+              if (item.quantity <= 1) {
+                CustomSnackBar.show(
+                  context,
+                  message: 'Minimum quantity must be 1',
+                  isError: true,
+                );
+              } else {
                 context.read<CartBloc>().add(
                   UpdateItemQuantity(
                     itemId: item.id,
-                    quantity: item.quantity + 1,
+                    quantity: item.quantity - 1,
                   ),
                 );
-              },
-              onDecrement: () {
-                if (item.quantity <= 1) {
-                  CustomSnackBar.show(
-                    context,
-                    message: 'Minimum quantity must be 1',
-                    isError: true,
-                  );
-                } else {
-                  context.read<CartBloc>().add(
-                    UpdateItemQuantity(
-                      itemId: item.id,
-                      quantity: item.quantity - 1,
-                    ),
-                  );
-                }
-              },
-              onDelete: () {
-                CartHelper.showDeleteDialog(context, () {
-                  context.read<CartBloc>().add(RemoveItem(itemId: item.id));
-                });
-              },
-              onBuyNow: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CheckoutPage(cartItems: [item]),
-                  ),
-                );
-              },
-            ),
+              }
+            },
+            onDelete: () {
+              CartHelper.showDeleteDialog(context, () {
+                context.read<CartBloc>().add(RemoveItem(itemId: item.id));
+              });
+            },
+            onBuyNow: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CheckoutPage(cartItems: [item]),
+                ),
+              );
+            },
+            onView: () => CartHelper.navigateToProductDetail(context, item),
           );
         },
       ),

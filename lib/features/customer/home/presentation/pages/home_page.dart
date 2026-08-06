@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/home/presentation/bloc/home_event.
 import 'package:street_cart/features/customer/home/presentation/bloc/home_state.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:street_cart/features/customer/home/presentation/widgets/products_section.dart';
 import 'package:street_cart/shared/components/customer_search_bar.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/home_banner.dart';
@@ -18,7 +19,6 @@ import 'package:street_cart/features/customer/home/presentation/widgets/categori
 import 'package:street_cart/features/customer/home/presentation/widgets/shops_list_section.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/shimmer/home_page_shimmer.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/home_app_bar.dart';
-import 'package:street_cart/features/customer/home/presentation/widgets/trending_products_section.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 
@@ -92,9 +92,10 @@ class _HomePageState extends State<HomePage> {
               body: Column(
                 children: [
                   CustomSearchBar(
+                    readOnly: true,
                     hintText: "Search for 'Product' or 'Stores' in $city",
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const CustomerProductsPage(
@@ -102,6 +103,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       );
+                      if (context.mounted) {
+                        FocusScope.of(context).unfocus();
+                        context.read<HomeBloc>().add(FetchHomeData());
+                      }
                     },
                     onFilterTap: () =>
                         HomeHelper.navigateToFilter(context, homeState),
@@ -110,8 +115,9 @@ class _HomePageState extends State<HomePage> {
                     child: RefreshIndicator(
                       color: CustomerAppColors.primary,
                       onRefresh: () async {
-                        context.read<HomeBloc>().add(SelectCategory('All'));
-                        context.read<HomeBloc>().add(FetchHomeData());
+                        final bloc = context.read<HomeBloc>();
+                        bloc.add(ResetHome());
+                        bloc.add(FetchHomeData());
                       },
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -134,9 +140,10 @@ class _HomePageState extends State<HomePage> {
                               if (homeState is HomeLoaded) ...[
                                 // Category Row Section
                                 CategoriesRow(
-                                  categories: HomeHelper.extractCategories(
-                                    homeState.homeData.nearbyProducts,
-                                  ),
+                                  categories:
+                                      HomeHelper.extractBusinessCategories(
+                                        homeState.homeData.nearbyShops,
+                                      ),
                                   selectedCategory: homeState.selectedCategory,
                                   onCategorySelected: (cat) {
                                     context.read<HomeBloc>().add(
@@ -149,10 +156,9 @@ class _HomePageState extends State<HomePage> {
                                   shops: homeState.homeData.nearbyShops,
                                 ),
                                 SizedBox(height: 16.h),
-                                // Trending Products Section
-                                TrendingProductsSection(
-                                  products: homeState.homeData.nearbyProducts,
-                                  shops: homeState.homeData.nearbyShops,
+                                // Products Section
+                                ProductsSection(
+                                  homeData: homeState.homeData,
                                   selectedCategory: homeState.selectedCategory,
                                 ),
                               ],
