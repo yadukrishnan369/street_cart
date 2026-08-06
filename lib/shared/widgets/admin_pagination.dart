@@ -37,15 +37,35 @@ class AdminPagination extends StatelessWidget {
     final normalizedTotalPages = totalPages.clamp(1, double.infinity).toInt();
 
     final List<dynamic> pages = [];
-    if (normalizedTotalPages <= 4) {
+    if (normalizedTotalPages <= 5) {
       for (int i = 1; i <= normalizedTotalPages; i++) {
         pages.add(i);
       }
     } else {
       pages.add(1);
-      pages.add(2);
-      pages.add(3);
-      pages.add('...');
+      int start = (currentPage - 1).clamp(2, normalizedTotalPages - 1);
+      int end = (currentPage + 1).clamp(2, normalizedTotalPages - 1);
+
+      if (currentPage <= 3) {
+        start = 2;
+        end = 4;
+      } else if (currentPage >= normalizedTotalPages - 2) {
+        start = normalizedTotalPages - 3;
+        end = normalizedTotalPages - 1;
+      }
+
+      if (start > 2) {
+        pages.add('...');
+      }
+
+      for (int i = start; i <= end; i++) {
+        pages.add(i);
+      }
+
+      if (end < normalizedTotalPages - 1) {
+        pages.add('...');
+      }
+
       pages.add(normalizedTotalPages);
     }
 

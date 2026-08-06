@@ -43,7 +43,7 @@ class ConfirmationModal extends StatelessWidget {
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(16.r),
           border: isDark
-              ? Border.all(color: CustomerAppColors.darkBorder)
+              ? Border.all(color: CustomerAppColors.border, width: 0.5)
               : null,
           boxShadow: [
             BoxShadow(

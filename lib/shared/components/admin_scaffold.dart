@@ -30,6 +30,7 @@ class _AdminScaffoldState extends State<AdminScaffold> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _logout(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (dialogContext) => ConfirmationModal(
@@ -37,7 +38,7 @@ class _AdminScaffoldState extends State<AdminScaffold> {
         content: 'Are you sure you want to logout?',
         confirmText: 'Logout',
         confirmColor: AdminAppColors.primaryColor,
-        surfaceColor: Colors.white,
+        surfaceColor: isDark ? AdminAppColors.darkSurface : Colors.white,
         onConfirm: () {
           Navigator.pop(dialogContext);
           context.read<AdminAuthBloc>().add(AdminLogoutRequested());

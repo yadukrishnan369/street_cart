@@ -43,7 +43,7 @@ class CustomAlertDialog extends StatelessWidget {
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(24.r),
             border: isDark
-                ? Border.all(color: CustomerAppColors.darkBorder)
+                ? Border.all(color: CustomerAppColors.border, width: 0.5)
                 : null,
             boxShadow: [
               BoxShadow(
