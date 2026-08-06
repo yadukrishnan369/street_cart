@@ -131,7 +131,14 @@ class ShopProductsBloc extends Bloc<ShopProductsEvent, ShopProductsState> {
     LoadShopProductsEvent event,
     Emitter<ShopProductsState> emit,
   ) async {
-    emit(state.copyWith(status: ShopProductsStatus.loading));
+    emit(
+      state.copyWith(
+        status: ShopProductsStatus.loading,
+        searchQuery: '',
+        selectedCategories: const ['All'],
+        isSearching: false,
+      ),
+    );
     await _productsSubscription?.cancel();
 
     try {

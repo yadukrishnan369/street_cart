@@ -61,9 +61,9 @@ class RecentOrdersList extends StatelessWidget {
                     color: ShopAppColors.primary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
-                  // Today Label
+                  // Recent Label
                   child: Text(
-                    'Today',
+                    'Recent',
                     style: ShopAppTextStyles.bodyMediumBold.copyWith(
                       color: ShopAppColors.primary,
                       fontSize: 11.sp,

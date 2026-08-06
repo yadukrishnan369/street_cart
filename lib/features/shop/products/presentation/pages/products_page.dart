@@ -72,6 +72,9 @@ class _ProductsPageState extends State<ProductsPage>
               isError: true,
             );
           }
+          if (state.searchQuery.isEmpty && _searchController.text.isNotEmpty) {
+            _searchController.clear();
+          }
         },
         child: BlocBuilder<ShopProductsBloc, ShopProductsState>(
           builder: (context, state) {

@@ -92,7 +92,7 @@ class PreferencesSection extends StatelessWidget {
           children: [
             SettingRowItem(
               icon: Icons.nightlight_outlined,
-              title: 'App Theme',
+              title: 'Dark Mode',
               // Theme Switch
               trailing: SettingCustomSwitch(
                 value: Theme.of(context).brightness == Brightness.dark,
