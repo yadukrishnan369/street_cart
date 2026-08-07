@@ -149,16 +149,26 @@ class AdminProductRemoteDataSourceImpl
   Future<int> getProductOrderCount(String productId) async {
     try {
       final snap = await _firestore.collection('orders').get();
-      int count = 0;
+      int totalUnits = 0;
       for (final doc in snap.docs) {
         final data = doc.data();
-        final items = data['items'] as List<dynamic>? ?? [];
-        final hasProduct = items.any((item) => item['product_id'] == productId);
-        if (hasProduct) {
-          count++;
+        final orderStatus = (data['status'] ?? '').toString().toLowerCase();
+        if (orderStatus == 'delivered') {
+          final items = data['items'] as List<dynamic>? ?? [];
+          for (final item in items) {
+            final itemMap = item as Map<String, dynamic>;
+            if (itemMap['product_id'] == productId) {
+              final itemStatus = (itemMap['status'] ?? '').toString();
+              final itemReturnStatus = (itemMap['return_status'] ?? '')
+                  .toString();
+              if (itemStatus != 'cancelled' && itemReturnStatus.isEmpty) {
+                totalUnits += (itemMap['quantity'] as num?)?.toInt() ?? 1;
+              }
+            }
+          }
         }
       }
-      return count;
+      return totalUnits;
     } catch (e) {
       return 0;
     }

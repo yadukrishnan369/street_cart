@@ -57,102 +57,127 @@ class RecentOrdersTable extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-          SingleChildScrollView(
-            child: SizedBox(
-              width: 950.w,
-              child: Table(
-                columnWidths: const {
-                  0: FlexColumnWidth(1.8), // Order ID
-                  1: FlexColumnWidth(2.2), // Customer
-                  2: FlexColumnWidth(1.5), // Amount
-                  3: FlexColumnWidth(1.5), // Status
-                  4: FlexColumnWidth(1.2), // Actions
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: [
-                  // Table Header
-                  TableRow(
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AdminAppColors.darkInputBackground
-                          : const Color(0xFFF4F5F7),
-                      border: Border(
-                        bottom: BorderSide(
-                          color: isDark
-                              ? AdminAppColors.darkBorder
-                              : const Color(0xFFF0EFF5),
-                          width: 2,
+          // Empty Orders State
+          orders.isEmpty
+              ? Container(
+                  height: 200.h,
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.receipt_long_outlined,
+                        size: 48.sp,
+                        color: AdminAppColors.primaryColor,
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        'No recent orders available',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AdminAppColors.primaryColor,
                         ),
                       ),
-                    ),
-                    children: [
-                      _buildHeaderCell(context, 'ORDER ID'),
-                      _buildHeaderCell(context, 'CUSTOMER'),
-                      _buildHeaderCell(context, 'AMOUNT'),
-                      _buildHeaderCell(context, 'STATUS'),
-                      _buildHeaderCell(context, 'ACTIONS'),
                     ],
                   ),
-                  ...orders.map((order) {
-                    // order ID
-                    final displayId = AdminDashboardHelper.formatOrderId(
-                      order.id,
-                    );
-
-                    return TableRow(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: isDark
-                                ? AdminAppColors.darkBorder
-                                : const Color(0xFFF0EFF5),
-                            width: 1,
-                          ),
-                        ),
-                      ),
+                )
+              : SingleChildScrollView(
+                  child: SizedBox(
+                    width: 950.w,
+                    child: Table(
+                      columnWidths: const {
+                        0: FlexColumnWidth(1.8), // Order ID
+                        1: FlexColumnWidth(2.2), // Customer
+                        2: FlexColumnWidth(1.5), // Amount
+                        3: FlexColumnWidth(1.5), // Status
+                        4: FlexColumnWidth(1.2), // Actions
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
                       children: [
-                        _buildDataCell(context, displayId, isBold: true),
-                        _buildDataCell(context, order.customerName),
-                        _buildDataCell(
-                          context,
-                          '₹${order.amount.toStringAsFixed(2)}',
-                          isBold: true,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.h),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: _buildStatusBadge(order.status),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton(
-                              // Navigate to Order Details Page
-                              onPressed: () {
-                                context.push('/orders/${order.id}');
-                              },
-                              child: Text(
-                                'View',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AdminAppColors.primaryColor,
-                                ),
+                        // Table Header
+                        TableRow(
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AdminAppColors.darkInputBackground
+                                : const Color(0xFFF4F5F7),
+                            border: Border(
+                              bottom: BorderSide(
+                                color: isDark
+                                    ? AdminAppColors.darkBorder
+                                    : const Color(0xFFF0EFF5),
+                                width: 2,
                               ),
                             ),
                           ),
+                          children: [
+                            _buildHeaderCell(context, 'ORDER ID'),
+                            _buildHeaderCell(context, 'CUSTOMER'),
+                            _buildHeaderCell(context, 'AMOUNT'),
+                            _buildHeaderCell(context, 'STATUS'),
+                            _buildHeaderCell(context, 'ACTIONS'),
+                          ],
                         ),
+                        ...orders.map((order) {
+                          // order ID
+                          final displayId = AdminDashboardHelper.formatOrderId(
+                            order.id,
+                          );
+
+                          return TableRow(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: isDark
+                                      ? AdminAppColors.darkBorder
+                                      : const Color(0xFFF0EFF5),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            children: [
+                              _buildDataCell(context, displayId, isBold: true),
+                              _buildDataCell(context, order.customerName),
+                              _buildDataCell(
+                                context,
+                                '₹${order.amount.toStringAsFixed(2)}',
+                                isBold: true,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16.h),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: _buildStatusBadge(order),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextButton(
+                                    // Navigate to Order Details Page
+                                    onPressed: () {
+                                      context.push('/orders/${order.id}');
+                                    },
+                                    child: Text(
+                                      'View',
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: AdminAppColors.primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                       ],
-                    );
-                  }),
-                ],
-              ),
-            ),
-          ),
+                    ),
+                  ),
+                ),
         ],
       ),
     );
@@ -199,25 +224,120 @@ class RecentOrdersTable extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(String status) {
-    final bgColor = AdminOrdersHelper.getStatusBgColor(status);
-    final textColor = AdminOrdersHelper.getStatusTextColor(status);
-    final label = AdminOrdersHelper.getStatusLabel(status);
+  Widget _buildStatusBadge(RecentOrderModel order) {
+    final returnedItems = order.items
+        .where((i) => i.returnStatus != null && i.returnStatus!.isNotEmpty)
+        .toList();
+    final cancelledItems = order.items
+        .where((i) => i.status == 'cancelled')
+        .toList();
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11.sp,
-          fontWeight: FontWeight.bold,
-          color: textColor,
+    final allItemsCancelled =
+        order.items.isNotEmpty &&
+        order.items.every((i) => i.status == 'cancelled');
+    final allItemsReturned =
+        order.items.isNotEmpty &&
+        order.items.every(
+          (i) => i.returnStatus != null && i.returnStatus!.isNotEmpty,
+        );
+    final allItemsCancelledOrReturned =
+        order.items.isNotEmpty &&
+        order.items.every(
+          (i) =>
+              i.status == 'cancelled' ||
+              (i.returnStatus != null && i.returnStatus!.isNotEmpty),
+        );
+
+    final String mainStatus;
+    final String? secondaryStatusLabel;
+    final Color? secondaryStatusBg;
+    final Color? secondaryStatusText;
+
+    if (allItemsCancelled) {
+      mainStatus = 'cancelled';
+      secondaryStatusLabel = null;
+      secondaryStatusBg = null;
+      secondaryStatusText = null;
+    } else if (allItemsReturned) {
+      mainStatus = 'returned';
+      secondaryStatusLabel = null;
+      secondaryStatusBg = null;
+      secondaryStatusText = null;
+    } else if (allItemsCancelledOrReturned) {
+      mainStatus = 'returned';
+      if (cancelledItems.isNotEmpty) {
+        secondaryStatusLabel = '${cancelledItems.length} Cancelled';
+        secondaryStatusBg = const Color(0xFFFCE8E6);
+        secondaryStatusText = AdminAppColors.errorColor;
+      } else {
+        secondaryStatusLabel = null;
+        secondaryStatusBg = null;
+        secondaryStatusText = null;
+      }
+    } else {
+      final String orderMainStatus = order.status;
+      mainStatus = orderMainStatus;
+      if (returnedItems.isNotEmpty) {
+        final isRequested = returnedItems.any(
+          (i) => i.returnStatus!.toLowerCase() == 'return_requested',
+        );
+        secondaryStatusLabel = isRequested
+            ? '${returnedItems.length} Requested'
+            : '${returnedItems.length} Returned';
+        secondaryStatusBg = const Color(0xFFFFF3E0);
+        secondaryStatusText = AdminAppColors.warningColor;
+      } else if (cancelledItems.isNotEmpty) {
+        secondaryStatusLabel = '${cancelledItems.length} Cancelled';
+        secondaryStatusBg = const Color(0xFFFCE8E6);
+        secondaryStatusText = AdminAppColors.errorColor;
+      } else {
+        secondaryStatusLabel = null;
+        secondaryStatusBg = null;
+        secondaryStatusText = null;
+      }
+    }
+
+    final bgColor = AdminOrdersHelper.getStatusBgColor(mainStatus);
+    final textColor = AdminOrdersHelper.getStatusTextColor(mainStatus);
+    final label = AdminOrdersHelper.getStatusLabel(mainStatus);
+
+    return Wrap(
+      spacing: 6.w,
+      runSpacing: 4.h,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
         ),
-      ),
+        if (secondaryStatusLabel != null)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: secondaryStatusBg,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Text(
+              secondaryStatusLabel,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.bold,
+                color: secondaryStatusText,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -78,10 +78,16 @@ class AdminDashboardRemoteDataSourceImpl
       final totalOrdersCount = ordersSnap.docs.where((doc) {
         final data = doc.data();
         final status = (data['status'] ?? '').toString().toLowerCase();
-        final returnStatus = (data['return_status'] ?? '')
-            .toString()
-            .toLowerCase();
-        return status != 'cancelled' && returnStatus.isEmpty;
+        if (status == 'cancelled') return false;
+
+        final items = data['items'] as List<dynamic>? ?? [];
+        final hasActiveItem = items.any((item) {
+          final itemMap = item as Map<String, dynamic>;
+          final itemReturnStatus = (itemMap['return_status'] ?? '').toString();
+          final itemStatus = (itemMap['status'] ?? '').toString();
+          return itemReturnStatus.isEmpty && itemStatus != 'cancelled';
+        });
+        return hasActiveItem;
       }).length;
 
       final allOrders = ordersSnap.docs.map((doc) {
@@ -95,17 +101,28 @@ class AdminDashboardRemoteDataSourceImpl
                 DateTime.tryParse(data['created_at']) ?? DateTime.now();
           }
         }
-        final returnStatus = (data['return_status'] ?? '').toString();
-        final rawStatus = data['status'] ?? 'pending';
-        final status = returnStatus.isNotEmpty ? returnStatus : rawStatus;
+
+        final items = data['items'] as List<dynamic>? ?? [];
+        final double activeAmount = items.fold(0.0, (itemSum, item) {
+          final itemMap = item as Map<String, dynamic>;
+          final itemReturnStatus = (itemMap['return_status'] ?? '').toString();
+          final itemStatus = (itemMap['status'] ?? '').toString();
+          if (itemReturnStatus.isNotEmpty || itemStatus == 'cancelled') {
+            return itemSum;
+          }
+          return itemSum +
+              (((itemMap['price'] as num?)?.toDouble() ?? 0.0) *
+                  ((itemMap['quantity'] as num?)?.toInt() ?? 1));
+        });
 
         return {
           'id': doc.id,
           'customer_id': data['customer_id'] ?? '',
-          'amount': (data['total_amount'] as num?)?.toDouble() ?? 0.0,
-          'status': status,
+          'amount': activeAmount,
+          'status': data['status'] ?? 'pending',
           'createdAt': parsedDate,
           'deliveryAddress': data['delivery_address'] ?? {},
+          'items': items,
         };
       }).toList();
 
@@ -139,6 +156,14 @@ class AdminDashboardRemoteDataSourceImpl
         final createdDate = rawOrder['createdAt'] as DateTime;
         final timeAgoStr = _calculateTimeAgo(createdDate);
 
+        final rawItems = rawOrder['items'] as List<dynamic>? ?? [];
+        final itemsList = rawItems
+            .map(
+              (item) =>
+                  RecentOrderItemModel.fromMap(item as Map<String, dynamic>),
+            )
+            .toList();
+
         recentOrders.add(
           RecentOrderModel(
             id: rawOrder['id'] as String,
@@ -146,6 +171,7 @@ class AdminDashboardRemoteDataSourceImpl
             amount: rawOrder['amount'] as double,
             status: rawOrder['status'] as String,
             timeAgo: timeAgoStr,
+            items: itemsList,
           ),
         );
       }
@@ -154,13 +180,16 @@ class AdminDashboardRemoteDataSourceImpl
       final double totalRevenue = ordersSnap.docs.fold(0.0, (sum, doc) {
         final data = doc.data();
         final status = (data['status'] ?? '').toString().toLowerCase();
-        final returnStatus = (data['return_status'] ?? '')
-            .toString()
-            .toLowerCase();
-        if (status == 'delivered' && returnStatus.isEmpty) {
+        if (status == 'delivered') {
           final items = data['items'] as List<dynamic>? ?? [];
           final orderCommission = items.fold(0.0, (itemSum, item) {
             final itemMap = item as Map<String, dynamic>;
+            final itemReturnStatus = (itemMap['return_status'] ?? '')
+                .toString();
+            final itemStatus = (itemMap['status'] ?? '').toString();
+            if (itemReturnStatus.isNotEmpty || itemStatus == 'cancelled') {
+              return itemSum;
+            }
             return itemSum +
                 ((itemMap['admin_commission'] as num?)?.toDouble() ?? 0.0);
           });

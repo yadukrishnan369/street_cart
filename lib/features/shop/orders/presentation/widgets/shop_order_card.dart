@@ -12,12 +12,16 @@ import 'package:street_cart/core/utils/price_utils.dart';
 class ShopOrderCard extends StatelessWidget {
   final OrderModel order;
   final String shopId;
+  final bool isCancelledView;
+  final bool isReturnedView;
   final Function(String nextStatus) onUpdateStatus;
 
   const ShopOrderCard({
     super.key,
     required this.order,
     required this.shopId,
+    this.isCancelledView = false,
+    this.isReturnedView = false,
     required this.onUpdateStatus,
   });
 
@@ -30,6 +34,8 @@ class ShopOrderCard extends StatelessWidget {
     final cardData = ShopOrdersHelper.getShopOrderCardData(
       order: order,
       shopId: shopId,
+      isCancelledView: isCancelledView,
+      isReturnedView: isReturnedView,
     );
     if (cardData.isEmpty) return const SizedBox.shrink();
 
@@ -52,7 +58,7 @@ class ShopOrderCard extends StatelessWidget {
     );
 
     final rStatus = order.returnStatus;
-    final hasReturn = rStatus != null && rStatus.isNotEmpty;
+    final hasReturn = isReturnedView && rStatus != null && rStatus.isNotEmpty;
     String? returnStatusLabel;
     Color returnStatusColor = Colors.grey;
     // Return Statuses
@@ -76,6 +82,25 @@ class ShopOrderCard extends StatelessWidget {
 
     final bool isCOD = paymentMethodLabel == 'COD';
     final badgeColor = isCOD ? ShopAppColors.warning : ShopAppColors.success;
+    final bool isRefundPending =
+        !isCOD &&
+        (order.refundStatus == 'pending' ||
+            order.items.any(
+              (item) =>
+                  item.shopId == shopId &&
+                  item.status == 'cancelled' &&
+                  item.refundStatus == 'pending',
+            ));
+    final bool isRefundCompleted =
+        !isCOD &&
+        !isRefundPending &&
+        (order.refundStatus == 'refunded' ||
+            order.items.any(
+              (item) =>
+                  item.shopId == shopId &&
+                  item.status == 'cancelled' &&
+                  item.refundStatus == 'refunded',
+            ));
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -223,6 +248,115 @@ class ShopOrderCard extends StatelessWidget {
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ] else if (order.status.toLowerCase() ==
+                                  'cancelled' ||
+                              isCancelledView) ...[
+                            if (isRefundPending) ...[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ShopAppColors.warning.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: ShopAppColors.warning.withValues(
+                                      alpha: 0.15,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Refund Pending',
+                                  style: TextStyle(
+                                    color: ShopAppColors.warning,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ] else if (isRefundCompleted) ...[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ShopAppColors.success.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: ShopAppColors.success.withValues(
+                                      alpha: 0.15,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Refunded',
+                                  style: TextStyle(
+                                    color: ShopAppColors.success,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ] else ...[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ShopAppColors.error.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: ShopAppColors.error.withValues(
+                                      alpha: 0.15,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cancelled',
+                                  style: TextStyle(
+                                    color: ShopAppColors.error,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ] else if (order.status.toLowerCase() ==
+                              'delivered') ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: ShopAppColors.success.withValues(
+                                  alpha: 0.08,
+                                ),
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: Border.all(
+                                  color: ShopAppColors.success.withValues(
+                                    alpha: 0.15,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'Completed',
+                                style: TextStyle(
+                                  color: ShopAppColors.success,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),

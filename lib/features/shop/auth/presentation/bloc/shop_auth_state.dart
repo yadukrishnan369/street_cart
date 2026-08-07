@@ -8,6 +8,7 @@ enum ShopAuthStatus {
   verificationWaiting,
   verificationSuccess,
   passwordResetSuccess,
+  profileSetupSuccess,
 }
 
 class ShopAuthState extends Equatable {

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
+import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 
 // Shop Orders Tab Bar
 class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,6 +16,10 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final authState = context.read<ShopAuthBloc>().state;
+    final shopId = authState.status == ShopAuthStatus.authenticated
+        ? (authState.shop?.uid ?? '')
+        : '';
 
     return BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
       builder: (context, state) {
@@ -32,9 +37,20 @@ class ShopOrdersTabBar extends StatelessWidget implements PreferredSizeWidget {
               ? ShopAppColors.darkTextSecondary
               : Colors.grey[500],
           onTap: (index) => activeTabNotifier.value = index,
-          tabs: List.generate(5, (index) {
-            final tabTitles = ['NEW', 'PROCESS', 'SHIPPED', 'DONE', 'RETURNS'];
-            final count = ShopOrdersHelper.getCount(orders.cast(), index);
+          tabs: List.generate(6, (index) {
+            final tabTitles = [
+              'NEW',
+              'PROCESS',
+              'SHIPPED',
+              'DONE',
+              'CANCELLED',
+              'RETURNS',
+            ];
+            final count = ShopOrdersHelper.getCount(
+              orders.cast(),
+              index,
+              shopId,
+            );
 
             return ValueListenableBuilder<int>(
               valueListenable: activeTabNotifier,

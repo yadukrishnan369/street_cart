@@ -26,7 +26,7 @@ class OrderPaymentSummaryCard extends StatelessWidget {
     final subtotalStr = '₹${PriceUtils.formatPrice(subtotal)}';
     final commStr = '₹${PriceUtils.formatPrice(commission)}';
     final deductionStr = '₹${PriceUtils.formatPrice(deduction)}';
-    final grandTotalStr = '₹${PriceUtils.formatPrice(order.totalAmount)}';
+    final grandTotalStr = '₹${PriceUtils.formatPrice(subtotal)}';
 
     // Calculate commission percentage
     final double commissionPercentage =

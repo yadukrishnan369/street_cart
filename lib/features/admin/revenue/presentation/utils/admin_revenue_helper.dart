@@ -38,8 +38,12 @@ class AdminRevenueHelper {
   static List<OrderModel> filterCompletedOrdersOnly(List<OrderModel> orders) {
     return orders.where((o) {
       final status = o.status.toLowerCase();
-      final hasReturn = o.returnStatus != null && o.returnStatus!.isNotEmpty;
-      return status == 'delivered' && !hasReturn;
+      final allItemsReturnedOrCancelled = o.items.every(
+        (item) =>
+            (item.returnStatus != null && item.returnStatus!.isNotEmpty) ||
+            item.status == 'cancelled',
+      );
+      return status == 'delivered' && !allItemsReturnedOrCancelled;
     }).toList();
   }
 
@@ -65,9 +69,12 @@ class AdminRevenueHelper {
 
     return orders.where((order) {
       final status = order.status.toLowerCase();
-      final hasReturn =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
-      if (status != 'delivered' || hasReturn) return false;
+      final allItemsReturnedOrCancelled = order.items.every(
+        (item) =>
+            (item.returnStatus != null && item.returnStatus!.isNotEmpty) ||
+            item.status == 'cancelled',
+      );
+      if (status != 'delivered' || allItemsReturnedOrCancelled) return false;
 
       if (dateRange != null) {
         if (order.createdAt.isBefore(dateRange.$1) ||
@@ -175,7 +182,28 @@ class AdminRevenueHelper {
 
   // Get Order Commission Amount
   static double computeOrderCommission(OrderModel order) {
-    return order.items.fold(0.0, (sum, item) => sum + item.adminCommission);
+    return order.items.fold(0.0, (sum, item) {
+      final isItemReturnedOrCancelled =
+          (item.returnStatus != null && item.returnStatus!.isNotEmpty) ||
+          item.status == 'cancelled';
+      if (isItemReturnedOrCancelled) {
+        return sum;
+      }
+      return sum + item.adminCommission;
+    });
+  }
+
+  // Get Order Amount - excluding returned/cancelled products
+  static double computeOrderAmount(OrderModel order) {
+    return order.items.fold(0.0, (sum, item) {
+      final isItemReturnedOrCancelled =
+          (item.returnStatus != null && item.returnStatus!.isNotEmpty) ||
+          item.status == 'cancelled';
+      if (isItemReturnedOrCancelled) {
+        return sum;
+      }
+      return sum + (item.price * item.quantity);
+    });
   }
 
   // Get Order ID

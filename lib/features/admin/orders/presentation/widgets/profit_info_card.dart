@@ -17,7 +17,8 @@ class ProfitInfoCard extends StatelessWidget {
     final commission = AdminOrdersHelper.calculateCommission(order);
     final vendorEarnings = AdminOrdersHelper.calculateVendorEarnings(order);
 
-    final totalStr = '₹${PriceUtils.formatPrice(order.totalAmount)}';
+    final totalStr =
+        '₹${PriceUtils.formatPrice(AdminOrdersHelper.calculateSubtotal(order))}';
     final vendorStr = '₹${PriceUtils.formatPrice(vendorEarnings)}';
     final profitStr = '₹${PriceUtils.formatPrice(commission)}';
 

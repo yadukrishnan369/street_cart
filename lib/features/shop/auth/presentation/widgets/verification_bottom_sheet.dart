@@ -22,10 +22,7 @@ class ShopVerificationBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ShopAuthBloc, ShopAuthState>(
       listener: (context, state) {
-        if (state.status == ShopAuthStatus.verificationSuccess ||
-            state.status == ShopAuthStatus.authenticated) {
-          Navigator.pop(context);
-        } else if (state.status == ShopAuthStatus.initial) {
+        if (state.status == ShopAuthStatus.initial) {
           Navigator.pop(context);
           CustomSnackBar.show(
             context,

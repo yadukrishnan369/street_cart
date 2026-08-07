@@ -19,13 +19,13 @@ class SalesAnalyticsHelper {
     for (final order in orders) {
       final status = order.status.toLowerCase();
       final isDelivered = status == 'delivered';
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
-      final isCancelled = status == 'cancelled';
 
-      if (isDelivered && !isReturned && !isCancelled) {
+      if (isDelivered) {
         for (final item in order.items) {
-          if (item.shopId == shopId) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (item.shopId == shopId && !isItemReturned && !isItemCancelled) {
             final category = productCategories[item.productId] ?? 'Other';
             if (selectedCategory == 'All' || category == selectedCategory) {
               total += item.price * item.quantity;
@@ -165,21 +165,28 @@ class SalesAnalyticsHelper {
     final List<AnalyticsTransactionItem> list = [];
     for (final order in orders) {
       final status = order.status.toLowerCase();
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
+      final hasReturnedItems = order.items.any(
+        (item) => item.returnStatus != null && item.returnStatus!.isNotEmpty,
+      );
+      final hasCancelledItems = order.items.any(
+        (item) => item.status == 'cancelled',
+      );
       final isCancelled = status == 'cancelled';
       final isDelivered = status == 'delivered';
 
       // Only show completed, returned, and cancelled orders
-      if (isDelivered || isReturned || isCancelled) {
+      if (isDelivered || hasReturnedItems || isCancelled || hasCancelledItems) {
         for (final item in order.items) {
           if (item.shopId == shopId) {
             final category = productCategories[item.productId] ?? 'Other';
             if (selectedCategory == 'All' || category == selectedCategory) {
               String displayStatus = 'Paid';
-              if (isCancelled) {
+              final isItemCancelled = item.status == 'cancelled';
+              final isItemReturned =
+                  item.returnStatus != null && item.returnStatus!.isNotEmpty;
+              if (isItemCancelled || isCancelled) {
                 displayStatus = 'Cancelled';
-              } else if (isReturned) {
+              } else if (isItemReturned) {
                 displayStatus = 'Returned';
               }
 
@@ -296,16 +303,16 @@ class SalesAnalyticsHelper {
     for (final order in orders) {
       final status = order.status.toLowerCase();
       final isDelivered = status == 'delivered';
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
-      final isCancelled = status == 'cancelled';
 
-      if (isDelivered && !isReturned && !isCancelled) {
+      if (isDelivered) {
         bool hasShopItem = false;
         int orderItemsQuantity = 0;
 
         for (final item in order.items) {
-          if (item.shopId == shopId) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (item.shopId == shopId && !isItemReturned && !isItemCancelled) {
             final category = productCategories[item.productId] ?? 'Other';
             if (selectedCategory == 'All' || category == selectedCategory) {
               hasShopItem = true;

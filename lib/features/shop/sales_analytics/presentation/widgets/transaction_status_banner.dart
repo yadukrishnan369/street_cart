@@ -6,20 +6,31 @@ import 'package:street_cart/features/customer/orders/data/models/order_model.dar
 // Transaction Status Banner
 class TransactionStatusBanner extends StatelessWidget {
   final OrderModel order;
+  final String? transactionStatus;
 
-  const TransactionStatusBanner({super.key, required this.order});
+  const TransactionStatusBanner({
+    super.key,
+    required this.order,
+    this.transactionStatus,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final status = order.status.toLowerCase();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final status = (transactionStatus ?? order.status).toLowerCase();
     final isCancelled = status == 'cancelled';
     final isReturned =
-        order.returnStatus != null && order.returnStatus!.isNotEmpty;
+        status == 'returned' ||
+        (order.returnStatus != null &&
+            order.returnStatus!.isNotEmpty &&
+            transactionStatus == null);
 
     Color bannerColor = ShopAppColors.success;
     String bannerText = 'Order Delivered Successfully';
     IconData bannerIcon = Icons.check_circle_outline;
+
     // Cancelled Banner styles
     if (isCancelled) {
       bannerColor = ShopAppColors.error;

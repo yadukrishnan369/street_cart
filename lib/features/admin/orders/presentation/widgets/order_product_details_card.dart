@@ -175,6 +175,41 @@ class OrderProductDetailsCard extends StatelessWidget {
                               : const Color(0xFF8A8A9E),
                         ),
                       ),
+                      if (order.status.toLowerCase() == 'cancelled' ||
+                          item.status == 'cancelled' ||
+                          (item.returnStatus != null &&
+                              item.returnStatus!.isNotEmpty)) ...[
+                        SizedBox(height: 4.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                (order.status.toLowerCase() == 'cancelled' ||
+                                    item.status == 'cancelled')
+                                ? const Color(0xFFFCE8E6)
+                                : const Color(0xFFFFF3E0),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Text(
+                            (order.status.toLowerCase() == 'cancelled' ||
+                                    item.status == 'cancelled')
+                                ? 'Cancelled'
+                                : 'Returned',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  (order.status.toLowerCase() == 'cancelled' ||
+                                      item.status == 'cancelled')
+                                  ? AdminAppColors.errorColor
+                                  : AdminAppColors.warningColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

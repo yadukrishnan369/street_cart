@@ -47,11 +47,15 @@ class EmptyShopOrdersView extends StatelessWidget {
         description =
             'You haven\'t completed any orders yet. Keep serving customers to build your history!';
         break;
-      case 4: // RETURNED
-        icon = Icons.cancel_presentation_outlined;
+      case 4: // CANCELLED
+        icon = Icons.cancel_outlined;
+        title = 'No Cancelled Orders';
+        description = 'You have no cancelled orders at this time.';
+        break;
+      case 5: // RETURNED
+        icon = Icons.assignment_return_outlined;
         title = 'No Returned Orders';
-        description =
-            'Clean sheet! You have no cancelled or returned orders at this time.';
+        description = 'Clean sheet! You have no returned orders at this time.';
         break;
       default:
         icon = Icons.assignment_outlined;

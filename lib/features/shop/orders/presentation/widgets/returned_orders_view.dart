@@ -68,6 +68,7 @@ class ReturnedOrdersView extends StatelessWidget {
             child: ShopOrderCard(
               order: order,
               shopId: shopId,
+              isReturnedView: true,
               onUpdateStatus: (_) {},
             ),
           );

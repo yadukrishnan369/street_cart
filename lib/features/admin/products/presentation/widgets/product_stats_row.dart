@@ -63,7 +63,7 @@ class ProductStatsRow extends StatelessWidget {
           child: _buildStatItemCard(
             context,
             label: 'SALES',
-            value: '${p.salesCount} Units',
+            value: '${productItem.orderCount} Units',
             labelColor: isDark
                 ? AdminAppColors.darkTextSecondary
                 : const Color(0xFF667085),

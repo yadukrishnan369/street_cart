@@ -32,7 +32,7 @@ class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
     return BlocListener<ShopAuthBloc, ShopAuthState>(
       listener: (context, state) {
         final bool isSuccess =
-            state.status == ShopAuthStatus.authenticated ||
+            state.status == ShopAuthStatus.profileSetupSuccess ||
             (state.shop != null &&
                 state.shop!.isProfileCompleted &&
                 !state.shop!.isRejected);

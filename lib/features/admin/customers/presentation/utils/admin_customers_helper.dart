@@ -35,34 +35,61 @@ class AdminCustomersHelper {
 
   // get returns count
   static int getReturnsCount(List<OrderModel> orders) {
-    return orders
-        .where((o) => o.returnStatus != null && o.returnStatus!.isNotEmpty)
-        .length;
+    int count = 0;
+    for (final order in orders) {
+      for (final item in order.items) {
+        if (item.returnStatus != null && item.returnStatus!.isNotEmpty) {
+          count++;
+        }
+      }
+    }
+    return count;
   }
 
   // get cancelled count
   static int getCancelledCount(List<OrderModel> orders) {
-    return orders.where((o) => o.status.toLowerCase() == 'cancelled').length;
+    int count = 0;
+    for (final order in orders) {
+      for (final item in order.items) {
+        if (item.status == 'cancelled') {
+          count++;
+        }
+      }
+    }
+    return count;
   }
 
   // get completed count
   static int getCompletedCount(List<OrderModel> orders) {
-    return orders.where((o) {
-      final status = o.status.toLowerCase();
-      final isReturned = o.returnStatus != null && o.returnStatus!.isNotEmpty;
-      return status == 'delivered' && !isReturned;
-    }).length;
+    int count = 0;
+    for (final order in orders) {
+      if (order.status.toLowerCase() == 'delivered') {
+        for (final item in order.items) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (!isItemReturned && !isItemCancelled) {
+            count++;
+          }
+        }
+      }
+    }
+    return count;
   }
 
   // Calculates total spent amount
   static double getTotalSpent(List<OrderModel> orders) {
     double totalSpent = 0.0;
     for (final order in orders) {
-      final isCancelled = order.status.toLowerCase() == 'cancelled';
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
-      if (!isCancelled && !isReturned) {
-        totalSpent += order.totalAmount;
+      if (order.status.toLowerCase() == 'delivered') {
+        for (final item in order.items) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (!isItemReturned && !isItemCancelled) {
+            totalSpent += item.price * item.quantity;
+          }
+        }
       }
     }
     return totalSpent;

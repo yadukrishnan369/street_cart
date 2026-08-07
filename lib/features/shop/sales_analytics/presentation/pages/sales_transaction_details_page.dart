@@ -13,11 +13,13 @@ import 'package:street_cart/shared/widgets/app_error_view.dart';
 class ShopSalesTransactionDetailsPage extends StatelessWidget {
   final OrderModel order;
   final String shopId;
+  final String? transactionStatus;
 
   const ShopSalesTransactionDetailsPage({
     super.key,
     required this.order,
     required this.shopId,
+    this.transactionStatus,
   });
 
   @override
@@ -87,7 +89,10 @@ class ShopSalesTransactionDetailsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Transaction Status Banner
-                TransactionStatusBanner(order: order),
+                TransactionStatusBanner(
+                  order: order,
+                  transactionStatus: transactionStatus,
+                ),
                 SizedBox(height: 12.h),
                 //Transaction Customer Info
                 TransactionCustomerInfo(order: order),

@@ -75,6 +75,7 @@ class RecentTransactionsList extends StatelessWidget {
                 builder: (_) => ShopSalesTransactionDetailsPage(
                   order: tx.order,
                   shopId: shopId,
+                  transactionStatus: tx.status,
                 ),
               ),
             );

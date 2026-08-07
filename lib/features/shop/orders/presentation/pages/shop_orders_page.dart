@@ -35,7 +35,7 @@ class ShopOrdersPage extends StatelessWidget {
       create: (context) =>
           sl<ShopOrdersBloc>()..add(FetchShopOrdersEvent(shopId)),
       child: DefaultTabController(
-        length: 5,
+        length: 6,
         child: BlocListener<ShopOrdersBloc, ShopOrdersState>(
           listener: (context, state) {
             if (state.status == ShopOrdersStatus.failure &&
@@ -103,10 +103,11 @@ class ShopOrdersPage extends StatelessWidget {
                   // Tab Bar Views
                   return TabBarView(
                     physics: const BouncingScrollPhysics(),
-                    children: List.generate(5, (tabIndex) {
+                    children: List.generate(6, (tabIndex) {
                       final filteredList = ShopOrdersHelper.filterOrders(
                         allOrders,
                         tabIndex,
+                        shopId,
                       );
 
                       if (filteredList.isEmpty) {
@@ -119,7 +120,7 @@ class ShopOrdersPage extends StatelessWidget {
                         );
                       }
                       // Return Orders View
-                      if (tabIndex == 4) {
+                      if (tabIndex == 5) {
                         return ReturnedOrdersView(
                           filteredList: filteredList,
                           shopId: shopId,
@@ -145,6 +146,7 @@ class ShopOrdersPage extends StatelessWidget {
                                       child: ShopOrderDetailsPage(
                                         order: order,
                                         shopId: shopId,
+                                        isCancelledView: tabIndex == 4,
                                       ),
                                     ),
                                   ),
@@ -154,6 +156,7 @@ class ShopOrdersPage extends StatelessWidget {
                               child: ShopOrderCard(
                                 order: order,
                                 shopId: shopId,
+                                isCancelledView: tabIndex == 4,
                                 onUpdateStatus: (nextStatus) {
                                   context.read<ShopOrdersBloc>().add(
                                     UpdateOrderStatusEvent(

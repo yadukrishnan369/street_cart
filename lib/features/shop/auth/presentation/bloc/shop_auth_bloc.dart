@@ -261,6 +261,7 @@ class ShopAuthBloc extends Bloc<ShopAuthEvent, ShopAuthState> {
         businessLicenseFile: event.businessLicenseFile,
         ownerIdFile: event.ownerIdFile,
       );
+      emit(state.copyWith(status: ShopAuthStatus.profileSetupSuccess));
       emit(state.copyWith(status: ShopAuthStatus.authenticated));
     } on ServerException catch (e) {
       emit(

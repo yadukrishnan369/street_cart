@@ -9,18 +9,23 @@ import 'package:street_cart/features/shop/orders/presentation/widgets/item_summa
 import 'package:street_cart/features/shop/orders/presentation/widgets/order_timeline_tracker.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_delivered_banner.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_details_action_button.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/refund_success_widget.dart';
+import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
+import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_cancelled_banner.dart';
 
 // Shop Order Details Page
 class ShopOrderDetailsPage extends StatelessWidget {
   final OrderModel order;
   final String shopId;
+  final bool isCancelledView;
 
   const ShopOrderDetailsPage({
     super.key,
     required this.order,
     required this.shopId,
+    this.isCancelledView = false,
   });
 
   @override
@@ -57,70 +62,168 @@ class ShopOrderDetailsPage extends StatelessWidget {
             ShopOrderStatus.fromString(currentOrder.status),
           );
 
-          return Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: AppBar(
-              backgroundColor: isDark
-                  ? ShopAppColors.darkBackground
-                  : Colors.white,
-              centerTitle: true,
-              elevation: isDark ? null : 1.0,
-              shape: Border(
-                bottom: BorderSide(
-                  color: isDark
-                      ? ShopAppColors.darkBorder
-                      : ShopAppColors.border.withValues(alpha: 1.0),
-                  width: 0.5,
+          final cardData = ShopOrdersHelper.getShopOrderCardData(
+            order: currentOrder,
+            shopId: shopId,
+            isCancelledView: isCancelledView,
+          );
+          final totalAmount =
+              (cardData['totalAmount'] as double?) ?? currentOrder.totalAmount;
+
+          final isCOD =
+              currentOrder.paymentMethod.toLowerCase().contains('cod') ||
+              currentOrder.paymentMethod.toLowerCase().contains('cash');
+          final isCancelled =
+              currentOrder.status.toLowerCase() == 'cancelled' ||
+              isCancelledView;
+
+          return Stack(
+            children: [
+              Scaffold(
+                backgroundColor: theme.scaffoldBackgroundColor,
+                appBar: AppBar(
+                  backgroundColor: isDark
+                      ? ShopAppColors.darkBackground
+                      : Colors.white,
+                  centerTitle: true,
+                  elevation: isDark ? null : 1.0,
+                  shape: Border(
+                    bottom: BorderSide(
+                      color: isDark
+                          ? ShopAppColors.darkBorder
+                          : ShopAppColors.border.withValues(alpha: 1.0),
+                      width: 0.5,
+                    ),
+                  ),
+                  // Page Header with Order ID
+                  title: Text(
+                    'Order #ORD-$orderIdPrefix',
+                    style: TextStyle(
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: isDark
+                          ? ShopAppColors.darkTextPrimary
+                          : ShopAppColors.textPrimary,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                 ),
-              ),
-              // Page Header with Order ID
-              title: Text(
-                'Order #ORD-$orderIdPrefix',
-                style: TextStyle(
-                  color: isDark
-                      ? ShopAppColors.darkTextPrimary
-                      : ShopAppColors.textPrimary,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
+                body: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (isCancelled)
+                        ShopOrderCancelledBanner(
+                          order: currentOrder,
+                          totalAmount: totalAmount,
+                        )
+                      else
+                        ShopOrderDeliveredBanner(order: currentOrder),
+                      SizedBox(height: 8.h),
+                      // Customer Info Card
+                      CustomerInfoCard(order: currentOrder),
+                      SizedBox(height: 16.h),
+                      // Item Summary Card
+                      ItemSummaryCard(
+                        order: currentOrder,
+                        shopId: shopId,
+                        isCancelledView: isCancelledView,
+                      ),
+                      SizedBox(height: 16.h),
+                      // Order Timeline Tracker
+                      if (!isCancelled) ...[
+                        OrderTimelineTracker(order: currentOrder),
+                      ],
+                      SizedBox(height: 120.h),
+                    ],
+                  ),
                 ),
+                // Shop Order Details Action Button
+                bottomSheet:
+                    (isCancelled &&
+                        !isCOD &&
+                        (currentOrder.refundStatus == 'pending' ||
+                            currentOrder.items.any(
+                              (item) =>
+                                  item.shopId == shopId &&
+                                  item.status == 'cancelled' &&
+                                  item.refundStatus == 'pending',
+                            )))
+                    ? Container(
+                        padding: EdgeInsets.all(16.w),
+                        color: isDark
+                            ? ShopAppColors.darkSurface
+                            : Colors.white,
+                        child: SafeArea(
+                          child: PrimaryButton(
+                            prefixIcon: const Icon(
+                              Icons.currency_rupee,
+                              color: Colors.white,
+                            ),
+                            text: 'Process Refund',
+                            backgroundColor: ShopAppColors.primary,
+                            height: 55.h,
+                            onPressed: () {
+                              ShopOrdersHelper.showStatusChangeConfirmation(
+                                context: context,
+                                statusLabel: 'Process Refund',
+                                onConfirm: () {
+                                  context.read<ShopOrdersBloc>().add(
+                                    InitiateRefundEvent(
+                                      orderId: currentOrder.id,
+                                      refundAmount: totalAmount,
+                                      paymentMethod: currentOrder.paymentMethod,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    : (nextStatusLabel != null &&
+                          nextStatus != null &&
+                          !isCancelled)
+                    ? ShopOrderDetailsActionButton(
+                        order: currentOrder,
+                        shopId: shopId,
+                      )
+                    : null,
               ),
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: isDark
-                      ? ShopAppColors.darkTextPrimary
-                      : ShopAppColors.textPrimary,
+              if (state.refundStatus == 'processing')
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black26,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          ShopAppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Shop Order Delivered Banner
-                  ShopOrderDeliveredBanner(order: currentOrder),
-                  SizedBox(height: 8.h),
-                  // Customer Info Card
-                  CustomerInfoCard(order: currentOrder),
-                  SizedBox(height: 16.h),
-                  // Item Summary Card
-                  ItemSummaryCard(order: currentOrder, shopId: shopId),
-                  SizedBox(height: 16.h),
-                  // Order Timeline Tracker
-                  OrderTimelineTracker(order: currentOrder),
-                  SizedBox(height: 120.h),
-                ],
-              ),
-            ),
-            // Shop Order Details Action Button
-            bottomSheet: (nextStatusLabel != null && nextStatus != null)
-                ? ShopOrderDetailsActionButton(
-                    order: currentOrder,
-                    shopId: shopId,
-                  )
-                : null,
+              if (state.refundStatus == 'success')
+                Positioned.fill(
+                  child: RefundSuccessWidget(
+                    amount: totalAmount,
+                    onDismiss: () {
+                      context.read<ShopOrdersBloc>().add(
+                        const ResetRefundStatusEvent(),
+                      );
+                    },
+                  ),
+                ),
+            ],
           );
         },
       ),

@@ -68,10 +68,39 @@ class OrdersHelper {
   // formats products display label for order cards
   static String getOrderDisplayName(OrderModel order) {
     if (order.items.isEmpty) return '';
-    final firstItem = order.items.first;
-    return order.items.length > 1
-        ? '${firstItem.productName} and ${order.items.length - 1} more'
+
+    final activeItems = order.items
+        .where((item) => item.status != 'cancelled')
+        .toList();
+    final cancelledItems = order.items
+        .where((item) => item.status == 'cancelled')
+        .toList();
+
+    final displayItems = (order.status.toLowerCase() == 'cancelled')
+        ? (cancelledItems.isNotEmpty ? cancelledItems : order.items)
+        : (activeItems.isNotEmpty ? activeItems : order.items);
+
+    if (displayItems.isEmpty) return '';
+    final firstItem = displayItems.first;
+    return displayItems.length > 1
+        ? '${firstItem.productName} and ${displayItems.length - 1} more'
         : firstItem.productName;
+  }
+
+  // Get active items in an order
+  static List<OrderItemModel> getActiveItems(OrderModel order) {
+    return order.items.where((item) => item.status != 'cancelled').toList();
+  }
+
+  // Get cancelled items in an order
+  static List<OrderItemModel> getCancelledItems(OrderModel order) {
+    return order.items.where((item) => item.status == 'cancelled').toList();
+  }
+
+  // Get active item to display
+  static OrderItemModel getDisplayItem(OrderModel order) {
+    final activeItems = getActiveItems(order);
+    return activeItems.isNotEmpty ? activeItems.first : order.items.first;
   }
 
   // Returns only if the order is delivered with return option

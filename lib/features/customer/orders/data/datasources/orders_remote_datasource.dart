@@ -68,11 +68,35 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
         }
       }
 
+      final paymentMethod = (data['payment_method'] as String? ?? '')
+          .toLowerCase();
+      final isOnlinePayment =
+          !paymentMethod.contains('cod') && !paymentMethod.contains('cash');
+
+      // Update item statuses inside the items list
+      final updatedItems = items.map((item) {
+        final itemMap = Map<String, dynamic>.from(item as Map);
+        itemMap['status'] = 'cancelled';
+        if (isOnlinePayment) {
+          itemMap['refund_status'] = 'pending';
+        }
+        return itemMap;
+      }).toList();
+
       // Mark order as cancelled
-      transaction.update(_firestore.collection('orders').doc(orderId), {
+      final Map<String, dynamic> updateData = {
         'status': 'cancelled',
         'cancelled_at': FieldValue.serverTimestamp(),
-      });
+        'items': updatedItems,
+      };
+      if (isOnlinePayment) {
+        updateData['refund_status'] = 'pending';
+      }
+
+      transaction.update(
+        _firestore.collection('orders').doc(orderId),
+        updateData,
+      );
 
       // Revert stock for each item
       for (final item in items) {
@@ -197,13 +221,43 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
 
       // If this is the only item in the order, cancel the entire order
       if (items.length == 1) {
-        transaction.update(_firestore.collection('orders').doc(orderId), {
+        final paymentMethod = (data['payment_method'] as String? ?? '')
+            .toLowerCase();
+        final isOnlinePayment =
+            !paymentMethod.contains('cod') && !paymentMethod.contains('cash');
+
+        itemToCancel['status'] = 'cancelled';
+        if (isOnlinePayment) {
+          itemToCancel['refund_status'] = 'pending';
+        }
+        items[0] = itemToCancel;
+
+        final Map<String, dynamic> cancelData = {
           'status': 'cancelled',
           'cancelled_at': FieldValue.serverTimestamp(),
-        });
+          'items': items,
+        };
+        if (isOnlinePayment) {
+          cancelData['refund_status'] = 'pending';
+        }
+        transaction.update(
+          _firestore.collection('orders').doc(orderId),
+          cancelData,
+        );
       } else {
-        // Remove the item and update order totals
-        items.removeAt(itemIndex);
+        // Mark the item as cancelled
+        final paymentMethod = (data['payment_method'] as String? ?? '')
+            .toLowerCase();
+        final isOnlinePayment =
+            !paymentMethod.contains('cod') && !paymentMethod.contains('cash');
+
+        itemToCancel['status'] = 'cancelled';
+        if (isOnlinePayment) {
+          itemToCancel['refund_status'] = 'pending';
+        }
+
+        items[itemIndex] = itemToCancel;
+
         final itemPrice = (itemToCancel['price'] as num).toDouble();
         final itemQty = (itemToCancel['quantity'] as num).toInt();
         final currentTotal = (data['total_amount'] as num).toDouble();

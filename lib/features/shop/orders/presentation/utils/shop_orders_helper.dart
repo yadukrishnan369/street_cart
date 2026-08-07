@@ -7,38 +7,93 @@ import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_b
 
 class ShopOrdersHelper {
   // Filter Orders
-  static List<OrderModel> filterOrders(List<OrderModel> orders, int tabIndex) {
+  static List<OrderModel> filterOrders(
+    List<OrderModel> orders,
+    int tabIndex,
+    String shopId,
+  ) {
     switch (tabIndex) {
       case 0: // NEW
         return orders.where((o) {
           final s = ShopOrderStatus.fromString(o.status);
-          return s == ShopOrderStatus.placed;
+          final hasActiveShopItem = o.items.any(
+            (item) => item.shopId == shopId && item.status != 'cancelled',
+          );
+          return s == ShopOrderStatus.placed && hasActiveShopItem;
         }).toList();
       case 1: // PROCESS
         return orders
             .where(
               (o) =>
                   ShopOrderStatus.fromString(o.status) ==
-                  ShopOrderStatus.processing,
+                      ShopOrderStatus.processing &&
+                  o.items.any(
+                    (item) =>
+                        item.shopId == shopId && item.status != 'cancelled',
+                  ),
             )
             .toList();
       case 2: // SHIPPED
         return orders.where((o) {
           final s = ShopOrderStatus.fromString(o.status);
-          return s == ShopOrderStatus.shipped;
+          final hasActiveShopItem = o.items.any(
+            (item) => item.shopId == shopId && item.status != 'cancelled',
+          );
+          return s == ShopOrderStatus.shipped && hasActiveShopItem;
         }).toList();
       case 3: // DONE
-        return orders
-            .where(
-              (o) =>
-                  ShopOrderStatus.fromString(o.status) ==
-                      ShopOrderStatus.delivered &&
-                  (o.returnStatus == null || o.returnStatus!.isEmpty),
-            )
-            .toList();
-      case 4: // RETURNED
+        return orders.where((o) {
+          final isDelivered =
+              ShopOrderStatus.fromString(o.status) == ShopOrderStatus.delivered;
+          if (!isDelivered) return false;
+          final hasCompletedItem = o.items.any(
+            (item) =>
+                item.shopId == shopId &&
+                item.status != 'cancelled' &&
+                (item.returnStatus == null || item.returnStatus!.isEmpty),
+          );
+          return hasCompletedItem;
+        }).toList();
+      case 4: // CANCELLED
+        final cancelledOrders = orders.where((o) {
+          final hasCancelledItem = o.items.any(
+            (item) => item.shopId == shopId && item.status == 'cancelled',
+          );
+          return o.status.toLowerCase() == 'cancelled' || hasCancelledItem;
+        }).toList();
+        cancelledOrders.sort((a, b) {
+          final isAPending =
+              a.refundStatus == 'pending' ||
+              a.items.any(
+                (item) =>
+                    item.shopId == shopId &&
+                    item.status == 'cancelled' &&
+                    item.refundStatus == 'pending',
+              );
+          final isBPending =
+              b.refundStatus == 'pending' ||
+              b.items.any(
+                (item) =>
+                    item.shopId == shopId &&
+                    item.status == 'cancelled' &&
+                    item.refundStatus == 'pending',
+              );
+          if (isAPending && !isBPending) return -1;
+          if (!isAPending && isBPending) return 1;
+          final timeA = a.cancelledAt ?? a.createdAt;
+          final timeB = b.cancelledAt ?? b.createdAt;
+          return timeB.compareTo(timeA);
+        });
+        return cancelledOrders;
+      case 5: // RETURNED
         final returnedOrders = orders.where((o) {
-          return o.returnStatus != null && o.returnStatus!.isNotEmpty;
+          final hasReturnedItem = o.items.any(
+            (item) =>
+                item.shopId == shopId &&
+                item.returnStatus != null &&
+                item.returnStatus!.isNotEmpty,
+          );
+          return hasReturnedItem;
         }).toList();
         returnedOrders.sort((a, b) {
           final statusOrder = {
@@ -62,8 +117,8 @@ class ShopOrdersHelper {
   }
 
   // Get Orders Count
-  static int getCount(List<OrderModel> orders, int tabIndex) {
-    return filterOrders(orders, tabIndex).length;
+  static int getCount(List<OrderModel> orders, int tabIndex, String shopId) {
+    return filterOrders(orders, tabIndex, shopId).length;
   }
 
   // Get Order Time based on status
@@ -86,6 +141,9 @@ class ShopOrdersHelper {
       return order.returnedAt ?? order.createdAt;
     }
     final status = order.status.toLowerCase();
+    if (status == 'cancelled') {
+      return order.cancelledAt ?? order.createdAt;
+    }
     if (status == 'delivered') {
       return order.deliveredAt ?? order.createdAt;
     }
@@ -137,7 +195,7 @@ class ShopOrdersHelper {
       case ShopOrderStatus.processing:
         return 'Mark as Shipped';
       case ShopOrderStatus.shipped:
-        return ' Mark as Delivered';
+        return 'Mark as Delivered';
       default:
         return null;
     }
@@ -191,51 +249,63 @@ class ShopOrdersHelper {
   static Map<String, dynamic> getShopOrderCardData({
     required OrderModel order,
     required String shopId,
+    bool isCancelledView = false,
+    bool isReturnedView = false,
   }) {
     final shopItems = order.items
         .where((item) => item.shopId == shopId)
         .toList();
     if (shopItems.isEmpty) return const {};
 
-    final firstItem = shopItems.first;
+    final activeItems = shopItems
+        .where(
+          (item) =>
+              item.status != 'cancelled' &&
+              (item.returnStatus == null || item.returnStatus!.isEmpty),
+        )
+        .toList();
+    final cancelledItems = shopItems
+        .where((item) => item.status == 'cancelled')
+        .toList();
+    final returnedItems = shopItems
+        .where(
+          (item) => item.returnStatus != null && item.returnStatus!.isNotEmpty,
+        )
+        .toList();
+
+    final List<OrderItemModel> displayItems;
+    if (isReturnedView) {
+      displayItems = returnedItems.isNotEmpty ? returnedItems : shopItems;
+    } else if (isCancelledView || order.status.toLowerCase() == 'cancelled') {
+      displayItems = cancelledItems.isNotEmpty ? cancelledItems : shopItems;
+    } else {
+      displayItems = activeItems.isNotEmpty ? activeItems : shopItems;
+    }
+
+    final firstItem = displayItems.first;
     final totalAmount = shopItems.fold<double>(
       0.0,
       (sum, item) => sum + (item.price * item.quantity),
     );
 
-    final rStatus = order.returnStatus;
-    final hasReturn = rStatus != null && rStatus.isNotEmpty;
+    final displayItem = firstItem;
 
-    final returnedItems = shopItems.where((item) {
-      return item.returnStatus != null && item.returnStatus!.isNotEmpty;
-    }).toList();
-
-    final displayItem = (hasReturn && returnedItems.isNotEmpty)
-        ? returnedItems.first
-        : firstItem;
-
-    final String productNameText;
-    if (hasReturn && returnedItems.isNotEmpty) {
-      productNameText = returnedItems.length > 1
-          ? '${returnedItems.first.productName} +${returnedItems.length - 1}'
-          : returnedItems.first.productName;
-    } else {
-      productNameText = shopItems.length > 1
-          ? '${firstItem.productName} + ${shopItems.length - 1} more'
-          : firstItem.productName;
-    }
+    final String productNameText = displayItems.length > 1
+        ? '${firstItem.productName} + ${displayItems.length - 1} more'
+        : firstItem.productName;
 
     final double cardTotalAmount;
-    if (hasReturn && returnedItems.isNotEmpty) {
-      final activeItems = returnedItems
+    if (isReturnedView && returnedItems.isNotEmpty) {
+      // For returned items - show pending-return amount
+      final pendingReturnItems = returnedItems
           .where(
             (item) =>
                 item.returnStatus == 'return_requested' ||
                 item.returnStatus == 'return_confirmed',
           )
           .toList();
-      cardTotalAmount = activeItems.isNotEmpty
-          ? activeItems.fold<double>(
+      cardTotalAmount = pendingReturnItems.isNotEmpty
+          ? pendingReturnItems.fold<double>(
               0.0,
               (sum, item) => sum + (item.price * item.quantity),
             )
@@ -243,8 +313,19 @@ class ShopOrdersHelper {
               0.0,
               (sum, item) => sum + (item.price * item.quantity),
             );
-    } else {
+    } else if (order.status.toLowerCase() == 'cancelled') {
+      // Whole order cancelled-  show total of all shop items
       cardTotalAmount = totalAmount;
+    } else if (isCancelledView && cancelledItems.isNotEmpty) {
+      cardTotalAmount = cancelledItems.fold<double>(
+        0.0,
+        (sum, item) => sum + (item.price * item.quantity),
+      );
+    } else {
+      cardTotalAmount = activeItems.fold<double>(
+        0.0,
+        (sum, item) => sum + (item.price * item.quantity),
+      );
     }
 
     return {
@@ -259,18 +340,49 @@ class ShopOrdersHelper {
   static Map<String, dynamic> getItemSummaryCardData({
     required OrderModel order,
     required String shopId,
+    bool isCancelledView = false,
+    bool isReturnedView = false,
   }) {
     final shopItems = order.items
         .where((item) => item.shopId == shopId)
         .toList();
     if (shopItems.isEmpty) return const {};
 
-    final totalAmount = shopItems.fold<double>(
+    final activeShopItems = shopItems
+        .where(
+          (item) =>
+              item.status != 'cancelled' &&
+              (item.returnStatus == null || item.returnStatus!.isEmpty),
+        )
+        .toList();
+
+    final cancelledShopItems = shopItems
+        .where((item) => item.status == 'cancelled')
+        .toList();
+
+    final returnedShopItems = shopItems
+        .where(
+          (item) => item.returnStatus != null && item.returnStatus!.isNotEmpty,
+        )
+        .toList();
+
+    final List<OrderItemModel> displayItems;
+    if (isReturnedView) {
+      displayItems = returnedShopItems;
+    } else if (isCancelledView || order.status.toLowerCase() == 'cancelled') {
+      displayItems = cancelledShopItems.isNotEmpty
+          ? cancelledShopItems
+          : shopItems;
+    } else {
+      displayItems = activeShopItems;
+    }
+
+    final totalAmount = displayItems.fold<double>(
       0.0,
       (sum, item) => sum + (item.price * item.quantity),
     );
 
-    final commission = shopItems.fold<double>(
+    final commission = displayItems.fold<double>(
       0.0,
       (sum, item) => sum + item.adminCommission,
     );
@@ -283,7 +395,7 @@ class ShopOrdersHelper {
     final paymentLabel = getDisplayPaymentMethod(order.paymentMethod);
 
     return {
-      'shopItems': shopItems,
+      'shopItems': displayItems,
       'totalAmount': totalAmount,
       'commission': commission,
       'commissionPercentage': commissionPercentage,

@@ -186,7 +186,7 @@ class RevenueOrdersTable extends StatelessWidget {
         // Amount
         _cell(
           Text(
-            '₹${PriceUtils.formatPrice(order.totalAmount)}',
+            '₹${PriceUtils.formatPrice(AdminRevenueHelper.computeOrderAmount(order))}',
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,

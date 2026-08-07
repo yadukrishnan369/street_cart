@@ -213,6 +213,8 @@ class OrderItemModel {
   final DateTime? returnedAt;
   final DateTime? returnConfirmedAt;
   final DateTime? returnPickedAt;
+  final String? status;
+  final String? refundStatus;
 
   OrderItemModel({
     required this.id,
@@ -232,6 +234,8 @@ class OrderItemModel {
     this.returnedAt,
     this.returnConfirmedAt,
     this.returnPickedAt,
+    this.status,
+    this.refundStatus,
   });
 
   factory OrderItemModel.fromMap(Map<String, dynamic> map) {
@@ -265,6 +269,8 @@ class OrderItemModel {
                 ? (map['return_picked_at'] as Timestamp).toDate()
                 : DateTime.parse(map['return_picked_at'].toString()))
           : null,
+      status: map['status'],
+      refundStatus: map['refund_status'],
     );
   }
 
@@ -287,6 +293,8 @@ class OrderItemModel {
       'returned_at': returnedAt,
       'return_confirmed_at': returnConfirmedAt,
       'return_picked_at': returnPickedAt,
+      if (status != null) 'status': status,
+      if (refundStatus != null) 'refund_status': refundStatus,
     };
   }
 }

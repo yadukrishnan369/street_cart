@@ -16,11 +16,10 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
         return OrderModel.fromMap(doc.data(), doc.id);
       }).toList();
 
-      // Filter for only this shops non cancelled orders
+      // Filter for only this shops orders
       final filtered = allOrders.where((order) {
-        final isCancelled = order.status.toLowerCase() == 'cancelled';
         final hasShopItem = order.items.any((item) => item.shopId == shopId);
-        return hasShopItem && !isCancelled;
+        return hasShopItem;
       }).toList();
 
       // Sort by newest first
@@ -225,10 +224,36 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
     double refundAmount,
     String refundStatus,
   ) async {
-    await _firestore.collection('orders').doc(orderId).update({
-      'refund_status': refundStatus,
-      'refund_amount': refundAmount,
+    final orderDoc = await _firestore.collection('orders').doc(orderId).get();
+    if (!orderDoc.exists) return;
+
+    final data = orderDoc.data()!;
+    final itemsRaw = (data['items'] as List<dynamic>? ?? []);
+    final items = itemsRaw
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList();
+
+    bool hasCancelledPendingItem = false;
+    for (var item in items) {
+      if (item['status'] == 'cancelled' && item['refund_status'] == 'pending') {
+        item['refund_status'] = refundStatus;
+        hasCancelledPendingItem = true;
+      }
+    }
+
+    final Map<String, dynamic> updates = {
       'refunded_at': FieldValue.serverTimestamp(),
-    });
+    };
+
+    if (hasCancelledPendingItem) {
+      updates['items'] = items;
+      updates['refund_amount'] =
+          (data['refund_amount'] as num? ?? 0.0).toDouble() + refundAmount;
+    } else {
+      updates['refund_status'] = refundStatus;
+      updates['refund_amount'] = refundAmount;
+    }
+
+    await _firestore.collection('orders').doc(orderId).update(updates);
   }
 }

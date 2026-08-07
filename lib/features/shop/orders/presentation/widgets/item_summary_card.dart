@@ -12,8 +12,16 @@ import 'package:street_cart/core/utils/price_utils.dart';
 class ItemSummaryCard extends StatelessWidget {
   final OrderModel order;
   final String shopId;
+  final bool isCancelledView;
+  final bool isReturnedView;
 
-  const ItemSummaryCard({super.key, required this.order, required this.shopId});
+  const ItemSummaryCard({
+    super.key,
+    required this.order,
+    required this.shopId,
+    this.isCancelledView = false,
+    this.isReturnedView = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +31,8 @@ class ItemSummaryCard extends StatelessWidget {
     final summaryData = ShopOrdersHelper.getItemSummaryCardData(
       order: order,
       shopId: shopId,
+      isCancelledView: isCancelledView,
+      isReturnedView: isReturnedView,
     );
     if (summaryData.isEmpty) return const SizedBox.shrink();
 
@@ -62,7 +72,7 @@ class ItemSummaryCard extends StatelessWidget {
                 ),
                 // Payment Label
                 child: Text(
-                  paymentLabel == 'COD' ? 'COD' : '${paymentLabel}',
+                  paymentLabel,
                   style: TextStyle(
                     color: badgeColor,
                     fontSize: 11.sp,
@@ -178,6 +188,69 @@ class ItemSummaryCard extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              // Cancelled order labels
+                              if (item.status == 'cancelled') ...[
+                                SizedBox(height: 6.h),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 4.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: ShopAppColors.error.withValues(
+                                          alpha: 0.08,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ),
+                                        border: Border.all(
+                                          color: ShopAppColors.error.withValues(
+                                            alpha: 0.15,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Cancelled',
+                                        style: TextStyle(
+                                          color: ShopAppColors.error,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    if (item.refundStatus == 'pending') ...[
+                                      SizedBox(width: 8.w),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                          vertical: 4.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: ShopAppColors.warning
+                                              .withValues(alpha: 0.08),
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
+                                          border: Border.all(
+                                            color: ShopAppColors.warning
+                                                .withValues(alpha: 0.15),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Refund Pending',
+                                          style: TextStyle(
+                                            color: ShopAppColors.warning,
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -223,41 +296,46 @@ class ItemSummaryCard extends StatelessWidget {
                 ),
               ),
 
-              Divider(
-                height: 1.0,
-                thickness: 0.2,
-                color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
-              ),
-
               // Commission Amount
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Commission (${commissionPercentage.toStringAsFixed(0)}%)',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: isDark
-                            ? ShopAppColors.darkTextSecondary
-                            : Colors.grey[500],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      '₹-${PriceUtils.formatPrice(commission)}',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: isDark
-                            ? ShopAppColors.darkTextPrimary
-                            : ShopAppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+              if (order.status.toLowerCase() != 'cancelled' &&
+                  !isCancelledView) ...[
+                Divider(
+                  height: 1.0,
+                  thickness: 0.2,
+                  color: isDark ? ShopAppColors.darkBorder : Colors.grey[300],
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 12.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Commission (${commissionPercentage.toStringAsFixed(0)}%)',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: isDark
+                              ? ShopAppColors.darkTextSecondary
+                              : Colors.grey[500],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        '₹-${PriceUtils.formatPrice(commission)}',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: isDark
+                              ? ShopAppColors.darkTextPrimary
+                              : ShopAppColors.textPrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
 
               Divider(
                 height: 1.0,
@@ -280,7 +358,10 @@ class ItemSummaryCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total Amount (Exclude comm)',
+                      (order.status.toLowerCase() == 'cancelled' ||
+                              isCancelledView)
+                          ? 'Total Amount'
+                          : 'Total Amount (Exclude comm)',
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: isDark
@@ -290,7 +371,7 @@ class ItemSummaryCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '₹${PriceUtils.formatPrice(finalEarnings)}',
+                      '₹${PriceUtils.formatPrice((order.status.toLowerCase() == 'cancelled' || isCancelledView) ? totalAmount : finalEarnings)}',
                       style: TextStyle(
                         fontSize: 18.sp,
                         color: ShopAppColors.primary,

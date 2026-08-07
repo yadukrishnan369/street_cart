@@ -86,7 +86,7 @@ class AdminDashboardPage extends StatelessWidget {
                               iconBgColor: const Color(0xFFE8F0FE),
                             ),
                             StatCard(
-                              title: 'Total Orders',
+                              title: 'Completed Orders',
                               value: NumberFormatter.formatNumber(
                                 stats.totalOrders,
                               ),

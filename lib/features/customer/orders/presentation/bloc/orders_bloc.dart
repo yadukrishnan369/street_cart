@@ -55,6 +55,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     try {
       await cancelOrder(event.orderId);
       emit(OrderCancelledSuccess());
+      add(FetchOrders());
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }
@@ -69,6 +70,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     try {
       await cancelOrderItem(event.orderId, event.orderItemId);
       emit(OrderItemCancelledSuccess());
+      add(FetchOrders());
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }
@@ -83,6 +85,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     try {
       await updateOrderAddress(event.orderId, event.address);
       emit(OrderAddressUpdateSuccess());
+      add(FetchOrders());
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }
@@ -102,6 +105,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         details: event.details,
       );
       emit(ReturnRequestSubmittedSuccess());
+      add(FetchOrders());
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }

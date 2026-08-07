@@ -30,12 +30,12 @@ class OrdersTable extends StatelessWidget {
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(1.2), // ORDER ID
-        1: FlexColumnWidth(2.2), // PRODUCT
-        2: FlexColumnWidth(1.5), // CUSTOMER
-        3: FlexColumnWidth(1.2), // AMOUNT
-        4: FlexColumnWidth(1.4), // STATUS
-        5: FlexColumnWidth(1.4), // DATE
-        6: FlexColumnWidth(1.0), // ACTIONS
+        1: FlexColumnWidth(1.7), // PRODUCT
+        2: FlexColumnWidth(1.7), // CUSTOMER
+        3: FlexColumnWidth(1.0), // AMOUNT
+        4: FlexColumnWidth(2.2), // STATUS
+        5: FlexColumnWidth(1.3), // DATE
+        6: FlexColumnWidth(0.9), // ACTIONS
       },
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
@@ -69,11 +69,68 @@ class OrdersTable extends StatelessWidget {
           final customer =
               customerNames[order.customerId] ?? order.deliveryAddress.fullName;
           final amount = '₹${PriceUtils.formatPrice(order.totalAmount)}';
-          final returnStatus = (order.returnStatus ?? '').toLowerCase();
-          final status = returnStatus.isNotEmpty
-              ? order.returnStatus!
-              : order.status;
           final date = DateFormatter.formatToReadableDate(order.createdAt);
+          final returnedItems = AdminOrdersHelper.getReturnedItems(order);
+          final cancelledItems = AdminOrdersHelper.getCancelledItems(order);
+          final allItemsCancelled = AdminOrdersHelper.isAllItemsCancelled(
+            order,
+          );
+          final allItemsReturned = AdminOrdersHelper.isAllItemsReturned(order);
+          final allItemsCancelledOrReturned =
+              AdminOrdersHelper.isAllItemsCancelledOrReturned(order);
+
+          final String mainStatus;
+          final String? secondaryStatusLabel;
+          final Color? secondaryStatusBg;
+          final Color? secondaryStatusText;
+
+          if (allItemsCancelled) {
+            mainStatus = 'cancelled';
+            secondaryStatusLabel = null;
+            secondaryStatusBg = null;
+            secondaryStatusText = null;
+          } else if (allItemsReturned) {
+            mainStatus = order.returnStatus ?? 'returned';
+            secondaryStatusLabel = null;
+            secondaryStatusBg = null;
+            secondaryStatusText = null;
+          } else if (allItemsCancelledOrReturned) {
+            mainStatus = 'returned';
+            if (cancelledItems.isNotEmpty) {
+              secondaryStatusLabel = '${cancelledItems.length} Cancelled';
+              secondaryStatusBg = const Color(0xFFFCE8E6);
+              secondaryStatusText = AdminAppColors.errorColor;
+            } else {
+              secondaryStatusLabel = null;
+              secondaryStatusBg = null;
+              secondaryStatusText = null;
+            }
+          } else {
+            final String orderMainStatus = order.status;
+            mainStatus = orderMainStatus;
+            if (returnedItems.isNotEmpty) {
+              final isRequested = returnedItems.any(
+                (i) => i.returnStatus!.toLowerCase() == 'return_requested',
+              );
+              secondaryStatusLabel = isRequested
+                  ? '${returnedItems.length} Requested'
+                  : '${returnedItems.length} Returned';
+              secondaryStatusBg = const Color(0xFFFFF3E0);
+              secondaryStatusText = AdminAppColors.warningColor;
+            } else if (cancelledItems.isNotEmpty) {
+              secondaryStatusLabel = '${cancelledItems.length} Cancelled';
+              secondaryStatusBg = const Color(0xFFFCE8E6);
+              secondaryStatusText = AdminAppColors.errorColor;
+            } else {
+              secondaryStatusLabel = null;
+              secondaryStatusBg = null;
+              secondaryStatusText = null;
+            }
+          }
+
+          final displayStatus = AdminOrdersHelper.getStatusLabel(mainStatus);
+          final badgeBg = AdminOrdersHelper.getStatusBgColor(mainStatus);
+          final badgeText = AdminOrdersHelper.getStatusTextColor(mainStatus);
 
           final hasItems = order.items.isNotEmpty;
           final firstItem = hasItems ? order.items.first : null;
@@ -193,25 +250,53 @@ class OrdersTable extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AdminOrdersHelper.getStatusBgColor(status),
-                      borderRadius: BorderRadius.circular(100.r),
-                    ),
-                    child: Text(
-                      AdminOrdersHelper.getStatusLabel(status),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AdminOrdersHelper.getStatusTextColor(status),
+                  child: Wrap(
+                    spacing: 6.w,
+                    runSpacing: 4.h,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: badgeBg,
+                          borderRadius: BorderRadius.circular(100.r),
+                        ),
+                        child: Text(
+                          displayStatus,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.bold,
+                            color: badgeText,
+                          ),
+                        ),
                       ),
-                    ),
+                      if (secondaryStatusLabel != null)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: secondaryStatusBg,
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                          child: Text(
+                            secondaryStatusLabel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                              color: secondaryStatusText,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

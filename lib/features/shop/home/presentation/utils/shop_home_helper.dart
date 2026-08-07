@@ -164,11 +164,12 @@ class ShopHomeHelper {
     double total = 0.0;
     for (final order in orders) {
       final status = order.status.toLowerCase();
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
-      if (status == 'delivered' && !isReturned) {
+      if (status == 'delivered') {
         for (final item in order.items) {
-          if (item.shopId == shopId) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (item.shopId == shopId && !isItemReturned && !isItemCancelled) {
             total += item.price * item.quantity;
           }
         }
@@ -187,13 +188,14 @@ class ShopHomeHelper {
     double total = 0.0;
     for (final order in orders) {
       final status = order.status.toLowerCase();
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
       final isInRange =
           order.createdAt.isAfter(weekAgo) && order.createdAt.isBefore(now);
-      if (status == 'delivered' && !isReturned && isInRange) {
+      if (status == 'delivered' && isInRange) {
         for (final item in order.items) {
-          if (item.shopId == shopId) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (item.shopId == shopId && !isItemReturned && !isItemCancelled) {
             total += item.price * item.quantity;
           }
         }
@@ -213,14 +215,15 @@ class ShopHomeHelper {
     double total = 0.0;
     for (final order in orders) {
       final status = order.status.toLowerCase();
-      final isReturned =
-          order.returnStatus != null && order.returnStatus!.isNotEmpty;
       final isToday =
           order.createdAt.isAfter(todayStart) &&
           order.createdAt.isBefore(todayEnd);
-      if (status == 'delivered' && !isReturned && isToday) {
+      if (status == 'delivered' && isToday) {
         for (final item in order.items) {
-          if (item.shopId == shopId) {
+          final isItemReturned =
+              item.returnStatus != null && item.returnStatus!.isNotEmpty;
+          final isItemCancelled = item.status == 'cancelled';
+          if (item.shopId == shopId && !isItemReturned && !isItemCancelled) {
             total += item.price * item.quantity;
           }
         }

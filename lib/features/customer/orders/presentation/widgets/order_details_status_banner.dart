@@ -177,7 +177,38 @@ class OrderDetailsStatusBanner extends StatelessWidget {
           ],
         ),
       );
+      // Cancelled Orders
     } else if (isCancelled) {
+      if (order.refundStatus == 'pending') {
+        return _buildBanner(
+          isDark: isDark,
+          color: isDark ? const Color(0xFF3D3019) : const Color(0xFFFFF8E1),
+          borderColor: isDark
+              ? const Color(0xFF7A5F23)
+              : const Color(0xFFFFECB3),
+          iconColor: CustomerAppColors.warning,
+          icon: Icons.access_time_rounded,
+          title: 'Refund Pending',
+          subtitle:
+              'Order cancelled on $cancelledDateStr. Refund of ₹${order.totalAmount.toStringAsFixed(0)} is pending from seller.',
+          textColor: CustomerAppColors.warning,
+        );
+      } else if (order.refundStatus == 'refunded') {
+        return _buildBanner(
+          isDark: isDark,
+          color: isDark ? const Color(0xFF1B3A2B) : const Color(0xFFE8F5E9),
+          borderColor: isDark
+              ? const Color(0xFF2E6B47)
+              : const Color(0xFFC8E6C9),
+          iconColor: CustomerAppColors.success,
+          icon: Icons.currency_rupee,
+          title: 'Refund Completed',
+          subtitle:
+              'Order cancelled on $cancelledDateStr. Refund of ₹${(order.refundAmount ?? order.totalAmount).toStringAsFixed(0)} processed successfully.',
+          textColor: CustomerAppColors.success,
+        );
+      }
+
       return Container(
         width: double.infinity,
         padding: EdgeInsets.all(16.w),

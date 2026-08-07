@@ -47,16 +47,21 @@ class StatCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Title
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? AdminAppColors.darkTextSecondary
-                      : const Color(0xFF8A8A9E),
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isDark
+                        ? AdminAppColors.darkTextSecondary
+                        : const Color(0xFF8A8A9E),
+                  ),
                 ),
               ),
+              SizedBox(width: 8.w),
               Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(

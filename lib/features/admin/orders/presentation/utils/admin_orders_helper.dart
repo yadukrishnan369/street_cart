@@ -43,30 +43,60 @@ class AdminOrdersHelper {
 
   // Calculate Subtotal
   static double calculateSubtotal(OrderModel order) {
+    final allItemsCancelled =
+        order.items.isNotEmpty &&
+        order.items.every((i) => i.status == 'cancelled');
+    if (order.status.toLowerCase() == 'cancelled' || allItemsCancelled)
+      return 0.0;
     double subtotal = 0.0;
     for (final item in order.items) {
-      subtotal += item.price * item.quantity;
+      final isItemReturned =
+          item.returnStatus != null && item.returnStatus!.isNotEmpty;
+      final isItemCancelled = item.status == 'cancelled';
+      if (!isItemReturned && !isItemCancelled) {
+        subtotal += item.price * item.quantity;
+      }
     }
     return subtotal;
   }
 
   // Calculate Commission
   static double calculateCommission(OrderModel order) {
+    final allItemsCancelled =
+        order.items.isNotEmpty &&
+        order.items.every((i) => i.status == 'cancelled');
+    if (order.status.toLowerCase() == 'cancelled' || allItemsCancelled)
+      return 0.0;
     // commission stored per item - set when order was placed
     double commission = 0.0;
     for (final item in order.items) {
-      commission += item.adminCommission;
+      final isItemReturned =
+          item.returnStatus != null && item.returnStatus!.isNotEmpty;
+      final isItemCancelled = item.status == 'cancelled';
+      if (!isItemReturned && !isItemCancelled) {
+        commission += item.adminCommission;
+      }
     }
     return commission;
   }
 
   // Calculate Commission Percentage
   static double calculateCommissionPercentage(OrderModel order) {
+    final allItemsCancelled =
+        order.items.isNotEmpty &&
+        order.items.every((i) => i.status == 'cancelled');
+    if (order.status.toLowerCase() == 'cancelled' || allItemsCancelled)
+      return 0.0;
     double totalProductPriceAmount = 0.0;
     double totalCommissionAmount = 0.0;
     for (final item in order.items) {
-      totalProductPriceAmount += item.price * item.quantity;
-      totalCommissionAmount += item.adminCommission;
+      final isItemReturned =
+          item.returnStatus != null && item.returnStatus!.isNotEmpty;
+      final isItemCancelled = item.status == 'cancelled';
+      if (!isItemReturned && !isItemCancelled) {
+        totalProductPriceAmount += item.price * item.quantity;
+        totalCommissionAmount += item.adminCommission;
+      }
     }
     if (totalProductPriceAmount > 0) {
       return (totalCommissionAmount / totalProductPriceAmount) * 100;
@@ -76,9 +106,19 @@ class AdminOrdersHelper {
 
   // Calculate Vendor Earnings
   static double calculateVendorEarnings(OrderModel order) {
+    final allItemsCancelled =
+        order.items.isNotEmpty &&
+        order.items.every((i) => i.status == 'cancelled');
+    if (order.status.toLowerCase() == 'cancelled' || allItemsCancelled)
+      return 0.0;
     double earnings = 0.0;
     for (final item in order.items) {
-      earnings += item.vendorEarnings;
+      final isItemReturned =
+          item.returnStatus != null && item.returnStatus!.isNotEmpty;
+      final isItemCancelled = item.status == 'cancelled';
+      if (!isItemReturned && !isItemCancelled) {
+        earnings += item.vendorEarnings;
+      }
     }
     return earnings;
   }
@@ -127,12 +167,20 @@ class AdminOrdersHelper {
             return status == 'processing';
           case 2: // Packed/Shipped
             return status == 'packed' || status == 'shipped';
-          case 3: // Completed - Delivered and not returned
-            return status == 'delivered' &&
-                (order.returnStatus == null || order.returnStatus!.isEmpty);
-          case 4: // Cancelled/Returned
-            return status == 'cancelled' ||
-                (order.returnStatus != null && order.returnStatus!.isNotEmpty);
+          case 3: // Completed - Delivered and has at least one completed item
+            final hasCompletedItem = order.items.any(
+              (item) =>
+                  item.status != 'cancelled' &&
+                  (item.returnStatus == null || item.returnStatus!.isEmpty),
+            );
+            return status == 'delivered' && hasCompletedItem;
+          case 4: // Cancelled/Returned - Cancelled order or has any cancelled/returned item
+            final hasCancelledOrReturnedItem = order.items.any(
+              (item) =>
+                  item.status == 'cancelled' ||
+                  (item.returnStatus != null && item.returnStatus!.isNotEmpty),
+            );
+            return status == 'cancelled' || hasCancelledOrReturnedItem;
           default:
             return true;
         }
@@ -257,5 +305,41 @@ class AdminOrdersHelper {
   // Get Shop Phone
   static String getShopPhone(ShopProfileModel? shop) {
     return shop?.phone ?? 'N/A';
+  }
+
+  // Get returned items
+  static List<OrderItemModel> getReturnedItems(OrderModel order) {
+    return order.items
+        .where((i) => i.returnStatus != null && i.returnStatus!.isNotEmpty)
+        .toList();
+  }
+
+  // Get cancelled items
+  static List<OrderItemModel> getCancelledItems(OrderModel order) {
+    return order.items.where((i) => i.status == 'cancelled').toList();
+  }
+
+  // Check if all items cancelled
+  static bool isAllItemsCancelled(OrderModel order) {
+    return order.items.isNotEmpty &&
+        order.items.every((i) => i.status == 'cancelled');
+  }
+
+  // Check if all items returned
+  static bool isAllItemsReturned(OrderModel order) {
+    return order.items.isNotEmpty &&
+        order.items.every(
+          (i) => i.returnStatus != null && i.returnStatus!.isNotEmpty,
+        );
+  }
+
+  // Check if all items cancelled or returned
+  static bool isAllItemsCancelledOrReturned(OrderModel order) {
+    return order.items.isNotEmpty &&
+        order.items.every(
+          (i) =>
+              i.status == 'cancelled' ||
+              (i.returnStatus != null && i.returnStatus!.isNotEmpty),
+        );
   }
 }

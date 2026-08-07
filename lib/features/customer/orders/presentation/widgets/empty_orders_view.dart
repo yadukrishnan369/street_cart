@@ -65,7 +65,7 @@ class EmptyOrdersView extends StatelessWidget {
                 SizedBox(height: 32.h),
                 // Button for move product page
                 SizedBox(
-                  width: double.infinity,
+                  width: 180.w,
                   height: 48.h,
                   child: ElevatedButton(
                     onPressed: () {
@@ -85,7 +85,7 @@ class EmptyOrdersView extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      'Explore Shops',
+                      'Explore Products',
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.bold,

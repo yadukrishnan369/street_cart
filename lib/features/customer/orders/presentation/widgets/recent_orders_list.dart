@@ -82,7 +82,7 @@ class _ActiveOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final firstItem = order.items.first;
+    final displayItem = OrdersHelper.getDisplayItem(order);
     final statusColor = OrdersHelper.getStatusColor(
       CustomerOrderStatus.fromString(order.status),
     );
@@ -219,7 +219,7 @@ class _ActiveOrderCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.r),
                     child: CachedNetworkImage(
-                      imageUrl: firstItem.productImage,
+                      imageUrl: displayItem.productImage,
                       width: 64.w,
                       height: 64.w,
                       fit: BoxFit.cover,
@@ -299,7 +299,7 @@ class _HistoryOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final firstItem = order.items.first;
+    final displayItem = OrdersHelper.getDisplayItem(order);
     final createdDateStr = OrdersHelper.formatDateShort(order.createdAt);
     final statusStr = order.status.toLowerCase();
     final isDelivered = statusStr == 'delivered';
@@ -352,7 +352,13 @@ class _HistoryOrderCard extends StatelessWidget {
         statusDisplay = 'Return Requested • $statusDateStr';
       }
     } else if (statusStr == 'cancelled') {
-      statusDisplay = 'Cancelled • $statusDateStr';
+      if (order.refundStatus == 'pending') {
+        statusDisplay = 'Cancelled & Pending Refund';
+      } else if (order.refundStatus == 'refunded') {
+        statusDisplay = 'Cancelled & Refunded';
+      } else {
+        statusDisplay = 'Cancelled • $statusDateStr';
+      }
     } else if (isDelivered) {
       statusDisplay = 'Delivered • $statusDateStr';
     } else {
@@ -397,7 +403,7 @@ class _HistoryOrderCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: CachedNetworkImage(
-                imageUrl: firstItem.productImage,
+                imageUrl: displayItem.productImage,
                 width: 56.w,
                 height: 56.w,
                 fit: BoxFit.cover,
@@ -433,7 +439,8 @@ class _HistoryOrderCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   // Order Status
-                  if (statusDisplay == 'Returned & Pending Refund') ...[
+                  if (statusDisplay == 'Returned & Pending Refund' ||
+                      statusDisplay == 'Cancelled & Pending Refund') ...[
                     RichText(
                       text: TextSpan(
                         style: TextStyle(
@@ -442,12 +449,41 @@ class _HistoryOrderCard extends StatelessWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: 'Returned • $statusDateStr -  ',
-                            style: TextStyle(color: CustomerAppColors.success),
+                            text: statusDisplay.contains('Returned')
+                                ? 'Returned • $statusDateStr - '
+                                : 'Cancelled • $statusDateStr - ',
+                            style: TextStyle(
+                              color: statusDisplay.contains('Returned')
+                                  ? CustomerAppColors.success
+                                  : CustomerAppColors.error,
+                            ),
                           ),
                           TextSpan(
                             text: 'Refund Pending',
                             style: TextStyle(color: CustomerAppColors.warning),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ] else if (order.status.toLowerCase() == 'cancelled' &&
+                      order.refundStatus == 'refunded') ...[
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Cancelled • $statusDateStr - ',
+                            style: TextStyle(color: CustomerAppColors.error),
+                          ),
+                          TextSpan(
+                            text: 'Refunded',
+                            style: TextStyle(
+                              color: CustomerAppColors.success,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -463,7 +499,9 @@ class _HistoryOrderCard extends StatelessWidget {
                                         : CustomerAppColors.warning)
                                   : CustomerAppColors.error)
                             : order.status.toLowerCase() == 'cancelled'
-                            ? CustomerAppColors.error
+                            ? (order.refundStatus == 'refunded'
+                                  ? CustomerAppColors.success
+                                  : CustomerAppColors.error)
                             : isDelivered
                             ? CustomerAppColors.success
                             : isDark
@@ -487,7 +525,10 @@ class _HistoryOrderCard extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => BlocProvider.value(
                         value: context.read<OrdersBloc>(),
-                        child: ReturnRequestPage(order: order, item: firstItem),
+                        child: ReturnRequestPage(
+                          order: order,
+                          item: displayItem,
+                        ),
                       ),
                     ),
                   );

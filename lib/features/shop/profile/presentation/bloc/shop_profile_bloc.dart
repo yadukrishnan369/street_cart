@@ -156,13 +156,33 @@ class ShopProfileBloc extends Bloc<ShopProfileEvent, ShopProfileState> {
           profileImageUrl: profile.profileImageUrl,
           businessLicenseUrl: profile.businessLicenseUrl,
           ownerIdUrl: profile.ownerIdUrl,
-          selectedDistrict:
-              ProfileConstants.districts.contains(profile.district)
-              ? profile.district
-              : null,
-          selectedState: ProfileConstants.states.contains(profile.state)
-              ? profile.state
-              : null,
+          selectedDistrict: () {
+            if (profile.district.isEmpty) return null;
+            final normalized = profile.district
+                .toLowerCase()
+                .replaceAll('district', '')
+                .trim();
+            for (final d in ProfileConstants.districts) {
+              if (d.toLowerCase() == normalized ||
+                  d.toLowerCase().contains(normalized) ||
+                  normalized.contains(d.toLowerCase())) {
+                return d;
+              }
+            }
+            return null;
+          }(),
+          selectedState: () {
+            if (profile.state.isEmpty) return null;
+            final normalized = profile.state.toLowerCase().trim();
+            for (final s in ProfileConstants.states) {
+              if (s.toLowerCase() == normalized ||
+                  s.toLowerCase().contains(normalized) ||
+                  normalized.contains(s.toLowerCase())) {
+                return s;
+              }
+            }
+            return null;
+          }(),
           selectedPaymentMethods: List<String>.from(profile.paymentMethods),
           currentStep: 1,
         ),
