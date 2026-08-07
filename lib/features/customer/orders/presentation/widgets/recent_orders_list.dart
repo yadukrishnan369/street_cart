@@ -301,10 +301,35 @@ class _HistoryOrderCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final firstItem = order.items.first;
     final createdDateStr = OrdersHelper.formatDateShort(order.createdAt);
-    final deliveredDateStr = order.deliveredAt != null
-        ? OrdersHelper.formatDateShort(order.deliveredAt!)
-        : createdDateStr;
-    final isDelivered = order.status.toLowerCase() == 'delivered';
+    final statusStr = order.status.toLowerCase();
+    final isDelivered = statusStr == 'delivered';
+
+    // Date for each status
+    final String statusDateStr;
+    if (statusStr == 'cancelled') {
+      statusDateStr = order.cancelledAt != null
+          ? OrdersHelper.formatDateShort(order.cancelledAt!)
+          : createdDateStr;
+    } else if (statusStr == 'delivered') {
+      statusDateStr = order.deliveredAt != null
+          ? OrdersHelper.formatDateShort(order.deliveredAt!)
+          : createdDateStr;
+    } else if (statusStr == 'shipped') {
+      statusDateStr = order.shippedAt != null
+          ? OrdersHelper.formatDateShort(order.shippedAt!)
+          : createdDateStr;
+    } else if (statusStr == 'processing') {
+      statusDateStr = order.processingAt != null
+          ? OrdersHelper.formatDateShort(order.processingAt!)
+          : createdDateStr;
+    } else if (statusStr == 'confirmed') {
+      statusDateStr = order.confirmedAt != null
+          ? OrdersHelper.formatDateShort(order.confirmedAt!)
+          : createdDateStr;
+    } else {
+      statusDateStr = createdDateStr;
+    }
+
     final activeColor = CustomerAppColors.primary;
 
     final displayName = OrdersHelper.getOrderDisplayName(order);
@@ -317,22 +342,22 @@ class _HistoryOrderCard extends StatelessWidget {
     if (hasReturnRequest && isDelivered) {
       if (isReturnPicked) {
         if (order.refundStatus == 'refunded') {
-          statusDisplay = 'Returned';
+          statusDisplay = 'Returned • $statusDateStr';
         } else {
           statusDisplay = 'Returned & Pending Refund';
         }
       } else if (returnStatus == 'return_confirmed') {
-        statusDisplay = 'Return Confirmed';
+        statusDisplay = 'Return Confirmed • $statusDateStr';
       } else {
-        statusDisplay = 'Return Requested';
+        statusDisplay = 'Return Requested • $statusDateStr';
       }
-    } else if (order.status.toLowerCase() == 'cancelled') {
-      statusDisplay = 'Cancelled $createdDateStr';
+    } else if (statusStr == 'cancelled') {
+      statusDisplay = 'Cancelled • $statusDateStr';
     } else if (isDelivered) {
-      statusDisplay = 'Delivered $deliveredDateStr';
+      statusDisplay = 'Delivered • $statusDateStr';
     } else {
       statusDisplay =
-          '${OrdersHelper.getDisplayStatus(CustomerOrderStatus.fromString(order.status))} • $createdDateStr';
+          '${OrdersHelper.getDisplayStatus(CustomerOrderStatus.fromString(order.status))} • $statusDateStr';
     }
 
     return InkWell(
@@ -417,11 +442,11 @@ class _HistoryOrderCard extends StatelessWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: 'Returned & ',
+                            text: 'Returned • $statusDateStr -  ',
                             style: TextStyle(color: CustomerAppColors.success),
                           ),
                           TextSpan(
-                            text: 'Pending Refund',
+                            text: 'Refund Pending',
                             style: TextStyle(color: CustomerAppColors.warning),
                           ),
                         ],

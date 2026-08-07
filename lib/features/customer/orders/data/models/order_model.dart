@@ -23,6 +23,7 @@ class OrderModel {
   final DateTime? returnConfirmedAt;
   final DateTime? returnPickedAt;
   final String? refundStatus;
+  final DateTime? cancelledAt;
   final DateTime? refundedAt;
   final double? refundAmount;
 
@@ -48,6 +49,7 @@ class OrderModel {
     this.returnConfirmedAt,
     this.returnPickedAt,
     this.refundStatus,
+    this.cancelledAt,
     this.refundedAt,
     this.refundAmount,
   });
@@ -100,6 +102,7 @@ class OrderModel {
       returnConfirmedAt: _parseTimestamp(map['return_confirmed_at']),
       returnPickedAt: _parseTimestamp(map['return_picked_at']),
       refundStatus: map['refund_status'],
+      cancelledAt: _parseTimestamp(map['cancelled_at']),
       refundedAt: _parseTimestamp(map['refunded_at']),
       refundAmount: (map['refund_amount'] as num?)?.toDouble(),
     );
@@ -131,6 +134,7 @@ class OrderModel {
       if (returnPickedAt != null)
         'return_picked_at': Timestamp.fromDate(returnPickedAt!),
       if (refundStatus != null) 'refund_status': refundStatus,
+      if (cancelledAt != null) 'cancelled_at': Timestamp.fromDate(cancelledAt!),
       if (refundedAt != null) 'refunded_at': Timestamp.fromDate(refundedAt!),
       if (refundAmount != null) 'refund_amount': refundAmount,
     };
@@ -158,6 +162,7 @@ class OrderModel {
     DateTime? returnConfirmedAt,
     DateTime? returnPickedAt,
     String? refundStatus,
+    DateTime? cancelledAt,
     DateTime? refundedAt,
     double? refundAmount,
   }) {
@@ -183,6 +188,7 @@ class OrderModel {
       returnConfirmedAt: returnConfirmedAt ?? this.returnConfirmedAt,
       returnPickedAt: returnPickedAt ?? this.returnPickedAt,
       refundStatus: refundStatus ?? this.refundStatus,
+      cancelledAt: cancelledAt ?? this.cancelledAt,
       refundedAt: refundedAt ?? this.refundedAt,
       refundAmount: refundAmount ?? this.refundAmount,
     );

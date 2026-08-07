@@ -71,6 +71,7 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
       // Mark order as cancelled
       transaction.update(_firestore.collection('orders').doc(orderId), {
         'status': 'cancelled',
+        'cancelled_at': FieldValue.serverTimestamp(),
       });
 
       // Revert stock for each item
@@ -198,6 +199,7 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
       if (items.length == 1) {
         transaction.update(_firestore.collection('orders').doc(orderId), {
           'status': 'cancelled',
+          'cancelled_at': FieldValue.serverTimestamp(),
         });
       } else {
         // Remove the item and update order totals

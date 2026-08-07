@@ -18,6 +18,7 @@ class ProductImageCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool hasMultipleImages = images.length > 1;
 
     // Placeholder for when product has no images
@@ -81,7 +82,9 @@ class ProductImageCarousel extends StatelessWidget {
                   },
                   child: Container(
                     width: double.infinity,
-                    color: Theme.of(context).cardColor,
+                    color: isDark
+                        ? CustomerAppColors.darkBackground
+                        : CustomerAppColors.background,
                     padding: EdgeInsets.all(12.w),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.r),

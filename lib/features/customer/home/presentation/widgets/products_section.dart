@@ -74,14 +74,11 @@ class ProductsSection extends StatelessWidget {
           products: recommended,
           shops: homeData.nearbyShops,
           onViewAllTap: () {
-            final recommendedCats = recommended.map((p) => p.category).toSet();
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => CustomerProductsPage(
-                  initialSelectedCategories: recommendedCats.isNotEmpty
-                      ? recommendedCats
-                      : {'All'},
+                builder: (_) => const CustomerProductsPage(
+                  initialSelectedSort: 'Recommended',
                 ),
               ),
             );
@@ -114,9 +111,8 @@ class ProductsSection extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => const CustomerProductsPage(
-                  initialSelectedSort: 'Best Sellers',
-                ),
+                builder: (_) =>
+                    const CustomerProductsPage(initialSelectedSort: 'Trending'),
               ),
             );
           },
@@ -377,6 +373,7 @@ class _HorizontalProductSection extends StatelessWidget {
                           ),
                         );
                       },
+                      // Product Card
                       child: ProductCard(
                         imageUrl: imgUrl,
                         brand: brand,

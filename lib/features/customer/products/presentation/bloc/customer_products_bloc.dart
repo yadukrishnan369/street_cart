@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +17,9 @@ class CustomerProductsBloc
   final GetCustomerProducts getCustomerProducts;
   final SharedPreferences _sharedPreferences;
   final GetProductReviews getProductReviews;
+
+  final Set<String> orderCats = {};
+  final Map<String, int> recentSales = {};
 
   CustomerProductsBloc({
     required this.getCustomerProducts,
@@ -59,6 +64,66 @@ class CustomerProductsBloc
       final selectedRating = event.initialSelectedRating;
       final selectedColors = event.initialSelectedColors ?? const <String>{};
       final selectedSizes = event.initialSelectedSizes ?? const <String>{};
+
+      // Load recommended / trending order data
+      orderCats.clear();
+      recentSales.clear();
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        try {
+          final ordersSnap = await FirebaseFirestore.instance
+              .collection('orders')
+              .where('customer_id', isEqualTo: user.uid)
+              .get();
+          for (final doc in ordersSnap.docs) {
+            final items = doc.data()['items'] as List<dynamic>? ?? [];
+            for (final item in items) {
+              final pId = item['product_id'] as String?;
+              if (pId != null) {
+                final matchedProduct = allProducts.firstWhere(
+                  (p) => p.id == pId,
+                  orElse: () => ProductModel(
+                    id: '',
+                    shopId: '',
+                    name: '',
+                    originalPrice: 0.0,
+                    description: '',
+                    stockQuantity: 0,
+                    category: '',
+                    sizeStandard: '',
+                  ),
+                );
+                if (matchedProduct.id.isNotEmpty &&
+                    matchedProduct.category.isNotEmpty) {
+                  orderCats.add(matchedProduct.category);
+                }
+              }
+            }
+          }
+        } catch (_) {}
+
+        try {
+          final tenDaysAgo = DateTime.now().subtract(const Duration(days: 10));
+          final recentOrdersSnap = await FirebaseFirestore.instance
+              .collection('orders')
+              .where(
+                'created_at',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(tenDaysAgo),
+              )
+              .get();
+          for (final doc in recentOrdersSnap.docs) {
+            final items = doc.data()['items'] as List<dynamic>? ?? [];
+            for (final item in items) {
+              final pId = item['product_id'] as String?;
+              final qty = (item['quantity'] as num?)?.toInt() ?? 1;
+              if (pId != null) {
+                recentSales[pId] = (recentSales[pId] ?? 0) + qty;
+              }
+            }
+          }
+        } catch (_) {}
+      }
 
       final filteredProducts = _filterAndSort(
         allProducts: allProducts,
@@ -246,7 +311,7 @@ class CustomerProductsBloc
   }) {
     final shopNames = {for (final s in shops) s.uid: s.shopName};
 
-    final filtered = allProducts.where((product) {
+    var filtered = allProducts.where((product) {
       // Match Product name, Description or Shop name By Search query
       final matchQuery =
           product.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
@@ -297,8 +362,78 @@ class CustomerProductsBloc
           matchRating;
     }).toList();
 
-    // Sort Filtered Products by Selected Sort Option
-    if (selectedSort == 'Newest') {
+    // Sort/Filter Filtered Products by Selected Sort Option
+    if (selectedSort == 'Recommended') {
+      final recentQueries =
+          _sharedPreferences.getStringList('recent_queries') ?? <String>[];
+      final recommendedSet = <String>{};
+      final recommendedList = <ProductModel>[];
+
+      // Add products matching recent search queries first
+      if (recentQueries.isNotEmpty) {
+        for (final query in recentQueries) {
+          final keywords = <String>{};
+          final words = query.split(RegExp(r'\s+'));
+          for (final word in words) {
+            final cleaned = word.trim().toLowerCase();
+            if (cleaned.length >= 3) {
+              keywords.add(cleaned);
+            }
+          }
+          if (keywords.isNotEmpty) {
+            final queryMatches = filtered.where((p) {
+              if (recommendedSet.contains(p.id)) return false;
+              final nameLower = p.name.toLowerCase();
+              final catLower = p.category.toLowerCase();
+              final descLower = p.description.toLowerCase();
+              return keywords.any((kw) {
+                return nameLower.contains(kw) ||
+                    catLower.contains(kw) ||
+                    descLower.contains(kw);
+              });
+            }).toList();
+            for (final p in queryMatches) {
+              recommendedList.add(p);
+              recommendedSet.add(p.id);
+            }
+          }
+        }
+      }
+
+      // Add products matching previously ordered product categories
+      if (orderCats.isNotEmpty) {
+        final orderCatProducts = filtered
+            .where(
+              (p) => orderCats.any(
+                (cat) => cat.toLowerCase() == p.category.toLowerCase(),
+              ),
+            )
+            .toList();
+        for (final p in orderCatProducts) {
+          if (!recommendedSet.contains(p.id)) {
+            recommendedList.add(p);
+            recommendedSet.add(p.id);
+          }
+        }
+      }
+
+      filtered = recommendedList;
+    } else if (selectedSort == 'Trending') {
+      filtered.sort((a, b) {
+        final salesA = recentSales[a.id] ?? 0;
+        final salesB = recentSales[b.id] ?? 0;
+        if (salesA != salesB) {
+          return salesB.compareTo(salesA);
+        }
+        if (a.salesCount != b.salesCount) {
+          return b.salesCount.compareTo(a.salesCount);
+        }
+        if (a.createdAt == null && b.createdAt == null) return 0;
+        if (a.createdAt == null) return 1;
+        if (b.createdAt == null) return -1;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
+    } else if (selectedSort == 'Newest') {
       filtered.sort((a, b) {
         if (a.createdAt == null && b.createdAt == null) return 0;
         if (a.createdAt == null) return 1;

@@ -18,6 +18,9 @@ class OrderDetailsStatusBanner extends StatelessWidget {
     final isDelivered = OrdersHelper.isDelivered(status);
     final isCancelled = OrdersHelper.isCancelled(status);
     final createdDateStr = OrdersHelper.formatDateShort(order.createdAt);
+    final cancelledDateStr = order.cancelledAt != null
+        ? OrdersHelper.formatDateShort(order.cancelledAt!)
+        : createdDateStr;
     final deliveredDateStr = order.deliveredAt != null
         ? OrdersHelper.formatDateShort(order.deliveredAt!)
         : createdDateStr;
@@ -202,7 +205,7 @@ class OrderDetailsStatusBanner extends StatelessWidget {
                 children: [
                   // Cancelled Title
                   Text(
-                    'Cancelled on $createdDateStr',
+                    'Cancelled on $cancelledDateStr',
                     style: TextStyle(
                       color: CustomerAppColors.error,
                       fontWeight: FontWeight.bold,
