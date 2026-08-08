@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/cart/data/models/cart_item_model.d
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/customer/payment/domain/usecases/place_customer_order.dart';
 import 'package:street_cart/features/customer/profile/domain/usecases/get_profile_data.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_product_by_id.dart';
 import 'package:street_cart/core/utils/delivery_validator.dart';
 import 'payment_event.dart';
 import 'payment_state.dart';
@@ -14,6 +15,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   final RazorpayService razorpayService;
   final GetProfileData getProfileData;
   final DeliveryValidator deliveryValidator;
+  final GetProductById getProductById;
 
   List<CartItem>? _currentItems;
   AddressModel? _currentAddress;
@@ -24,6 +26,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     required this.razorpayService,
     required this.getProfileData,
     required this.deliveryValidator,
+    required this.getProductById,
   }) : super(PaymentInitial()) {
     on<InitiateRazorpayPayment>(_onInitiateRazorpayPayment);
     on<CompleteOrderWithCOD>(_onCompleteOrderWithCOD);
@@ -57,6 +60,45 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       );
       _currentAddress = validatedAddress;
 
+      // Validate latest stock before showing Razorpay UI
+      final errors = <String>[];
+      for (final item in event.items) {
+        final product = await getProductById(item.productId);
+
+        if (!product.isActive || product.disabledByAdmin) {
+          errors.add('Product ${item.productName} is no longer available.');
+          continue;
+        }
+
+        if (product.hasVariants) {
+          final color = item.selectedColor;
+          final size = item.selectedSize;
+          if (color == null || color.isEmpty || size == null || size.isEmpty) {
+            errors.add('Selected variant for ${item.productName} not found.');
+            continue;
+          }
+          final colorExists = product.variants.any((v) => v.colorName == color);
+          if (!colorExists) {
+            errors.add('Selected variant for ${item.productName} not found.');
+            continue;
+          }
+          final variantStock = product.stockForVariant(color, size);
+          if (variantStock < item.quantity) {
+            errors.add(
+              'Insufficient stock for ${item.productName} ($color/$size).',
+            );
+          }
+        } else {
+          if (product.stockQuantity < item.quantity) {
+            errors.add('Insufficient stock for ${item.productName}.');
+          }
+        }
+      }
+
+      if (errors.isNotEmpty) {
+        throw Exception(errors.join('\n'));
+      }
+
       final profile = await getProfileData();
       final email = (profile != null && profile.email.isNotEmpty)
           ? profile.email
@@ -88,8 +130,6 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         shopIds: shopIds,
       );
 
-      emit(const PaymentOrderCreating('Cash on Delivery'));
-
       final orderId = await placeCustomerOrder(
         items: event.items,
         address: validatedAddress,
@@ -97,6 +137,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         paymentStatus: 'Pending',
         totalAmount: event.totalAmount,
       );
+
+      emit(const PaymentOrderCreating('Cash on Delivery'));
 
       emit(
         PaymentSuccess(
@@ -114,7 +156,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     ProcessPaymentPlacement event,
     Emitter<PaymentState> emit,
   ) async {
-    emit(PaymentOrderCreating(event.paymentMethod));
+    emit(PaymentProcessing());
     if (_currentItems == null ||
         _currentAddress == null ||
         _currentTotalAmount == null) {
@@ -135,6 +177,9 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         paymentStatus: event.paymentStatus,
         totalAmount: _currentTotalAmount!,
       );
+
+      emit(PaymentOrderCreating(event.paymentMethod));
+
       emit(
         PaymentSuccess(
           paymentMethod: event.paymentMethod,

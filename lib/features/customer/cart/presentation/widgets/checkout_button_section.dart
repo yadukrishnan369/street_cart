@@ -39,11 +39,13 @@ class CheckoutButtonSection extends StatelessWidget {
           builder: (buttonContext) {
             return BlocBuilder<PaymentBloc, PaymentState>(
               builder: (context, paymentState) {
+                final bool isBtnLoading =
+                    paymentState is PaymentProcessing ||
+                    paymentState is PaymentOrderCreating;
                 return PrimaryButton(
-                  text: paymentState is PaymentProcessing
-                      ? 'Processing...'
-                      : 'Confirm Order',
-                  onPressed: paymentState is PaymentProcessing
+                  text: isBtnLoading ? 'Processing...' : 'Confirm Order',
+                  isLoading: isBtnLoading,
+                  onPressed: isBtnLoading
                       ? null
                       : () {
                           final addressState = buttonContext

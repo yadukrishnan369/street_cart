@@ -872,7 +872,9 @@ void _initCustomerCart() {
     ),
   );
 
-  sl.registerFactory(() => CheckoutBloc(getShopById: sl()));
+  sl.registerFactory(
+    () => CheckoutBloc(getShopById: sl(), getProductById: sl()),
+  );
 }
 
 // ================= CUSTOMER PAYMENT =================
@@ -904,6 +906,7 @@ void _initCustomerPayment() {
       razorpayService: sl(),
       getProfileData: sl(),
       deliveryValidator: sl(),
+      getProductById: sl(),
     ),
   );
 }

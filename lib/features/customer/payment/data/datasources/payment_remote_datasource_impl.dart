@@ -86,21 +86,34 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
       }
       final double commissionRate = commissionPercentage / 100.0;
 
+      final errors = <String>[];
+
       // Validate stock & deduct for ALL items
       for (final item in items) {
         final productDoc = productSnapshots[item.productId]!;
         if (!productDoc.exists) {
-          throw Exception('Product ${item.productName} does not exist.');
+          errors.add('Product ${item.productName} does not exist.');
+          continue;
         }
 
         final productData = productDoc.data()!;
+        final isActive = productData['is_active'] as bool? ?? true;
+        final disabledByAdmin =
+            productData['disabled_by_admin'] as bool? ?? false;
+
+        if (!isActive || disabledByAdmin) {
+          errors.add('Product ${item.productName} is no longer available.');
+          continue;
+        }
+
         final variantsRaw = productData['variants'] as List<dynamic>? ?? [];
 
         if (variantsRaw.isEmpty) {
           final currentStock =
               (productData['stockQuantity'] as num?)?.toInt() ?? 0;
           if (currentStock < item.quantity) {
-            throw Exception('Insufficient stock for ${item.productName}.');
+            errors.add('Insufficient stock for ${item.productName}.');
+            continue;
           }
           transaction.update(productDoc.reference, {
             'stockQuantity': currentStock - item.quantity,
@@ -121,10 +134,11 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
               final currentStock =
                   (sizes[item.selectedSize] as num?)?.toInt() ?? 0;
               if (currentStock < item.quantity) {
-                throw Exception(
+                errors.add(
                   'Insufficient stock for ${item.productName}'
                   ' (${item.selectedColor}/${item.selectedSize}).',
                 );
+                break;
               }
               sizes[item.selectedSize!] = currentStock - item.quantity;
               variant['sizes'] = sizes;
@@ -137,11 +151,13 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
             }
           }
           if (!foundVariant) {
-            throw Exception(
-              'Selected variant for ${item.productName} not found.',
-            );
+            errors.add('Selected variant for ${item.productName} not found.');
           }
         }
+      }
+
+      if (errors.isNotEmpty) {
+        throw Exception(errors.join('\n'));
       }
 
       // Delete cart items for ALL items

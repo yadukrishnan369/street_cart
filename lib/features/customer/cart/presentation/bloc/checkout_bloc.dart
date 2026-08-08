@@ -1,13 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/customer/cart/domain/usecases/get_shop_by_id.dart';
+import 'package:street_cart/features/customer/cart/domain/usecases/get_product_by_id.dart';
 import 'checkout_event.dart';
 import 'checkout_state.dart';
 
 // Checkout Bloc
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final GetShopById getShopById;
+  final GetProductById getProductById;
 
-  CheckoutBloc({required this.getShopById}) : super(CheckoutInitial()) {
+  CheckoutBloc({required this.getShopById, required this.getProductById})
+    : super(CheckoutInitial()) {
     on<LoadCheckout>(_onLoadCheckout);
     on<SelectPaymentMethod>(_onSelectPaymentMethod);
   }
@@ -26,6 +29,49 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             selectedPaymentMethod: 'UPI',
           ),
         );
+        return;
+      }
+
+      // Validate product status and availability
+      final errors = <String>[];
+      for (final item in event.cartItems) {
+        final product = await getProductById(item.productId);
+        if (!product.isActive || product.disabledByAdmin) {
+          errors.add(
+            '${item.productName} is no longer available. Please go back and update your cart.',
+          );
+          continue;
+        }
+
+        if (product.hasVariants) {
+          final color = item.selectedColor;
+          final size = item.selectedSize;
+          if (color == null || color.isEmpty || size == null || size.isEmpty) {
+            errors.add('${item.productName} variant is no longer available.');
+            continue;
+          }
+          final colorExists = product.variants.any((v) => v.colorName == color);
+          if (!colorExists) {
+            errors.add(
+              '${item.productName} variant ($color) is no longer available.',
+            );
+            continue;
+          }
+          final variantStock = product.stockForVariant(color, size);
+          if (variantStock < item.quantity) {
+            errors.add(
+              'Insufficient stock for ${item.productName} ($color/$size).',
+            );
+          }
+        } else {
+          if (product.stockQuantity < item.quantity) {
+            errors.add('Insufficient stock for ${item.productName}.');
+          }
+        }
+      }
+
+      if (errors.isNotEmpty) {
+        emit(CheckoutError(errors.join('\n')));
         return;
       }
 

@@ -6,6 +6,8 @@ import 'package:street_cart/features/customer/cart/data/models/cart_item_model.d
 import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_bloc.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_event.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_state.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:street_cart/features/customer/cart/presentation/bloc/cart_event.dart';
 import 'package:street_cart/features/customer/cart/presentation/utils/checkout_helper.dart';
 import 'package:street_cart/features/customer/cart/presentation/widgets/checkout_button_section.dart';
 import 'package:street_cart/features/customer/cart/presentation/widgets/checkout_content_section.dart';
@@ -15,6 +17,7 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/address_
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_state.dart';
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_bloc.dart';
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_state.dart';
+import 'package:street_cart/features/customer/cart/presentation/widgets/order_stock_error_dialog.dart';
 import 'package:street_cart/features/customer/payment/presentation/widgets/payment_processing_overlay.dart';
 import 'package:street_cart/features/customer/payment/presentation/widgets/order_error_dialog.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
@@ -80,6 +83,18 @@ class CheckoutPage extends StatelessWidget {
               )) {
                 // Delivery Validation Error
                 OrdersHelper.showOutOfRadiusDialog(context);
+              } else if (paymentState.message.contains('Insufficient stock') ||
+                  paymentState.message.contains('not found') ||
+                  paymentState.message.contains('no longer available')) {
+                // Stock / Availability failure
+                OrderStockErrorDialog.show(
+                  context,
+                  errorMessage: paymentState.message,
+                  onConfirm: () {
+                    context.read<CartBloc>().add(LoadCart());
+                    Navigator.pop(context);
+                  },
+                );
               } else {
                 final isNetwork =
                     paymentState.message.toLowerCase().contains('connection') ||
