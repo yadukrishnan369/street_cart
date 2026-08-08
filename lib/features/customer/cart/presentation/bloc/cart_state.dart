@@ -16,17 +16,38 @@ class CartLoaded extends CartState {
   final List<CartItem> items;
   final bool isSummaryVisible;
 
-  const CartLoaded({required this.items, this.isSummaryVisible = true});
+  final Set<String> unavailableItemIds;
 
-  CartLoaded copyWith({List<CartItem>? items, bool? isSummaryVisible}) {
+  final Set<String> unviewableItemIds;
+
+  const CartLoaded({
+    required this.items,
+    this.isSummaryVisible = true,
+    this.unavailableItemIds = const {},
+    this.unviewableItemIds = const {},
+  });
+
+  CartLoaded copyWith({
+    List<CartItem>? items,
+    bool? isSummaryVisible,
+    Set<String>? unavailableItemIds,
+    Set<String>? unviewableItemIds,
+  }) {
     return CartLoaded(
       items: items ?? this.items,
       isSummaryVisible: isSummaryVisible ?? this.isSummaryVisible,
+      unavailableItemIds: unavailableItemIds ?? this.unavailableItemIds,
+      unviewableItemIds: unviewableItemIds ?? this.unviewableItemIds,
     );
   }
 
   @override
-  List<Object?> get props => [items, isSummaryVisible];
+  List<Object?> get props => [
+    items,
+    isSummaryVisible,
+    unavailableItemIds,
+    unviewableItemIds,
+  ];
 }
 
 class CartError extends CartState {
@@ -46,8 +67,56 @@ class CartItemUpdateError extends CartLoaded {
     required super.items,
     required this.errorMessage,
     super.isSummaryVisible = true,
+    super.unavailableItemIds = const {},
+    super.unviewableItemIds = const {},
   }) : timestamp = DateTime.now();
 
   @override
-  List<Object?> get props => [items, isSummaryVisible, errorMessage, timestamp];
+  List<Object?> get props => [
+    items,
+    isSummaryVisible,
+    unavailableItemIds,
+    unviewableItemIds,
+    errorMessage,
+    timestamp,
+  ];
+}
+
+class CartCheckoutValidating extends CartLoaded {
+  const CartCheckoutValidating({
+    required super.items,
+    super.isSummaryVisible,
+    super.unavailableItemIds,
+    super.unviewableItemIds,
+  });
+
+  @override
+  List<Object?> get props => [...super.props, 'validating'];
+}
+
+class CartCheckoutReady extends CartLoaded {
+  const CartCheckoutReady({
+    required super.items,
+    super.isSummaryVisible,
+    super.unavailableItemIds,
+    super.unviewableItemIds,
+  });
+
+  @override
+  List<Object?> get props => [...super.props, 'ready'];
+}
+
+class CartCheckoutInvalid extends CartLoaded {
+  final List<String> reasons;
+
+  const CartCheckoutInvalid({
+    required super.items,
+    required this.reasons,
+    required super.unavailableItemIds,
+    required super.unviewableItemIds,
+    super.isSummaryVisible,
+  });
+
+  @override
+  List<Object?> get props => [...super.props, reasons];
 }

@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/cart/presentation/widgets/cart_emp
 import 'package:street_cart/features/customer/cart/presentation/utils/cart_helper.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/features/customer/cart/presentation/widgets/shimmer/cart_shimmer.dart';
+import 'package:street_cart/features/customer/cart/presentation/widgets/cart_checkout_unavailable_sheet.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
@@ -103,7 +104,7 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
-      body: BlocListener<CartBloc, CartState>(
+      body: BlocConsumer<CartBloc, CartState>(
         listener: (context, state) {
           if (state is CartItemUpdateError) {
             CustomSnackBar.show(
@@ -111,84 +112,91 @@ class _CartPageState extends State<CartPage> {
               message: state.errorMessage,
               isError: true,
             );
+          } else if (state is CartCheckoutReady) {
+            // All items are valid — proceed to checkout
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CheckoutPage(cartItems: state.items),
+              ),
+            );
+          } else if (state is CartCheckoutInvalid) {
+            CartCheckoutUnavailableSheet.show(context, state.reasons);
           }
         },
-        child: BlocBuilder<CartBloc, CartState>(
-          builder: (context, state) {
-            if (_isFirstLoad) {
-              _isFirstLoad = false;
-              return const CartShimmer();
+        builder: (context, state) {
+          if (_isFirstLoad) {
+            _isFirstLoad = false;
+            return const CartShimmer();
+          }
+          if (state is CartLoading) {
+            return const CartShimmer();
+          } else if (state is CartError) {
+            // Error State
+            return AppErrorView(
+              message: state.message,
+              onRetry: () => context.read<CartBloc>().add(LoadCart()),
+            );
+          } else if (state is CartLoaded) {
+            final items = state.items;
+            if (items.isEmpty) {
+              // Cart Empty State
+              return const CartEmptyState();
             }
-            if (state is CartLoading) {
-              return const CartShimmer();
-            } else if (state is CartError) {
-              // Error State
-              return AppErrorView(
-                message: state.message,
-                onRetry: () => context.read<CartBloc>().add(LoadCart()),
-              );
-            } else if (state is CartLoaded) {
-              final items = state.items;
-              if (items.isEmpty) {
-                // Cart Empty State
-                return const CartEmptyState();
-              }
 
-              final int totalItems = CartHelper.calculateTotalItems(items);
-              final double subtotal = CartHelper.calculateSubtotal(items);
-              final double totalAmount = CartHelper.calculateTotalAmount(
-                subtotal,
-              );
+            final int totalItems = CartHelper.calculateTotalItems(items);
+            final double subtotal = CartHelper.calculateSubtotal(items);
+            final double totalAmount = CartHelper.calculateTotalAmount(
+              subtotal,
+            );
 
-              return SafeArea(
-                child: Column(
-                  children: [
-                    // Cart items List Section
-                    CartItemsList(
-                      items: items,
-                      scrollController: _scrollController,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16.w),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Order Summary Section
-                          OrderSummary(
-                            totalItems: totalItems,
-                            productTypes: items.length,
-                            subtotal: subtotal,
-                            totalAmount: totalAmount,
-                            isVisible: state.isSummaryVisible,
+            return SafeArea(
+              child: Column(
+                children: [
+                  // Cart items List Section
+                  CartItemsList(
+                    items: items,
+                    scrollController: _scrollController,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Order Summary Section
+                        OrderSummary(
+                          totalItems: totalItems,
+                          productTypes: items.length,
+                          subtotal: subtotal,
+                          totalAmount: totalAmount,
+                          isVisible: state.isSummaryVisible,
+                        ),
+                        // Action Button
+                        PrimaryButton(
+                          text: 'Proceed to Checkout',
+                          isLoading: state is CartCheckoutValidating,
+                          onPressed: state is CartCheckoutValidating
+                              ? null
+                              : () {
+                                  context.read<CartBloc>().add(
+                                    ValidateCartForCheckout(),
+                                  );
+                                },
+                          suffixIcon: const Icon(
+                            Icons.arrow_forward,
+                            size: 20,
+                            color: Colors.white,
                           ),
-                          // Action Button
-                          PrimaryButton(
-                            text: 'Proceed to Checkout',
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      CheckoutPage(cartItems: state.items),
-                                ),
-                              );
-                            },
-                            suffixIcon: const Icon(
-                              Icons.arrow_forward,
-                              size: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
   }

@@ -46,6 +46,10 @@ class RemoveItem extends CartEvent {
 
 class ClearAllCart extends CartEvent {}
 
+class ValidateCartForCheckout extends CartEvent {}
+
+class RefreshCartAvailability extends CartEvent {}
+
 class ClearLocalCart extends CartEvent {}
 
 class ToggleSummaryVisibility extends CartEvent {

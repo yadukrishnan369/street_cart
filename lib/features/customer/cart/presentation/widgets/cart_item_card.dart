@@ -11,8 +11,10 @@ class CartItemCard extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
   final VoidCallback onDelete;
-  final VoidCallback onBuyNow;
+  final VoidCallback? onBuyNow;
   final VoidCallback onView;
+  final bool isUnavailable;
+  final bool isViewDisabled;
 
   const CartItemCard({
     super.key,
@@ -20,8 +22,10 @@ class CartItemCard extends StatelessWidget {
     required this.onIncrement,
     required this.onDecrement,
     required this.onDelete,
-    required this.onBuyNow,
+    this.onBuyNow,
     required this.onView,
+    this.isUnavailable = false,
+    this.isViewDisabled = false,
   });
 
   @override
@@ -101,18 +105,48 @@ class CartItemCard extends StatelessWidget {
                             ),
                           ),
                         ),
+                        // Unavailable badge
+                        if (isUnavailable) ...[
+                          SizedBox(width: 6.w),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: CustomerAppColors.error.withValues(
+                                alpha: 0.12,
+                              ),
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Text(
+                              'Unavailable',
+                              style: TextStyle(
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.bold,
+                                color: CustomerAppColors.error,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                        ],
                         SizedBox(width: 8.w),
+                        // View Product detail option
                         GestureDetector(
-                          onTap: onView,
+                          onTap: isViewDisabled ? null : onView,
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 8.w,
                               vertical: 4.h,
                             ),
                             decoration: BoxDecoration(
-                              color: CustomerAppColors.primary.withValues(
-                                alpha: 0.1,
-                              ),
+                              color: isViewDisabled
+                                  ? (isDark
+                                        ? Colors.grey[850]
+                                        : Colors.grey[200])
+                                  : CustomerAppColors.primary.withValues(
+                                      alpha: 0.1,
+                                    ),
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Text(
@@ -120,7 +154,11 @@ class CartItemCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.bold,
-                                color: CustomerAppColors.primary,
+                                color: isViewDisabled
+                                    ? (isDark
+                                          ? Colors.grey[600]
+                                          : Colors.grey[500])
+                                    : CustomerAppColors.primary,
                               ),
                             ),
                           ),
@@ -267,17 +305,31 @@ class CartItemCard extends StatelessWidget {
               SizedBox(width: 38.w),
               ElevatedButton.icon(
                 onPressed: onBuyNow,
-                icon: Icon(Icons.bolt, size: 16.sp, color: Colors.white),
+                icon: Icon(
+                  Icons.bolt,
+                  size: 16.sp,
+                  color: onBuyNow == null
+                      ? (isDark ? Colors.grey[600] : Colors.grey[500])
+                      : Colors.white,
+                ),
                 label: Text(
                   'Buy Now',
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: onBuyNow == null
+                        ? (isDark ? Colors.grey[600] : Colors.grey[500])
+                        : Colors.white,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CustomerAppColors.primary,
+                  disabledBackgroundColor: isDark
+                      ? Colors.grey[850]
+                      : Colors.grey[300],
+                  disabledForegroundColor: isDark
+                      ? Colors.grey[600]
+                      : Colors.grey[500],
                   padding: EdgeInsets.symmetric(
                     horizontal: 12.w,
                     vertical: 6.h,

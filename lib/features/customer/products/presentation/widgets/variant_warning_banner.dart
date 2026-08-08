@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 // Variant Unavailable Warning Banner
 class VariantWarningBanner extends StatelessWidget {
@@ -15,15 +16,21 @@ class VariantWarningBanner extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: isDark ? Colors.red[900]! : Colors.red[50]!,
+        color: isDark
+            ? CustomerAppColors.error.withValues(alpha: 0.12)
+            : const Color(0xFFFEF2F2),
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: isDark ? Colors.red[700]! : Colors.red[200]!),
+        border: Border.all(
+          color: isDark
+              ? CustomerAppColors.error.withValues(alpha: 0.35)
+              : const Color(0xFFFECACA),
+        ),
       ),
       child: Row(
         children: [
           Icon(
             Icons.warning_amber_rounded,
-            color: isDark ? Colors.red[300]! : Colors.red[700]!,
+            color: CustomerAppColors.error,
             size: 20.sp,
           ),
           SizedBox(width: 8.w),
@@ -33,7 +40,9 @@ class VariantWarningBanner extends StatelessWidget {
               warningMessage,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: isDark ? Colors.red[300]! : Colors.red[700]!,
+                color: isDark
+                    ? CustomerAppColors.darkTextPrimary
+                    : CustomerAppColors.error,
                 fontWeight: FontWeight.w500,
               ),
             ),
