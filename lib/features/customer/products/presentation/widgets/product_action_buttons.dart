@@ -137,7 +137,14 @@ class ProductActionButtons extends StatelessWidget {
                     label: const Text('Buy Now'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: CustomerAppColors.primary,
-                      disabledBackgroundColor: Colors.grey[300],
+                      disabledBackgroundColor:
+                          Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[850]
+                          : Colors.grey[300],
+                      disabledForegroundColor:
+                          Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[600]
+                          : Colors.grey[500],
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(vertical: 14.h),
                       elevation: 0,
@@ -179,7 +186,7 @@ class ProductActionButtons extends StatelessWidget {
 
     if (isInCart) {
       // Go to Cart
-      final Color yellowColor = const Color(0xFFF59E0B);
+      final Color yellowColor = CustomerAppColors.warning;
       return ElevatedButton.icon(
         onPressed: () {
           Navigator.push(

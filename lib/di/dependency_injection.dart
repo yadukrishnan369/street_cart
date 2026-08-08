@@ -257,6 +257,7 @@ import 'package:street_cart/features/customer/orders/domain/usecases/cancel_orde
 import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order_item.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/update_order_address.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/submit_return_request.dart';
+import 'package:street_cart/features/customer/orders/domain/usecases/check_products_availability.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 
 // ADMIN
@@ -1274,6 +1275,7 @@ void _initCustomerOrders() {
   sl.registerLazySingleton(() => CancelOrderItem(sl()));
   sl.registerLazySingleton(() => UpdateOrderAddress(sl()));
   sl.registerLazySingleton(() => SubmitReturnRequest(sl()));
+  sl.registerLazySingleton(() => CheckProductsAvailability(sl()));
   sl.registerFactory(
     () => OrdersBloc(
       getCustomerOrders: sl(),
@@ -1281,6 +1283,7 @@ void _initCustomerOrders() {
       cancelOrderItem: sl(),
       updateOrderAddress: sl(),
       submitReturnRequest: sl(),
+      checkProductsAvailability: sl(),
     ),
   );
 }

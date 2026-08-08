@@ -34,7 +34,7 @@ class AdminProductRepositoryImpl implements IAdminProductRepository {
 
     final existingShopIds = allShops.map((s) => s.uid).toSet();
     final allProducts = allProductsRaw
-        .where((p) => existingShopIds.contains(p.shopId))
+        .where((p) => existingShopIds.contains(p.shopId) && p.isActive)
         .toList();
 
     final shopNameMap = {for (var shop in allShops) shop.uid: shop.shopName};

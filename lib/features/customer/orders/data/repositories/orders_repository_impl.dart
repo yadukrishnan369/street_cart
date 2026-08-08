@@ -79,4 +79,16 @@ class OrdersRepositoryImpl implements IOrdersRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Map<String, String>> checkProductsAvailability(List<OrderItemModel> items) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      return await remoteDataSource.checkProductsAvailability(items);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

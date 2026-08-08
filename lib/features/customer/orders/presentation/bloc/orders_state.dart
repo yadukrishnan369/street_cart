@@ -57,3 +57,26 @@ class ReturnRequestSubmitting extends OrdersState {}
 
 // Return Request Submitted Success State
 class ReturnRequestSubmittedSuccess extends OrdersState {}
+
+// Reorder verifying
+class ReorderVerifying extends OrdersLoaded {
+  const ReorderVerifying(super.orders);
+}
+
+// Reorder verify success
+class ReorderVerifySuccess extends OrdersLoaded {
+  final OrderModel order;
+  const ReorderVerifySuccess(this.order, super.orders);
+
+  @override
+  List<Object?> get props => [order, orders];
+}
+
+// Reorder verify failure - one or more products unavailable
+class ReorderVerifyFailure extends OrdersLoaded {
+  final String unavailableProducts;
+  const ReorderVerifyFailure(this.unavailableProducts, super.orders);
+
+  @override
+  List<Object?> get props => [unavailableProducts, orders];
+}

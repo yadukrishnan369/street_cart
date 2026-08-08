@@ -27,6 +27,7 @@ class ShopProductsRemoteDataSourceImpl
         .map((snapshot) {
           final products = snapshot.docs
               .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+              .where((p) => p.isActive)
               .toList();
           products.sort((a, b) {
             if (a.createdAt == null && b.createdAt == null) return 0;
@@ -75,7 +76,9 @@ class ShopProductsRemoteDataSourceImpl
   @override
   Future<void> deleteProduct(String shopId, String productId) async {
     try {
-      await _firestore.collection('products').doc(productId).delete();
+      await _firestore.collection('products').doc(productId).update({
+        'is_active': false,
+      });
     } catch (e) {
       throw ServerException('Failed to delete product: $e');
     }

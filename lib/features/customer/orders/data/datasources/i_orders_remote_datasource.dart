@@ -12,4 +12,7 @@ abstract class IOrdersRemoteDataSource {
     required String reason,
     required String details,
   });
+  Future<Map<String, String>> checkProductsAvailability(
+    List<OrderItemModel> items,
+  );
 }

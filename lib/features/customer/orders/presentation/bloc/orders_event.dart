@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
+import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 
 abstract class OrdersEvent extends Equatable {
   const OrdersEvent();
@@ -59,4 +60,14 @@ class SubmitReturnRequestEvent extends OrdersEvent {
 
   @override
   List<Object?> get props => [orderId, itemId, reason, details];
+}
+
+// Verify Reorder Event
+class VerifyReorderEvent extends OrdersEvent {
+  final OrderModel order;
+
+  const VerifyReorderEvent(this.order);
+
+  @override
+  List<Object?> get props => [order];
 }

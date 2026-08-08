@@ -166,7 +166,7 @@ class ProductModel {
           ? Timestamp.fromDate(createdAt!)
           : FieldValue.serverTimestamp(),
       'sales_count': salesCount,
-      'is_active': totalStock > 0,
+      'is_active': isActive,
       'disabled_by_admin': disabledByAdmin,
       'rating': rating,
       'reviews_count': reviewsCount,

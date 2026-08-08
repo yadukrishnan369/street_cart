@@ -63,7 +63,7 @@ class AdminProductDetailHelper {
       builder: (dialogCtx) => ConfirmationModal(
         title: 'Delete Product?',
         content:
-            'Are you sure you want to delete this product? This action is permanent and cannot be undone.',
+            'Are you sure you want to delete this product? This will permanently remove it from active business operations, but all historical orders, sales statistics, reviews, and financial records will be preserved. Proceed?',
         confirmText: 'Continue',
         confirmColor: AdminAppColors.errorColor,
         onCancel: () => Navigator.pop(dialogCtx),
@@ -74,7 +74,7 @@ class AdminProductDetailHelper {
             builder: (secondCtx) => ConfirmationModal(
               title: 'Confirm to Delete',
               content:
-                  'Confirming again: Delete this product permanently from Shop account?',
+                  'Confirming again: Delete this product? Existing sales and order records will remain unaffected. This cannot be undone.',
               confirmText: 'Yes, Delete',
               confirmColor: AdminAppColors.errorColor,
               onCancel: () => Navigator.pop(secondCtx),

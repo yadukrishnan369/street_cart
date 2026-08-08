@@ -343,4 +343,100 @@ class OrdersRemoteDataSourceImpl implements IOrdersRemoteDataSource {
       });
     });
   }
+
+  // Check Products Availability
+  @override
+  Future<Map<String, String>> checkProductsAvailability(
+    List<OrderItemModel> items,
+  ) async {
+    try {
+      final Map<String, String> errors = {};
+      for (final item in items) {
+        if (item.productId.isEmpty) {
+          errors[item.id] = 'Product ID is empty';
+          continue;
+        }
+        final doc = await _firestore
+            .collection('products')
+            .doc(item.productId)
+            .get();
+        if (!doc.exists) {
+          errors[item.id] = '${item.productName} is no longer available';
+          continue;
+        }
+        final data = doc.data();
+        if (data == null) {
+          errors[item.id] = '${item.productName} is no longer available';
+          continue;
+        }
+        final bool isActive = data['is_active'] ?? false;
+        final bool disabledByAdmin = data['disabled_by_admin'] ?? false;
+
+        if (!isActive || disabledByAdmin) {
+          errors[item.id] = '${item.productName} is no longer available';
+          continue;
+        }
+
+        // Check stock and variants
+        final variantList = (data['variants'] as List<dynamic>? ?? []);
+        if (variantList.isNotEmpty) {
+          final String selectedColor = item.selectedColor ?? '';
+          final String selectedSize = item.selectedSize ?? '';
+
+          if (selectedColor.isEmpty && selectedSize.isEmpty) {
+            // General stock check
+            final totalStock = variantList.fold<int>(0, (sum, v) {
+              final sizes = (v['sizes'] as Map<dynamic, dynamic>? ?? {});
+              final vStock = sizes.values.fold<int>(
+                0,
+                (acc, qty) => acc + (qty as num).toInt(),
+              );
+              return sum + vStock;
+            });
+            if (totalStock < item.quantity) {
+              errors[item.id] = '${item.productName} is out of stock';
+            }
+          } else {
+            // Find matching variant by color
+            final matchingVariant = variantList.firstWhere(
+              (v) =>
+                  (v['color_name'] as String? ?? '').toLowerCase() ==
+                  selectedColor.toLowerCase(),
+              orElse: () => null,
+            );
+
+            if (matchingVariant == null) {
+              errors[item.id] =
+                  '${item.productName} is no longer available in ${selectedColor.isNotEmpty ? selectedColor : 'selected color'}';
+              continue;
+            }
+
+            final sizesMap =
+                (matchingVariant['sizes'] as Map<dynamic, dynamic>? ?? {});
+            final sizeStock = (sizesMap[selectedSize] as num?)?.toInt() ?? 0;
+
+            if (sizeStock <= 0) {
+              errors[item.id] =
+                  '${item.productName} (${selectedColor.isNotEmpty ? '$selectedColor, ' : ''}$selectedSize) is out of stock';
+            } else if (sizeStock < item.quantity) {
+              errors[item.id] =
+                  'Only $sizeStock quantity available for ${item.productName} (${selectedColor.isNotEmpty ? '$selectedColor, ' : ''}$selectedSize)';
+            }
+          }
+        } else {
+          // No variants, check overall stock
+          final stockQuantity = (data['stock_quantity'] as num?)?.toInt() ?? 0;
+          if (stockQuantity <= 0) {
+            errors[item.id] = '${item.productName} is out of stock';
+          } else if (stockQuantity < item.quantity) {
+            errors[item.id] =
+                'Only $stockQuantity quantity available for ${item.productName}';
+          }
+        }
+      }
+      return errors;
+    } catch (e) {
+      throw Exception('Failed to check product availability: $e');
+    }
+  }
 }

@@ -109,7 +109,10 @@ class AdminProductRemoteDataSourceImpl
   @override
   Future<void> deleteProduct(String productId) async {
     try {
-      await _firestore.collection('products').doc(productId).delete();
+      await _firestore.collection('products').doc(productId).update({
+        'is_active': false,
+        'disabled_by_admin': true,
+      });
     } catch (e) {
       throw Exception('Failed to delete product: $e');
     }

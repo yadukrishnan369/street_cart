@@ -34,28 +34,34 @@ class ProductListItem extends StatelessWidget {
     final bool isDisabledByAdmin = product.disabledByAdmin;
 
     return GestureDetector(
-      onTap: () {
-        // Navigate to Product Detail Page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailPage(
-              product: product,
-              shopId: shopId,
-              productsBloc: productsBloc,
-            ),
-          ),
-        );
-      },
+      onTap: isDisabledByAdmin
+          ? null
+          : () {
+              // Navigate to Product Detail Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailPage(
+                    product: product,
+                    shopId: shopId,
+                    productsBloc: productsBloc,
+                  ),
+                ),
+              );
+            },
       child: Opacity(
         opacity: isDisabledByAdmin ? 0.6 : 1.0,
         child: Container(
           margin: EdgeInsets.only(bottom: 16.h),
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            color: isDark ? ShopAppColors.darkSurface : Colors.white,
+            color: isDisabledByAdmin
+                ? (isDark ? Colors.grey[900] : const Color(0xFFF5F5F5))
+                : (isDark ? ShopAppColors.darkSurface : Colors.white),
             border: Border.all(
-              color: isDark ? ShopAppColors.darkBorder : Colors.grey[200]!,
+              color: isDisabledByAdmin
+                  ? (isDark ? Colors.grey[800]! : Colors.grey[300]!)
+                  : (isDark ? ShopAppColors.darkBorder : Colors.grey[200]!),
             ),
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
@@ -162,30 +168,34 @@ class ProductListItem extends StatelessWidget {
                   ],
                 ),
               ),
-              PopupMenuButton<String>(
-                icon: Icon(Icons.more_vert, color: ShopAppColors.textSecondary),
-                onSelected: (val) {
-                  if (val == 'edit') {
-                    // Navigate to Add Edit Product Page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddEditProductPage(
-                          shopId: shopId,
-                          product: product,
-                          productsBloc: productsBloc,
+              if (!isDisabledByAdmin)
+                PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: ShopAppColors.textSecondary,
+                  ),
+                  onSelected: (val) {
+                    if (val == 'edit') {
+                      // Navigate to Add Edit Product Page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddEditProductPage(
+                            shopId: shopId,
+                            product: product,
+                            productsBloc: productsBloc,
+                          ),
                         ),
-                      ),
-                    );
-                  } else if (val == 'delete') {
-                    onDeleteTap();
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                  const PopupMenuItem(value: 'delete', child: Text('Delete')),
-                ],
-              ),
+                      );
+                    } else if (val == 'delete') {
+                      onDeleteTap();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                    const PopupMenuItem(value: 'delete', child: Text('Delete')),
+                  ],
+                ),
             ],
           ),
         ),

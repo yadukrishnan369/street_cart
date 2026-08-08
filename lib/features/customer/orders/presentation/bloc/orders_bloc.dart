@@ -5,6 +5,7 @@ import 'package:street_cart/features/customer/orders/domain/usecases/cancel_orde
 import 'package:street_cart/features/customer/orders/domain/usecases/cancel_order_item.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/update_order_address.dart';
 import 'package:street_cart/features/customer/orders/domain/usecases/submit_return_request.dart';
+import 'package:street_cart/features/customer/orders/domain/usecases/check_products_availability.dart';
 import 'orders_event.dart';
 import 'orders_state.dart';
 
@@ -14,6 +15,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   final CancelOrderItem cancelOrderItem;
   final UpdateOrderAddress updateOrderAddress;
   final SubmitReturnRequest submitReturnRequest;
+  final CheckProductsAvailability checkProductsAvailability;
 
   OrdersBloc({
     required this.getCustomerOrders,
@@ -21,12 +23,14 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     required this.cancelOrderItem,
     required this.updateOrderAddress,
     required this.submitReturnRequest,
+    required this.checkProductsAvailability,
   }) : super(OrdersInitial()) {
     on<FetchOrders>(_onFetchOrders);
     on<CancelOrderEvent>(_onCancelOrder);
     on<CancelOrderItemEvent>(_onCancelOrderItem);
     on<UpdateOrderAddressEvent>(_onUpdateOrderAddress);
     on<SubmitReturnRequestEvent>(_onSubmitReturnRequest);
+    on<VerifyReorderEvent>(_onVerifyReorder);
   }
 
   // Fetch Orders of Specific Customer
@@ -108,6 +112,29 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       add(FetchOrders());
     } catch (e) {
       emit(OrdersFailure(e.toString()));
+    }
+  }
+
+  // Verify Reorder Availability
+  Future<void> _onVerifyReorder(
+    VerifyReorderEvent event,
+    Emitter<OrdersState> emit,
+  ) async {
+    final currentOrders = state is OrdersLoaded
+        ? (state as OrdersLoaded).orders
+        : <OrderModel>[];
+    emit(ReorderVerifying(currentOrders));
+    try {
+      final errorsMap = await checkProductsAvailability(event.order.items);
+
+      if (errorsMap.isNotEmpty) {
+        final errorMsg = errorsMap.values.join('\n');
+        emit(ReorderVerifyFailure(errorMsg, currentOrders));
+      } else {
+        emit(ReorderVerifySuccess(event.order, currentOrders));
+      }
+    } catch (e) {
+      emit(OrdersFailure('Failed to verify products availability: $e'));
     }
   }
 }
