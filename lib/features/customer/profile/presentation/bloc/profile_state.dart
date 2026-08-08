@@ -58,7 +58,7 @@ class ProfileLoaded extends ProfileState {
   }) {
     return ProfileLoaded(
       profile ?? this.profile,
-      editImageUrl: clearImageUrl ? null : (editImageUrl ?? this.editImageUrl),
+      editImageUrl: clearImageUrl ? '' : (editImageUrl ?? this.editImageUrl),
       editActiveName: editActiveName ?? this.editActiveName,
       isUploadingImage: isUploadingImage ?? this.isUploadingImage,
       orderUpdates: orderUpdates ?? this.orderUpdates,

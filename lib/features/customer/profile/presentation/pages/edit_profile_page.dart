@@ -25,10 +25,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
   final _formKey = GlobalKey<FormState>();
+  String? _lastImageUrl;
+  String? _lastActiveName;
 
   @override
   void initState() {
     super.initState();
+    _lastImageUrl = widget.profile?.profileImageUrl;
+    _lastActiveName = widget.profile?.fullName;
     _nameController = TextEditingController(
       text: widget.profile?.fullName ?? '',
     );
@@ -88,8 +92,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           final profileState = state is ProfileLoaded ? state : null;
-          final currentImageUrl = profileState?.editImageUrl;
-          final activeName = profileState?.editActiveName ?? '';
+          if (profileState != null) {
+            _lastImageUrl = profileState.editImageUrl;
+            _lastActiveName = profileState.editActiveName;
+          }
+          final currentImageUrl = _lastImageUrl;
+          final activeName = _lastActiveName ?? '';
           final isUploading = profileState?.isUploadingImage ?? false;
 
           return Scaffold(

@@ -71,8 +71,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         try {
           final url = await uploadProfileImage(event.imageFile);
           if (url != null) {
-            emit(current.copyWith(isUploadingImage: false, editImageUrl: url));
+            final updatedState = current.copyWith(
+              isUploadingImage: false,
+              editImageUrl: url,
+            );
+            emit(updatedState);
             emit(ProfileImageUploaded(url));
+            emit(updatedState);
           } else {
             emit(const ProfileError('Failed to upload image.'));
           }
@@ -82,17 +87,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     });
 
-    // Remove profile picture
-    on<RemoveProfileImageEvent>((event, emit) async {
+    // Remove profile picture locally
+    on<RemoveProfileImageEvent>((event, emit) {
       if (state is ProfileLoaded) {
         final current = state as ProfileLoaded;
-        emit(current.copyWith(isUploadingImage: true));
-        try {
-          await removeProfileImage();
-          emit(current.copyWith(isUploadingImage: false, clearImageUrl: true));
-        } catch (e) {
-          emit(ProfileError(e.toString()));
-        }
+        emit(current.copyWith(clearImageUrl: true));
       }
     });
 
