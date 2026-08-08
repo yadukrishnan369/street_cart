@@ -80,3 +80,23 @@ class SettingsError extends SettingsState {
     super.obscureConfirmPassword,
   });
 }
+
+// Settings Clear Data In Progress State
+class SettingsClearingData extends SettingsState {
+  const SettingsClearingData({
+    super.obscureDeletePassword,
+    super.obscureCurrentPassword,
+    super.obscureNewPassword,
+    super.obscureConfirmPassword,
+  });
+}
+
+// Settings Clear Data Success State
+class SettingsClearDataSuccess extends SettingsState {
+  const SettingsClearDataSuccess({
+    super.obscureDeletePassword,
+    super.obscureCurrentPassword,
+    super.obscureNewPassword,
+    super.obscureConfirmPassword,
+  });
+}

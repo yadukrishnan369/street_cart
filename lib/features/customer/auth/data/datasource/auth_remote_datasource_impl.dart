@@ -253,8 +253,69 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
       final uid = _authService.getCurrentUserId();
       if (uid == null) throw ServerException('No user logged in');
 
-      // Delete Firestore data
-      await _firestore.collection('customers').doc(uid).delete();
+      // Delete Firestore data using batch
+      final batch = _firestore.batch();
+
+      // Anonymize Reviews
+      final reviewsQuery = await _firestore
+          .collection('reviews')
+          .where('customer_id', isEqualTo: uid)
+          .get();
+      for (final doc in reviewsQuery.docs) {
+        batch.update(doc.reference, {
+          'customer_id': null,
+          'customer_name': 'Deleted User',
+          'customer_image': '',
+        });
+      }
+
+      // Flag Orders - NOT delete orders
+      final ordersQuery = await _firestore
+          .collection('orders')
+          .where('customer_id', isEqualTo: uid)
+          .get();
+      for (final doc in ordersQuery.docs) {
+        batch.update(doc.reference, {
+          'customer_id': null,
+          'customer_deleted': true,
+        });
+      }
+
+      // Delete Addresses Subcollection
+      final addressesQuery = await _firestore
+          .collection('customers')
+          .doc(uid)
+          .collection('addresses')
+          .get();
+      for (final doc in addressesQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete Cart Subcollection
+      final cartQuery = await _firestore
+          .collection('customers')
+          .doc(uid)
+          .collection('cart')
+          .get();
+      for (final doc in cartQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete Wishlist Subcollection
+      final wishlistQuery = await _firestore
+          .collection('customers')
+          .doc(uid)
+          .collection('wishlist')
+          .get();
+      for (final doc in wishlistQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete Customer Document
+      batch.delete(_firestore.collection('customers').doc(uid));
+
+      // Commit all Firestore operations
+      await batch.commit();
 
       // Delete from Firebase Auth
       await _authService.deleteAuthAccount();

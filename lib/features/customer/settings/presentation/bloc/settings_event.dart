@@ -21,3 +21,6 @@ class ToggleObscureNewPassword extends SettingsEvent {}
 
 // Change Passord, Confirm Password Toggle Event
 class ToggleObscureConfirmPassword extends SettingsEvent {}
+
+// Perform Clear Data Event
+class PerformClearData extends SettingsEvent {}

@@ -237,10 +237,34 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       final uid = _authService.getCurrentUserId();
       if (uid == null) throw ServerException('No user logged in');
 
-      // Delete Firestore data first while authenticated
-      await _firestore.collection('shops').doc(uid).delete();
+      // Delete Firestore data using a batch
+      final batch = _firestore.batch();
 
-      // Then delete from Firebase Auth
+      // Deactivate active products - NOT delete products
+      final productsQuery = await _firestore
+          .collection('products')
+          .where('shop_id', isEqualTo: uid)
+          .get();
+      for (final doc in productsQuery.docs) {
+        batch.update(doc.reference, {'is_active': false});
+      }
+
+      // Flag Orders - NOT delete orders
+      final ordersQuery = await _firestore
+          .collection('orders')
+          .where('shop_id', isEqualTo: uid)
+          .get();
+      for (final doc in ordersQuery.docs) {
+        batch.update(doc.reference, {'shop_deleted': true});
+      }
+
+      // Delete Shop Document
+      batch.delete(_firestore.collection('shops').doc(uid));
+
+      // Commit all Firestore operations
+      await batch.commit();
+
+      // Delete from Firebase Auth
       await _authService.deleteAuthAccount();
 
       // Sign out

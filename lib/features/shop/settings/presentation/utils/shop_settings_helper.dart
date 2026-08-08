@@ -33,9 +33,9 @@ class ShopSettingsHelper {
     showDialog(
       context: context,
       builder: (dialogContext) => ConfirmationModal(
-        title: 'Permanently Erase Data?',
+        title: 'Permanently Delete Merchant Account?',
         content:
-            'Warning: This action will permanently erase your store profile, active products, and past order records. Proceed?',
+            'Warning: This action will permanently erase your store profile and deactivate your products. Your past order records will be preserved for business, reporting, and financial purposes. Proceed?',
         confirmText: 'Delete Permanently',
         confirmColor: ShopAppColors.error,
         onConfirm: () {

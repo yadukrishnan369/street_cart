@@ -1,5 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/core/theme/shop/shop_theme_cubit.dart';
 import 'package:street_cart/features/shop/settings/domain/usecases/change_shop_password.dart';
 import 'package:street_cart/features/shop/settings/domain/usecases/delete_shop_auth_account.dart';
 part 'shop_settings_event.dart';
@@ -40,8 +44,22 @@ class ShopSettingsBloc extends Bloc<ShopSettingsEvent, ShopSettingsState> {
         ),
       );
       try {
-        await Future.delayed(const Duration(seconds: 1));
-        emit(state.copyWith(isClearingData: false, isClearDataSuccess: true));
+        final prefs = sl<SharedPreferences>();
+        await prefs.clear();
+        await DefaultCacheManager().emptyCache();
+
+        // Reset theme to light mode
+        sl<ShopThemeCubit>().toggleTheme(false);
+
+        emit(
+          state.copyWith(
+            isClearingData: false,
+            isClearDataSuccess: true,
+            appTheme: false,
+            pushNotifications: false,
+            orderAlerts: false,
+          ),
+        );
       } catch (e) {
         emit(
           state.copyWith(isClearingData: false, clearDataError: e.toString()),
