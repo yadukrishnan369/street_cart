@@ -13,8 +13,34 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
   @override
   Future<void> deleteShop(String shopId) async {
     try {
-      await _firestore.collection('shops').doc(shopId).delete();
-      await _firestore.collection('users').doc(shopId).delete();
+      final batch = _firestore.batch();
+
+      // Deactivate active products - NOT delete products
+      final productsQuery = await _firestore
+          .collection('products')
+          .where('shop_id', isEqualTo: shopId)
+          .get();
+      for (final doc in productsQuery.docs) {
+        batch.update(doc.reference, {'is_active': false});
+      }
+
+      // Flag Orders - NOT delete orders
+      final ordersQuery = await _firestore
+          .collection('orders')
+          .where('shop_id', isEqualTo: shopId)
+          .get();
+      for (final doc in ordersQuery.docs) {
+        batch.update(doc.reference, {'shop_deleted': true});
+      }
+
+      // Delete Shop Document
+      batch.delete(_firestore.collection('shops').doc(shopId));
+
+      // Delete users credentials collection document
+      batch.delete(_firestore.collection('users').doc(shopId));
+
+      // Commit all operations
+      await batch.commit();
     } catch (e) {
       throw Exception('Failed to delete shop from Firestore: $e');
     }

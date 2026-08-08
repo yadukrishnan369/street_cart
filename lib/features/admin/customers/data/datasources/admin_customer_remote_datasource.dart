@@ -1,18 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/features/customer/profile/data/models/address_model.dart';
 import 'package:street_cart/features/admin/customers/data/models/customer_model.dart';
-
-abstract class IAdminCustomerRemoteDataSource {
-  Future<List<CustomerModel>> getAllCustomers();
-
-  Future<void> updateCustomerBlockStatus(String uid, bool isBlocked);
-
-  Future<CustomerModel> getCustomerById(String uid);
-
-  Future<List<AddressModel>> getCustomerAddresses(String uid);
-
-  Future<void> deleteCustomer(String uid);
-}
+import 'i_admin_customer_remote_datasource.dart';
 
 class AdminCustomerRemoteDataSourceImpl
     implements IAdminCustomerRemoteDataSource {
@@ -107,16 +96,60 @@ class AdminCustomerRemoteDataSourceImpl
   @override
   Future<void> deleteCustomer(String uid) async {
     try {
-      final addressesSnap = await _firestore
+      final batch = _firestore.batch();
+
+      // Anonymize Reviews
+      final reviewsQuery = await _firestore
+          .collection('reviews')
+          .where('customer_id', isEqualTo: uid)
+          .get();
+      for (final doc in reviewsQuery.docs) {
+        batch.update(doc.reference, {
+          'customer_id': null,
+          'customer_name': 'Deleted User',
+          'customer_image': '',
+        });
+      }
+
+      // Flag Orders - NOT delete orders
+      final ordersQuery = await _firestore
+          .collection('orders')
+          .where('customer_id', isEqualTo: uid)
+          .get();
+      for (final doc in ordersQuery.docs) {
+        batch.update(doc.reference, {
+          'customer_id': null,
+          'customer_deleted': true,
+        });
+      }
+
+      // Delete Addresses Subcollection
+      final addressesQuery = await _firestore
           .collection('customers')
           .doc(uid)
           .collection('addresses')
           .get();
+      for (final doc in addressesQuery.docs) {
+        batch.delete(doc.reference);
+      }
 
-      final batch = _firestore.batch();
+      // Delete Cart Subcollection
+      final cartQuery = await _firestore
+          .collection('customers')
+          .doc(uid)
+          .collection('cart')
+          .get();
+      for (final doc in cartQuery.docs) {
+        batch.delete(doc.reference);
+      }
 
-      // Delete addresses in the subcollection
-      for (var doc in addressesSnap.docs) {
+      // Delete Wishlist Subcollection
+      final wishlistQuery = await _firestore
+          .collection('customers')
+          .doc(uid)
+          .collection('wishlist')
+          .get();
+      for (final doc in wishlistQuery.docs) {
         batch.delete(doc.reference);
       }
 
