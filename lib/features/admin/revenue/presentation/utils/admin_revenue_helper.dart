@@ -250,6 +250,6 @@ class AdminRevenueHelper {
       final cust = customers.firstWhere((c) => c.uid == order.customerId);
       if (cust.fullName.isNotEmpty) return cust.fullName;
     } catch (_) {}
-    return '—';
+    return 'Unknown User';
   }
 }

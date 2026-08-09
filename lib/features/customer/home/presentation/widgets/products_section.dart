@@ -14,6 +14,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
+import 'package:street_cart/features/customer/home/presentation/widgets/products_empty_state.dart';
 
 // Trending Products Section
 class ProductsSection extends StatelessWidget {
@@ -63,7 +64,7 @@ class ProductsSection extends StatelessWidget {
         bestSellers.isNotEmpty;
 
     if (!hasAnyProducts) {
-      return const SizedBox.shrink();
+      return const ProductsEmptyState();
     }
 
     return Column(

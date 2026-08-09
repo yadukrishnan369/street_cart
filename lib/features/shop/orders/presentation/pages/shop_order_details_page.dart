@@ -34,6 +34,11 @@ class ShopOrderDetailsPage extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final orderIdPrefix = ShopOrdersHelper.getOrderIdPrefix(order.id);
 
+    final productIds = order.items.map((item) => item.productId).toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ShopOrdersBloc>().add(CheckProductsStatusEvent(productIds));
+    });
+
     return BlocListener<ShopOrdersBloc, ShopOrdersState>(
       listener: (context, state) {
         // Get Current Order

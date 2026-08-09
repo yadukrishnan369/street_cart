@@ -47,6 +47,21 @@ class AddressModel {
   }
 
   factory AddressModel.fromMap(Map<String, dynamic> map, String id) {
+    if (map.isEmpty) {
+      return AddressModel(
+        id: id,
+        fullName: 'Unknown User',
+        phone: '',
+        addressLine1: 'Unknown Address',
+        addressLine2: '',
+        city: '',
+        district: '',
+        state: '',
+        pincode: '',
+        type: 'OTHER',
+        isDefault: false,
+      );
+    }
     return AddressModel(
       id: id,
       fullName: map['fullName'] ?? '',

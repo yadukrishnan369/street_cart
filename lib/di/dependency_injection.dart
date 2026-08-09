@@ -245,6 +245,7 @@ import 'package:street_cart/features/shop/orders/domain/usecases/get_shop_orders
 import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_status.dart';
 import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_return_status.dart';
 import 'package:street_cart/features/shop/orders/domain/usecases/process_refund.dart';
+import 'package:street_cart/features/shop/orders/domain/usecases/check_products_status.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 
 // CUSTOMER - ORDERS
@@ -1304,6 +1305,7 @@ void _initShopOrders() {
   sl.registerLazySingleton(() => UpdateShopOrderStatus(sl()));
   sl.registerLazySingleton(() => UpdateShopOrderReturnStatus(sl()));
   sl.registerLazySingleton(() => ProcessRefund(sl()));
+  sl.registerLazySingleton(() => CheckProductsStatus(sl()));
   sl.registerFactory(
     () => ShopOrdersBloc(
       getShopOrders: sl(),
@@ -1312,6 +1314,7 @@ void _initShopOrders() {
       processRefund: sl(),
       razorpayService: sl(),
       getShopProfileData: sl(),
+      checkProductsStatus: sl(),
     ),
   );
 }

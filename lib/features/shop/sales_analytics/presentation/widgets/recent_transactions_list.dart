@@ -59,7 +59,8 @@ class RecentTransactionsList extends StatelessWidget {
     }
     // List of Transaction
     return ListView.separated(
-      physics: const AlwaysScrollableScrollPhysics(),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.only(bottom: 24.h),
       itemCount: displayList.length,
       separatorBuilder: (_, __) => SizedBox(height: 12.h),

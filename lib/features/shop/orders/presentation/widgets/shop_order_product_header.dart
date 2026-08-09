@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
@@ -6,6 +7,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
+import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 
 // Shop Orders Product Header
 class ShopOrderProductHeader extends StatelessWidget {
@@ -89,6 +91,44 @@ class ShopOrderProductHeader extends StatelessWidget {
               fontWeight: FontWeight.w800,
               color: ShopAppColors.primary,
             ),
+          ),
+          SizedBox(height: 8.h),
+          // Product Status Badge
+          BlocBuilder<ShopOrdersBloc, ShopOrdersState>(
+            builder: (context, state) {
+              final data = state.productStatusMap[item.productId];
+              final isDeletedOrInactive = data?['isDeletedOrInactive'] ?? false;
+              final disabledByAdmin = data?['disabledByAdmin'] ?? false;
+
+              String labelText = 'Active';
+              Color badgeBg = const Color(0xFFDEF7EC);
+              Color badgeText = const Color(0xFF03543F);
+
+              if (isDeletedOrInactive) {
+                labelText = disabledByAdmin
+                    ? 'Disabled by Admin'
+                    : 'Deleted / Inactive';
+                badgeBg = const Color(0xFFFDE8E8);
+                badgeText = const Color(0xFF9B1C1C);
+              }
+
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: badgeBg,
+                  borderRadius: BorderRadius.circular(100.r),
+                  border: Border.all(color: badgeText.withValues(alpha: 0.15)),
+                ),
+                child: Text(
+                  labelText,
+                  style: TextStyle(
+                    color: badgeText,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

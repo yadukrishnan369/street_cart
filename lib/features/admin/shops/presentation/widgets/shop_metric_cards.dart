@@ -35,7 +35,7 @@ class ShopMetricCards extends StatelessWidget {
         'color': AdminAppColors.successColor,
       },
       {
-        'title': 'Suspended',
+        'title': 'Suspended/Deleted',
         'value': '$suspendedShops',
         'color': AdminAppColors.errorColor,
       },

@@ -107,7 +107,7 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
           ),
           SizedBox(height: 6.h),
           Text(
-            customer.phone.isNotEmpty ? customer.phone : 'Not Provided',
+            customer.phone.isNotEmpty ? customer.phone : '......',
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.bold,
@@ -131,7 +131,7 @@ class AdminCustomerContactInfoCard extends StatelessWidget {
           ),
           SizedBox(height: 6.h),
           Text(
-            primaryAddressText,
+            primaryAddressText.isNotEmpty ? primaryAddressText : '',
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.bold,

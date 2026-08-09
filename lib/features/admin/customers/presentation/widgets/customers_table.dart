@@ -192,15 +192,24 @@ class CustomersTable extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: AdminCustomersHelper.getStatusBgColor(isBlocked),
+                color: AdminCustomersHelper.getStatusBgColor(
+                  isBlocked,
+                  isDeleted: customer.isDeleted,
+                ),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Text(
-                AdminCustomersHelper.getStatusLabel(isBlocked),
+                AdminCustomersHelper.getStatusLabel(
+                  isBlocked,
+                  isDeleted: customer.isDeleted,
+                ),
                 style: TextStyle(
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
-                  color: AdminCustomersHelper.getStatusTextColor(isBlocked),
+                  color: AdminCustomersHelper.getStatusTextColor(
+                    isBlocked,
+                    isDeleted: customer.isDeleted,
+                  ),
                 ),
               ),
             ),

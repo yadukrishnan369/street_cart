@@ -109,7 +109,13 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
             .collection('customers')
             .doc(userCredential.user!.uid)
             .get();
-        isNewUser = !doc.exists;
+
+        final data = doc.data();
+        final wasDeletedOrBlocked =
+            doc.exists &&
+            (data?['is_deleted'] == true || data?['is_blocked'] == true);
+
+        isNewUser = !doc.exists || wasDeletedOrBlocked;
         if (isNewUser) {
           await _firestore
               .collection('customers')
@@ -121,6 +127,8 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
                 'created_at': FieldValue.serverTimestamp(),
                 'profile_image_url': userCredential.user!.photoURL ?? '',
                 'role': 'customer',
+                'is_deleted': false,
+                'is_blocked': false,
               });
         }
       }
@@ -246,8 +254,13 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
   Future<void> deleteAccount(String? password) async {
     try {
       // Re-authenticate if password is provided
-      if (password != null) {
-        await _authService.reauthenticate(password);
+      final isEmailUser = await _authService.isEmailPasswordUser();
+      if (isEmailUser) {
+        if (password != null) {
+          await _authService.reauthenticate(password);
+        }
+      } else {
+        await _authService.reauthenticateWithGoogle();
       }
 
       final uid = _authService.getCurrentUserId();
@@ -269,15 +282,15 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
         });
       }
 
-      // Flag Orders - NOT delete orders
+      // Flag Orders - NOT delete orders, but completely delete delivery address details
       final ordersQuery = await _firestore
           .collection('orders')
           .where('customer_id', isEqualTo: uid)
           .get();
       for (final doc in ordersQuery.docs) {
         batch.update(doc.reference, {
-          'customer_id': null,
           'customer_deleted': true,
+          'delivery_address': FieldValue.delete(),
         });
       }
 
@@ -311,8 +324,16 @@ class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
         batch.delete(doc.reference);
       }
 
-      // Delete Customer Document
-      batch.delete(_firestore.collection('customers').doc(uid));
+      // Delete Customer Document - preserve for order history tracking with placeholders
+      batch.update(_firestore.collection('customers').doc(uid), {
+        'is_deleted': true,
+        'is_blocked': true,
+        'email': 'deleted_${uid}@streetcart.com',
+        'full_name': 'Deleted User',
+        'phone': '',
+        'profile_image_url': '',
+        'is_profile_completed': false,
+      });
 
       // Commit all Firestore operations
       await batch.commit();

@@ -70,4 +70,18 @@ class ShopOrdersRepositoryImpl implements IShopOrdersRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Map<String, Map<String, bool>>> checkProductsStatus(
+    List<String> productIds,
+  ) async {
+    if (!await networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      return await remoteDataSource.checkProductsStatus(productIds);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -131,9 +131,11 @@ class ProductListItem extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isDisabledByAdmin
                                 ? ShopAppColors.error
-                                : (isOutOfStock
+                                : (!product.isActive
                                       ? ShopAppColors.error
-                                      : ShopAppColors.success),
+                                      : (isOutOfStock
+                                            ? ShopAppColors.error
+                                            : ShopAppColors.success)),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -141,14 +143,20 @@ class ProductListItem extends StatelessWidget {
                         Text(
                           isDisabledByAdmin
                               ? 'Disabled by Admin'
-                              : (isOutOfStock ? 'Out of Stock' : 'Active'),
+                              : (!product.isActive
+                                    ? 'Inactive / Deleted'
+                                    : (isOutOfStock
+                                          ? 'Out of Stock'
+                                          : 'Active')),
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: isDisabledByAdmin
                                 ? ShopAppColors.error
-                                : (isOutOfStock
+                                : (!product.isActive
                                       ? ShopAppColors.error
-                                      : ShopAppColors.success),
+                                      : (isOutOfStock
+                                            ? ShopAppColors.error
+                                            : ShopAppColors.success)),
                             fontWeight: FontWeight.w600,
                           ),
                         ),

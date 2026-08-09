@@ -24,7 +24,7 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
 
     final joinedDate = customer.createdAt != null
         ? DateFormatter.formatToReadableDate(customer.createdAt!)
-        : 'Oct 12, 2026';
+        : 'N/A';
 
     final isBlocked = customer.isBlocked;
 
@@ -136,16 +136,21 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AdminCustomersHelper.getStatusBgColor(
                               isBlocked,
+                              isDeleted: customer.isDeleted,
                             ),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
                           child: Text(
-                            AdminCustomersHelper.getStatusLabel(isBlocked),
+                            AdminCustomersHelper.getStatusLabel(
+                              isBlocked,
+                              isDeleted: customer.isDeleted,
+                            ),
                             style: TextStyle(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.bold,
                               color: AdminCustomersHelper.getStatusTextColor(
                                 isBlocked,
+                                isDeleted: customer.isDeleted,
                               ),
                             ),
                           ),
@@ -243,16 +248,20 @@ class AdminCustomerDetailHeaderCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: headerInfo),
-                    SizedBox(width: 32.w),
-                    actionButtons,
+                    if (!customer.isDeleted) ...[
+                      SizedBox(width: 32.w),
+                      actionButtons,
+                    ],
                   ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     headerInfo,
-                    SizedBox(height: 24.h),
-                    actionButtons,
+                    if (!customer.isDeleted) ...[
+                      SizedBox(height: 24.h),
+                      actionButtons,
+                    ],
                   ],
                 );
         },

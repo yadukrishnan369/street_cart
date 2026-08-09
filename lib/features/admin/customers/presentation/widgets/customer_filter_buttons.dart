@@ -18,7 +18,7 @@ class CustomerFilterButtons extends StatelessWidget {
     final labels = {
       'All': 'All Customers',
       'Active': 'Active',
-      'Blocked': 'Blocked',
+      'Blocked': 'Blocked/Deleted',
     };
 
     return Row(

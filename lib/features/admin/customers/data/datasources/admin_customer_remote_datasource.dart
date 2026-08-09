@@ -111,15 +111,15 @@ class AdminCustomerRemoteDataSourceImpl
         });
       }
 
-      // Flag Orders - NOT delete orders
+      // Flag Orders - NOT delete orders, but completely delete delivery address details
       final ordersQuery = await _firestore
           .collection('orders')
           .where('customer_id', isEqualTo: uid)
           .get();
       for (final doc in ordersQuery.docs) {
         batch.update(doc.reference, {
-          'customer_id': null,
           'customer_deleted': true,
+          'delivery_address': FieldValue.delete(),
         });
       }
 
@@ -153,11 +153,23 @@ class AdminCustomerRemoteDataSourceImpl
         batch.delete(doc.reference);
       }
 
-      // Delete the main customer profile document
-      batch.delete(_firestore.collection('customers').doc(uid));
+      // Soft-delete Customer Document - preserve for order history tracking with placeholders
+      batch.update(_firestore.collection('customers').doc(uid), {
+        'is_deleted': true,
+        'is_blocked': true,
+        'email': 'deleted_${uid}@streetcart.com',
+        'full_name': 'Deleted User',
+        'phone': '',
+        'profile_image_url': '',
+        'is_profile_completed': false,
+      });
 
-      // Delete users credentials collection document
-      batch.delete(_firestore.collection('users').doc(uid));
+      // Soft-delete users credentials document
+      batch.update(_firestore.collection('users').doc(uid), {
+        'is_deleted': true,
+        'is_blocked': true,
+        'email': 'deleted_${uid}@streetcart.com',
+      });
 
       await batch.commit();
     } catch (e) {

@@ -256,4 +256,41 @@ class ShopOrdersRemoteDataSourceImpl implements IShopOrdersRemoteDataSource {
 
     await _firestore.collection('orders').doc(orderId).update(updates);
   }
+
+  // Check Products Status
+  @override
+  Future<Map<String, Map<String, bool>>> checkProductsStatus(
+    List<String> productIds,
+  ) async {
+    final Map<String, Map<String, bool>> results = {};
+    for (final productId in productIds) {
+      if (productId.isEmpty) continue;
+      try {
+        final doc = await _firestore
+            .collection('products')
+            .doc(productId)
+            .get();
+        if (doc.exists && doc.data() != null) {
+          final data = doc.data()!;
+          final isActive = data['is_active'] as bool? ?? true;
+          final disabledByAdmin = data['disabled_by_admin'] as bool? ?? false;
+          results[productId] = {
+            'isDeletedOrInactive': !isActive || disabledByAdmin,
+            'disabledByAdmin': disabledByAdmin,
+          };
+        } else {
+          results[productId] = {
+            'isDeletedOrInactive': true,
+            'disabledByAdmin': false,
+          };
+        }
+      } catch (_) {
+        results[productId] = {
+          'isDeletedOrInactive': true,
+          'disabledByAdmin': false,
+        };
+      }
+    }
+    return results;
+  }
 }

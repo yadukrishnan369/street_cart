@@ -161,9 +161,8 @@ class ShopSalesAnalyticsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Recent Transactions Section fills remaining space
-                        SliverFillRemaining(
-                          hasScrollBody: true,
+                        // Recent Transactions Section
+                        SliverToBoxAdapter(
                           child: RecentTransactionsSection(
                             transactions: state.recentTransactions,
                             shopId: shopId,

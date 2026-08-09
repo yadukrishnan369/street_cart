@@ -32,6 +32,7 @@ class ShopProfileModel {
   final bool isReRegistered;
   final double rating;
   final int reviewsCount;
+  final bool isDeleted;
 
   ShopProfileModel({
     required this.uid,
@@ -65,6 +66,7 @@ class ShopProfileModel {
     this.isReRegistered = false,
     this.rating = 0.0,
     this.reviewsCount = 0,
+    this.isDeleted = false,
   });
 
   factory ShopProfileModel.fromMap(Map<String, dynamic> map, String id) {
@@ -104,6 +106,7 @@ class ShopProfileModel {
       isReRegistered: map['is_reregistered'] ?? false,
       rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
       reviewsCount: (map['reviews_count'] as num?)?.toInt() ?? 0,
+      isDeleted: map['is_deleted'] ?? false,
     );
   }
 
@@ -141,6 +144,7 @@ class ShopProfileModel {
       'is_reregistered': isReRegistered,
       'rating': rating,
       'reviews_count': reviewsCount,
+      'is_deleted': isDeleted,
     };
   }
 
@@ -175,6 +179,7 @@ class ShopProfileModel {
     bool? isReRegistered,
     double? rating,
     int? reviewsCount,
+    bool? isDeleted,
   }) {
     return ShopProfileModel(
       uid: uid,
@@ -208,6 +213,7 @@ class ShopProfileModel {
       isReRegistered: isReRegistered ?? this.isReRegistered,
       rating: rating ?? this.rating,
       reviewsCount: reviewsCount ?? this.reviewsCount,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 }

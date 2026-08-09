@@ -80,7 +80,9 @@ class CustomerInfoCard extends StatelessWidget {
                     SizedBox(height: 4.h),
                     // Delivery Address Phone Number
                     Text(
-                      order.deliveryAddress.phone,
+                      order.deliveryAddress.phone.isNotEmpty
+                          ? order.deliveryAddress.phone
+                          : '..........',
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: isDark
@@ -92,29 +94,31 @@ class CustomerInfoCard extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  // Confirmation for Call the Customer
-                  showDialog(
-                    context: context,
-                    builder: (dialogCtx) => CustomAlertDialog(
-                      title: 'Call Customer',
-                      content:
-                          'Do you want to make a call to ${order.deliveryAddress.fullName}?',
-                      primaryActionLabel: 'Call',
-                      onPrimaryAction: () {
-                        Navigator.pop(dialogCtx);
-                        sl<CommunicationService>().makeCall(
-                          order.deliveryAddress.phone,
+                onTap: order.deliveryAddress.phone.isEmpty
+                    ? null
+                    : () {
+                        // Confirmation for Call the Customer
+                        showDialog(
+                          context: context,
+                          builder: (dialogCtx) => CustomAlertDialog(
+                            title: 'Call Customer',
+                            content:
+                                'Do you want to make a call to ${order.deliveryAddress.fullName}?',
+                            primaryActionLabel: 'Call',
+                            onPrimaryAction: () {
+                              Navigator.pop(dialogCtx);
+                              sl<CommunicationService>().makeCall(
+                                order.deliveryAddress.phone,
+                              );
+                            },
+                            secondaryActionLabel: 'Cancel',
+                            onSecondaryAction: () => Navigator.pop(dialogCtx),
+                            icon: Icons.phone,
+                            iconColor: ShopAppColors.primary,
+                            primaryActionColor: ShopAppColors.primary,
+                          ),
                         );
                       },
-                      secondaryActionLabel: 'Cancel',
-                      onSecondaryAction: () => Navigator.pop(dialogCtx),
-                      icon: Icons.phone,
-                      iconColor: ShopAppColors.primary,
-                      primaryActionColor: ShopAppColors.primary,
-                    ),
-                  );
-                },
                 child: Container(
                   padding: EdgeInsets.all(10.w),
                   decoration: const BoxDecoration(

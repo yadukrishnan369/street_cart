@@ -5,6 +5,7 @@ import 'package:street_cart/features/shop/orders/domain/usecases/get_shop_orders
 import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_status.dart';
 import 'package:street_cart/features/shop/orders/domain/usecases/update_shop_order_return_status.dart';
 import 'package:street_cart/features/shop/orders/domain/usecases/process_refund.dart';
+import 'package:street_cart/features/shop/orders/domain/usecases/check_products_status.dart';
 import 'package:street_cart/core/services/razorpay_service.dart';
 import 'package:street_cart/features/shop/profile/domain/usecases/get_shop_profile_data.dart';
 part 'shop_orders_event.dart';
@@ -17,6 +18,7 @@ class ShopOrdersBloc extends Bloc<ShopOrdersEvent, ShopOrdersState> {
   final ProcessRefund processRefund;
   final RazorpayService razorpayService;
   final GetShopProfileData getShopProfileData;
+  final CheckProductsStatus checkProductsStatus;
 
   ShopOrdersBloc({
     required this.getShopOrders,
@@ -25,6 +27,7 @@ class ShopOrdersBloc extends Bloc<ShopOrdersEvent, ShopOrdersState> {
     required this.processRefund,
     required this.razorpayService,
     required this.getShopProfileData,
+    required this.checkProductsStatus,
   }) : super(const ShopOrdersState()) {
     // Fetch orders
     on<FetchShopOrdersEvent>(_onFetchShopOrders);
@@ -50,6 +53,7 @@ class ShopOrdersBloc extends Bloc<ShopOrdersEvent, ShopOrdersState> {
     on<ToggleRefundViaHandEvent>((event, emit) {
       emit(state.copyWith(isRefundViaHand: event.isChecked));
     });
+    on<CheckProductsStatusEvent>(_onCheckProductsStatus);
   }
 
   // Fetch Shop Orders
@@ -199,6 +203,21 @@ class ShopOrdersBloc extends Bloc<ShopOrdersEvent, ShopOrdersState> {
     emit(
       state.copyWith(refundStatus: 'failure', refundError: event.errorMessage),
     );
+  }
+
+  // Check Products Status
+  Future<void> _onCheckProductsStatus(
+    CheckProductsStatusEvent event,
+    Emitter<ShopOrdersState> emit,
+  ) async {
+    try {
+      final results = await checkProductsStatus(event.productIds);
+      final newMap = Map<String, Map<String, bool>>.from(
+        state.productStatusMap,
+      );
+      newMap.addAll(results);
+      emit(state.copyWith(productStatusMap: newMap));
+    } catch (_) {}
   }
 
   @override

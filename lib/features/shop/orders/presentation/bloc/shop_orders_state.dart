@@ -11,6 +11,7 @@ class ShopOrdersState extends Equatable {
   final String refundStatus;
   final String? refundError;
   final bool isRefundViaHand;
+  final Map<String, Map<String, bool>> productStatusMap;
 
   const ShopOrdersState({
     this.status = ShopOrdersStatus.initial,
@@ -20,6 +21,7 @@ class ShopOrdersState extends Equatable {
     this.refundStatus = 'initial',
     this.refundError,
     this.isRefundViaHand = false,
+    this.productStatusMap = const {},
   });
 
   ShopOrdersState copyWith({
@@ -30,6 +32,7 @@ class ShopOrdersState extends Equatable {
     String? refundStatus,
     String? refundError,
     bool? isRefundViaHand,
+    Map<String, Map<String, bool>>? productStatusMap,
   }) {
     return ShopOrdersState(
       status: status ?? this.status,
@@ -39,6 +42,7 @@ class ShopOrdersState extends Equatable {
       refundStatus: refundStatus ?? this.refundStatus,
       refundError: refundError ?? this.refundError,
       isRefundViaHand: isRefundViaHand ?? this.isRefundViaHand,
+      productStatusMap: productStatusMap ?? this.productStatusMap,
     );
   }
 
@@ -51,5 +55,6 @@ class ShopOrdersState extends Equatable {
     refundStatus,
     refundError,
     isRefundViaHand,
+    productStatusMap,
   ];
 }

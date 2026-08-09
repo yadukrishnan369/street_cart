@@ -148,6 +148,33 @@ class FirebaseAuthService {
     }
   }
 
+  // Reauthenticate With Google
+  Future<void> reauthenticateWithGoogle() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw ServerException('No user logged in');
+    }
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw ServerException('Google sign-in cancelled');
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw _handleGenericException(e);
+    }
+  }
+
   // Delete Auth Account
   Future<void> deleteAuthAccount() async {
     final user = _auth.currentUser;

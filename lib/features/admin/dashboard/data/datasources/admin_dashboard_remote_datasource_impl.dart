@@ -18,12 +18,17 @@ class AdminDashboardRemoteDataSourceImpl
       int shopsCount = 0;
       int customersCount = 0;
 
-      // Fetch approved shops count
+      // Fetch approved shops count without deleted and suspended
       final shopsSnap = await _firestore
           .collection('shops')
           .where('is_approved', isEqualTo: true)
           .get();
-      shopsCount = shopsSnap.docs.length;
+      shopsCount = shopsSnap.docs.where((doc) {
+        final data = doc.data();
+        final isDeleted = data['is_deleted'] as bool? ?? false;
+        final isSuspended = data['is_suspended'] as bool? ?? false;
+        return !isDeleted && !isSuspended;
+      }).length;
 
       // Fetch unblocked customers count
       final customersSnap = await _firestore.collection('customers').get();

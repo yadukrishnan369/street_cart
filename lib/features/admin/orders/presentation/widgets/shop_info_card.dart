@@ -107,7 +107,7 @@ class ShopInfoCard extends StatelessWidget {
                         // Status Label
                         Text(
                           shop?.isSuspended == true
-                              ? 'Suspended'
+                              ? 'Suspended/Deleted'
                               : 'Verified Shop',
                           style: TextStyle(
                             fontSize: 11.sp,

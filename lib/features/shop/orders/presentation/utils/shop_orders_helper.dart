@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
@@ -530,5 +531,25 @@ class ShopOrdersHelper {
       0.0,
       (sum, item) => sum + (item.price * item.quantity),
     );
+  }
+
+  // Check product active/disabled status
+  static Future<Map<String, bool>> checkProductStatus(String productId) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .get();
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        final isActive = data['is_active'] as bool? ?? true;
+        final disabledByAdmin = data['disabled_by_admin'] as bool? ?? false;
+        return {
+          'isDeletedOrInactive': !isActive || disabledByAdmin,
+          'disabledByAdmin': disabledByAdmin,
+        };
+      }
+    } catch (_) {}
+    return {'isDeletedOrInactive': false, 'disabledByAdmin': false};
   }
 }

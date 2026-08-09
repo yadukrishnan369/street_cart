@@ -24,7 +24,7 @@ class CustomerInfoCard extends StatelessWidget {
     final email = customerEmail.isNotEmpty ? customerEmail : '';
     final phone = order.deliveryAddress.phone;
     final address =
-        '${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.addressLine2}, ${order.deliveryAddress.city}';
+        '${order.deliveryAddress.addressLine1} ${order.deliveryAddress.addressLine2} ${order.deliveryAddress.city}';
 
     return Container(
       decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class CustomerInfoCard extends StatelessWidget {
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
-            text,
+            text.isNotEmpty ? text : '......',
             style: TextStyle(
               fontSize: 12.sp,
               color: isDark

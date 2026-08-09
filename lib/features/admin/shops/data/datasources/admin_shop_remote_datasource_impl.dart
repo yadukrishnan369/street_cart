@@ -33,11 +33,42 @@ class AdminShopRemoteDataSourceImpl implements IAdminShopRemoteDataSource {
         batch.update(doc.reference, {'shop_deleted': true});
       }
 
-      // Delete Shop Document
-      batch.delete(_firestore.collection('shops').doc(shopId));
+      // Soft-delete Shop Document - preserve for order history tracking with placeholders
+      final shopDoc = await _firestore.collection('shops').doc(shopId).get();
+      if (shopDoc.exists) {
+        batch.update(shopDoc.reference, {
+          'is_deleted': true,
+          'is_suspended': true,
+          'email': 'deleted_${shopId}@streetcart.com',
+          'shop_name': 'Deleted Shop',
+          'owner_name': 'Deleted Owner',
+          'phone': '',
+          'profile_image_url': '',
+          'gst_number': '',
+          'full_address': 'Deleted',
+          'landmark': '',
+          'city': '',
+          'pincode': '',
+          'district': '',
+          'state': '',
+          'latitude': 0.0,
+          'longitude': 0.0,
+          'description': 'This shop has been deleted.',
+          'business_license_url': '',
+          'owner_id_url': '',
+          'payment_methods': <String>[],
+        });
+      }
 
-      // Delete users credentials collection document
-      batch.delete(_firestore.collection('users').doc(shopId));
+      // Soft-delete users credentials document
+      final userDoc = await _firestore.collection('users').doc(shopId).get();
+      if (userDoc.exists) {
+        batch.update(userDoc.reference, {
+          'is_deleted': true,
+          'is_blocked': true,
+          'email': 'deleted_${shopId}@streetcart.com',
+        });
+      }
 
       // Commit all operations
       await batch.commit();

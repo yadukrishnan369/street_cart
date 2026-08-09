@@ -111,7 +111,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: isSuspended
+                      color: shop.isDeleted
+                          ? const Color(0xFFE2E8F0)
+                          : isSuspended
                           ? const Color(0xFFFDE8E8)
                           : !isApproved
                           ? const Color(0xFFFFF3CD)
@@ -119,7 +121,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100.r),
                     ),
                     child: Text(
-                      isSuspended
+                      shop.isDeleted
+                          ? 'Deleted'
+                          : isSuspended
                           ? 'Suspended'
                           : !isApproved
                           ? 'Pending'
@@ -127,7 +131,9 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.bold,
-                        color: isSuspended
+                        color: shop.isDeleted
+                            ? const Color(0xFF475569)
+                            : isSuspended
                             ? const Color(0xFF9B1C1C)
                             : !isApproved
                             ? const Color(0xFF856404)
@@ -284,16 +290,14 @@ class AdminShopDetailHeaderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(child: headerInfo),
-                SizedBox(width: 32.w),
-                actionButtons,
+                if (!shop.isDeleted) ...[SizedBox(width: 32.w), actionButtons],
               ],
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 headerInfo,
-                SizedBox(height: 24.h),
-                actionButtons,
+                if (!shop.isDeleted) ...[SizedBox(height: 24.h), actionButtons],
               ],
             ),
     );

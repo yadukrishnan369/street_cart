@@ -68,7 +68,7 @@ class AdminDashboardPage extends StatelessWidget {
                           // Stats Cards
                           children: [
                             StatCard(
-                              title: 'Total Shops',
+                              title: 'Current Shops',
                               value: NumberFormatter.formatNumber(
                                 stats.totalShops,
                               ),
@@ -77,7 +77,7 @@ class AdminDashboardPage extends StatelessWidget {
                               iconBgColor: const Color(0xFFF4EBFF),
                             ),
                             StatCard(
-                              title: 'Total Customers',
+                              title: 'Current Customers',
                               value: NumberFormatter.formatNumber(
                                 stats.totalCustomers,
                               ),

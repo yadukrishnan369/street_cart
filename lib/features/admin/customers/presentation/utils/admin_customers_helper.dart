@@ -12,24 +12,27 @@ class AdminCustomersHelper {
   // customer display initials
   static String getCustomerInitials(
     String name, {
-    String defaultInitials = 'JD',
+    String defaultInitials = 'DU',
   }) {
     if (name.isEmpty) return defaultInitials;
     return name.trim().split(' ').map((e) => e[0]).take(2).join().toUpperCase();
   }
 
   // get status Bg color
-  static Color getStatusBgColor(bool isBlocked) {
+  static Color getStatusBgColor(bool isBlocked, {bool isDeleted = false}) {
+    if (isDeleted) return const Color(0xFFE2E8F0);
     return isBlocked ? const Color(0xFFFDE8E8) : const Color(0xFFDEF7EC);
   }
 
   // get status text color
-  static Color getStatusTextColor(bool isBlocked) {
+  static Color getStatusTextColor(bool isBlocked, {bool isDeleted = false}) {
+    if (isDeleted) return const Color(0xFF475569);
     return isBlocked ? const Color(0xFF9B1C1C) : const Color(0xFF03543F);
   }
 
   // get status label
-  static String getStatusLabel(bool isBlocked) {
+  static String getStatusLabel(bool isBlocked, {bool isDeleted = false}) {
+    if (isDeleted) return 'Deleted';
     return isBlocked ? 'Blocked' : 'Active';
   }
 
@@ -124,7 +127,7 @@ class AdminCustomersHelper {
   // formats customer primary address
   static String getPrimaryAddressText(List<AddressModel> addresses) {
     if (addresses.isEmpty) {
-      return 'No address registered yet.';
+      return '.......';
     }
     final defaultAddr = addresses.firstWhere(
       (a) => a.isDefault,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_product_details_page.dart';
@@ -7,6 +8,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
+import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 
 // Item Summary Card
 class ItemSummaryCard extends StatelessWidget {
@@ -43,8 +45,8 @@ class ItemSummaryCard extends StatelessWidget {
     final finalEarnings = summaryData['finalEarnings'] as double;
     final paymentLabel = summaryData['paymentLabel'] as String;
     final badgeColor = paymentLabel == 'COD'
-        ? const Color(0xFFF2A900)
-        : const Color(0xFF10B981);
+        ? ShopAppColors.warning
+        : ShopAppColors.success;
 
     return Column(
       children: [
@@ -100,10 +102,14 @@ class ItemSummaryCard extends StatelessWidget {
                 (item) => InkWell(
                   onTap: () {
                     // Navigate to Shop Order Product Details Page
+                    final ordersBloc = context.read<ShopOrdersBloc>();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => ShopOrderProductDetailsPage(item: item),
+                        builder: (_) => BlocProvider.value(
+                          value: ordersBloc,
+                          child: ShopOrderProductDetailsPage(item: item),
+                        ),
                       ),
                     );
                   },

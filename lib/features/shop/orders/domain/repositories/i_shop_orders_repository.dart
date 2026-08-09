@@ -14,4 +14,7 @@ abstract class IShopOrdersRepository {
     double refundAmount,
     String refundStatus,
   );
+  Future<Map<String, Map<String, bool>>> checkProductsStatus(
+    List<String> productIds,
+  );
 }

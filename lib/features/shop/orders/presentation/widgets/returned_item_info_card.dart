@@ -121,15 +121,73 @@ class ReturnedItemInfoCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Product Name
-                                Text(
-                                  item.productName,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: isDark
-                                        ? ShopAppColors.darkTextPrimary
-                                        : ShopAppColors.textPrimary,
-                                  ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        item.productName,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: isDark
+                                              ? ShopAppColors.darkTextPrimary
+                                              : ShopAppColors.textPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                    // Product Status Badge
+                                    FutureBuilder<Map<String, bool>>(
+                                      future:
+                                          ShopOrdersHelper.checkProductStatus(
+                                            item.productId,
+                                          ),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData) {
+                                          final data = snapshot.data!;
+                                          final isDeletedOrInactive =
+                                              data['isDeletedOrInactive'] ??
+                                              false;
+                                          final disabledByAdmin =
+                                              data['disabledByAdmin'] ?? false;
+
+                                          if (isDeletedOrInactive) {
+                                            return Container(
+                                              margin: EdgeInsets.only(
+                                                left: 8.w,
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8.w,
+                                                vertical: 2.h,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFFDE8E8),
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
+                                                border: Border.all(
+                                                  color: const Color(
+                                                    0xFFFBD5D5,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                disabledByAdmin
+                                                    ? 'Disabled by Admin'
+                                                    : 'Deleted / Inactive',
+                                                style: TextStyle(
+                                                  color: ShopAppColors.error,
+                                                  fontSize: 9.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                        return const SizedBox.shrink();
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(height: 4.h),
                                 Row(

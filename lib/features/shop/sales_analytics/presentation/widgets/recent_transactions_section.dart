@@ -99,11 +99,9 @@ class _RecentTransactionsSectionState extends State<RecentTransactionsSection> {
           ),
           SizedBox(height: 12.h),
           // Transaction List
-          Expanded(
-            child: RecentTransactionsList(
-              transactions: widget.transactions,
-              shopId: widget.shopId,
-            ),
+          RecentTransactionsList(
+            transactions: widget.transactions,
+            shopId: widget.shopId,
           ),
         ],
       ),

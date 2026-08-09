@@ -73,7 +73,9 @@ class TransactionCustomerInfo extends StatelessWidget {
                     SizedBox(height: 4.h),
                     // Delivered Addresss
                     Text(
-                      order.deliveryAddress.phone,
+                      order.deliveryAddress.phone.isNotEmpty
+                          ? order.deliveryAddress.phone
+                          : '..........',
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: isDark
@@ -86,11 +88,13 @@ class TransactionCustomerInfo extends StatelessWidget {
               ),
               // Customer Phone Call
               GestureDetector(
-                onTap: () => SalesAnalyticsHelper.callCustomer(
-                  context,
-                  order.deliveryAddress.fullName,
-                  order.deliveryAddress.phone,
-                ),
+                onTap: order.deliveryAddress.phone.isEmpty
+                    ? null
+                    : () => SalesAnalyticsHelper.callCustomer(
+                        context,
+                        order.deliveryAddress.fullName,
+                        order.deliveryAddress.phone,
+                      ),
                 child: Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: const BoxDecoration(

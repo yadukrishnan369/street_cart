@@ -27,18 +27,18 @@ class ProductDetailHeader extends StatelessWidget {
     Color statusBg = const Color(0xFFDEF7EC);
     Color statusTextCol = const Color(0xFF03543F);
 
-    if (p.disabledByAdmin) {
-      statusText = 'Disabled';
+    if (!p.isActive) {
+      statusText = 'Deleted';
       statusBg = const Color(0xFFFDE8E8);
       statusTextCol = AdminAppColors.errorColor;
+    } else if (p.disabledByAdmin) {
+      statusText = 'Disabled';
+      statusBg = const Color(0xFFE5E7EB);
+      statusTextCol = const Color(0xFF374151);
     } else if (isOutOfStock) {
       statusText = 'Out of Stock';
       statusBg = const Color(0xFFFEF08A);
       statusTextCol = AdminAppColors.warningColor;
-    } else if (!p.isActive) {
-      statusText = 'Disabled';
-      statusBg = const Color(0xFFE5E7EB);
-      statusTextCol = const Color(0xFF374151);
     }
 
     final thumbnailUrl = p.images.isNotEmpty ? p.images.first : '';
@@ -263,16 +263,14 @@ class ProductDetailHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: headerInfo),
-                    SizedBox(width: 32.w),
-                    actionButtons,
+                    if (p.isActive) ...[SizedBox(width: 32.w), actionButtons],
                   ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     headerInfo,
-                    SizedBox(height: 24.h),
-                    actionButtons,
+                    if (p.isActive) ...[SizedBox(height: 24.h), actionButtons],
                   ],
                 );
         },

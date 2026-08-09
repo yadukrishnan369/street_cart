@@ -207,17 +207,25 @@ class ShopsTable extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: isSuspended
+                color: shop.isDeleted
+                    ? const Color(0xFFE2E8F0)
+                    : isSuspended
                     ? const Color(0xFFFDE8E8)
                     : const Color(0xFFDEF7EC),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Text(
-                isSuspended ? 'Suspended' : 'Active',
+                shop.isDeleted
+                    ? 'Deleted'
+                    : isSuspended
+                    ? 'Suspended'
+                    : 'Active',
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.bold,
-                  color: isSuspended
+                  color: shop.isDeleted
+                      ? const Color(0xFF475569)
+                      : isSuspended
                       ? const Color(0xFF9B1C1C)
                       : const Color(0xFF03543F),
                 ),

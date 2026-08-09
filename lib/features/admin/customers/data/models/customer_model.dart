@@ -9,6 +9,7 @@ class CustomerModel {
   final bool isBlocked;
   final int totalOrders;
   final DateTime? createdAt;
+  final bool isDeleted;
 
   CustomerModel({
     required this.uid,
@@ -19,6 +20,7 @@ class CustomerModel {
     required this.isBlocked,
     required this.totalOrders,
     this.createdAt,
+    this.isDeleted = false,
   });
 
   factory CustomerModel.fromMap(Map<String, dynamic> map, String docId) {
@@ -38,6 +40,7 @@ class CustomerModel {
       isBlocked: map['is_blocked'] ?? false,
       totalOrders: map['total_orders'] ?? 0,
       createdAt: createdTime,
+      isDeleted: map['is_deleted'] ?? false,
     );
   }
 
@@ -50,6 +53,7 @@ class CustomerModel {
       'is_blocked': isBlocked,
       'total_orders': totalOrders,
       'created_at': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'is_deleted': isDeleted,
     };
   }
 
@@ -62,6 +66,7 @@ class CustomerModel {
     bool? isBlocked,
     int? totalOrders,
     DateTime? createdAt,
+    bool? isDeleted,
   }) {
     return CustomerModel(
       uid: uid ?? this.uid,
@@ -72,6 +77,7 @@ class CustomerModel {
       isBlocked: isBlocked ?? this.isBlocked,
       totalOrders: totalOrders ?? this.totalOrders,
       createdAt: createdAt ?? this.createdAt,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 }

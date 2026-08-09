@@ -17,7 +17,7 @@ class ShopsListSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
+    // Shop Empty State
     if (shops.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
@@ -143,7 +143,7 @@ class ShopsListSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             border: isDark
                 ? Border.all(color: CustomerAppColors.darkBorder)
-                : null,
+                : Border.all(color: CustomerAppColors.border),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
@@ -156,6 +156,7 @@ class ShopsListSection extends StatelessWidget {
             padding: EdgeInsets.all(8.w),
             child: Row(
               children: [
+                // Shop Profile Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.r),
                   child: Container(
@@ -179,6 +180,7 @@ class ShopsListSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Shop name
                       Text(
                         shop.shopName,
                         style: TextStyle(
@@ -189,6 +191,7 @@ class ShopsListSection extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 4.h),
+                      // Shop Rating
                       Row(
                         children: [
                           Icon(
@@ -207,6 +210,7 @@ class ShopsListSection extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 4.w),
+                          // Shop category
                           Text(
                             '• ${shop.category}',
                             style: TextStyle(
@@ -217,6 +221,7 @@ class ShopsListSection extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 4.h),
+                      // Shop Address
                       Text(
                         shop.state.isNotEmpty
                             ? '${shop.city}, ${shop.state}'

@@ -129,3 +129,13 @@ class ToggleRefundViaHandEvent extends ShopOrdersEvent {
   @override
   List<Object?> get props => [isChecked];
 }
+
+// Check Products Status Event
+class CheckProductsStatusEvent extends ShopOrdersEvent {
+  final List<String> productIds;
+
+  const CheckProductsStatusEvent(this.productIds);
+
+  @override
+  List<Object?> get props => [productIds];
+}

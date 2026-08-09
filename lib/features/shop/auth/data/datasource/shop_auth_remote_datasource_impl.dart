@@ -258,10 +258,44 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
         batch.update(doc.reference, {'shop_deleted': true});
       }
 
-      // Delete Shop Document
-      batch.delete(_firestore.collection('shops').doc(uid));
+      // Delete Shop Document - preserve for order history tracking with placeholders
+      final shopDoc = await _firestore.collection('shops').doc(uid).get();
+      if (shopDoc.exists) {
+        batch.update(shopDoc.reference, {
+          'is_deleted': true,
+          'is_suspended': true,
+          'email': 'deleted_${uid}@streetcart.com',
+          'shop_name': 'Deleted Shop',
+          'owner_name': 'Deleted Owner',
+          'phone': '',
+          'profile_image_url': '',
+          'gst_number': '',
+          'full_address': 'Deleted',
+          'landmark': '',
+          'city': '',
+          'pincode': '',
+          'district': '',
+          'state': '',
+          'latitude': 0.0,
+          'longitude': 0.0,
+          'description': 'This shop has been deleted.',
+          'business_license_url': '',
+          'owner_id_url': '',
+          'payment_methods': <String>[],
+        });
+      }
 
-      // Commit all Firestore operations
+      // Delete users credentials document
+      final userDoc = await _firestore.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        batch.update(userDoc.reference, {
+          'is_deleted': true,
+          'is_blocked': true,
+          'email': 'deleted_${uid}@streetcart.com',
+        });
+      }
+
+      // Commit all operations
       await batch.commit();
 
       // Delete from Firebase Auth
