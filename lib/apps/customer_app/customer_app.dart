@@ -13,6 +13,9 @@ import 'package:street_cart/features/customer/notification/presentation/bloc/cus
 import 'package:street_cart/features/customer/orders/presentation/pages/order_details_page.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_product_detail_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
+import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
+import 'package:street_cart/di/dependency_injection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'customer_providers.dart';
 
@@ -76,8 +79,12 @@ class CustomerApp extends StatelessWidget {
                           NotificationService.instance.navigatorKey.currentState
                               ?.push(
                                 MaterialPageRoute(
-                                  builder: (_) => OrderDetailsPage(
-                                    order: state.selectedOrder!,
+                                  builder: (_) => BlocProvider(
+                                    create: (_) =>
+                                        sl<OrdersBloc>()..add(FetchOrders()),
+                                    child: OrderDetailsPage(
+                                      order: state.selectedOrder!,
+                                    ),
                                   ),
                                 ),
                               )

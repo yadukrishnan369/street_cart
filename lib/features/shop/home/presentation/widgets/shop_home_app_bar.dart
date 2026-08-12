@@ -78,9 +78,7 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 IconButton(
                   icon: Icon(
                     Icons.notifications_none_rounded,
-                    color: isDark
-                        ? ShopAppColors.darkTextSecondary
-                        : ShopAppColors.textSecondary,
+                    color: ShopAppColors.primary,
                     size: 26.sp,
                   ),
                   onPressed: () {
