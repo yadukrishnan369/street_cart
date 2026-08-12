@@ -289,9 +289,6 @@ class AddEditProductBloc
       if (v.images.isEmpty) {
         return 'Add at least one image for the "${v.colorName}" variant.';
       }
-      if (v.sizes.isEmpty || v.sizes.values.every((qty) => qty == 0)) {
-        return 'Set stock quantity for at least one size in the "${v.colorName}" variant.';
-      }
     }
     return null;
   }

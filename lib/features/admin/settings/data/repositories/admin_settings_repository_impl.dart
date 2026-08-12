@@ -27,7 +27,7 @@ class AdminSettingsRepositoryImpl implements IAdminSettingsRepository {
   }
 
   @override
-  Future<void> savePlatformCommission(double percentage) async {
+  Future<List<String>> savePlatformCommission(double percentage) async {
     await _checkConnection();
     return _remoteDataSource.savePlatformCommission(percentage);
   }
@@ -84,5 +84,17 @@ class AdminSettingsRepositoryImpl implements IAdminSettingsRepository {
   Future<void> saveSizeGroups(List<SizeGroupModel> sizeGroups) async {
     await _checkConnection();
     return _remoteDataSource.saveSizeGroups(sizeGroups);
+  }
+
+  @override
+  Future<Map<String, bool>> getNotificationPreferences() async {
+    await _checkConnection();
+    return _remoteDataSource.getNotificationPreferences();
+  }
+
+  @override
+  Future<void> saveNotificationPreference(String key, bool value) async {
+    await _checkConnection();
+    return _remoteDataSource.saveNotificationPreference(key, value);
   }
 }

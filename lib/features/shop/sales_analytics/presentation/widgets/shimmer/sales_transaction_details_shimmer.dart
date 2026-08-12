@@ -29,7 +29,7 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
-              color: cardBg.withOpacity(0.4),
+              color: cardBg.withValues(alpha: 0.4),
               child: Row(
                 children: [
                   Container(
@@ -72,7 +72,7 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: cardBg.withOpacity(0.4),
+                color: cardBg.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(color: cardBorder),
               ),
@@ -128,7 +128,7 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
+                color: Colors.white.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(color: const Color(0xFFE2E8F0)),
               ),
@@ -199,7 +199,7 @@ class SalesTransactionDetailsShimmer extends StatelessWidget {
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
+                color: Colors.white.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(color: const Color(0xFFE2E8F0)),
               ),

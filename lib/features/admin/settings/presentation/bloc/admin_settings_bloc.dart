@@ -5,6 +5,8 @@ import 'package:street_cart/features/admin/settings/domain/usecases/save_platfor
 import 'package:street_cart/features/admin/settings/domain/usecases/save_payment_controls.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/change_admin_password.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/save_categories.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/get_admin_notification_preferences.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_admin_notification_preference.dart';
 import 'admin_settings_event.dart';
 import 'admin_settings_state.dart';
 
@@ -14,6 +16,8 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
   final SavePaymentControls _savePaymentControls;
   final ChangeAdminPassword _changeAdminPassword;
   final SaveCategories _saveCategories;
+  final GetAdminNotificationPreferences _getAdminNotificationPreferences;
+  final SaveAdminNotificationPreference _saveAdminNotificationPreference;
 
   AdminSettingsModel _currentSettings = const AdminSettingsModel(
     commissionPercentage: 2.0,
@@ -45,11 +49,15 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
     required SavePaymentControls savePaymentControls,
     required ChangeAdminPassword changeAdminPassword,
     required SaveCategories saveCategories,
+    required GetAdminNotificationPreferences getAdminNotificationPreferences,
+    required SaveAdminNotificationPreference saveAdminNotificationPreference,
   }) : _getAdminSettings = getAdminSettings,
        _savePlatformCommission = savePlatformCommission,
        _savePaymentControls = savePaymentControls,
        _changeAdminPassword = changeAdminPassword,
        _saveCategories = saveCategories,
+       _getAdminNotificationPreferences = getAdminNotificationPreferences,
+       _saveAdminNotificationPreference = saveAdminNotificationPreference,
        super(AdminSettingsInitial()) {
     on<LoadAdminSettings>(_onLoadAdminSettings);
     on<UpdatePlatformCommission>(_onUpdatePlatformCommission);
@@ -164,6 +172,9 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
       ),
     );
     try {
+      final prefs = await _getAdminNotificationPreferences();
+      _notifyNewShopAlert = prefs['registrationAlertsEnabled'] ?? true;
+      _notifyNewOrderAlert = prefs['orderAlertsEnabled'] ?? true;
       final settings = await _getAdminSettings();
       _currentSettings = settings;
       _draftEnableCod = settings.enableCod;
@@ -379,20 +390,29 @@ class AdminSettingsBloc extends Bloc<AdminSettingsEvent, AdminSettingsState> {
   }
 
   // Toggle New Shop Alert
-  void _onToggleNewShopAlert(
+  Future<void> _onToggleNewShopAlert(
     ToggleNewShopAlert event,
     Emitter<AdminSettingsState> emit,
-  ) {
+  ) async {
     _notifyNewShopAlert = event.value;
+    try {
+      await _saveAdminNotificationPreference(
+        'registrationAlertsEnabled',
+        event.value,
+      );
+    } catch (_) {}
     _emitLoaded(emit);
   }
 
   // Toggle New Order Alert
-  void _onToggleNewOrderAlert(
+  Future<void> _onToggleNewOrderAlert(
     ToggleNewOrderAlert event,
     Emitter<AdminSettingsState> emit,
-  ) {
+  ) async {
     _notifyNewOrderAlert = event.value;
+    try {
+      await _saveAdminNotificationPreference('orderAlertsEnabled', event.value);
+    } catch (_) {}
     _emitLoaded(emit);
   }
 }

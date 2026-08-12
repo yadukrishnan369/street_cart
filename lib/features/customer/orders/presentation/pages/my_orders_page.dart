@@ -73,14 +73,7 @@ class MyOrdersPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state is OrdersLoading ||
-                state is OrdersInitial ||
-                state is OrderCancelling ||
-                state is OrderCancelledSuccess ||
-                state is OrderItemCancelling ||
-                state is OrderItemCancelledSuccess ||
-                state is OrderAddressUpdating ||
-                state is OrderAddressUpdateSuccess) {
+            if (state is OrdersLoading || state is OrdersInitial) {
               // Loading Shimmer
               return const CustomerOrdersShimmer();
             }
@@ -120,7 +113,8 @@ class MyOrdersPage extends StatelessWidget {
               );
             }
 
-            return const Center(child: Text('Something went wrong.'));
+            // Shimmer loading
+            return const CustomerOrdersShimmer();
           },
         ),
         // BOttom Navigation Bar

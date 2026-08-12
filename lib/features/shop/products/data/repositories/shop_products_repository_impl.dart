@@ -37,7 +37,7 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
   }
 
   @override
-  Future<void> updateProduct(
+  Future<Map<String, dynamic>> updateProduct(
     ProductModel product,
     List<VariantImageDraft> variantDrafts,
   ) async {
@@ -46,7 +46,7 @@ class ShopProductsRepositoryImpl implements IShopProductsRepository {
         'No internet connection. Please check your network.',
       );
     }
-    await _remoteDataSource.updateProduct(product, variantDrafts);
+    return await _remoteDataSource.updateProduct(product, variantDrafts);
   }
 
   @override

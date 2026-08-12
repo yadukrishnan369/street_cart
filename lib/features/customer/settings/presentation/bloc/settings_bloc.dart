@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:street_cart/di/dependency_injection.dart';
@@ -8,6 +7,8 @@ import 'package:street_cart/features/customer/auth/domain/repositories/i_auth_re
 import 'package:street_cart/features/customer/location/domain/repositories/i_location_repository.dart';
 import 'package:street_cart/features/customer/settings/domain/usecases/get_settings.dart';
 import 'package:street_cart/features/customer/settings/domain/usecases/update_setting.dart';
+import 'package:street_cart/features/customer/settings/domain/usecases/get_customer_notification_preferences.dart';
+import 'package:street_cart/features/customer/settings/domain/usecases/save_customer_notification_preference.dart';
 import 'settings_event.dart';
 import 'settings_state.dart';
 
@@ -17,12 +18,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final UpdateSetting updateSetting;
   final ILocationRepository locationRepository;
   final IAuthRepository authRepository;
+  final GetCustomerNotificationPreferences getCustomerNotificationPreferences;
+  final SaveCustomerNotificationPreference saveCustomerNotificationPreference;
 
   SettingsBloc({
     required this.getSettings,
     required this.updateSetting,
     required this.locationRepository,
     required this.authRepository,
+    required this.getCustomerNotificationPreferences,
+    required this.saveCustomerNotificationPreference,
   }) : super(const SettingsInitial()) {
     on<FetchSettingsData>(_onFetchSettingsData);
     on<ToggleSetting>(_onToggleSetting);
@@ -90,14 +95,22 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       ),
     );
     try {
-      final settings = await getSettings();
-      final user = FirebaseAuth.instance.currentUser;
+      final settings = Map<String, dynamic>.from(await getSettings());
       bool hasLocationData = false;
 
-      if (user != null) {
-        final profile = await authRepository.getCustomer(user.uid);
-        hasLocationData = profile?.locationName != null;
-      }
+      try {
+        final prefs = await getCustomerNotificationPreferences();
+        if (prefs.containsKey('generalNotificationsEnabled')) {
+          final val = prefs['generalNotificationsEnabled']!;
+          settings['generalNotifications'] = val;
+          await updateSetting('generalNotifications', val);
+        }
+        if (prefs.containsKey('orderAlertsEnabled')) {
+          final val = prefs['orderAlertsEnabled']!;
+          settings['orderAlerts'] = val;
+          await updateSetting('orderAlerts', val);
+        }
+      } catch (_) {}
 
       emit(
         SettingsLoaded(
@@ -131,6 +144,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final currentState = state as SettingsLoaded;
       try {
         await updateSetting(event.key, event.value);
+
+        if (event.key == 'generalNotifications') {
+          await saveCustomerNotificationPreference(
+            'generalNotificationsEnabled',
+            event.value,
+          );
+        } else if (event.key == 'orderAlerts') {
+          await saveCustomerNotificationPreference(
+            'orderAlertsEnabled',
+            event.value,
+          );
+        }
 
         if (event.key == 'locationServices') {
           if (event.value == true) {

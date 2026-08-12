@@ -6,11 +6,15 @@ import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/shared/components/admin_sidenav.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_event.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/core/router/admin/route_paths.dart';
 import 'package:street_cart/shared/widgets/custom_confirmation_modal.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_bloc.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_state.dart';
+import 'package:street_cart/core/services/notification_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:street_cart/features/admin/notification/presentation/bloc/admin_notifications_bloc.dart';
+import 'package:street_cart/features/admin/notification/presentation/bloc/admin_notifications_state.dart';
+import 'package:street_cart/core/router/admin/admin_route_helper.dart';
 
 class AdminScaffold extends StatefulWidget {
   final Widget child;
@@ -29,6 +33,16 @@ class AdminScaffold extends StatefulWidget {
 class _AdminScaffoldState extends State<AdminScaffold> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _logout(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
@@ -39,9 +53,18 @@ class _AdminScaffoldState extends State<AdminScaffold> {
         confirmText: 'Logout',
         confirmColor: AdminAppColors.primaryColor,
         surfaceColor: isDark ? AdminAppColors.darkSurface : Colors.white,
-        onConfirm: () {
-          Navigator.pop(dialogContext);
-          context.read<AdminAuthBloc>().add(AdminLogoutRequested());
+        onConfirm: () async {
+          final uid = FirebaseAuth.instance.currentUser?.uid;
+          if (uid != null) {
+            await NotificationService.instance.deleteTokenFromFirestore(
+              uid,
+              'admin',
+            );
+          }
+          if (dialogContext.mounted) {
+            Navigator.pop(dialogContext);
+            context.read<AdminAuthBloc>().add(AdminLogoutRequested());
+          }
         },
         onCancel: () => Navigator.pop(dialogContext),
       ),
@@ -118,85 +141,11 @@ class _AdminScaffoldState extends State<AdminScaffold> {
   }
 
   String _getPageTitle(String route) {
-    if (route.contains(RoutePaths.dashboard)) {
-      return 'Dashboard';
-    } else if (route.contains('/shops/')) {
-      return 'Shop Details';
-    } else if (route.contains(RoutePaths.shops)) {
-      return 'Shop Management';
-    } else if (route.contains('/customers/')) {
-      return 'Customer Details Page';
-    } else if (route.contains(RoutePaths.customers)) {
-      return 'Customer Management';
-    } else if (route.contains('/registrations/')) {
-      return 'Shop Registration Details';
-    } else if (route.contains(RoutePaths.registrations)) {
-      return 'New Registrations';
-    } else if (route.contains(RoutePaths.categories)) {
-      return 'Categories';
-    } else if (route.contains(RoutePaths.productConfig)) {
-      return 'Product Configurations';
-    } else if (route.contains(RoutePaths.settings)) {
-      return 'Settings';
-    } else if (route.contains(RoutePaths.profile)) {
-      return 'Admin Profile';
-    } else if (route.contains('/products/')) {
-      return 'Product Details';
-    } else if (route.contains(RoutePaths.products)) {
-      return 'Product Management';
-    } else if (route.contains('/orders/')) {
-      return 'Order Details';
-    } else if (route.contains(RoutePaths.orders)) {
-      return 'Order Management';
-    } else if (route.contains('/reviews/')) {
-      return 'Review Details';
-    } else if (route.contains(RoutePaths.reviews)) {
-      return 'Reviews & Ratings';
-    } else if (route.contains(RoutePaths.revenue)) {
-      return 'Revenue';
-    }
-    return '';
+    return AdminRouteHelper.getPageTitle(route);
   }
 
   IconData _getPageIcon(String route) {
-    if (route.contains(RoutePaths.dashboard)) {
-      return Icons.dashboard_outlined;
-    } else if (route.contains('/shops/')) {
-      return Icons.storefront_outlined;
-    } else if (route.contains(RoutePaths.shops)) {
-      return Icons.storefront_outlined;
-    } else if (route.contains('/customers/')) {
-      return Icons.people_alt_outlined;
-    } else if (route.contains(RoutePaths.customers)) {
-      return Icons.people_alt_outlined;
-    } else if (route.contains('/registrations/')) {
-      return Icons.assignment_outlined;
-    } else if (route.contains(RoutePaths.registrations)) {
-      return Icons.assignment_outlined;
-    } else if (route.contains(RoutePaths.categories)) {
-      return Icons.category_outlined;
-    } else if (route.contains(RoutePaths.productConfig)) {
-      return Icons.tune_outlined;
-    } else if (route.contains(RoutePaths.settings)) {
-      return Icons.settings_outlined;
-    } else if (route.contains(RoutePaths.profile)) {
-      return Icons.person_outline;
-    } else if (route.contains('/products/')) {
-      return Icons.inventory_2_outlined;
-    } else if (route.contains(RoutePaths.products)) {
-      return Icons.inventory_2_outlined;
-    } else if (route.contains('/orders/')) {
-      return Icons.assignment_outlined;
-    } else if (route.contains(RoutePaths.orders)) {
-      return Icons.shopping_cart_outlined;
-    } else if (route.contains('/reviews/')) {
-      return Icons.rate_review_outlined;
-    } else if (route.contains(RoutePaths.reviews)) {
-      return Icons.rate_review_outlined;
-    } else if (route.contains(RoutePaths.revenue)) {
-      return Icons.bar_chart_outlined;
-    }
-    return Icons.circle;
+    return AdminRouteHelper.getPageIcon(route);
   }
 
   Widget _buildTopbar(BuildContext context) {
@@ -239,6 +188,31 @@ class _AdminScaffoldState extends State<AdminScaffold> {
 
           Row(
             children: [
+              if (widget.currentRoute.contains(RoutePaths.notifications) ||
+                  widget.currentRoute.contains('/shops/') ||
+                  widget.currentRoute.contains('/orders/') ||
+                  widget.currentRoute.contains('/registrations/') ||
+                  widget.currentRoute.contains('/reviews/') ||
+                  widget.currentRoute.contains('/customers/'))
+                Padding(
+                  padding: EdgeInsets.only(right: 8.w),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      size: 20.sp,
+                      color: isDark
+                          ? AdminAppColors.darkTextPrimary
+                          : AdminAppColors.textPrimary,
+                    ),
+                    onPressed: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go(RoutePaths.dashboard);
+                      }
+                    },
+                  ),
+                ),
               Icon(
                 _getPageIcon(widget.currentRoute),
                 size: 20.sp,
@@ -261,24 +235,61 @@ class _AdminScaffoldState extends State<AdminScaffold> {
           const Spacer(),
 
           // Notifications Bell Icon
-          Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
-                  : const Color(0xFFF4EBFF),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: InkWell(
-              onTap: () {
-                CustomSnackBar.show(context, message: 'No new notifications');
-              },
-              child: Icon(
-                Icons.notifications_none,
-                color: AdminAppColors.primaryColor,
-                size: 20.sp,
-              ),
-            ),
+          BlocBuilder<AdminNotificationsBloc, AdminNotificationsState>(
+            builder: (context, state) {
+              final unreadCount = state.unreadCount;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AdminAppColors.primaryColor.withValues(alpha: 0.15)
+                          : const Color(0xFFF4EBFF),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        context.push(RoutePaths.notifications);
+                      },
+                      child: Icon(
+                        Icons.notifications_none,
+                        color: AdminAppColors.primaryColor,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                  if (unreadCount > 0)
+                    Positioned(
+                      top: -4.r,
+                      right: -4.r,
+                      child: Container(
+                        padding: EdgeInsets.all(2.r),
+                        decoration: const BoxDecoration(
+                          color: AdminAppColors.errorColor,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 16.r,
+                          minHeight: 16.r,
+                        ),
+                        child: Center(
+                          child: Text(
+                            unreadCount > 9 ? '9+' : '$unreadCount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         ],
       ),

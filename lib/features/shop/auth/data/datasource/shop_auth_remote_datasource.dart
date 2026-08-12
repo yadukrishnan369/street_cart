@@ -13,7 +13,7 @@ abstract class IShopAuthRemoteDataSource {
     required String userId,
   });
 
-  Future<void> setupShopProfile({
+  Future<Map<String, dynamic>> setupShopProfile({
     required String userId,
     required String category,
     required String description,
@@ -48,4 +48,6 @@ abstract class IShopAuthRemoteDataSource {
   Future<List<String>> getProductCategories();
 
   Future<Map<String, bool>> getPaymentSettings();
+  Future<Map<String, bool>> getNotificationPreferences();
+  Future<void> saveNotificationPreference(String key, bool value);
 }

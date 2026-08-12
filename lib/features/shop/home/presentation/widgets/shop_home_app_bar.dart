@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
+import 'package:street_cart/features/shop/notification/presentation/bloc/shop_notifications_bloc.dart';
+import 'package:street_cart/features/shop/notification/presentation/bloc/shop_notifications_state.dart';
+import 'package:street_cart/features/shop/notification/presentation/pages/shop_notifications_page.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 
 // Shop Home App bar
@@ -32,7 +35,7 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               padding: EdgeInsets.only(left: 20.w, right: 10.w),
               child: Center(
                 child: AppLogo(
-                  size: 40,
+                  size: 40.r,
                   backgroundColor: ShopAppColors.primary,
                   logoColor: Colors.white,
                 ),
@@ -43,9 +46,9 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: BlocBuilder<ShopAuthBloc, ShopAuthState>(
         builder: (context, state) {
-          String shopName = "My Shop";
+          String shopName = 'Shop';
           if (state.status == ShopAuthStatus.authenticated) {
-            shopName = state.shop?.shopName ?? "My Shop";
+            shopName = state.shop?.shopName ?? 'Shop';
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,32 +69,57 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       // Notification Icon
       actions: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.notifications_none_rounded,
-                color: isDark
-                    ? ShopAppColors.darkTextSecondary
-                    : ShopAppColors.textSecondary,
-                size: 26.sp,
-              ),
-              onPressed: () {},
-            ),
-            Positioned(
-              right: 12.w,
-              top: 12.h,
-              child: Container(
-                height: 8.r,
-                width: 8.r,
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
+        BlocBuilder<ShopNotificationsBloc, ShopNotificationsState>(
+          builder: (context, state) {
+            final unread = state.unreadCount;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications_none_rounded,
+                    color: isDark
+                        ? ShopAppColors.darkTextSecondary
+                        : ShopAppColors.textSecondary,
+                    size: 26.sp,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShopNotificationsPage(),
+                      ),
+                    );
+                  },
                 ),
-              ),
-            ),
-          ],
+                if (unread > 0)
+                  Positioned(
+                    right: 8.w,
+                    top: 10.h,
+                    child: Container(
+                      padding: EdgeInsets.all(2.r),
+                      decoration: const BoxDecoration(
+                        color: ShopAppColors.error,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14.r,
+                        minHeight: 14.r,
+                      ),
+                      child: Text(
+                        '${unread > 9 ? '9+' : unread}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
         SizedBox(width: 8.w),
       ],

@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Interfaces
 abstract class ISettingsLocalDataSource {
   Future<Map<String, dynamic>> getSettings();
   Future<void> updateSetting(String key, dynamic value);
@@ -16,8 +17,8 @@ class SettingsLocalDataSourceImpl implements ISettingsLocalDataSource {
     return {
       'darkMode': sharedPreferences.getBool('darkMode') ?? false,
       'locationServices': sharedPreferences.getBool('locationServices') ?? true,
-      'pushNotifications':
-          sharedPreferences.getBool('pushNotifications') ?? true,
+      'generalNotifications':
+          sharedPreferences.getBool('generalNotifications') ?? true,
       'orderAlerts': sharedPreferences.getBool('orderAlerts') ?? true,
     };
   }

@@ -9,7 +9,7 @@ abstract class IShopProductsRemoteDataSource {
     List<VariantImageDraft> variantDrafts,
   );
 
-  Future<void> updateProduct(
+  Future<Map<String, dynamic>> updateProduct(
     ProductModel product,
     List<VariantImageDraft> variantDrafts,
   );

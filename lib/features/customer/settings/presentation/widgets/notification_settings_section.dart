@@ -44,11 +44,11 @@ class NotificationSettingsSection extends StatelessWidget {
           icon: Icons.notifications_none_outlined,
           iconColor: CustomerAppColors.primary,
           backgroundColor: CustomerAppColors.primary.withValues(alpha: 0.1),
-          title: 'Push Notifications',
-          value: settings['pushNotifications'] ?? true,
+          title: 'General Notifications',
+          value: settings['generalNotifications'] ?? true,
           onChanged: (val) {
             context.read<SettingsBloc>().add(
-              ToggleSetting(key: 'pushNotifications', value: val),
+              ToggleSetting(key: 'generalNotifications', value: val),
             );
           },
         ),

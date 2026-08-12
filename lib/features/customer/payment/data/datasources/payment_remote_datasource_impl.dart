@@ -17,9 +17,9 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
   }) : _auth = auth,
        _firestore = firestore,
        _deliveryValidator = deliveryValidator;
-
+  // Place Order
   @override
-  Future<String> placeOrder({
+  Future<Map<String, dynamic>> placeOrder({
     required List<CartItem> items,
     required AddressModel address,
     required String paymentMethod,
@@ -110,13 +110,16 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
 
         if (variantsRaw.isEmpty) {
           final currentStock =
-              (productData['stockQuantity'] as num?)?.toInt() ?? 0;
+              (productData['stock_quantity'] ??
+                      productData['stockQuantity'] as num?)
+                  ?.toInt() ??
+              0;
           if (currentStock < item.quantity) {
             errors.add('Insufficient stock for ${item.productName}.');
             continue;
           }
           transaction.update(productDoc.reference, {
-            'stockQuantity': currentStock - item.quantity,
+            'stock_quantity': currentStock - item.quantity,
           });
         } else {
           final List<Map<String, dynamic>> variants = variantsRaw
@@ -146,7 +149,17 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
                 0,
                 (acc, qty) => acc + (qty as num).toInt(),
               );
-              transaction.update(productDoc.reference, {'variants': variants});
+
+              // Recalculate total product stock across variants
+              final int newTotalStock = variants.fold(
+                0,
+                (sum, v) => sum + ((v['total_stock'] ?? 0) as num).toInt(),
+              );
+
+              transaction.update(productDoc.reference, {
+                'variants': variants,
+                'stock_quantity': newTotalStock,
+              });
               break;
             }
           }
@@ -224,7 +237,14 @@ class PaymentRemoteDataSourceImpl implements IPaymentRemoteDataSource {
       }
     });
 
-    // Return the first order ID for showing success navigation
-    return orderRefs.values.first.id;
+    final Map<String, String> shopOrderIds = {};
+    for (final entry in orderRefs.entries) {
+      shopOrderIds[entry.key] = entry.value.id;
+    }
+
+    return {
+      'firstOrderId': orderRefs.values.first.id,
+      'shopOrderIds': shopOrderIds,
+    };
   }
 }

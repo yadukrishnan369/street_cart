@@ -36,8 +36,8 @@ class OrdersHelper {
 
   // Get Order ID
   static String getOrderIdSuffix(String id) {
-    if (id.length <= 4) return 'SC-$id'.toUpperCase();
-    return 'ORD-${id.substring(id.length - 4)}'.toUpperCase();
+    if (id.length <= 6) return 'SC-${id.substring(0, 4)}'.toUpperCase();
+    return 'ORD-${id.substring(0, 6)}'.toUpperCase();
   }
 
   // Date Formatter

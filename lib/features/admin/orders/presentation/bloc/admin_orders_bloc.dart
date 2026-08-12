@@ -101,6 +101,7 @@ class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
     emit(
       AdminOrdersLoaded(
         orders: filtered,
+        allOrders: _allOrders,
         shopNames: _shopNames,
         shopProfiles: _shopProfiles,
         customerNames: _customerNames,

@@ -8,6 +8,7 @@ import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.d
 import 'package:street_cart/core/theme/customer/theme_cubit.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_bloc.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_event.dart';
+import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_bloc.dart';
 
 class CustomerProviders extends StatelessWidget {
   final Widget child;
@@ -25,6 +26,7 @@ class CustomerProviders extends StatelessWidget {
         BlocProvider(
           create: (_) => sl<SettingsBloc>()..add(FetchSettingsData()),
         ),
+        BlocProvider(create: (_) => sl<CustomerNotificationsBloc>()),
       ],
       child: child,
     );

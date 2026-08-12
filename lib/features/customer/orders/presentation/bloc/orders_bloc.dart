@@ -38,7 +38,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     FetchOrders event,
     Emitter<OrdersState> emit,
   ) async {
-    emit(OrdersLoading());
+    if (state is OrdersInitial) {
+      emit(OrdersLoading());
+    }
     try {
       await emit.forEach<List<OrderModel>>(
         getCustomerOrders(),
@@ -55,11 +57,26 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     CancelOrderEvent event,
     Emitter<OrdersState> emit,
   ) async {
-    emit(OrderCancelling());
+    final currentOrders = state is OrdersLoaded
+        ? (state as OrdersLoaded).orders
+        : <OrderModel>[];
+    emit(OrderCancelling(currentOrders));
     try {
       await cancelOrder(event.orderId);
-      emit(OrderCancelledSuccess());
-      add(FetchOrders());
+      final updatedOrders = currentOrders.map((order) {
+        if (order.id == event.orderId) {
+          final updatedItems = order.items.map((item) {
+            return item.copyWith(status: 'cancelled');
+          }).toList();
+          return order.copyWith(
+            status: 'cancelled',
+            items: updatedItems,
+            cancelledAt: DateTime.now(),
+          );
+        }
+        return order;
+      }).toList();
+      emit(OrderCancelledSuccess(updatedOrders));
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }
@@ -70,11 +87,32 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     CancelOrderItemEvent event,
     Emitter<OrdersState> emit,
   ) async {
-    emit(OrderItemCancelling());
+    final currentOrders = state is OrdersLoaded
+        ? (state as OrdersLoaded).orders
+        : <OrderModel>[];
+    emit(OrderItemCancelling(currentOrders));
     try {
       await cancelOrderItem(event.orderId, event.orderItemId);
-      emit(OrderItemCancelledSuccess());
-      add(FetchOrders());
+      final updatedOrders = currentOrders.map((order) {
+        if (order.id == event.orderId) {
+          final updatedItems = order.items.map((item) {
+            if (item.id == event.orderItemId) {
+              return item.copyWith(status: 'cancelled');
+            }
+            return item;
+          }).toList();
+          final allCancelled = updatedItems.every(
+            (item) => (item.status ?? '') == 'cancelled',
+          );
+          return order.copyWith(
+            status: allCancelled ? 'cancelled' : order.status,
+            items: updatedItems,
+            cancelledAt: allCancelled ? DateTime.now() : order.cancelledAt,
+          );
+        }
+        return order;
+      }).toList();
+      emit(OrderItemCancelledSuccess(updatedOrders));
     } catch (e) {
       emit(OrdersFailure(e.toString()));
     }
@@ -85,10 +123,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     UpdateOrderAddressEvent event,
     Emitter<OrdersState> emit,
   ) async {
-    emit(OrderAddressUpdating());
+    final currentOrders = state is OrdersLoaded
+        ? (state as OrdersLoaded).orders
+        : <OrderModel>[];
+    emit(OrderAddressUpdating(currentOrders));
     try {
       await updateOrderAddress(event.orderId, event.address);
-      emit(OrderAddressUpdateSuccess());
+      emit(OrderAddressUpdateSuccess(currentOrders));
       add(FetchOrders());
     } catch (e) {
       emit(OrdersFailure(e.toString()));

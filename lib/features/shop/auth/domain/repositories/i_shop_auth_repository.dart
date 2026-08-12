@@ -18,7 +18,7 @@ abstract class IShopAuthRepository {
 
   Future<bool> checkEmailVerification();
 
-  Future<void> finalizeSignUp({
+  Future<String?> finalizeSignUp({
     required String ownerName,
     required String shopName,
     required String email,
@@ -26,7 +26,7 @@ abstract class IShopAuthRepository {
 
   Future<void> login({required String email, required String password});
 
-  Future<void> setupShopProfile({
+  Future<Map<String, dynamic>> setupShopProfile({
     required String category,
     required String description,
     required String gstNumber,
@@ -54,4 +54,6 @@ abstract class IShopAuthRepository {
   Future<List<String>> getProductCategories();
 
   Future<Map<String, bool>> getPaymentSettings();
+  Future<Map<String, bool>> getNotificationPreferences();
+  Future<void> saveNotificationPreference(String key, bool value);
 }

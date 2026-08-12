@@ -19,6 +19,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/home/presentation/widgets/shimmer/shop_home_shimmer.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'dart:async';
 
 // Shop Home Page
 class ShopHomePage extends StatefulWidget {
@@ -82,6 +83,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
               }
             },
           ),
+
           BlocListener<ShopHomeBloc, ShopHomeState>(
             listener: (context, state) {
               if (state is ShopHomeFirstVisitCheckCompleted) {
@@ -114,7 +116,9 @@ class _ShopHomePageState extends State<ShopHomePage> {
         ],
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          // Support section drawer
           drawer: const ShopSupportDrawer(),
+          // Shop home appbar
           appBar: const ShopHomeAppBar(),
           body: BlocBuilder<ShopHomeBloc, ShopHomeState>(
             builder: (context, state) {

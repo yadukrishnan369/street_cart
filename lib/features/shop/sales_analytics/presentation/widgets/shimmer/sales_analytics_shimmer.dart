@@ -133,7 +133,7 @@ class SalesAnalyticsShimmer extends StatelessWidget {
                       horizontal: 12.w,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(color: const Color(0xFFE2E8F0)),
                     ),

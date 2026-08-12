@@ -53,7 +53,7 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
   }
 
   @override
-  Future<void> setupShopProfile({
+  Future<Map<String, dynamic>> setupShopProfile({
     required String category,
     required String description,
     required String gstNumber,
@@ -68,7 +68,7 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
     if (uid == null)
       throw ServerException('Session expired. Please login again.');
 
-    await _remoteDataSource.setupShopProfile(
+    return await _remoteDataSource.setupShopProfile(
       userId: uid,
       category: category,
       description: description,
@@ -132,7 +132,7 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
   }
 
   @override
-  Future<void> finalizeSignUp({
+  Future<String?> finalizeSignUp({
     required String ownerName,
     required String shopName,
     required String email,
@@ -148,7 +148,9 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
         email: email,
         userId: uid,
       );
+      return uid;
     }
+    return null;
   }
 
   @override
@@ -214,6 +216,34 @@ class ShopAuthRepositoryImpl implements IShopAuthRepository {
     }
     try {
       return await _remoteDataSource.getPaymentSettings();
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, bool>> getNotificationPreferences() async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      return await _remoteDataSource.getNotificationPreferences();
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> saveNotificationPreference(String key, bool value) async {
+    if (!await _networkInfo.isConnected) {
+      throw NetworkException('Please check your internet connection.');
+    }
+    try {
+      await _remoteDataSource.saveNotificationPreference(key, value);
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {

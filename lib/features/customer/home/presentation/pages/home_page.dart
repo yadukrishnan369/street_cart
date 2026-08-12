@@ -10,7 +10,6 @@ import 'package:street_cart/features/customer/home/presentation/bloc/home_bloc.d
 import 'package:street_cart/features/customer/home/presentation/bloc/home_event.dart';
 import 'package:street_cart/features/customer/home/presentation/bloc/home_state.dart';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/products_section.dart';
 import 'package:street_cart/shared/components/customer_search_bar.dart';
 import 'package:street_cart/shared/components/customer_bottom_navigation.dart';
@@ -21,6 +20,7 @@ import 'package:street_cart/features/customer/home/presentation/widgets/shimmer/
 import 'package:street_cart/features/customer/home/presentation/widgets/home_app_bar.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Home Page
 class HomePage extends StatefulWidget {
@@ -55,16 +55,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: sl<HomeBloc>()..add(FetchHomeData()),
-      child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthInitial || state is AuthError) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginPage()),
-              (route) => false,
-            );
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthInitial || state is AuthError) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  (route) => false,
+                );
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, homeState) {
             bool isLoading =
@@ -84,6 +88,7 @@ class _HomePageState extends State<HomePage> {
 
             return Scaffold(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              // Home appbar
               appBar: HomeAppBar(
                 isLoading: isLoading,
                 hasLocation: hasLocation,
@@ -91,6 +96,7 @@ class _HomePageState extends State<HomePage> {
               ),
               body: Column(
                 children: [
+                  // Search bar
                   CustomSearchBar(
                     readOnly: true,
                     hintText: "Search for 'Product' or 'Stores' in $city",
@@ -112,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                         HomeHelper.navigateToFilter(context, homeState),
                   ),
                   Expanded(
+                    // Refresh indicator
                     child: RefreshIndicator(
                       color: CustomerAppColors.primary,
                       onRefresh: () async {

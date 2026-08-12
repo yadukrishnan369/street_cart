@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_bloc.dart';
+import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_state.dart';
+import 'package:street_cart/features/customer/notification/presentation/pages/customer_notifications_page.dart';
 
 // Home App Bar
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -87,16 +91,57 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
+      // Notification bell Icon
       actions: [
-        IconButton(
-          icon: Icon(
-            Icons.notifications_none,
-            color: isDark
-                ? CustomerAppColors.primary
-                : CustomerAppColors.textPrimary,
-          ),
-          onPressed: () {
-            // notification
+        BlocBuilder<CustomerNotificationsBloc, CustomerNotificationsState>(
+          builder: (context, state) {
+            final unread = state.unreadCount;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications_none,
+                    color: isDark
+                        ? CustomerAppColors.primary
+                        : CustomerAppColors.textPrimary,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CustomerNotificationsPage(),
+                      ),
+                    );
+                  },
+                ),
+                if (unread > 0)
+                  Positioned(
+                    right: 8.w,
+                    top: 8.h,
+                    child: Container(
+                      padding: EdgeInsets.all(2.r),
+                      decoration: const BoxDecoration(
+                        color: CustomerAppColors.error,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14.r,
+                        minHeight: 14.r,
+                      ),
+                      child: Text(
+                        '${unread > 9 ? '9+' : unread}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
           },
         ),
       ],

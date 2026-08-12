@@ -1,4 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:street_cart/features/customer/notification/domain/usecases/send_customer_notification.dart';
+import 'package:street_cart/features/shop/notification/domain/usecases/send_shop_notification.dart';
+import 'package:street_cart/features/admin/notification/domain/usecases/send_admin_notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -56,6 +59,8 @@ import 'package:street_cart/features/customer/cart/domain/usecases/get_product_b
 import 'package:street_cart/features/customer/cart/domain/usecases/get_shop_by_id.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/cart_bloc.dart';
 import 'package:street_cart/features/customer/cart/presentation/bloc/checkout_bloc.dart';
+import 'package:street_cart/features/customer/notification/data/datasources/customer_notification_datasource_impl.dart';
+import 'package:street_cart/features/customer/notification/data/datasources/i_customer_notification_datasource.dart';
 
 // CUSTOMER - PRODUCTS
 import 'package:street_cart/features/customer/products/data/datasources/customer_products_remote_datasource.dart';
@@ -119,6 +124,11 @@ import 'package:street_cart/features/customer/payment/presentation/bloc/payment_
 import 'package:street_cart/features/customer/settings/data/datasources/settings_local_datasource.dart';
 import 'package:street_cart/features/customer/settings/data/repositories/settings_repository_impl.dart';
 import 'package:street_cart/features/customer/settings/domain/repositories/settings_repository.dart';
+import 'package:street_cart/features/customer/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:street_cart/features/customer/settings/domain/usecases/get_customer_notification_preferences.dart';
+import 'package:street_cart/features/customer/settings/domain/usecases/save_customer_notification_preference.dart';
+import 'package:street_cart/features/shop/settings/domain/usecases/get_shop_notification_preferences.dart';
+import 'package:street_cart/features/shop/settings/domain/usecases/save_shop_notification_preference.dart';
 import 'package:street_cart/features/customer/settings/domain/usecases/get_settings.dart';
 import 'package:street_cart/features/customer/settings/domain/usecases/update_setting.dart';
 import 'package:street_cart/features/customer/settings/presentation/bloc/settings_bloc.dart';
@@ -171,10 +181,17 @@ import 'package:street_cart/features/shop/auth/domain/usecases/get_business_cate
 import 'package:street_cart/features/shop/auth/domain/usecases/get_product_categories.dart';
 import 'package:street_cart/features/shop/auth/domain/usecases/get_shop_payment_settings.dart';
 import 'package:street_cart/features/shop/home/data/datasource/shop_home_local_datasource_impl.dart';
+import 'package:street_cart/features/shop/notification/data/datasources/i_shop_notification_datasource.dart';
+import 'package:street_cart/features/shop/notification/data/datasources/shop_notification_datasource_impl.dart';
 
 // SHOP - SETTINGS
+import 'package:street_cart/features/shop/settings/data/datasources/shop_settings_local_datasource.dart';
+import 'package:street_cart/features/shop/settings/domain/repositories/i_shop_settings_repository.dart';
+import 'package:street_cart/features/shop/settings/data/repositories/shop_settings_repository_impl.dart';
 import 'package:street_cart/features/shop/settings/domain/usecases/change_shop_password.dart';
 import 'package:street_cart/features/shop/settings/domain/usecases/delete_shop_auth_account.dart';
+import 'package:street_cart/features/shop/settings/domain/usecases/get_shop_local_settings.dart';
+import 'package:street_cart/features/shop/settings/domain/usecases/update_shop_local_setting.dart';
 import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settings_bloc.dart';
 
 // SHOP - ONBOARDING
@@ -262,6 +279,31 @@ import 'package:street_cart/features/customer/orders/domain/usecases/check_produ
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 
 // ADMIN
+import 'package:street_cart/core/services/notification_service.dart';
+import 'package:street_cart/features/customer/notification/domain/repositories/i_customer_notifications_repository.dart';
+import 'package:street_cart/features/customer/notification/data/repositories/customer_notifications_repository_impl.dart';
+import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_bloc.dart';
+import 'package:street_cart/features/shop/notification/domain/repositories/i_shop_notifications_repository.dart';
+import 'package:street_cart/features/shop/notification/data/repositories/shop_notifications_repository_impl.dart';
+import 'package:street_cart/features/shop/notification/presentation/bloc/shop_notifications_bloc.dart';
+import 'package:street_cart/features/admin/notification/domain/repositories/i_admin_notifications_repository.dart';
+import 'package:street_cart/features/admin/notification/data/repositories/admin_notifications_repository_impl.dart';
+import 'package:street_cart/features/admin/notification/data/datasources/i_admin_notification_datasource.dart';
+import 'package:street_cart/features/admin/notification/data/datasources/admin_notification_datasource_impl.dart';
+import 'package:street_cart/features/admin/notification/presentation/bloc/admin_notifications_bloc.dart';
+import 'package:street_cart/features/admin/notification/domain/usecases/watch_admin_notifications.dart';
+import 'package:street_cart/features/admin/notification/domain/usecases/mark_admin_notification_as_read.dart';
+import 'package:street_cart/features/admin/notification/domain/usecases/mark_all_admin_notifications_as_read.dart';
+import 'package:street_cart/features/shop/notification/domain/usecases/watch_shop_notifications.dart';
+import 'package:street_cart/features/shop/notification/domain/usecases/mark_shop_notification_as_read.dart';
+import 'package:street_cart/features/shop/notification/domain/usecases/mark_all_shop_notifications_as_read.dart';
+import 'package:street_cart/features/shop/notification/domain/usecases/delete_shop_notification.dart';
+import 'package:street_cart/features/shop/notification/domain/usecases/get_shop_order_details.dart';
+import 'package:street_cart/features/customer/notification/domain/usecases/watch_customer_notifications.dart';
+import 'package:street_cart/features/customer/notification/domain/usecases/mark_customer_notification_as_read.dart';
+import 'package:street_cart/features/customer/notification/domain/usecases/mark_all_customer_notifications_as_read.dart';
+import 'package:street_cart/features/customer/notification/domain/usecases/get_customer_order_details.dart';
+import 'package:street_cart/features/customer/notification/domain/usecases/get_customer_product_details.dart';
 import 'package:street_cart/features/admin/auth/data/datasource/admin_auth_remote_datasource.dart';
 import 'package:street_cart/features/admin/auth/data/datasource/admin_auth_remote_datasource_impl.dart';
 import 'package:street_cart/features/admin/auth/domain/repositories/i_admin_auth_repository.dart';
@@ -299,6 +341,8 @@ import 'package:street_cart/features/admin/settings/data/datasources/admin_setti
 import 'package:street_cart/features/admin/settings/data/datasources/admin_settings_remote_datasource_impl.dart';
 import 'package:street_cart/features/admin/settings/domain/repositories/i_admin_settings_repository.dart';
 import 'package:street_cart/features/admin/settings/data/repositories/admin_settings_repository_impl.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/get_admin_notification_preferences.dart';
+import 'package:street_cart/features/admin/settings/domain/usecases/save_admin_notification_preference.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/get_admin_settings.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/save_platform_commission.dart';
 import 'package:street_cart/features/admin/settings/domain/usecases/save_payment_controls.dart';
@@ -416,6 +460,7 @@ Future<void> initDependencies() async {
   _initCustomerSplash();
   await _initCustomerSettings();
   _initCustomerReview();
+  _initCustomerNotifications();
 
   // SHOP
   await _initShopAuth();
@@ -429,6 +474,7 @@ Future<void> initDependencies() async {
   _initShopOrders();
   _initShopReviews();
   _initShopSalesAnalytics();
+  _initShopNotifications();
 
   // ADMIN
   _initAdminAuth();
@@ -442,6 +488,7 @@ Future<void> initDependencies() async {
   _initAdminOrders();
   _initAdminReviews();
   _initAdminRevenue();
+  _initAdminNotifications();
 }
 
 // ================= SHOP SPLASH =================
@@ -540,13 +587,13 @@ Future<void> _initShopAuth() async {
   // Use Cases
   sl.registerLazySingleton(() => ShopLogin(sl()));
   sl.registerLazySingleton(() => ShopSignup(sl()));
-  sl.registerLazySingleton(() => SetupShopProfile(sl()));
+  sl.registerLazySingleton(() => SetupShopProfile(sl(), sl()));
   sl.registerLazySingleton(() => GetShopStatus(sl()));
   sl.registerLazySingleton(() => ShopLogout(sl()));
   sl.registerLazySingleton(() => SendShopPasswordResetEmail(sl()));
   sl.registerLazySingleton(() => SendShopEmailVerification(sl()));
   sl.registerLazySingleton(() => CheckShopEmailVerification(sl()));
-  sl.registerLazySingleton(() => FinalizeShopSignUp(sl()));
+  sl.registerLazySingleton(() => FinalizeShopSignUp(sl(), sl()));
   sl.registerLazySingleton(() => GetBusinessCategories(sl()));
   sl.registerLazySingleton(() => GetProductCategories(sl()));
   sl.registerLazySingleton(() => GetShopPaymentSettings(sl()));
@@ -586,6 +633,7 @@ Future<void> _initCore() async {
   sl.registerLazySingleton(() => CloudinaryService());
   sl.registerLazySingleton(() => LocationService());
   sl.registerLazySingleton(() => CommunicationService());
+  sl.registerLazySingleton(() => NotificationService.instance);
 
   sl.registerLazySingleton<INetworkInfo>(() => NetworkInfoImpl());
 }
@@ -713,7 +761,13 @@ void _initCustomerReview() {
     () => ReviewRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
-  sl.registerLazySingleton(() => SubmitReview(sl()));
+  sl.registerLazySingleton(
+    () => SubmitReview(
+      repository: sl(),
+      getProductById: sl(),
+      sendShopNotification: sl(),
+    ),
+  );
   sl.registerLazySingleton(() => GetProductReviews(sl()));
   sl.registerLazySingleton(() => DeleteReview(sl()));
 
@@ -785,12 +839,18 @@ Future<void> _initCustomerSettings() async {
     () => SettingsLocalDataSourceImpl(sharedPreferences: sl()),
   );
 
+  sl.registerLazySingleton<ISettingsRemoteDataSource>(
+    () => SettingsRemoteDataSourceImpl(),
+  );
+
   sl.registerLazySingleton<ISettingsRepository>(
-    () => SettingsRepositoryImpl(localDataSource: sl()),
+    () => SettingsRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
   );
 
   sl.registerLazySingleton(() => GetSettings(sl()));
   sl.registerLazySingleton(() => UpdateSetting(sl()));
+  sl.registerLazySingleton(() => GetCustomerNotificationPreferences(sl()));
+  sl.registerLazySingleton(() => SaveCustomerNotificationPreference(sl()));
 
   sl.registerLazySingleton(
     () => SettingsBloc(
@@ -798,6 +858,8 @@ Future<void> _initCustomerSettings() async {
       updateSetting: sl(),
       locationRepository: sl(),
       authRepository: sl(),
+      getCustomerNotificationPreferences: sl(),
+      saveCustomerNotificationPreference: sl(),
     ),
   );
 
@@ -899,7 +961,13 @@ void _initCustomerPayment() {
   );
 
   // Use Case
-  sl.registerLazySingleton(() => PlaceCustomerOrder(repository: sl()));
+  sl.registerLazySingleton(
+    () => PlaceCustomerOrder(
+      repository: sl(),
+      sendShopNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
 
   // Bloc
   sl.registerFactory(
@@ -972,12 +1040,34 @@ Future<void> _initShopProfile() async {
 
 // ================= SHOP SETTINGS =================
 Future<void> _initShopSettings() async {
+  // Datasources
+  sl.registerLazySingleton<IShopSettingsLocalDataSource>(
+    () => ShopSettingsLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+  // Repositories
+  sl.registerLazySingleton<IShopSettingsRepository>(
+    () => ShopSettingsRepositoryImpl(localDataSource: sl()),
+  );
+  // Usecases
   sl.registerLazySingleton(() => ChangeShopPassword(sl()));
   sl.registerLazySingleton(() => DeleteShopAuthAccount(sl()));
+  sl.registerLazySingleton(() => GetShopNotificationPreferences(sl()));
+  sl.registerLazySingleton(() => SaveShopNotificationPreference(sl()));
+  sl.registerLazySingleton(() => GetShopLocalSettings(sl()));
+  sl.registerLazySingleton(() => UpdateShopLocalSetting(sl()));
 
   sl.registerFactory(
-    () =>
-        ShopSettingsBloc(changeShopPassword: sl(), deleteShopAuthAccount: sl()),
+    () => ShopSettingsBloc(
+      changeShopPassword: sl(),
+      deleteShopAuthAccount: sl(),
+      getShopNotificationPreferences: sl(),
+      saveShopNotificationPreference: sl(),
+      getShopLocalSettings: sl(),
+      updateShopLocalSetting: sl(),
+      pushNotifications:
+          sl<SharedPreferences>().getBool('generalNotifications') ?? true,
+      orderAlerts: sl<SharedPreferences>().getBool('orderAlerts') ?? true,
+    ),
   );
 }
 
@@ -999,7 +1089,7 @@ Future<void> _initShopProducts() async {
   // Use Cases
   sl.registerLazySingleton(() => GetShopProducts(sl()));
   sl.registerLazySingleton(() => AddProduct(sl()));
-  sl.registerLazySingleton(() => UpdateProduct(sl()));
+  sl.registerLazySingleton(() => UpdateProduct(sl(), sl()));
   sl.registerLazySingleton(() => DeleteProduct(sl()));
   sl.registerLazySingleton(() => GetShopProductConfig(sl()));
   sl.registerLazySingleton(() => SaveShopProductConfig(sl()));
@@ -1081,8 +1171,20 @@ void _initAdminDashboard() {
   sl.registerLazySingleton(() => GetPendingRegistrations(sl()));
   sl.registerLazySingleton(() => GetPendingRegistrationsCount(sl()));
   sl.registerLazySingleton(() => GetShopDetails(sl()));
-  sl.registerLazySingleton(() => ApproveShop(sl()));
-  sl.registerLazySingleton(() => RejectShop(sl()));
+  sl.registerLazySingleton(
+    () => ApproveShop(
+      repository: sl(),
+      getShopDetails: sl(),
+      sendShopNotification: sl(),
+    ),
+  );
+  sl.registerLazySingleton(
+    () => RejectShop(
+      repository: sl(),
+      getShopDetails: sl(),
+      sendShopNotification: sl(),
+    ),
+  );
 
   // Bloc
   sl.registerFactory(
@@ -1118,13 +1220,15 @@ void _initAdminSettings() {
 
   // Use cases
   sl.registerLazySingleton(() => GetAdminSettings(sl()));
-  sl.registerLazySingleton(() => SavePlatformCommission(sl()));
+  sl.registerLazySingleton(() => SavePlatformCommission(sl(), sl()));
   sl.registerLazySingleton(() => SavePaymentControls(sl()));
   sl.registerLazySingleton(() => ChangeAdminPassword(sl()));
   sl.registerLazySingleton(() => SaveCategories(sl()));
   sl.registerLazySingleton(() => GetProductConfig(sl()));
   sl.registerLazySingleton(() => SaveColors(sl()));
   sl.registerLazySingleton(() => SaveSizeGroups(sl()));
+  sl.registerLazySingleton(() => GetAdminNotificationPreferences(sl()));
+  sl.registerLazySingleton(() => SaveAdminNotificationPreference(sl()));
 
   // Bloc
   sl.registerFactory(
@@ -1134,6 +1238,8 @@ void _initAdminSettings() {
       savePaymentControls: sl(),
       changeAdminPassword: sl(),
       saveCategories: sl(),
+      getAdminNotificationPreferences: sl(),
+      saveAdminNotificationPreference: sl(),
     ),
   );
   sl.registerFactory(
@@ -1276,10 +1382,31 @@ void _initCustomerOrders() {
     () => OrdersRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton(() => GetCustomerOrders(sl()));
-  sl.registerLazySingleton(() => CancelOrder(sl()));
-  sl.registerLazySingleton(() => CancelOrderItem(sl()));
+  sl.registerLazySingleton(
+    () => CancelOrder(
+      repository: sl(),
+      getOrderDetails: sl(),
+      sendShopNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
+  sl.registerLazySingleton(
+    () => CancelOrderItem(
+      repository: sl(),
+      getOrderDetails: sl(),
+      sendShopNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
   sl.registerLazySingleton(() => UpdateOrderAddress(sl()));
-  sl.registerLazySingleton(() => SubmitReturnRequest(sl()));
+  sl.registerLazySingleton(
+    () => SubmitReturnRequest(
+      repository: sl(),
+      getOrderDetails: sl(),
+      sendShopNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
   sl.registerLazySingleton(() => CheckProductsAvailability(sl()));
   sl.registerFactory(
     () => OrdersBloc(
@@ -1302,9 +1429,30 @@ void _initShopOrders() {
     () => ShopOrdersRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton(() => GetShopOrders(sl()));
-  sl.registerLazySingleton(() => UpdateShopOrderStatus(sl()));
-  sl.registerLazySingleton(() => UpdateShopOrderReturnStatus(sl()));
-  sl.registerLazySingleton(() => ProcessRefund(sl()));
+  sl.registerLazySingleton(
+    () => UpdateShopOrderStatus(
+      repository: sl(),
+      getOrderDetails: sl(),
+      sendCustomerNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
+  sl.registerLazySingleton(
+    () => UpdateShopOrderReturnStatus(
+      repository: sl(),
+      getOrderDetails: sl(),
+      sendCustomerNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
+  sl.registerLazySingleton(
+    () => ProcessRefund(
+      repository: sl(),
+      getOrderDetails: sl(),
+      sendCustomerNotification: sl(),
+      sendAdminNotification: sl(),
+    ),
+  );
   sl.registerLazySingleton(() => CheckProductsStatus(sl()));
   sl.registerFactory(
     () => ShopOrdersBloc(
@@ -1401,6 +1549,89 @@ void _initAdminRevenue() {
       getShops: sl(),
       getProducts: sl(),
       getCustomers: sl(),
+    ),
+  );
+}
+
+// ================= CUSTOMER NOTIFICATION =================
+void _initCustomerNotifications() {
+  sl.registerLazySingleton<ICustomerNotificationDataSource>(
+    () => CustomerNotificationDataSourceImpl(),
+  );
+  sl.registerLazySingleton<ICustomerNotificationsRepository>(
+    () => CustomerNotificationsRepositoryImpl(
+      datasource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => WatchCustomerNotifications(sl()));
+  sl.registerLazySingleton(() => MarkCustomerNotificationAsRead(sl()));
+  sl.registerLazySingleton(() => MarkAllCustomerNotificationsAsRead(sl()));
+  sl.registerLazySingleton(() => GetCustomerOrderDetails(sl()));
+  sl.registerLazySingleton(() => GetCustomerProductDetails(sl()));
+
+  sl.registerLazySingleton(() => SendCustomerNotification(sl()));
+
+  sl.registerFactory(
+    () => CustomerNotificationsBloc(
+      watchCustomerNotifications: sl(),
+      markCustomerNotificationAsRead: sl(),
+      markAllCustomerNotificationsAsRead: sl(),
+      getCustomerOrderDetails: sl(),
+      getCustomerProductDetails: sl(),
+    ),
+  );
+}
+
+// ================= SHOP NOTIFICATION =================
+void _initShopNotifications() {
+  sl.registerLazySingleton<IShopNotificationDataSource>(
+    () => ShopNotificationDataSourceImpl(),
+  );
+  sl.registerLazySingleton<IShopNotificationsRepository>(
+    () => ShopNotificationsRepositoryImpl(datasource: sl(), networkInfo: sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => WatchShopNotifications(sl()));
+  sl.registerLazySingleton(() => MarkShopNotificationAsRead(sl()));
+  sl.registerLazySingleton(() => MarkAllShopNotificationsAsRead(sl()));
+  sl.registerLazySingleton(() => DeleteShopNotification(sl()));
+  sl.registerLazySingleton(() => GetShopOrderDetails(sl()));
+
+  sl.registerLazySingleton(() => SendShopNotification(sl()));
+
+  sl.registerFactory(
+    () => ShopNotificationsBloc(
+      watchShopNotifications: sl(),
+      markShopNotificationAsRead: sl(),
+      markAllShopNotificationsAsRead: sl(),
+      deleteShopNotification: sl(),
+      getShopOrderDetails: sl(),
+    ),
+  );
+}
+
+// ================= ADMIN NOTIFICATION =================
+void _initAdminNotifications() {
+  sl.registerLazySingleton<IAdminNotificationDataSource>(
+    () => AdminNotificationDataSourceImpl(),
+  );
+  sl.registerLazySingleton<IAdminNotificationsRepository>(
+    () => AdminNotificationsRepositoryImpl(datasource: sl(), networkInfo: sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => WatchAdminNotifications(sl()));
+  sl.registerLazySingleton(() => MarkAdminNotificationAsRead(sl()));
+  sl.registerLazySingleton(() => MarkAllAdminNotificationsAsRead(sl()));
+
+  sl.registerLazySingleton(() => SendAdminNotification(sl()));
+
+  sl.registerFactory(
+    () => AdminNotificationsBloc(
+      watchAdminNotifications: sl(),
+      markAdminNotificationAsRead: sl(),
+      markAllAdminNotificationsAsRead: sl(),
     ),
   );
 }

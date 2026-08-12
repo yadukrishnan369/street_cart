@@ -53,6 +53,17 @@ class AdminAuthRemoteDataSourceImpl implements IAdminAuthRemoteDataSource {
           if (currentLastLogin != null) 'last_login_previous': currentLastLogin,
           'last_login': FieldValue.serverTimestamp(),
         });
+      } else {
+        // Automatically create admin record if it doesn't exist
+        final userDoc = await _firestore.collection('users').doc(uid).get();
+        final userData = userDoc.exists ? userDoc.data() : null;
+        await adminDocRef.set({
+          'email': userData?['email'] ?? 'adminstreetcart@gmail.com',
+          'full_name': userData?['full_name'] ?? 'Admin',
+          'role': userData?['role'] ?? 'admin',
+          'last_login': FieldValue.serverTimestamp(),
+          'created_at': FieldValue.serverTimestamp(),
+        });
       }
     } catch (e) {
       print('Error updating login timestamps: $e');

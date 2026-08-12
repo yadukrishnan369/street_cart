@@ -8,6 +8,9 @@ abstract class ShopSettingsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Fetch Settings Data Event
+class FetchSettingsDataEvent extends ShopSettingsEvent {}
+
 //  Update Password Event
 class ChangePasswordRequested extends ShopSettingsEvent {
   final String currentPassword;

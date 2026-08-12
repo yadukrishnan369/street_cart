@@ -128,7 +128,7 @@ class NotificationsSection extends StatelessWidget {
           children: [
             SettingRowItem(
               icon: Icons.notifications_none_outlined,
-              title: 'Push Notifications',
+              title: 'General Notifications',
               // Push Notification Switch
               trailing: SettingCustomSwitch(
                 value: uiState.pushNotifications,

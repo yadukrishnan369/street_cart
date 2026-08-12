@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
-import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
-import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_bloc.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_event.dart';
 import 'package:street_cart/features/admin/settings/presentation/bloc/admin_settings_state.dart';
@@ -70,7 +68,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                 padding: EdgeInsets.all(24.w),
                 child: Column(
                   children: [
-                    // New Shop Registration Alert
+                    // New Registration Alerts
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -79,7 +77,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'New Shop Registration Alert',
+                                'New Registration Alerts',
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w600,
@@ -90,7 +88,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                               ),
                               SizedBox(height: 2.h),
                               Text(
-                                'Receive a notification when a new vendor applies to join.',
+                                'Receive a notification when a new customer or vendor registers.',
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   color: isDark
@@ -114,7 +112,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
 
-                    // New Order Alert
+                    // Order Alerts
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -123,7 +121,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'New Order Alert',
+                                'Order Alerts',
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w600,
@@ -134,7 +132,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                               ),
                               SizedBox(height: 2.h),
                               Text(
-                                'Get real-time updates for every new order placed on the platform.',
+                                'Get real-time updates for every new order, cancellation, status change or refund.',
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   color: isDark
@@ -156,49 +154,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 24.h),
-
-                    // Save button
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (dialogCtx) => CustomAlertDialog(
-                              title: 'Save Preferences',
-                              content:
-                                  'Are you sure you want to save these notification preferences?',
-                              secondaryActionLabel: 'Cancel',
-                              primaryActionLabel: 'Confirm',
-                              icon: Icons.notifications_none,
-                              iconColor: AdminAppColors.primaryColor,
-                              primaryActionColor: AdminAppColors.primaryColor,
-                              onPrimaryAction: () {
-                                Navigator.pop(dialogCtx);
-                                CustomSnackBar.show(
-                                  context,
-                                  message: 'Notification preferences saved',
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AdminAppColors.primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 24.w,
-                            vertical: 12.h,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text('Save Preferences'),
-                      ),
-                    ),
+                    SizedBox(height: 8.h),
                   ],
                 ),
               ),

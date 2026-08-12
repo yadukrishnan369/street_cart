@@ -35,22 +35,34 @@ class OrdersFailure extends OrdersState {
 }
 
 // Order Cancelling State
-class OrderCancelling extends OrdersState {}
+class OrderCancelling extends OrdersLoaded {
+  const OrderCancelling(super.orders);
+}
 
 // Order Cancelled Success State
-class OrderCancelledSuccess extends OrdersState {}
+class OrderCancelledSuccess extends OrdersLoaded {
+  const OrderCancelledSuccess(super.orders);
+}
 
 // Order Item Cancelling State
-class OrderItemCancelling extends OrdersState {}
+class OrderItemCancelling extends OrdersLoaded {
+  const OrderItemCancelling(super.orders);
+}
 
 // Order Item Cancelled Success State
-class OrderItemCancelledSuccess extends OrdersState {}
+class OrderItemCancelledSuccess extends OrdersLoaded {
+  const OrderItemCancelledSuccess(super.orders);
+}
 
 // Order Address Updating State
-class OrderAddressUpdating extends OrdersState {}
+class OrderAddressUpdating extends OrdersLoaded {
+  const OrderAddressUpdating(super.orders);
+}
 
 // Order Address Update Success State
-class OrderAddressUpdateSuccess extends OrdersState {}
+class OrderAddressUpdateSuccess extends OrdersLoaded {
+  const OrderAddressUpdateSuccess(super.orders);
+}
 
 // Return Request Submitting State
 class ReturnRequestSubmitting extends OrdersState {}

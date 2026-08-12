@@ -12,6 +12,7 @@ class AdminOrdersLoading extends AdminOrdersState {}
 // Orders Loaded State
 class AdminOrdersLoaded extends AdminOrdersState {
   final List<OrderModel> orders;
+  final List<OrderModel> allOrders;
   final Map<String, String> shopNames;
   final Map<String, ShopProfileModel> shopProfiles;
   final Map<String, String> customerNames;
@@ -22,6 +23,7 @@ class AdminOrdersLoaded extends AdminOrdersState {
 
   AdminOrdersLoaded({
     required this.orders,
+    required this.allOrders,
     required this.shopNames,
     this.shopProfiles = const {},
     this.customerNames = const {},
@@ -33,6 +35,7 @@ class AdminOrdersLoaded extends AdminOrdersState {
 
   AdminOrdersLoaded copyWith({
     List<OrderModel>? orders,
+    List<OrderModel>? allOrders,
     Map<String, String>? shopNames,
     Map<String, ShopProfileModel>? shopProfiles,
     Map<String, String>? customerNames,
@@ -43,6 +46,7 @@ class AdminOrdersLoaded extends AdminOrdersState {
   }) {
     return AdminOrdersLoaded(
       orders: orders ?? this.orders,
+      allOrders: allOrders ?? this.allOrders,
       shopNames: shopNames ?? this.shopNames,
       shopProfiles: shopProfiles ?? this.shopProfiles,
       customerNames: customerNames ?? this.customerNames,

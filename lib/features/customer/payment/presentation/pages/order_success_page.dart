@@ -39,41 +39,44 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: theme.cardColor,
-        elevation: 0.5,
-        centerTitle: true,
-        title: Text(
-          'Order Status',
-          style: TextStyle(
-            color: isDark
-                ? CustomerAppColors.darkTextPrimary
-                : CustomerAppColors.textPrimary,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          backgroundColor: theme.cardColor,
+          elevation: 0.5,
+          centerTitle: true,
+          title: Text(
+            'Order Status',
+            style: TextStyle(
+              color: isDark
+                  ? CustomerAppColors.darkTextPrimary
+                  : CustomerAppColors.textPrimary,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          automaticallyImplyLeading: false,
         ),
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-          child: Column(
-            children: [
-              // Order Placed Success Section
-              OrderPlacedSuccessSection(orderIdSuffix: orderIdSuffix),
-              SizedBox(height: 34.h),
-              // Order Success Buttons for Track Order and Continue Shopping
-              const OrderSuccessButtonsSection(),
-              SizedBox(height: 34.h),
-              // Order Suceess Delivery Estimate Banner
-              OrderSuccessEstimationBanner(
-                totalAmount: widget.totalAmount,
-                paymentStatus: widget.paymentStatus,
-              ),
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+            child: Column(
+              children: [
+                // Order Placed Success Section
+                OrderPlacedSuccessSection(orderIdSuffix: orderIdSuffix),
+                SizedBox(height: 34.h),
+                // Order Success Buttons for Track Order and Continue Shopping
+                const OrderSuccessButtonsSection(),
+                SizedBox(height: 34.h),
+                // Order Suceess Delivery Estimate Banner
+                OrderSuccessEstimationBanner(
+                  totalAmount: widget.totalAmount,
+                  paymentStatus: widget.paymentStatus,
+                ),
+              ],
+            ),
           ),
         ),
       ),

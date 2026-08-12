@@ -102,7 +102,11 @@ class ShopProfilePage extends StatelessWidget {
                         builder: (_) => MultiBlocProvider(
                           providers: [
                             BlocProvider.value(value: profileBloc),
-                            BlocProvider(create: (_) => sl<ShopSettingsBloc>()),
+                            BlocProvider(
+                              create: (_) =>
+                                  sl<ShopSettingsBloc>()
+                                    ..add(FetchSettingsDataEvent()),
+                            ),
                           ],
                           child: ShopSettingsPage(authBloc: authBloc),
                         ),

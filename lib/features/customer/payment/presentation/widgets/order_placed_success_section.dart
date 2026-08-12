@@ -67,7 +67,7 @@ class OrderPlacedSuccessSection extends StatelessWidget {
             children: [
               const TextSpan(text: 'Your order ID is '),
               TextSpan(
-                text: '#OR-$orderIdSuffix',
+                text: '#ORD-$orderIdSuffix',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: CustomerAppColors.primary,

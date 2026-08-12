@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_bloc.dart';
 import 'package:street_cart/features/admin/auth/presentation/bloc/admin_auth_state.dart';
+import 'package:street_cart/core/services/notification_service.dart';
 import 'admin_routes.dart';
 import 'route_paths.dart';
 import 'router_refresh.dart';
@@ -14,6 +15,7 @@ class AppRouter {
   }
 
   late final GoRouter router = GoRouter(
+    navigatorKey: NotificationService.instance.navigatorKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: refreshStream,
     redirect: (context, state) {
@@ -37,7 +39,8 @@ class AppRouter {
         if (isLoggingIn || isSplash) {
           return RoutePaths.dashboard;
         }
-      } else if (authState is AdminUnauthenticated || authState is AdminAuthFailure) {
+      } else if (authState is AdminUnauthenticated ||
+          authState is AdminAuthFailure) {
         final isForgotPassword = path == RoutePaths.forgotPassword;
         if (!isLoggingIn && !isForgotPassword) {
           return RoutePaths.login;

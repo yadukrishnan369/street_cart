@@ -47,7 +47,7 @@ class ShopSettingsState extends Equatable {
     this.deliveryRadius = 5.0,
     this.appTheme = false,
     this.pushNotifications = true,
-    this.orderAlerts = false,
+    this.orderAlerts = true,
   });
 
   ShopSettingsState copyWith({

@@ -2,7 +2,7 @@ import 'package:street_cart/features/admin/settings/data/models/admin_settings_m
 
 abstract class IAdminSettingsRepository {
   Future<AdminSettingsModel> getSettings();
-  Future<void> savePlatformCommission(double percentage);
+  Future<List<String>> savePlatformCommission(double percentage);
   Future<void> savePaymentControls({
     required bool enableCod,
     required bool enableOnline,
@@ -18,4 +18,6 @@ abstract class IAdminSettingsRepository {
   Future<ProductConfigModel> getProductConfig();
   Future<void> saveColors(List<ColorModel> colors);
   Future<void> saveSizeGroups(List<SizeGroupModel> sizeGroups);
+  Future<Map<String, bool>> getNotificationPreferences();
+  Future<void> saveNotificationPreference(String key, bool value);
 }

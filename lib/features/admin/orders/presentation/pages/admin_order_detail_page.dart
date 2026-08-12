@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/core/theme/admin/admin_app_colors.dart';
 import 'package:street_cart/core/utils/date_formatter.dart';
 import 'package:street_cart/di/dependency_injection.dart';
@@ -41,12 +42,19 @@ class AdminOrderDetailPage extends StatelessWidget {
                 return const AdminOrderDetailShimmer();
               }
               if (state is AdminOrdersLoaded) {
-                final order = state.orders.firstWhere(
-                  (o) =>
-                      o.id == orderId ||
-                      AdminOrdersHelper.getDisplayOrderId(o.id) == orderId,
-                  orElse: () => null as dynamic,
-                );
+                final OrderModel? order = state.allOrders
+                    .cast<OrderModel?>()
+                    .firstWhere(
+                      (o) =>
+                          o != null &&
+                          (o.id == orderId ||
+                              AdminOrdersHelper.getDisplayOrderId(o.id) ==
+                                  orderId),
+                      orElse: () => null,
+                    );
+                if (order == null) {
+                  return const Center(child: Text('Order not found.'));
+                }
                 final formattedId = AdminOrdersHelper.getDisplayOrderId(
                   order.id,
                 );

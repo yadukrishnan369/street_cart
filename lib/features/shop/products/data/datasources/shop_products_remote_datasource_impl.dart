@@ -56,17 +56,61 @@ class ShopProductsRemoteDataSourceImpl
 
   // Update Product
   @override
-  Future<void> updateProduct(
+  Future<Map<String, dynamic>> updateProduct(
     ProductModel product,
     List<VariantImageDraft> variantDrafts,
   ) async {
     try {
+      // Get old product to check for price drop or stock changes
+      final oldProductDoc = await _firestore
+          .collection('products')
+          .doc(product.id)
+          .get();
+      final double? oldPrice = oldProductDoc.exists
+          ? ((oldProductDoc.data()?['offer_price'] ??
+                        oldProductDoc.data()?['original_price'])
+                    as num?)
+                ?.toDouble()
+          : null;
+      final int? oldStock = oldProductDoc.exists
+          ? (oldProductDoc.data()?['stock_quantity'] as num?)?.toInt()
+          : null;
+
       final variants = await _uploadVariants(variantDrafts);
       final finalProduct = product.copyWith(variants: variants);
       await _firestore
           .collection('products')
           .doc(product.id)
           .update(finalProduct.toMap());
+
+      bool isPriceDrop = false;
+      bool isRestock = false;
+      int percentOff = 0;
+
+      if (oldProductDoc.exists) {
+        final double newPrice = product.offerPrice ?? product.originalPrice;
+        final int newStock = finalProduct.hasVariants
+            ? finalProduct.variants.fold(0, (s, v) => s + v.totalStock)
+            : finalProduct.stockQuantity;
+
+        // Price drop check
+        if (oldPrice != null && newPrice < oldPrice) {
+          final double percent = ((oldPrice - newPrice) / oldPrice * 100);
+          isPriceDrop = true;
+          percentOff = percent.round();
+        }
+
+        // Restock check - from 0 to >0
+        if (oldStock != null && oldStock == 0 && newStock > 0) {
+          isRestock = true;
+        }
+      }
+
+      return {
+        'isPriceDrop': isPriceDrop,
+        'isRestock': isRestock,
+        'percentOff': percentOff,
+      };
     } catch (e) {
       throw ServerException('Failed to update product: $e');
     }

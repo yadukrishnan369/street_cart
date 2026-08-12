@@ -219,7 +219,9 @@ class ShopOrdersHelper {
   // Get Order ID
   static String getOrderIdPrefix(String orderId) {
     final length = orderId.length;
-    final prefix = orderId.substring(0, length.clamp(0, 5));
+    final prefix = length > 6
+        ? orderId.substring(0, 6).toUpperCase()
+        : orderId.substring(0, 4).toUpperCase();
     return prefix.toUpperCase();
   }
 

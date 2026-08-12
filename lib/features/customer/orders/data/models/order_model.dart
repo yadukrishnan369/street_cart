@@ -293,8 +293,50 @@ class OrderItemModel {
       'returned_at': returnedAt,
       'return_confirmed_at': returnConfirmedAt,
       'return_picked_at': returnPickedAt,
-      if (status != null) 'status': status,
-      if (refundStatus != null) 'refund_status': refundStatus,
     };
+  }
+
+  OrderItemModel copyWith({
+    String? id,
+    String? productId,
+    String? productName,
+    String? productImage,
+    String? selectedSize,
+    String? selectedColor,
+    double? price,
+    int? quantity,
+    String? shopId,
+    double? adminCommission,
+    double? vendorEarnings,
+    String? returnStatus,
+    String? returnReason,
+    String? returnDetails,
+    DateTime? returnedAt,
+    DateTime? returnConfirmedAt,
+    DateTime? returnPickedAt,
+    String? status,
+    String? refundStatus,
+  }) {
+    return OrderItemModel(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      productImage: productImage ?? this.productImage,
+      selectedSize: selectedSize ?? this.selectedSize,
+      selectedColor: selectedColor ?? this.selectedColor,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      shopId: shopId ?? this.shopId,
+      adminCommission: adminCommission ?? this.adminCommission,
+      vendorEarnings: vendorEarnings ?? this.vendorEarnings,
+      returnStatus: returnStatus ?? this.returnStatus,
+      returnReason: returnReason ?? this.returnReason,
+      returnDetails: returnDetails ?? this.returnDetails,
+      returnedAt: returnedAt ?? this.returnedAt,
+      returnConfirmedAt: returnConfirmedAt ?? this.returnConfirmedAt,
+      returnPickedAt: returnPickedAt ?? this.returnPickedAt,
+      status: status ?? this.status,
+      refundStatus: refundStatus ?? this.refundStatus,
+    );
   }
 }

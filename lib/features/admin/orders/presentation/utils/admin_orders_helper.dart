@@ -8,7 +8,7 @@ class AdminOrdersHelper {
   // get Display Order ID
   static String getDisplayOrderId(String id) {
     if (id.length <= 4) return '#ORD-$id'.toUpperCase();
-    return '#ORD-${id.substring(id.length - 4)}'.toUpperCase();
+    return '#ORD-${id.substring(0, 6)}'.toUpperCase();
   }
 
   // Get Shop Name

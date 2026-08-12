@@ -5,9 +5,9 @@ import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 class PaymentHelper {
   // Get Order ID
   static String getOrderIdSuffix(String rawId) {
-    return rawId.length >= 5
-        ? rawId.substring(0, 5).toUpperCase()
-        : rawId.toUpperCase();
+    return rawId.length <= 4
+        ? rawId.substring(0, 4).toUpperCase()
+        : rawId.substring(0, 6).toUpperCase();
   }
 
   // checks if the payment method is an online payment

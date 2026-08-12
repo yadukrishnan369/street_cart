@@ -93,7 +93,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
 
   // Setup Shop Profile
   @override
-  Future<void> setupShopProfile({
+  Future<Map<String, dynamic>> setupShopProfile({
     required String userId,
     required String category,
     required String description,
@@ -113,6 +113,7 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       }
 
       final doc = await _firestore.collection('shops').doc(userId).get();
+      final shopName = doc.data()?['shop_name'] as String? ?? 'Shop';
       final bool wasRejected =
           doc.exists && (doc.data()?['is_rejected'] == true);
 
@@ -131,6 +132,12 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
             : (doc.data()?['is_reregistered'] ?? false),
         'is_approved': false,
       });
+
+      return {
+        'userId': userId,
+        'shopName': shopName,
+        'wasRejected': wasRejected,
+      };
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -390,6 +397,43 @@ class ShopAuthRemoteDataSourceImpl implements IShopAuthRemoteDataSource {
       return {'enable_cod': true, 'enable_online': true};
     } catch (e) {
       throw ServerException('Failed to load payment settings: $e');
+    }
+  }
+
+  // Get Notification Preferences
+  @override
+  Future<Map<String, bool>> getNotificationPreferences() async {
+    try {
+      final uid = await getCurrentUserId();
+      if (uid != null) {
+        final doc = await _firestore.collection('shops').doc(uid).get();
+        if (doc.exists && doc.data() != null) {
+          final data = doc.data()!;
+          return {
+            'generalNotificationsEnabled':
+                data['generalNotificationsEnabled'] ?? true,
+            'orderAlertsEnabled': data['orderAlertsEnabled'] ?? true,
+          };
+        }
+      }
+      return {'generalNotificationsEnabled': true, 'orderAlertsEnabled': true};
+    } catch (e) {
+      throw ServerException('Failed to load notification preferences: $e');
+    }
+  }
+
+  // Save Notification Preference
+  @override
+  Future<void> saveNotificationPreference(String key, bool value) async {
+    try {
+      final uid = await getCurrentUserId();
+      if (uid != null) {
+        await _firestore.collection('shops').doc(uid).set({
+          key: value,
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      throw ServerException('Failed to save notification preference: $e');
     }
   }
 }

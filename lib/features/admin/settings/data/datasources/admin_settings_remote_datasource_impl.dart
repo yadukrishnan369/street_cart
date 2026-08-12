@@ -59,11 +59,14 @@ class AdminSettingsRemoteDataSourceImpl
 
   // Save Platform Commission
   @override
-  Future<void> savePlatformCommission(double percentage) async {
+  Future<List<String>> savePlatformCommission(double percentage) async {
     try {
       await _firestore.collection('config').doc('settings').set({
         'commission_percentage': percentage,
       }, SetOptions(merge: true));
+
+      final shopsSnap = await _firestore.collection('shops').get();
+      return shopsSnap.docs.map((doc) => doc.id).toList();
     } catch (e) {
       throw Exception('Failed to save platform commission: $e');
     }
@@ -163,6 +166,43 @@ class AdminSettingsRemoteDataSourceImpl
       }, SetOptions(merge: true));
     } catch (e) {
       throw Exception('Failed to save size groups: $e');
+    }
+  }
+
+  // Get Notification Preferences
+  @override
+  Future<Map<String, bool>> getNotificationPreferences() async {
+    try {
+      final uid = await _authService.getCurrentUserIdAsync();
+      if (uid != null) {
+        final doc = await _firestore.collection('admins').doc(uid).get();
+        if (doc.exists && doc.data() != null) {
+          final data = doc.data()!;
+          return {
+            'registrationAlertsEnabled':
+                data['registrationAlertsEnabled'] ?? true,
+            'orderAlertsEnabled': data['orderAlertsEnabled'] ?? true,
+          };
+        }
+      }
+      return {'registrationAlertsEnabled': true, 'orderAlertsEnabled': true};
+    } catch (e) {
+      throw Exception('Failed to load notification preferences: $e');
+    }
+  }
+
+  // Save Notification Preference
+  @override
+  Future<void> saveNotificationPreference(String key, bool value) async {
+    try {
+      final uid = await _authService.getCurrentUserIdAsync();
+      if (uid != null) {
+        await _firestore.collection('admins').doc(uid).set({
+          key: value,
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      throw Exception('Failed to save notification preference: $e');
     }
   }
 }

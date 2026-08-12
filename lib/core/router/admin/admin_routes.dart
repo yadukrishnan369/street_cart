@@ -14,6 +14,7 @@ import 'package:street_cart/features/admin/settings/presentation/pages/admin_cat
 import 'package:street_cart/features/admin/settings/presentation/pages/admin_product_config_page.dart';
 import 'package:street_cart/features/admin/splash/presentation/pages/admin_splash_page.dart';
 import 'package:street_cart/features/admin/profile/presentation/pages/admin_profile_page.dart';
+import 'package:street_cart/features/admin/notification/presentation/pages/admin_notifications_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/admin/profile/presentation/bloc/admin_profile_bloc.dart';
@@ -101,6 +102,10 @@ class AdminRoutes {
         GoRoute(
           path: RoutePaths.profile,
           builder: (context, state) => const AdminProfilePage(),
+        ),
+        GoRoute(
+          path: RoutePaths.notifications,
+          builder: (context, state) => const AdminNotificationsPage(),
         ),
         GoRoute(
           path: RoutePaths.products,
