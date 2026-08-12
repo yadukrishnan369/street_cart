@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Card
 class ShopCard extends StatelessWidget {
@@ -40,7 +41,7 @@ class ShopCard extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => ShopDetailsPage(shop: shop)),
+              AppPageTransitions.slide(ShopDetailsPage(shop: shop)),
             );
           },
           child: Column(
@@ -222,8 +223,8 @@ class ShopCard extends StatelessWidget {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) => ShopDetailsPage(shop: shop),
+                              AppPageTransitions.slide(
+                                ShopDetailsPage(shop: shop),
                               ),
                             );
                           },

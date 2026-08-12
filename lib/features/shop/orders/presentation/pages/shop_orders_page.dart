@@ -16,6 +16,7 @@ import 'package:street_cart/shared/components/shop_bottom_navigation.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Orders Page
 class ShopOrdersPage extends StatelessWidget {
@@ -140,8 +141,8 @@ class ShopOrdersPage extends StatelessWidget {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (_) => BlocProvider.value(
+                                  AppPageTransitions.slide(
+                                    BlocProvider.value(
                                       value: context.read<ShopOrdersBloc>(),
                                       child: ShopOrderDetailsPage(
                                         order: order,

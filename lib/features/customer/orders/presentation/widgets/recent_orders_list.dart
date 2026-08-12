@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/orders/presentation/utils/orders_h
 import 'package:street_cart/features/customer/orders/presentation/utils/customer_order_status.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Recent Orders List
 class RecentOrdersList extends StatelessWidget {
@@ -111,8 +112,8 @@ class _ActiveOrderCard extends StatelessWidget {
           final ordersBloc = context.read<OrdersBloc>();
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
+            AppPageTransitions.slide(
+              BlocProvider.value(
                 value: ordersBloc,
                 child: OrderDetailsPage(order: order),
               ),
@@ -371,8 +372,8 @@ class _HistoryOrderCard extends StatelessWidget {
         final ordersBloc = context.read<OrdersBloc>();
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => BlocProvider.value(
+          AppPageTransitions.slide(
+            BlocProvider.value(
               value: ordersBloc,
               child: OrderDetailsPage(order: order),
             ),
@@ -522,8 +523,8 @@ class _HistoryOrderCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
+                    AppPageTransitions.slide(
+                      BlocProvider.value(
                         value: context.read<OrdersBloc>(),
                         child: ReturnRequestPage(
                           order: order,

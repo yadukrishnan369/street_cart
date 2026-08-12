@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_state.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/saved_addresses_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Checkout Address Section
 class CheckoutAddressSection extends StatelessWidget {
@@ -34,8 +35,8 @@ class CheckoutAddressSection extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: context.read<AddressBloc>(),
                       child: const SavedAddressesPage(),
                     ),
@@ -176,8 +177,8 @@ class CheckoutAddressSection extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
+                        AppPageTransitions.slide(
+                          BlocProvider.value(
                             value: context.read<AddressBloc>(),
                             child: const SavedAddressesPage(),
                           ),

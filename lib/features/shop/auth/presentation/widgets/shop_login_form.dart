@@ -9,6 +9,7 @@ import 'package:street_cart/features/shop/auth/presentation/pages/forgot_passwor
 import 'package:street_cart/features/shop/auth/presentation/pages/signup_page.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Login Form
 class ShopLoginForm extends StatelessWidget {
@@ -151,8 +152,8 @@ class ShopLoginForm extends StatelessWidget {
                       // Navigate to forgot Password Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const ShopForgotPasswordPage(),
+                        AppPageTransitions.slide(
+                          const ShopForgotPasswordPage(),
                         ),
                       );
                     },
@@ -200,9 +201,7 @@ class ShopLoginForm extends StatelessWidget {
                         // Navigate to Signup Page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => const ShopSignupPage(),
-                          ),
+                          AppPageTransitions.slide(const ShopSignupPage()),
                         );
                       },
                       child: Text(

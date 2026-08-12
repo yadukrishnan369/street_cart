@@ -9,6 +9,7 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/profile_
 import 'package:street_cart/features/customer/profile/presentation/pages/edit_profile_page.dart';
 import 'package:street_cart/shared/widgets/customer_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Profile Header
 class ProfileHeader extends StatelessWidget {
@@ -56,8 +57,8 @@ class ProfileHeader extends StatelessWidget {
                   ? () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => ImagePreviewPage(
+                        AppPageTransitions.fade(
+                          ImagePreviewPage(
                             images: [profile.profileImageUrl],
                             initialIndex: 0,
                           ),
@@ -152,8 +153,8 @@ class ProfileHeader extends StatelessWidget {
                 final profileBloc = context.read<ProfileBloc>();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: profileBloc,
                       child: EditProfilePage(profile: profile),
                     ),

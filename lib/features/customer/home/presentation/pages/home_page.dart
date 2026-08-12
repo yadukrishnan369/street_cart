@@ -21,6 +21,7 @@ import 'package:street_cart/features/customer/home/presentation/widgets/home_app
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Home Page
 class HomePage extends StatefulWidget {
@@ -103,10 +104,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () async {
                       await Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const CustomerProductsPage(
-                            shouldFocusSearch: true,
-                          ),
+                        AppPageTransitions.slide(
+                          const CustomerProductsPage(shouldFocusSearch: true),
                         ),
                       );
                       if (context.mounted) {

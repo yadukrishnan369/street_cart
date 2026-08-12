@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/payment/presentation/bloc/payment_
 import 'package:street_cart/features/customer/payment/presentation/bloc/payment_state.dart';
 import 'package:street_cart/features/customer/payment/presentation/pages/order_success_page.dart';
 import 'package:street_cart/features/customer/payment/presentation/utils/payment_helper.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Payment Processing Overlay
 class PaymentProcessingOverlay extends StatefulWidget {
@@ -108,8 +109,8 @@ class _PaymentProcessingOverlayState extends State<PaymentProcessingOverlay>
     context.read<CartBloc>().add(LoadCart());
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => OrderSuccessPage(
+      AppPageTransitions.fade(
+        OrderSuccessPage(
           paymentMethod: successState.paymentMethod,
           paymentStatus: successState.paymentStatus,
           totalAmount: widget.totalAmount,

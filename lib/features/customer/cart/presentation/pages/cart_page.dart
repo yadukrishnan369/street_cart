@@ -16,6 +16,7 @@ import 'package:street_cart/features/customer/cart/presentation/widgets/shimmer/
 import 'package:street_cart/features/customer/cart/presentation/widgets/cart_checkout_unavailable_sheet.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Cart Page
 class CartPage extends StatefulWidget {
@@ -116,8 +117,8 @@ class _CartPageState extends State<CartPage> {
             // All items are valid — proceed to checkout
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => CheckoutPage(cartItems: state.items),
+              AppPageTransitions.slideFromBottom(
+                CheckoutPage(cartItems: state.items),
               ),
             );
           } else if (state is CartCheckoutInvalid) {

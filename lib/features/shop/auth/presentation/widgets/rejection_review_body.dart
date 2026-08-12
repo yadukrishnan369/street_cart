@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/rejection_details_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Rejection Review Body
 class RejectionReviewBody extends StatelessWidget {
@@ -164,8 +165,8 @@ class RejectionReviewBody extends StatelessWidget {
                     // Navigate to Rejection Detail Page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => RejectionDetailsPage(shop: shop),
+                      AppPageTransitions.slide(
+                        RejectionDetailsPage(shop: shop),
                       ),
                     );
                   },

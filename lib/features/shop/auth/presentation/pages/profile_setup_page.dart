@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.
 import 'package:street_cart/features/shop/auth/presentation/widgets/shop_profile_setup_form.dart';
 import 'package:street_cart/features/shop/location/presentation/pages/shop_location_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Profile Setup Page
 class ShopProfileSetupPage extends StatefulWidget {
@@ -42,9 +43,7 @@ class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
           // Navigate to Shop Location Permission Page
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-              builder: (context) => const ShopLocationPermissionPage(),
-            ),
+            AppPageTransitions.slide(const ShopLocationPermissionPage()),
             (route) => false,
           );
         } else if (state.status == ShopAuthStatus.failure &&

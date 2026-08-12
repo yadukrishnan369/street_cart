@@ -14,6 +14,7 @@ import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_bloc.dart';
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_event.dart';
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_state.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Splash Page
 class ShopSplashPage extends StatefulWidget {
@@ -61,8 +62,8 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 // Navigate to Shop Onboarding Page
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ShopOnboardingPage(),
+                  AppPageTransitions.splashSlideExit(
+                    const ShopOnboardingPage(),
                   ),
                 );
                 break;
@@ -70,17 +71,15 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 // Navigate to Shop Login Page
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ShopLoginPage(),
-                  ),
+                  AppPageTransitions.splashSlideExit(const ShopLoginPage()),
                 );
                 break;
               case ShopAppStatus.profilePending:
                 // Navigate to Shop Profile Setup Page
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ShopProfileSetupPage(),
+                  AppPageTransitions.splashSlideExit(
+                    const ShopProfileSetupPage(),
                   ),
                 );
                 break;
@@ -88,16 +87,14 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                 // Navigate to Account Review Page
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const AccountReviewPage(),
-                  ),
+                  AppPageTransitions.splashSlideExit(const AccountReviewPage()),
                 );
                 break;
               case ShopAppStatus.approved:
                 // Navigate to Shop Home Page
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const ShopHomePage()),
+                  AppPageTransitions.splashExit(const ShopHomePage()),
                 );
                 break;
             }

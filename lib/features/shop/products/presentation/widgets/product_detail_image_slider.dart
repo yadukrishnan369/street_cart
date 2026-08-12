@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product Detail Image Slider
 class ProductDetailImageSlider extends StatelessWidget {
@@ -63,8 +64,8 @@ class ProductDetailImageSlider extends StatelessWidget {
                     // Navigate to Image Preview Page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => ImagePreviewPage(
+                      AppPageTransitions.fade(
+                        ImagePreviewPage(
                           images: validImages,
                           initialIndex: index,
                         ),

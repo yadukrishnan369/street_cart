@@ -12,6 +12,7 @@ import 'package:street_cart/features/shop/notification/presentation/bloc/shop_no
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_details_page.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'shop_providers.dart';
@@ -78,8 +79,8 @@ class ShopApp extends StatelessWidget {
                           final shopId = authState.shop?.uid ?? '';
                           NotificationService.instance.navigatorKey.currentState
                               ?.push(
-                                MaterialPageRoute(
-                                  builder: (_) => BlocProvider.value(
+                                AppPageTransitions.slide(
+                                  BlocProvider.value(
                                     value: sl<ShopOrdersBloc>(),
                                     child: ShopOrderDetailsPage(
                                       order: state.selectedOrder!,

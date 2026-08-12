@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/support/presentation/pages/contact_support_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Help Support Contact Card
 class HelpSupportContactCard extends StatelessWidget {
@@ -52,7 +53,7 @@ class HelpSupportContactCard extends StatelessWidget {
               // Navigate to Contact Support Page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => ContactSupportPage()),
+                AppPageTransitions.slide(ContactSupportPage()),
               );
             },
             style: ElevatedButton.styleFrom(

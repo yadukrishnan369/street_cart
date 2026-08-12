@@ -12,6 +12,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/products_empty_state.dart';
@@ -77,10 +78,8 @@ class ProductsSection extends StatelessWidget {
           onViewAllTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => const CustomerProductsPage(
-                  initialSelectedSort: 'Recommended',
-                ),
+              AppPageTransitions.slide(
+                const CustomerProductsPage(initialSelectedSort: 'Recommended'),
               ),
             );
           },
@@ -94,10 +93,8 @@ class ProductsSection extends StatelessWidget {
           onViewAllTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => const CustomerProductsPage(
-                  initialSelectedSort: 'Popularity',
-                ),
+              AppPageTransitions.slide(
+                const CustomerProductsPage(initialSelectedSort: 'Popularity'),
               ),
             );
           },
@@ -111,9 +108,8 @@ class ProductsSection extends StatelessWidget {
           onViewAllTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) =>
-                    const CustomerProductsPage(initialSelectedSort: 'Trending'),
+              AppPageTransitions.slide(
+                const CustomerProductsPage(initialSelectedSort: 'Trending'),
               ),
             );
           },
@@ -127,9 +123,8 @@ class ProductsSection extends StatelessWidget {
           onViewAllTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) =>
-                    const CustomerProductsPage(initialSelectedSort: 'Newest'),
+              AppPageTransitions.slide(
+                const CustomerProductsPage(initialSelectedSort: 'Newest'),
               ),
             );
           },
@@ -143,10 +138,8 @@ class ProductsSection extends StatelessWidget {
           onViewAllTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => const CustomerProductsPage(
-                  initialSelectedSort: 'Best Sellers',
-                ),
+              AppPageTransitions.slide(
+                const CustomerProductsPage(initialSelectedSort: 'Best Sellers'),
               ),
             );
           },
@@ -162,9 +155,7 @@ class ProductsSection extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const CustomerProductsPage(),
-                  ),
+                  AppPageTransitions.fade(const CustomerProductsPage()),
                 );
               },
               style: OutlinedButton.styleFrom(
@@ -366,8 +357,8 @@ class _HorizontalProductSection extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => CustomerProductDetailPage(
+                          AppPageTransitions.slide(
+                            CustomerProductDetailPage(
                               product: product,
                               shop: shop,
                             ),

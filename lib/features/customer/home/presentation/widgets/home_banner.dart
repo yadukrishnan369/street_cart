@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/customer/home/presentation/bloc/home_bloc.dart';
 import 'package:street_cart/features/customer/home/presentation/bloc/home_event.dart';
 import 'package:street_cart/features/customer/home/presentation/bloc/home_state.dart';
@@ -81,8 +82,8 @@ class _HomeBannerState extends State<HomeBanner> {
                         ? () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) => ShopDetailsPage(shop: shop),
+                              AppPageTransitions.slide(
+                                ShopDetailsPage(shop: shop),
                               ),
                             );
                           }

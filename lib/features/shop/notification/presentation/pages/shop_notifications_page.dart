@@ -10,6 +10,7 @@ import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_d
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_returned_details_page.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/product_detail_page.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
@@ -105,8 +106,8 @@ class ShopNotificationsPage extends StatelessWidget {
             ordersBloc.add(FetchShopOrdersEvent(state.shopId));
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
+              AppPageTransitions.slide(
+                BlocProvider.value(
                   value: ordersBloc,
                   child: isReturn
                       // Navigate to Shop Order Returned Details Page
@@ -148,9 +149,8 @@ class ShopNotificationsPage extends StatelessWidget {
             final productsBloc = sl<ShopProductsBloc>();
             Navigator.push(
               context,
-              MaterialPageRoute(
-                // Navigate to Product Detail Page
-                builder: (_) => ProductDetailPage(
+              AppPageTransitions.slide(
+                ProductDetailPage(
                   product: product,
                   shopId: state.shopId,
                   productsBloc: productsBloc,

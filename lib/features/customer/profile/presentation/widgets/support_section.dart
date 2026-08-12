@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/help_support_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/contact_support_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/faq_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Support Section
 class SupportSection extends StatelessWidget {
@@ -87,8 +88,7 @@ class SupportSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
-      onTap: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
+      onTap: () => Navigator.push(context, AppPageTransitions.slide(page)),
       borderRadius: BorderRadius.circular(16.r),
       child: Padding(
         padding: EdgeInsets.all(16.w),

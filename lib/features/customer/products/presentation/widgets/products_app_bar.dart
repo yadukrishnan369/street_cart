@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/wishlist_page.dart';
 
@@ -43,7 +44,7 @@ class ProductsAppBar extends StatelessWidget implements PreferredSizeWidget {
         GestureDetector(
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const WishlistPage()),
+            AppPageTransitions.slide(const WishlistPage()),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),

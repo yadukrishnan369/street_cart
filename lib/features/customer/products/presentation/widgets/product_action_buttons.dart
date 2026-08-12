@@ -14,6 +14,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/custome
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product Action Buttons
 class ProductActionButtons extends StatelessWidget {
@@ -82,9 +83,7 @@ class ProductActionButtons extends StatelessWidget {
                             if (!CartHelper.isUserLoggedIn()) {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => const LoginPage(),
-                                ),
+                                AppPageTransitions.slide(const LoginPage()),
                               );
                               return;
                             }
@@ -127,9 +126,8 @@ class ProductActionButtons extends StatelessWidget {
 
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    CheckoutPage(cartItems: [buyNowItem]),
+                              AppPageTransitions.slideFromBottom(
+                                CheckoutPage(cartItems: [buyNowItem]),
                               ),
                             );
                           },
@@ -189,10 +187,7 @@ class ProductActionButtons extends StatelessWidget {
       final Color yellowColor = CustomerAppColors.warning;
       return ElevatedButton.icon(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const CartPage()),
-          );
+          Navigator.push(context, AppPageTransitions.slide(const CartPage()));
         },
         icon: const Icon(Icons.shopping_cart, color: Colors.white),
         label: const Text(
@@ -215,10 +210,7 @@ class ProductActionButtons extends StatelessWidget {
       onPressed: () async {
         // Check if logged in
         if (!CartHelper.isUserLoggedIn()) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginPage()),
-          );
+          Navigator.push(context, AppPageTransitions.slide(const LoginPage()));
           return;
         }
 

@@ -15,6 +15,7 @@ import 'package:street_cart/features/customer/cart/domain/usecases/get_product_b
 import 'package:street_cart/features/customer/cart/domain/usecases/get_shop_by_id.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_product_detail_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 class OrdersHelper {
   // Sort orders by creation time
@@ -386,8 +387,8 @@ class OrdersHelper {
       if (context.mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => CustomerProductDetailPage(
+          AppPageTransitions.slide(
+            CustomerProductDetailPage(
               product: product,
               shop: shop,
               initialColor: selectedColor,

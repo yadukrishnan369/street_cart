@@ -14,6 +14,7 @@ import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/address_card_shimmer.dart';
 import 'package:street_cart/features/customer/profile/presentation/utils/saved_addresses_helper.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Saved Address Page
 class SavedAddressesPage extends StatelessWidget {
@@ -52,8 +53,8 @@ class SavedAddressesPage extends StatelessWidget {
                   onAddAddress: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
+                      AppPageTransitions.slide(
+                        BlocProvider.value(
                           value: context.read<AddressBloc>(),
                           child: const AddAddressPage(),
                         ),
@@ -105,8 +106,8 @@ class SavedAddressesPage extends StatelessWidget {
                             // Navigate to Add Address Page
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
+                              AppPageTransitions.slide(
+                                BlocProvider.value(
                                   value: context.read<AddressBloc>(),
                                   child: AddAddressPage(address: address),
                                 ),

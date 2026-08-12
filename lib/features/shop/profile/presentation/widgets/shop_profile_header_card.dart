@@ -6,6 +6,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/location/presentation/pages/shop_location_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 
@@ -112,9 +113,8 @@ class ShopProfileHeaderCard extends StatelessWidget {
               // Navigate to Shop Location Permission Page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      const ShopLocationPermissionPage(isFromProfile: true),
+                AppPageTransitions.slide(
+                  const ShopLocationPermissionPage(isFromProfile: true),
                 ),
               ).then((result) {
                 if (result == true && context.mounted) {

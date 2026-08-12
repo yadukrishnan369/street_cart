@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product sold By Section - Shop Details
 class ProductSoldBySection extends StatelessWidget {
@@ -18,7 +19,7 @@ class ProductSoldBySection extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ShopDetailsPage(shop: shop)),
+          AppPageTransitions.slide(ShopDetailsPage(shop: shop)),
         );
       },
       child: Container(

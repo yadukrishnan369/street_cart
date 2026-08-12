@@ -23,6 +23,7 @@ import 'package:street_cart/features/customer/payment/presentation/widgets/order
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Checkout Page
 class CheckoutPage extends StatelessWidget {
@@ -66,8 +67,8 @@ class CheckoutPage extends StatelessWidget {
               final totalAmount = CheckoutHelper.getTotalAmount(cartItems);
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
+                AppPageTransitions.fade(
+                  BlocProvider.value(
                     value: context.read<PaymentBloc>(),
                     child: PaymentProcessingOverlay(
                       paymentMethod: paymentState.paymentMethod,

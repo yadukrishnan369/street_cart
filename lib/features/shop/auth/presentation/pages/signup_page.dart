@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/auth/presentation/pages/profile_setup_
 import 'package:street_cart/features/shop/auth/presentation/widgets/shop_signup_form.dart';
 import 'package:street_cart/features/shop/auth/presentation/widgets/verification_bottom_sheet.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Signup Page
 class ShopSignupPage extends StatefulWidget {
@@ -77,9 +78,7 @@ class _ShopSignupPageState extends State<ShopSignupPage> {
           // Navigate to Shop Profile Setup Page
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-              builder: (context) => const ShopProfileSetupPage(),
-            ),
+            AppPageTransitions.slide(const ShopProfileSetupPage()),
             (route) => false,
           );
         } else if (state.status == ShopAuthStatus.failure &&

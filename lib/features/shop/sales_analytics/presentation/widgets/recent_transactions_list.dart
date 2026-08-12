@@ -6,6 +6,7 @@ import 'package:street_cart/features/shop/sales_analytics/presentation/pages/sal
 import 'package:street_cart/features/shop/sales_analytics/presentation/utils/sales_analytics_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Recent Transactions List
 class RecentTransactionsList extends StatelessWidget {
@@ -72,8 +73,8 @@ class RecentTransactionsList extends StatelessWidget {
             // Navigate to Shop Sales Transaction Details Page
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => ShopSalesTransactionDetailsPage(
+              AppPageTransitions.slide(
+                ShopSalesTransactionDetailsPage(
                   order: tx.order,
                   shopId: shopId,
                   transactionStatus: tx.status,

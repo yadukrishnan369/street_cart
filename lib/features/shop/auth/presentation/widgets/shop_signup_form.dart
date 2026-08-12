@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Signup Form
 class ShopSignupForm extends StatelessWidget {
@@ -317,12 +318,16 @@ class ShopSignupForm extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ShopLoginPage(),
-                          ),
-                        );
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            AppPageTransitions.slideFromLeft(
+                              const ShopLoginPage(),
+                            ),
+                          );
+                        }
                       },
                       child: Text(
                         'Login',

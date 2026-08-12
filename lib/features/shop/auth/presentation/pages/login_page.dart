@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/presentation/widgets/shop_login_h
 import 'package:street_cart/features/shop/auth/presentation/widgets/shop_login_form.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Login Page
 class ShopLoginPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _ShopLoginPageState extends State<ShopLoginPage> {
           // Navigate to Shop Home Page
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const ShopHomePage()),
+            AppPageTransitions.slide(const ShopHomePage()),
             (route) => false,
           );
         } else if (state.status == ShopAuthStatus.failure &&

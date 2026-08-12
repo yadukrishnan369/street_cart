@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Normal Review Body
 class NormalReviewBody extends StatelessWidget {
@@ -181,9 +182,7 @@ class NormalReviewBody extends StatelessWidget {
                           // Navigation for Shop home page
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const ShopHomePage(),
-                            ),
+                            AppPageTransitions.slide(const ShopHomePage()),
                             (route) => false,
                           );
                         }

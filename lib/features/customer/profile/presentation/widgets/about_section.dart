@@ -6,6 +6,7 @@ import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/about_app_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/privacy_policy_page.dart';
 import 'package:street_cart/features/customer/support/presentation/pages/terms_conditions_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // About Section
 class AboutSection extends StatelessWidget {
@@ -120,8 +121,7 @@ class AboutSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
-      onTap: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
+      onTap: () => Navigator.push(context, AppPageTransitions.slide(page)),
       borderRadius: BorderRadius.circular(16.r),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),

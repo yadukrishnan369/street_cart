@@ -23,6 +23,7 @@ import 'package:street_cart/features/shop/profile/presentation/widgets/shop_veri
 import 'package:street_cart/features/shop/profile/presentation/widgets/shop_profile_action_buttons.dart';
 import 'package:street_cart/features/shop/profile/presentation/widgets/shimmer/shop_profile_shimmer.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Profile Page
 class ShopProfilePage extends StatelessWidget {
@@ -98,8 +99,8 @@ class ShopProfilePage extends StatelessWidget {
                     // Navigate to Shop Settings Page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => MultiBlocProvider(
+                      AppPageTransitions.slide(
+                        MultiBlocProvider(
                           providers: [
                             BlocProvider.value(value: profileBloc),
                             BlocProvider(

@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/orders/presentation/pages/return_r
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:street_cart/features/customer/review/presentation/bloc/review_bloc.dart';
 import 'package:street_cart/features/customer/review/presentation/pages/review_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Order Details Items Section
 class OrderDetailsItemsSection extends StatelessWidget {
@@ -275,8 +276,8 @@ class OrderDetailsItemsSection extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => BlocProvider(
+                        AppPageTransitions.slide(
+                          BlocProvider(
                             create: (_) => sl<ReviewBloc>(),
                             child: ReviewPage(
                               productId: item.productId,
@@ -389,8 +390,8 @@ class OrderDetailsItemsSection extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => BlocProvider.value(
+                          AppPageTransitions.slide(
+                            BlocProvider.value(
                               value: context.read<OrdersBloc>(),
                               child: ReturnRequestPage(
                                 order: order,

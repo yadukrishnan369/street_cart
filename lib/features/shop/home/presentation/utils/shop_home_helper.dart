@@ -16,6 +16,7 @@ import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_order_status.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 class ShopHomeHelper {
   // Filter Specific Shop Orders
@@ -85,8 +86,8 @@ class ShopHomeHelper {
           if (profile != null) {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
+              AppPageTransitions.slide(
+                BlocProvider(
                   create: (context) => sl<ShopProfileBloc>(),
                   child: EditShopProfilePage(profile: profile),
                 ),
@@ -128,9 +129,8 @@ class ShopHomeHelper {
     productsBloc.add(LoadProductConfigEvent(shopId));
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) =>
-            AddEditProductPage(shopId: shopId, productsBloc: productsBloc),
+      AppPageTransitions.slide(
+        AddEditProductPage(shopId: shopId, productsBloc: productsBloc),
       ),
     );
   }
@@ -139,8 +139,8 @@ class ShopHomeHelper {
   static void onEditProfileTap(BuildContext context, ShopProfileModel profile) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
+      AppPageTransitions.slide(
+        BlocProvider(
           create: (context) => sl<ShopProfileBloc>(),
           child: EditShopProfilePage(profile: profile),
         ),
@@ -150,10 +150,7 @@ class ShopHomeHelper {
 
   // Navigate to Orders Page
   static void onViewOrdersTap(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const ShopOrdersPage()),
-    );
+    Navigator.push(context, AppPageTransitions.slide(const ShopOrdersPage()));
   }
 
   // Calculate total earnings from all delivered orders

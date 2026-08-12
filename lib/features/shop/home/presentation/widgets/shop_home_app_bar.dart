@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/notification/presentation/bloc/shop_no
 import 'package:street_cart/features/shop/notification/presentation/bloc/shop_notifications_state.dart';
 import 'package:street_cart/features/shop/notification/presentation/pages/shop_notifications_page.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Home App bar
 class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -84,8 +85,8 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const ShopNotificationsPage(),
+                      AppPageTransitions.slideFromTopRight(
+                        const ShopNotificationsPage(),
                       ),
                     );
                   },

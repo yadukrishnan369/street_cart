@@ -9,6 +9,7 @@ import 'package:street_cart/features/customer/cart/presentation/utils/cart_helpe
 import 'package:street_cart/features/customer/cart/presentation/widgets/cart_item_card.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Cart Items List
 class CartItemsList extends StatelessWidget {
@@ -81,8 +82,8 @@ class CartItemsList extends StatelessWidget {
                     : () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => CheckoutPage(cartItems: [item]),
+                          AppPageTransitions.slideFromBottom(
+                            CheckoutPage(cartItems: [item]),
                           ),
                         );
                       },

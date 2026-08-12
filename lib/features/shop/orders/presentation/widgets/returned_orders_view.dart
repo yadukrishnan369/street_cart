@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_b
 import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_returned_details_page.dart';
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_card.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Returned Orders View
 class ReturnedOrdersView extends StatelessWidget {
@@ -53,8 +54,8 @@ class ReturnedOrdersView extends StatelessWidget {
               // Navigate to Order Returned Details Page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
+                AppPageTransitions.slide(
+                  BlocProvider.value(
                     value: context.read<ShopOrdersBloc>(),
                     child: ShopOrderReturnedDetailsPage(
                       order: order,

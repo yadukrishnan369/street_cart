@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/shop/products/presentation/bloc/shop_products_bloc.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product Detail Edit Button
 class ProductDetailEditButton extends StatelessWidget {
@@ -34,8 +35,8 @@ class ProductDetailEditButton extends StatelessWidget {
           // Navigate to Add Edit Product Page
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => AddEditProductPage(
+            AppPageTransitions.slide(
+              AddEditProductPage(
                 shopId: shopId,
                 product: product,
                 productsBloc: productsBloc,

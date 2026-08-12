@@ -8,6 +8,7 @@ import 'package:street_cart/shared/widgets/review_card.dart';
 import 'package:street_cart/features/customer/review/presentation/pages/all_reviews_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product Review Section
 class ProductReviewsSection extends StatelessWidget {
@@ -152,8 +153,8 @@ class ProductReviewsSection extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => AllReviewsPage(
+                  AppPageTransitions.slide(
+                    AllReviewsPage(
                       reviews: reviews,
                       product: product,
                       shop: shop,

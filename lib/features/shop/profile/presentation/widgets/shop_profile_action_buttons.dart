@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_bloc.dart';
 import 'package:street_cart/features/shop/profile/presentation/bloc/shop_profile_event.dart';
 import 'package:street_cart/features/shop/profile/presentation/pages/edit_shop_profile_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Profile Action Buttons
 class ShopProfileActionButtons extends StatelessWidget {
@@ -36,8 +37,8 @@ class ShopProfileActionButtons extends StatelessWidget {
                 // Navigate to Edit Shop Profile Page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: profileBloc,
                       child: EditShopProfilePage(profile: profile),
                     ),

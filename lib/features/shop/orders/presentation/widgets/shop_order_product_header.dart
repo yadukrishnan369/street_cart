@@ -7,6 +7,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
 
 // Shop Orders Product Header
@@ -40,8 +41,8 @@ class ShopOrderProductHeader extends StatelessWidget {
               // Navigate to Image Preview Page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => ImagePreviewPage(
+                AppPageTransitions.fade(
+                  ImagePreviewPage(
                     images: [item.productImage],
                     initialIndex: 0,
                   ),

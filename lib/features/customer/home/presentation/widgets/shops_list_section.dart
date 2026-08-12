@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/shops/presentation/pages/shop_deta
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shops List Section
 class ShopsListSection extends StatelessWidget {
@@ -87,12 +88,9 @@ class ShopsListSection extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
-                    PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const CustomerShopsPage(),
-                      transitionDuration: Duration.zero,
-                    ),
+                    AppPageTransitions.slide(const CustomerShopsPage()),
                   );
                 },
                 child: Text(
@@ -133,7 +131,7 @@ class ShopsListSection extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ShopDetailsPage(shop: shop)),
+            AppPageTransitions.slide(ShopDetailsPage(shop: shop)),
           );
         },
         child: Container(

@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/features/customer/settings/presentation/widgets/settings_action_tile.dart';
 import 'package:street_cart/features/customer/settings/presentation/pages/clear_data_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 Widget _buildSectionHeader(BuildContext context, String text) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -40,10 +41,7 @@ class AppSettingsSection extends StatelessWidget {
           title: 'Clear Data',
           showArrow: true,
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => ClearDataPage()),
-            );
+            Navigator.push(context, AppPageTransitions.slide(ClearDataPage()));
           },
         ),
       ],

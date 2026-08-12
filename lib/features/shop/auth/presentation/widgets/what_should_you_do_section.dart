@@ -4,6 +4,7 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/profile_setup_page.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Guidence Info Section
 class WhatShouldYouDoSection extends StatelessWidget {
@@ -52,7 +53,7 @@ class WhatShouldYouDoSection extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const ShopProfileSetupPage()),
+              AppPageTransitions.slide(const ShopProfileSetupPage()),
             );
           },
         ),

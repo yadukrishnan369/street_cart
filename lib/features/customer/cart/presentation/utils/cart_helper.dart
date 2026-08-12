@@ -14,6 +14,7 @@ import 'package:street_cart/features/shop/products/data/models/product_model.dar
 import 'package:street_cart/features/customer/cart/data/models/cart_item_model.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 class CartHelper {
   static Timer? _scrollDebounceTimer;
@@ -113,8 +114,8 @@ class CartHelper {
       if (context.mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => CustomerProductDetailPage(
+          AppPageTransitions.slide(
+            CustomerProductDetailPage(
               product: product,
               shop: shop,
               initialColor: item.selectedColor,

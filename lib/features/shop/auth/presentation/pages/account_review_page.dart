@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dar
 import 'package:street_cart/features/shop/auth/presentation/widgets/rejection_review_body.dart';
 import 'package:street_cart/features/shop/auth/presentation/widgets/normal_review_body.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Account Review Page
 class AccountReviewPage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _AccountReviewPageState extends State<AccountReviewPage> {
             // Navigate to Shop Login Page
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const ShopLoginPage()),
+              AppPageTransitions.slide(const ShopLoginPage()),
               (route) => false,
             );
           } else if (state.status == ShopAuthStatus.failure &&

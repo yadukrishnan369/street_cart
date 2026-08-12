@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/orders/data/models/order_model.dart';
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
@@ -36,8 +37,8 @@ class OrderDetailsReorderButton extends StatelessWidget {
           // Navigate to Checkout Page Directly
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => CheckoutPage(cartItems: cartItems),
+            AppPageTransitions.slideFromBottom(
+              CheckoutPage(cartItems: cartItems),
             ),
           );
         },

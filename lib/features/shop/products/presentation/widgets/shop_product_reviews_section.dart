@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/reviews/presentation/pages/reviews_pag
 import 'package:street_cart/features/customer/review/presentation/utils/review_helper.dart';
 import 'package:street_cart/shared/widgets/review_card.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/shop/reviews/presentation/bloc/shop_reviews_bloc.dart';
 import 'package:street_cart/features/shop/reviews/presentation/bloc/shop_reviews_event.dart';
 import 'package:street_cart/features/shop/reviews/presentation/bloc/shop_reviews_state.dart';
@@ -166,8 +167,8 @@ class ShopProductReviewsSection extends StatelessWidget {
                         // Navigate to Shop Reviews Page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => ShopReviewsPage(
+                          AppPageTransitions.slide(
+                            ShopReviewsPage(
                               reviews: reviews,
                               product: product,
                               shopId: shopId,

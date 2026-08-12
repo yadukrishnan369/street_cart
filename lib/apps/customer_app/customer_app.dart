@@ -16,6 +16,7 @@ import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_bloc.dart';
 import 'package:street_cart/features/customer/orders/presentation/bloc/orders_event.dart';
 import 'package:street_cart/di/dependency_injection.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'customer_providers.dart';
 
@@ -78,8 +79,8 @@ class CustomerApp extends StatelessWidget {
                           final notifId = state.selectedNotificationId;
                           NotificationService.instance.navigatorKey.currentState
                               ?.push(
-                                MaterialPageRoute(
-                                  builder: (_) => BlocProvider(
+                                AppPageTransitions.slide(
+                                  BlocProvider(
                                     create: (_) =>
                                         sl<OrdersBloc>()..add(FetchOrders()),
                                     child: OrderDetailsPage(
@@ -108,8 +109,8 @@ class CustomerApp extends StatelessWidget {
                           final notifId = state.selectedNotificationId;
                           NotificationService.instance.navigatorKey.currentState
                               ?.push(
-                                MaterialPageRoute(
-                                  builder: (_) => CustomerProductDetailPage(
+                                AppPageTransitions.slide(
+                                  CustomerProductDetailPage(
                                     product: state.selectedProduct!,
                                     shop: state.selectedShop!,
                                   ),

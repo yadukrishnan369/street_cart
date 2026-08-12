@@ -12,6 +12,7 @@ import 'package:street_cart/features/customer/splash/domain/repositories/i_splas
 import 'package:street_cart/features/customer/splash/presentation/bloc/splash_bloc.dart';
 import 'package:street_cart/features/customer/splash/presentation/bloc/splash_event.dart';
 import 'package:street_cart/features/customer/splash/presentation/bloc/splash_state.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Splash Page
 class SplashPage extends StatefulWidget {
@@ -65,21 +66,21 @@ class _SplashPageState extends State<SplashPage>
                 // Navigate to OnBoarding
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const OnboardingPage()),
+                  AppPageTransitions.splashSlideExit(const OnboardingPage()),
                 );
                 break;
               case AppStatus.notLoggedIn:
                 // Navigate to Login
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  AppPageTransitions.splashSlideExit(const LoginPage()),
                 );
                 break;
               case AppStatus.loggedIn:
                 // Navigate to Home
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const HomePage()),
+                  AppPageTransitions.splashExit(const HomePage()),
                 );
                 break;
             }

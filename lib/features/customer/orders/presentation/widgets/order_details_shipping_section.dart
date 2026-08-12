@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/address_
 import 'package:street_cart/di/dependency_injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/customer/orders/presentation/utils/orders_helper.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Order Details Shipping Section
 class OrderDetailsShippingSection extends StatelessWidget {
@@ -54,8 +55,8 @@ class OrderDetailsShippingSection extends StatelessWidget {
                           final ordersBloc = context.read<OrdersBloc>();
                           final dynamic selectedAddress = await Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => MultiBlocProvider(
+                            AppPageTransitions.slide(
+                              MultiBlocProvider(
                                 providers: [
                                   BlocProvider.value(value: ordersBloc),
                                   BlocProvider<AddressBloc>(

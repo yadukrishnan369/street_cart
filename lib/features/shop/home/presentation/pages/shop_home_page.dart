@@ -19,6 +19,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:street_cart/features/shop/home/presentation/widgets/shimmer/shop_home_shimmer.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'dart:async';
 
 // Shop Home Page
@@ -68,9 +69,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
                 // Navigate to Shop Login Page
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ShopLoginPage(),
-                  ),
+                  AppPageTransitions.slide(const ShopLoginPage()),
                   (route) => false,
                 );
               } else if (state.status == ShopAuthStatus.authenticated) {

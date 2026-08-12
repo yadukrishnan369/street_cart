@@ -13,6 +13,7 @@ import 'package:street_cart/features/customer/review/presentation/pages/review_p
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 class ReviewHelper {
   //  Get Rating Title
@@ -168,8 +169,8 @@ class ReviewHelper {
   }) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
+      AppPageTransitions.slide(
+        BlocProvider(
           create: (_) => sl<ReviewBloc>()
             ..add(
               InitializeReviewEvent(
@@ -183,10 +184,10 @@ class ReviewHelper {
             productName: product.name,
             productImage: product.images.isNotEmpty ? product.images.first : '',
             shopId: shop.uid,
-            price: product.offerPrice,
-            existingReview: review,
-            selectedColor: selectedColor,
             selectedSize: selectedSize,
+            selectedColor: selectedColor,
+            price: (product.offerPrice ?? product.originalPrice).toDouble(),
+            existingReview: review,
           ),
         ),
       ),

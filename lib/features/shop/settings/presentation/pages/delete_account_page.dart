@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/settings/presentation/bloc/shop_settin
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/widgets/delete_account_form.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Delete Account Page
 class DeleteAccountPage extends StatelessWidget {
@@ -23,14 +24,8 @@ class DeleteAccountPage extends StatelessWidget {
           );
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-              builder: (BuildContext ctx) {
-                return const ShopLoginPage();
-              },
-            ),
-            (Route<dynamic> route) {
-              return false;
-            },
+            AppPageTransitions.slide(const ShopLoginPage()),
+            (Route<dynamic> route) => false,
           );
         } else if (state.status == ShopSettingsStatus.failure) {
           CustomSnackBar.show(

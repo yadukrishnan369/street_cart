@@ -15,6 +15,7 @@ import 'package:street_cart/features/customer/home/presentation/pages/home_page.
 import 'package:street_cart/features/customer/location/presentation/pages/location_permission_page.dart';
 import 'package:street_cart/features/customer/auth/presentation/widgets/verification_bottom_sheet.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Signup Page
 class SignupPage extends StatelessWidget {
@@ -61,9 +62,8 @@ class SignupPage extends StatelessWidget {
                 } else {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          HomePage(showProfileModal: !state.isProfileCompleted),
+                    AppPageTransitions.loginExit(
+                      HomePage(showProfileModal: !state.isProfileCompleted),
                     ),
                   );
                 }
@@ -129,11 +129,14 @@ class SignupPage extends StatelessWidget {
                     text1: "Already have an account? ",
                     text2: "Log In",
                     onTap: () {
-                      // Navigate to Login Page
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginPage()),
-                      );
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          AppPageTransitions.slideFromLeft(const LoginPage()),
+                        );
+                      }
                     },
                   ),
                   40.verticalSpace,

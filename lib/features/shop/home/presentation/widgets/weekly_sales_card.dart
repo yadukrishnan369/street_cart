@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/pages/sales_analytics_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Weekly Sales Card
 class WeeklySalesCard extends StatelessWidget {
@@ -111,8 +112,8 @@ class WeeklySalesCard extends StatelessWidget {
                       // Navigate to Shop Sales Analytics Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const ShopSalesAnalyticsPage(),
+                        AppPageTransitions.slide(
+                          const ShopSalesAnalyticsPage(),
                         ),
                       );
                     },

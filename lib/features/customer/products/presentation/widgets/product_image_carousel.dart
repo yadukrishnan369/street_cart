@@ -9,6 +9,7 @@ import 'package:street_cart/shared/widgets/image_preview_page.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product Image Carousel
 class ProductImageCarousel extends StatelessWidget {
@@ -72,11 +73,8 @@ class ProductImageCarousel extends StatelessWidget {
                     // Full screen image preview
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => ImagePreviewPage(
-                          images: images,
-                          initialIndex: index,
-                        ),
+                      AppPageTransitions.fade(
+                        ImagePreviewPage(images: images, initialIndex: index),
                       ),
                     );
                   },

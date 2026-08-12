@@ -9,6 +9,7 @@ import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/about_app_action_card.dart';
 import 'privacy_policy_page.dart';
 import 'terms_conditions_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // About App Page
 class AboutAppPage extends StatelessWidget {
@@ -151,7 +152,7 @@ class AboutAppPage extends StatelessWidget {
                 // Navigate to Privacy Policy Page
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const PrivacyPolicyPage()),
+                  AppPageTransitions.slide(const PrivacyPolicyPage()),
                 ),
               ),
               SizedBox(height: 12.h),
@@ -163,9 +164,7 @@ class AboutAppPage extends StatelessWidget {
                 // Navigate to Terms Conditions Page
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const TermsConditionsPage(),
-                  ),
+                  AppPageTransitions.slide(const TermsConditionsPage()),
                 ),
               ),
               SizedBox(height: 48.h),

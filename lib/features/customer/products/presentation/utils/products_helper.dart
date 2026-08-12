@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/custome
 import 'package:street_cart/features/customer/products/presentation/bloc/customer_products_state.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/product_filter_bloc.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/product_filter_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 class ProductsHelper {
   // Fetch Full Category List with 'All'
@@ -30,8 +31,8 @@ class ProductsHelper {
   ) async {
     final result = await Navigator.push<Map<String, dynamic>>(
       context,
-      MaterialPageRoute(
-        builder: (_) => ProductFilterPage(
+      AppPageTransitions.slideFromBottom(
+        ProductFilterPage(
           allProducts: state.allProducts,
           categories: categories,
           selectedSort: state.selectedSort,
@@ -41,7 +42,6 @@ class ProductsHelper {
           selectedColors: state.selectedColors,
           selectedSizes: state.selectedSizes,
         ),
-        fullscreenDialog: true,
       ),
     );
 

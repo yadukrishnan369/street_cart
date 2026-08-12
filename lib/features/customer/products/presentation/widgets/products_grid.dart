@@ -5,6 +5,7 @@ import 'package:street_cart/shared/components/customer_product_card.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_product_detail_page.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Product Grid View
 class ProductsGrid extends StatelessWidget {
@@ -79,9 +80,8 @@ class ProductsGrid extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    CustomerProductDetailPage(product: product, shop: shop),
+              AppPageTransitions.slide(
+                CustomerProductDetailPage(product: product, shop: shop),
               ),
             );
           },

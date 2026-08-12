@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/shop/orders/presentation/bloc/shop_orders_bloc.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Item Summary Card
 class ItemSummaryCard extends StatelessWidget {
@@ -105,8 +106,8 @@ class ItemSummaryCard extends StatelessWidget {
                     final ordersBloc = context.read<ShopOrdersBloc>();
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
+                      AppPageTransitions.slide(
+                        BlocProvider.value(
                           value: ordersBloc,
                           child: ShopOrderProductDetailsPage(item: item),
                         ),

@@ -10,6 +10,7 @@ import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
 import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 class EditShopProfileHelper {
   static Future<void> pickProfileImage(BuildContext context) async {
@@ -17,7 +18,9 @@ class EditShopProfileHelper {
     if (file != null) {
       if (context.mounted) {
         context.read<ShopProfileBloc>().add(UploadShopProfileImageEvent(file));
-        context.read<ShopProfileBloc>().add(const UpdateUploadingImageEvent(true));
+        context.read<ShopProfileBloc>().add(
+          const UpdateUploadingImageEvent(true),
+        );
       }
     }
   }
@@ -26,14 +29,20 @@ class EditShopProfileHelper {
     final file = await ImagePickerHelper.pickImageFromGallery();
     if (file != null) {
       if (context.mounted) {
-        context.read<ShopProfileBloc>().add(const UpdateUploadingLicenseEvent(true));
+        context.read<ShopProfileBloc>().add(
+          const UpdateUploadingLicenseEvent(true),
+        );
         try {
           final url = await context.read<ShopProfileBloc>().uploadProfileImage(
             file,
           );
           if (context.mounted) {
-            context.read<ShopProfileBloc>().add(UpdateBusinessLicenseUrlEvent(url));
-            context.read<ShopProfileBloc>().add(const UpdateUploadingLicenseEvent(false));
+            context.read<ShopProfileBloc>().add(
+              UpdateBusinessLicenseUrlEvent(url),
+            );
+            context.read<ShopProfileBloc>().add(
+              const UpdateUploadingLicenseEvent(false),
+            );
             CustomSnackBar.show(
               context,
               message: 'License uploaded successfully!',
@@ -41,7 +50,9 @@ class EditShopProfileHelper {
           }
         } catch (e) {
           if (context.mounted) {
-            context.read<ShopProfileBloc>().add(const UpdateUploadingLicenseEvent(false));
+            context.read<ShopProfileBloc>().add(
+              const UpdateUploadingLicenseEvent(false),
+            );
             CustomSnackBar.show(
               context,
               message: 'Failed to upload license: $e',
@@ -57,14 +68,18 @@ class EditShopProfileHelper {
     final file = await ImagePickerHelper.pickImageFromGallery();
     if (file != null) {
       if (context.mounted) {
-        context.read<ShopProfileBloc>().add(const UpdateUploadingOwnerIdEvent(true));
+        context.read<ShopProfileBloc>().add(
+          const UpdateUploadingOwnerIdEvent(true),
+        );
         try {
           final url = await context.read<ShopProfileBloc>().uploadProfileImage(
             file,
           );
           if (context.mounted) {
             context.read<ShopProfileBloc>().add(UpdateOwnerIdUrlEvent(url));
-            context.read<ShopProfileBloc>().add(const UpdateUploadingOwnerIdEvent(false));
+            context.read<ShopProfileBloc>().add(
+              const UpdateUploadingOwnerIdEvent(false),
+            );
             CustomSnackBar.show(
               context,
               message: 'Owner ID uploaded successfully!',
@@ -72,7 +87,9 @@ class EditShopProfileHelper {
           }
         } catch (e) {
           if (context.mounted) {
-            context.read<ShopProfileBloc>().add(const UpdateUploadingOwnerIdEvent(false));
+            context.read<ShopProfileBloc>().add(
+              const UpdateUploadingOwnerIdEvent(false),
+            );
             CustomSnackBar.show(
               context,
               message: 'Failed to upload ID: $e',
@@ -226,7 +243,7 @@ class EditShopProfileHelper {
           authBloc.add(ShopLogoutRequested());
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) => const ShopLoginPage()),
+            AppPageTransitions.slide(const ShopLoginPage()),
             (route) => false,
           );
         },

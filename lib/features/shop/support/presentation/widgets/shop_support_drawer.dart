@@ -9,6 +9,7 @@ import 'package:street_cart/features/shop/support/presentation/pages/faq_page.da
 import 'package:street_cart/features/shop/support/presentation/pages/about_app_page.dart';
 import 'package:street_cart/features/shop/support/presentation/pages/privacy_policy_page.dart';
 import 'package:street_cart/features/shop/support/presentation/pages/terms_conditions_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/shop/support/presentation/utils/shop_support_helper.dart';
 
 // Shop Support Drawer
@@ -66,9 +67,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       // Navigate to Help Support Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const HelpSupportPage(),
-                        ),
+                        AppPageTransitions.slide(const HelpSupportPage()),
                       );
                     },
                   ),
@@ -82,7 +81,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       // Navigate to Contact Support Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => ContactSupportPage()),
+                        AppPageTransitions.slide(ContactSupportPage()),
                       );
                     },
                   ),
@@ -96,7 +95,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const FAQPage()),
+                        AppPageTransitions.slide(const FAQPage()),
                       );
                     },
                   ),
@@ -119,7 +118,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => AboutAppPage()),
+                        AppPageTransitions.slide(AboutAppPage()),
                       );
                     },
                   ),
@@ -133,9 +132,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       // Navigate to Privacy Policy Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const PrivacyPolicyPage(),
-                        ),
+                        AppPageTransitions.slide(const PrivacyPolicyPage()),
                       );
                     },
                   ),
@@ -149,9 +146,7 @@ class ShopSupportDrawer extends StatelessWidget {
                       // Navigate to Terms Conditions Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const TermsConditionsPage(),
-                        ),
+                        AppPageTransitions.slide(const TermsConditionsPage()),
                       );
                     },
                   ),

@@ -5,6 +5,7 @@ import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/address_bloc.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/add_address_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Saved Address App Bar
 class SavedAddressesAppBar extends StatelessWidget
@@ -41,8 +42,8 @@ class SavedAddressesAppBar extends StatelessWidget
             // Navigate to Add New Address Page
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
+              AppPageTransitions.slide(
+                BlocProvider.value(
                   value: context.read<AddressBloc>(),
                   child: const AddAddressPage(),
                 ),

@@ -8,6 +8,7 @@ import 'package:street_cart/features/customer/profile/presentation/bloc/profile_
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_event.dart';
 import 'package:street_cart/features/customer/profile/presentation/bloc/profile_state.dart';
 import 'package:street_cart/features/customer/profile/presentation/pages/saved_addresses_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Account Profile Settings Section
 class AccountSettingsSection extends StatelessWidget {
@@ -53,8 +54,8 @@ class AccountSettingsSection extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => BlocProvider(
+                          AppPageTransitions.slide(
+                            BlocProvider(
                               create: (context) => sl<AddressBloc>(),
                               child: const SavedAddressesPage(),
                             ),

@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/t
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/transaction_status_banner.dart';
 import 'package:street_cart/features/shop/sales_analytics/presentation/widgets/shimmer/sales_transaction_details_shimmer.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Sales Transaction Details Page
 class ShopSalesTransactionDetailsPage extends StatelessWidget {
@@ -74,11 +75,8 @@ class ShopSalesTransactionDetailsPage extends StatelessWidget {
               message: snapshot.error.toString(),
               onRetry: () => Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => ShopSalesTransactionDetailsPage(
-                    order: order,
-                    shopId: shopId,
-                  ),
+                AppPageTransitions.slide(
+                  ShopSalesTransactionDetailsPage(order: order, shopId: shopId),
                 ),
               ),
             );

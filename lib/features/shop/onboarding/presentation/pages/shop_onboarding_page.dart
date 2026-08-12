@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/onboarding/presentation/bloc/shop_onbo
 import 'package:street_cart/features/shop/onboarding/data/models/onboarding_content.dart';
 import 'package:street_cart/features/shop/onboarding/presentation/widgets/shop_onboarding_page_view.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shop Onboarding Pages
 class ShopOnboardingPage extends StatefulWidget {
@@ -37,7 +38,7 @@ class _ShopOnboardingPageState extends State<ShopOnboardingPage> {
             // Navigate to Login Page After Onboarding Completes
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const ShopLoginPage()),
+              AppPageTransitions.slide(const ShopLoginPage()),
             );
           }
         },

@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/location/presentation/widgets/map_illu
 import 'package:street_cart/features/shop/location/presentation/widgets/why_we_need_this_card.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_bloc.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_event.dart';
 import 'package:street_cart/features/shop/location/presentation/bloc/shop_location_state.dart';
@@ -41,9 +42,7 @@ class _ShopLocationPermissionPageState
                 // Navigate to Account Review Page
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const AccountReviewPage(),
-                  ),
+                  AppPageTransitions.slide(const AccountReviewPage()),
                 );
               }
             }
@@ -54,9 +53,7 @@ class _ShopLocationPermissionPageState
               // Navigate to Account Review Page
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const AccountReviewPage(),
-                ),
+                AppPageTransitions.slide(const AccountReviewPage()),
               );
             }
           } else if (state is ShopLocationFailure) {

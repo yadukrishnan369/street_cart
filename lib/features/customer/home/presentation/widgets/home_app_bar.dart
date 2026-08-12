@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_bloc.dart';
 import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_state.dart';
 import 'package:street_cart/features/customer/notification/presentation/pages/customer_notifications_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Home App Bar
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -109,8 +110,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const CustomerNotificationsPage(),
+                      AppPageTransitions.slideFromTopRight(
+                        const CustomerNotificationsPage(),
                       ),
                     );
                   },

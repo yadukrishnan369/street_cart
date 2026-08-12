@@ -12,6 +12,7 @@ import 'package:street_cart/features/shop/settings/presentation/pages/delivery_r
 import 'package:street_cart/features/shop/settings/presentation/pages/change_password_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/delete_account_page.dart';
 import 'package:street_cart/features/shop/settings/presentation/pages/clear_data_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Business Configuration Section
 class BusinessConfigurationSection extends StatelessWidget {
@@ -57,8 +58,8 @@ class BusinessConfigurationSection extends StatelessWidget {
                   // Navigate to Delivery Radius Settings Page
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => DeliveryRadiusSettingsPage(
+                    AppPageTransitions.slide(
+                      DeliveryRadiusSettingsPage(
                         profile: profile!,
                         profileBloc: context.read<ShopProfileBloc>(),
                         settingsBloc: context.read<ShopSettingsBloc>(),
@@ -183,8 +184,8 @@ class SecuritySection extends StatelessWidget {
                 // Navigate to Change Password Page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: settingsBloc,
                       child: const ChangePasswordPage(),
                     ),
@@ -232,8 +233,8 @@ class AccountManagementSection extends StatelessWidget {
                 // Navigate to Delete Account Page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: settingsBloc,
                       child: const DeleteAccountPage(),
                     ),
@@ -256,8 +257,8 @@ class AccountManagementSection extends StatelessWidget {
                 // Navigate to Clear Data Page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: settingsBloc,
                       child: ClearDataPage(),
                     ),

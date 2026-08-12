@@ -14,6 +14,7 @@ import 'package:street_cart/features/customer/auth/presentation/widgets/auth_foo
 import 'package:street_cart/features/customer/auth/presentation/widgets/login_form.dart';
 import 'signup_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Login Page
 class LoginPage extends StatelessWidget {
@@ -40,15 +41,15 @@ class LoginPage extends StatelessWidget {
               } else if (!state.isProfileCompleted) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => HomePage(showProfileModal: true),
+                  AppPageTransitions.loginExit(
+                    HomePage(showProfileModal: true),
                   ),
                 );
               } else {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => HomePage(showProfileModal: false),
+                  AppPageTransitions.loginExit(
+                    HomePage(showProfileModal: false),
                   ),
                 );
               }
@@ -122,9 +123,7 @@ class LoginPage extends StatelessWidget {
                           // Navigate to Signup Page
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => const SignupPage(),
-                            ),
+                            AppPageTransitions.slide(const SignupPage()),
                           );
                         },
                       ),

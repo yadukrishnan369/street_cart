@@ -12,6 +12,7 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_event.dart';
 import 'package:street_cart/features/customer/products/presentation/bloc/wishlist_state.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Shops Products Grid
 class ShopProductsGrid extends StatelessWidget {
@@ -109,8 +110,8 @@ class ShopProductsGrid extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => CustomerProductDetailPage(
+                          AppPageTransitions.slide(
+                            CustomerProductDetailPage(
                               product: product,
                               shop: shop,
                             ),

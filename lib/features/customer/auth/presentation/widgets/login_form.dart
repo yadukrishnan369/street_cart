@@ -7,6 +7,7 @@ import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/shared/widgets/custom_text_field.dart';
 import 'package:street_cart/features/customer/auth/presentation/pages/forgot_password_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_event.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_state.dart';
@@ -62,9 +63,7 @@ class _LoginFormState extends State<LoginForm> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const ForgotPasswordPage(),
-                      ),
+                      AppPageTransitions.slide(const ForgotPasswordPage()),
                     );
                   },
                   child: Text(

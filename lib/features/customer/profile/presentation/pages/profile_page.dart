@@ -18,6 +18,7 @@ import 'package:street_cart/features/customer/profile/presentation/widgets/logou
 import 'package:street_cart/features/customer/settings/presentation/pages/settings_page.dart';
 import 'package:street_cart/features/customer/profile/presentation/widgets/shimmer/profile_shimmer.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Profile Page
 class UserProfilePage extends StatelessWidget {
@@ -32,7 +33,7 @@ class UserProfilePage extends StatelessWidget {
           if (state is AuthInitial) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const LoginPage()),
+              AppPageTransitions.slide(const LoginPage()),
               (route) => false,
             );
           }
@@ -77,7 +78,7 @@ class UserProfilePage extends StatelessWidget {
                       // Navigate to Settings Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => SettingsPage()),
+                        AppPageTransitions.slide(SettingsPage()),
                       ).then((_) {
                         if (context.mounted) {
                           context.read<ProfileBloc>().add(FetchProfileData());

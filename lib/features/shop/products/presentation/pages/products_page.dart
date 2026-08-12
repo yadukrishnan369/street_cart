@@ -18,6 +18,7 @@ import 'package:street_cart/features/shop/products/presentation/widgets/shimmer/
 import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Products Page
 class ProductsPage extends StatefulWidget {
@@ -202,8 +203,8 @@ class _ProductsPageState extends State<ProductsPage>
                   // Navigate to Add Edit Product Page
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => AddEditProductPage(
+                    AppPageTransitions.slide(
+                      AddEditProductPage(
                         shopId: _shopId,
                         productsBloc: _productsBloc,
                       ),

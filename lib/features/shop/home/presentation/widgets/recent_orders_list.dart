@@ -16,6 +16,7 @@ import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'empty_recent_orders_view.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Recent Orders List
 class RecentOrdersList extends StatelessWidget {
@@ -91,8 +92,8 @@ class RecentOrdersList extends StatelessWidget {
                     // Navigate to Shop Order Details Page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider(
+                      AppPageTransitions.slide(
+                        BlocProvider(
                           create: (_) =>
                               sl<ShopOrdersBloc>()
                                 ..add(FetchShopOrdersEvent(shopId)),
@@ -125,7 +126,7 @@ class RecentOrdersList extends StatelessWidget {
                   // Navigate to Shop Orders Page
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const ShopOrdersPage()),
+                    AppPageTransitions.slide(const ShopOrdersPage()),
                   );
                 },
               ),

@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/settings/presentation/pages/change
 import 'package:street_cart/features/customer/settings/presentation/pages/delete_account_page.dart';
 import 'package:street_cart/features/customer/auth/presentation/bloc/auth_bloc.dart';
 import 'package:street_cart/shared/widgets/custom_alert_dialog.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 Widget _buildSectionHeader(BuildContext context, String text) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -56,8 +57,8 @@ class PrivacySecuritySection extends StatelessWidget {
                 // Navigate to Change Password Page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
+                  AppPageTransitions.slide(
+                    BlocProvider.value(
                       value: settingsBloc,
                       child: const ChangePasswordPage(),
                     ),
@@ -97,8 +98,8 @@ class PrivacySecuritySection extends StatelessWidget {
               // Navigate to Delete Account Page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => MultiBlocProvider(
+                AppPageTransitions.slide(
+                  MultiBlocProvider(
                     providers: [
                       BlocProvider.value(value: authBloc),
                       BlocProvider.value(value: settingsBloc),

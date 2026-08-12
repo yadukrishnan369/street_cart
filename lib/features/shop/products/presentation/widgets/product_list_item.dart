@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/products/presentation/bloc/shop_produc
 import 'package:street_cart/features/shop/products/presentation/pages/product_detail_page.dart';
 import 'package:street_cart/features/shop/products/presentation/pages/add_edit_product_page.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/core/utils/price_utils.dart';
 
 // Product List Item
@@ -40,8 +41,8 @@ class ProductListItem extends StatelessWidget {
               // Navigate to Product Detail Page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailPage(
+                AppPageTransitions.slide(
+                  ProductDetailPage(
                     product: product,
                     shopId: shopId,
                     productsBloc: productsBloc,
@@ -187,8 +188,8 @@ class ProductListItem extends StatelessWidget {
                       // Navigate to Add Edit Product Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => AddEditProductPage(
+                        AppPageTransitions.slide(
+                          AddEditProductPage(
                             shopId: shopId,
                             product: product,
                             productsBloc: productsBloc,

@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/support/presentation/widgets/help_supp
 import 'package:street_cart/features/shop/support/presentation/widgets/help_topic_card.dart';
 import 'package:street_cart/features/shop/support/presentation/widgets/help_expandable_category_row.dart';
 import 'package:street_cart/features/shop/support/presentation/pages/faq_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/shop/support/presentation/utils/shop_support_helper.dart';
 
 // Help Support Page
@@ -71,7 +72,7 @@ class HelpSupportPage extends StatelessWidget {
                       // Navigate to FAQ Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const FAQPage()),
+                        AppPageTransitions.slide(const FAQPage()),
                       );
                     },
                   ),
@@ -86,7 +87,7 @@ class HelpSupportPage extends StatelessWidget {
                       // Navigate to FAQ Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const FAQPage()),
+                        AppPageTransitions.slide(const FAQPage()),
                       );
                     },
                   ),
@@ -101,7 +102,7 @@ class HelpSupportPage extends StatelessWidget {
                       // Navigate to FAQ Page
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const FAQPage()),
+                        AppPageTransitions.slide(const FAQPage()),
                       );
                     },
                   ),
