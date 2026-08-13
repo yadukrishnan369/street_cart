@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Products Empty State
 class ProductsEmptyState extends StatelessWidget {
@@ -39,13 +40,14 @@ class ProductsEmptyState extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           // Title
-          Text(
+          AppTextAnimation.fade(
             'No Products in Your Area',
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w700,
               color: isDark ? Colors.white : Colors.black,
             ),
+            duration: const Duration(milliseconds: 1500),
           ),
           SizedBox(height: 8.h),
           // Subtitle

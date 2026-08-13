@@ -1,62 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class AppPageTransitions {
   // Slide from Right to Left - default
   static Route<T> slide<T>(Widget page) {
-    return _slide<T>(page, const Offset(1.0, 0.0));
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.rightToLeft,
+      duration: const Duration(milliseconds: 260),
+      reverseDuration: const Duration(milliseconds: 220),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   // Slide from Left to Right
   static Route<T> slideFromLeft<T>(Widget page) {
-    return _slide<T>(page, const Offset(-1.0, 0.0));
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.leftToRight,
+      duration: const Duration(milliseconds: 260),
+      reverseDuration: const Duration(milliseconds: 220),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   // Slide from Bottom to Top
   static Route<T> slideFromBottom<T>(Widget page) {
-    return PageRouteBuilder<T>(
-      transitionDuration: const Duration(milliseconds: 280),
-      reverseTransitionDuration: const Duration(milliseconds: 240),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curveAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.fastOutSlowIn,
-          reverseCurve: Curves.fastOutSlowIn,
-        );
-        final tween = Tween<Offset>(
-          begin: const Offset(0.0, 1.0),
-          end: Offset.zero,
-        );
-        return SlideTransition(
-          position: curveAnimation.drive(tween),
-          child: child,
-        );
-      },
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.bottomToTop,
+      duration: const Duration(milliseconds: 280),
+      reverseDuration: const Duration(milliseconds: 240),
+      curve: Curves.fastOutSlowIn,
     );
   }
 
-  // Slide from Top-Right
+  // Custom Slide from Top-Right for notification pages
   static Route<T> slideFromTopRight<T>(Widget page) {
-    return _slide<T>(page, const Offset(1.0, -1.0));
-  }
-
-  // Private reusable slide transition builder
-  static Route<T> _slide<T>(Widget page, Offset beginOffset) {
     return PageRouteBuilder<T>(
-      transitionDuration: const Duration(milliseconds: 260),
-      reverseTransitionDuration: const Duration(milliseconds: 220),
       pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: const Duration(milliseconds: 300),
+      reverseTransitionDuration: const Duration(milliseconds: 260),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final curveAnimation = CurvedAnimation(
           parent: animation,
           curve: Curves.fastOutSlowIn,
           reverseCurve: Curves.fastOutSlowIn,
         );
-
-        final tween = Tween<Offset>(begin: beginOffset, end: Offset.zero);
-
         return SlideTransition(
-          position: curveAnimation.drive(tween),
+          position: Tween<Offset>(
+            begin: const Offset(1.0, -1.0),
+            end: Offset.zero,
+          ).animate(curveAnimation),
           child: child,
         );
       },
@@ -65,114 +60,72 @@ class AppPageTransitions {
 
   // Fade transition
   static Route<T> fade<T>(Widget page) {
-    return PageRouteBuilder<T>(
-      transitionDuration: const Duration(milliseconds: 260),
-      reverseTransitionDuration: const Duration(milliseconds: 220),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curveAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeIn,
-        );
-        return FadeTransition(opacity: curveAnimation, child: child);
-      },
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.fade,
+      duration: const Duration(milliseconds: 260),
+      reverseDuration: const Duration(milliseconds: 220),
+      curve: Curves.easeIn,
     );
   }
 
   // Scale transition
   static Route<T> scale<T>(Widget page) {
-    return PageRouteBuilder<T>(
-      transitionDuration: const Duration(milliseconds: 260),
-      reverseTransitionDuration: const Duration(milliseconds: 220),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curveAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.scale,
+      alignment: Alignment.center,
+      duration: const Duration(milliseconds: 260),
+      reverseDuration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutBack,
+    );
+  }
 
-        final tween = Tween<double>(begin: 0.0, end: 1.0);
-
-        return ScaleTransition(
-          scale: curveAnimation.drive(tween),
-          child: child,
-        );
-      },
+  // Rotate transition
+  static Route<T> rotate<T>(Widget page) {
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.rotate,
+      alignment: Alignment.center,
+      duration: const Duration(milliseconds: 350),
+      reverseDuration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
     );
   }
 
   // splash exit transition
   static Route<T> splashExit<T>(Widget page) {
-    return PageRouteBuilder<T>(
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.fade,
       opaque: false,
-      transitionDuration: const Duration(milliseconds: 700),
-      reverseTransitionDuration: const Duration(milliseconds: 400),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curveAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeIn,
-        );
-        return FadeTransition(opacity: curveAnimation, child: child);
-      },
+      duration: const Duration(milliseconds: 700),
+      reverseDuration: const Duration(milliseconds: 400),
+      curve: Curves.easeIn,
     );
   }
 
   // Slide exit transition from splash screen
   static Route<T> splashSlideExit<T>(Widget page) {
-    return PageRouteBuilder<T>(
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.rightToLeft,
       opaque: false,
-      transitionDuration: const Duration(milliseconds: 300),
-      reverseTransitionDuration: const Duration(milliseconds: 260),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curveAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.fastOutSlowIn,
-          reverseCurve: Curves.fastOutSlowIn,
-        );
-        final tween = Tween<Offset>(
-          begin: const Offset(1.0, 0.0),
-          end: Offset.zero,
-        );
-        return SlideTransition(
-          position: curveAnimation.drive(tween),
-          child: child,
-        );
-      },
+      duration: const Duration(milliseconds: 300),
+      reverseDuration: const Duration(milliseconds: 260),
+      curve: Curves.fastOutSlowIn,
     );
   }
 
   // Zoom out / Shrink fade transition for login/signup exit to Home
   static Route<T> loginExit<T>(Widget page) {
-    return PageRouteBuilder<T>(
+    return PageTransition<T>(
+      child: page,
+      type: PageTransitionType.fade,
       opaque: false,
-      transitionDuration: const Duration(milliseconds: 650),
-      reverseTransitionDuration: const Duration(milliseconds: 400),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final fadeAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeInOut,
-        );
-        final scaleAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOut,
-        );
-
-        final scaleTween = Tween<double>(
-          begin: 1.08, // Entering page zooms down to 1.0
-          end: 1.0,
-        );
-
-        return FadeTransition(
-          opacity: fadeAnimation,
-          child: ScaleTransition(
-            scale: scaleAnimation.drive(scaleTween),
-            child: child,
-          ),
-        );
-      },
+      duration: const Duration(milliseconds: 650),
+      reverseDuration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
     );
   }
 }

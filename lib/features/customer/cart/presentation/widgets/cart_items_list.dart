@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/cart/presentation/widgets/cart_ite
 import 'package:street_cart/features/customer/cart/presentation/pages/checkout_page.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Cart Items List
 class CartItemsList extends StatelessWidget {
@@ -35,61 +36,69 @@ class CartItemsList extends StatelessWidget {
             : {};
 
         return Expanded(
-          child: ListView.builder(
-            controller: scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
-              final bool isUnavailable = unavailableIds.contains(item.id);
-              final bool isViewDisabled = unviewableIds.contains(item.id);
-              return CartItemCard(
-                item: item,
-                isUnavailable: isUnavailable,
-                isViewDisabled: isViewDisabled,
-                onIncrement: () {
-                  context.read<CartBloc>().add(
-                    UpdateItemQuantity(
-                      itemId: item.id,
-                      quantity: item.quantity + 1,
-                    ),
-                  );
-                },
-                onDecrement: () {
-                  if (item.quantity <= 1) {
-                    CustomSnackBar.show(
-                      context,
-                      message: 'Minimum quantity must be 1',
-                      isError: true,
-                    );
-                  } else {
-                    context.read<CartBloc>().add(
-                      UpdateItemQuantity(
-                        itemId: item.id,
-                        quantity: item.quantity - 1,
-                      ),
-                    );
-                  }
-                },
-                onDelete: () {
-                  CartHelper.showDeleteDialog(context, () {
-                    context.read<CartBloc>().add(RemoveItem(itemId: item.id));
-                  });
-                },
-                onBuyNow: isUnavailable
-                    ? null
-                    : () {
-                        Navigator.push(
+          child: AppStaggeredAnimation.limiter(
+            child: ListView.builder(
+              controller: scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final bool isUnavailable = unavailableIds.contains(item.id);
+                final bool isViewDisabled = unviewableIds.contains(item.id);
+                return AppStaggeredAnimation.staggeredList(
+                  index: index,
+                  child: CartItemCard(
+                    item: item,
+                    isUnavailable: isUnavailable,
+                    isViewDisabled: isViewDisabled,
+                    onIncrement: () {
+                      context.read<CartBloc>().add(
+                        UpdateItemQuantity(
+                          itemId: item.id,
+                          quantity: item.quantity + 1,
+                        ),
+                      );
+                    },
+                    onDecrement: () {
+                      if (item.quantity <= 1) {
+                        CustomSnackBar.show(
                           context,
-                          AppPageTransitions.slideFromBottom(
-                            CheckoutPage(cartItems: [item]),
+                          message: 'Minimum quantity must be 1',
+                          isError: true,
+                        );
+                      } else {
+                        context.read<CartBloc>().add(
+                          UpdateItemQuantity(
+                            itemId: item.id,
+                            quantity: item.quantity - 1,
                           ),
                         );
-                      },
-                onView: () => CartHelper.navigateToProductDetail(context, item),
-              );
-            },
+                      }
+                    },
+                    onDelete: () {
+                      CartHelper.showDeleteDialog(context, () {
+                        context.read<CartBloc>().add(
+                          RemoveItem(itemId: item.id),
+                        );
+                      });
+                    },
+                    onBuyNow: isUnavailable
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              AppPageTransitions.slideFromBottom(
+                                CheckoutPage(cartItems: [item]),
+                              ),
+                            );
+                          },
+                    onView: () =>
+                        CartHelper.navigateToProductDetail(context, item),
+                  ),
+                );
+              },
+            ),
           ),
         );
       },

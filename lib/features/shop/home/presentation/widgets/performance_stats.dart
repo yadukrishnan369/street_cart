@@ -7,6 +7,7 @@ import 'package:street_cart/core/utils/price_utils.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_bloc.dart';
 import 'package:street_cart/features/shop/home/presentation/bloc/shop_home_state.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Performance Status
 class PerformanceStats extends StatelessWidget {
@@ -58,13 +59,14 @@ class PerformanceStats extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Title
-                Text(
+                AppTextAnimation.fade(
                   'Performance Today',
                   style: ShopAppTextStyles.bodyLargeBold.copyWith(
                     color: isDark
                         ? ShopAppColors.darkTextPrimary
                         : ShopAppColors.textPrimary,
                   ),
+                  duration: const Duration(milliseconds: 1000),
                 ),
                 // Live Updates Label
                 Container(

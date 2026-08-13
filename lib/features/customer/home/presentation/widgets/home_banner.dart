@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/features/customer/shops/presentation/pages/shop_details_page.dart';
@@ -125,8 +126,11 @@ class _HomeBannerState extends State<HomeBanner> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(
+                                AppTextAnimation.scale(
                                   banner['title']!,
+                                  key: ValueKey(
+                                    'banner_title_${banner['title']}',
+                                  ),
                                   style: TextStyle(
                                     color: Colors.white70,
                                     fontSize: 10.sp,
@@ -135,8 +139,11 @@ class _HomeBannerState extends State<HomeBanner> {
                                   ),
                                 ),
                                 SizedBox(height: 4.h),
-                                Text(
+                                AppTextAnimation.scale(
                                   banner['subtitle']!,
+                                  key: ValueKey(
+                                    'banner_subtitle_${banner['subtitle']}',
+                                  ),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 22.sp,

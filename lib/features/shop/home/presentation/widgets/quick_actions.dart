@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/core/theme/shop/shop_text_styles.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Home Quick Actions
 class QuickActions extends StatelessWidget {
@@ -24,13 +25,14 @@ class QuickActions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        AppTextAnimation.fade(
           'Quick Actions',
           style: ShopAppTextStyles.bodyLargeBold.copyWith(
             color: isDark
                 ? ShopAppColors.darkTextPrimary
                 : ShopAppColors.textPrimary,
           ),
+          duration: const Duration(milliseconds: 1000),
         ),
         SizedBox(height: 12.h),
         Row(

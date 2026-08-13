@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
 import 'package:street_cart/features/customer/orders/presentation/pages/my_orders_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 
 // Order Success Buttons Section
 class OrderSuccessButtonsSection extends StatelessWidget {
@@ -22,12 +23,12 @@ class OrderSuccessButtonsSection extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: () {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const HomePage()),
+                AppPageTransitions.rotate(const HomePage()),
                 (route) => false,
               );
               Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (_) => const MyOrdersPage()));
+              ).push(AppPageTransitions.rotate(const MyOrdersPage()));
             },
             icon: Icon(
               Icons.local_shipping_outlined,
@@ -56,7 +57,7 @@ class OrderSuccessButtonsSection extends StatelessWidget {
           child: OutlinedButton(
             onPressed: () {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const HomePage()),
+                AppPageTransitions.rotate(const HomePage()),
                 (route) => false,
               );
             },

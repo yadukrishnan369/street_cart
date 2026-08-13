@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
@@ -35,7 +36,7 @@ class AuthHeader extends StatelessWidget {
           ),
           24.verticalSpace,
         ],
-        Text(
+        AppTextAnimation.scale(
           title,
           style: CustomerAppTextStyles.heading2.copyWith(
             color: isDark
@@ -45,7 +46,7 @@ class AuthHeader extends StatelessWidget {
           textAlign: centerText ? TextAlign.center : TextAlign.start,
         ),
         8.verticalSpace,
-        Text(
+        AppTextAnimation.scale(
           subtitle,
           style: CustomerAppTextStyles.body.copyWith(
             color: isDark

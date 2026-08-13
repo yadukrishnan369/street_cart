@@ -16,6 +16,7 @@ import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
 import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/products_empty_state.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Trending Products Section
 class ProductsSection extends StatelessWidget {
@@ -250,169 +251,181 @@ class _HorizontalProductSection extends StatelessWidget {
                   ? wishlistState.items.map((i) => i.product.id).toSet()
                   : <String>{};
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: displayProducts.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == displayProducts.length) {
-                    // View all card
-                    return GestureDetector(
-                      onTap: onViewAllTap,
-                      child: Container(
-                        width: 140.w,
-                        margin: EdgeInsets.only(
-                          right: 8.w,
-                          top: 4.h,
-                          bottom: 8.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? CustomerAppColors.darkSurface
-                              : Colors.grey[100],
-                          borderRadius: BorderRadius.circular(16.r),
-                          border: Border.all(
+              return AppStaggeredAnimation.limiter(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  itemCount: displayProducts.length + 1,
+                  itemBuilder: (context, index) {
+                    Widget itemWidget;
+
+                    if (index == displayProducts.length) {
+                      // View all card
+                      itemWidget = GestureDetector(
+                        onTap: onViewAllTap,
+                        child: Container(
+                          width: 140.w,
+                          margin: EdgeInsets.only(
+                            right: 8.w,
+                            top: 4.h,
+                            bottom: 8.h,
+                          ),
+                          decoration: BoxDecoration(
                             color: isDark
-                                ? CustomerAppColors.darkBorder
-                                : CustomerAppColors.border,
+                                ? CustomerAppColors.darkSurface
+                                : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(16.r),
+                            border: Border.all(
+                              color: isDark
+                                  ? CustomerAppColors.darkBorder
+                                  : CustomerAppColors.border,
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12.w),
-                              decoration: BoxDecoration(
-                                color: CustomerAppColors.primary.withValues(
-                                  alpha: 0.1,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12.w),
+                                decoration: BoxDecoration(
+                                  color: CustomerAppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  shape: BoxShape.circle,
                                 ),
-                                shape: BoxShape.circle,
+                                child: Icon(
+                                  Icons.arrow_forward,
+                                  color: CustomerAppColors.primary,
+                                  size: 24.sp,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: CustomerAppColors.primary,
-                                size: 24.sp,
+                              SizedBox(height: 12.h),
+                              Text(
+                                'View All',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark
+                                      ? CustomerAppColors.darkTextPrimary
+                                      : CustomerAppColors.textPrimary,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 12.h),
-                            Text(
-                              'View All',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? CustomerAppColors.darkTextPrimary
-                                    : CustomerAppColors.textPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  final product = displayProducts[index];
-                  final imgUrl = product.images.isNotEmpty
-                      ? product.images.first
-                      : '';
-                  final brand = shopNames[product.shopId] ?? 'Unknown Shop';
-                  final price = product.offerPrice != null
-                      ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
-                      : '₹${PriceUtils.formatPrice(product.originalPrice)}';
-
-                  final shop = shops.firstWhere(
-                    (s) => s.uid == product.shopId,
-                    orElse: () => ShopProfileModel(
-                      uid: product.shopId,
-                      ownerName: '',
-                      shopName: brand,
-                      email: '',
-                      category: '',
-                      description: '',
-                      gstNumber: '',
-                      businessLicenseUrl: '',
-                      ownerIdUrl: '',
-                      isApproved: true,
-                      role: 'shop',
-                      isProfileCompleted: true,
-                      profileImageUrl: '',
-                      phone: '',
-                      deliveryRadius: 5.0,
-                      fullAddress: 'Address Unknown',
-                      landmark: '',
-                      city: '',
-                      pincode: '',
-                      district: '',
-                      state: '',
-                      paymentMethods: [],
-                    ),
-                  );
-
-                  final isWishlisted = wishlistedIds.contains(product.id);
-
-                  return Container(
-                    width: 160.w,
-                    margin: EdgeInsets.only(right: 12.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          AppPageTransitions.slide(
-                            CustomerProductDetailPage(
-                              product: product,
-                              shop: shop,
-                            ),
+                            ],
                           ),
-                        );
-                      },
-                      // Product Card
-                      child: ProductCard(
-                        imageUrl: imgUrl,
-                        brand: brand,
-                        title: product.name,
-                        price: price,
-                        originalPrice: product.offerPrice != null
-                            ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
-                            : null,
-                        discountPercentage: product.offerPrice != null
-                            ? (((product.originalPrice - product.offerPrice!) /
-                                          product.originalPrice) *
-                                      100)
-                                  .round()
-                            : null,
-                        isFavorite: isWishlisted,
-                        onFavoriteTap: () {
-                          if (isWishlisted) {
-                            context.read<WishlistBloc>().add(
-                              RemoveProductFromWishlist(productId: product.id),
-                            );
-                            CustomSnackBar.show(
+                        ),
+                      );
+                    } else {
+                      final product = displayProducts[index];
+                      final imgUrl = product.images.isNotEmpty
+                          ? product.images.first
+                          : '';
+                      final brand = shopNames[product.shopId] ?? 'Unknown Shop';
+                      final price = product.offerPrice != null
+                          ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
+                          : '₹${PriceUtils.formatPrice(product.originalPrice)}';
+
+                      final shop = shops.firstWhere(
+                        (s) => s.uid == product.shopId,
+                        orElse: () => ShopProfileModel(
+                          uid: product.shopId,
+                          ownerName: '',
+                          shopName: brand,
+                          email: '',
+                          category: '',
+                          description: '',
+                          gstNumber: '',
+                          businessLicenseUrl: '',
+                          ownerIdUrl: '',
+                          isApproved: true,
+                          role: 'shop',
+                          isProfileCompleted: true,
+                          profileImageUrl: '',
+                          phone: '',
+                          deliveryRadius: 5.0,
+                          fullAddress: 'Address Unknown',
+                          landmark: '',
+                          city: '',
+                          pincode: '',
+                          district: '',
+                          state: '',
+                          paymentMethods: [],
+                        ),
+                      );
+
+                      final isWishlisted = wishlistedIds.contains(product.id);
+
+                      itemWidget = Container(
+                        width: 160.w,
+                        margin: EdgeInsets.only(right: 12.w),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
                               context,
-                              message: 'Removed from wishlist',
-                            );
-                          } else {
-                            context.read<WishlistBloc>().add(
-                              AddProductToWishlist(
-                                product: product,
-                                shop: shop,
+                              AppPageTransitions.slide(
+                                CustomerProductDetailPage(
+                                  product: product,
+                                  shop: shop,
+                                ),
                               ),
                             );
-                            CustomSnackBar.show(
-                              context,
-                              message: 'Added to wishlist',
-                            );
-                          }
-                        },
-                        isNew:
-                            product.createdAt != null &&
-                            DateTime.now()
-                                    .difference(product.createdAt!)
-                                    .inDays <
-                                7,
-                      ),
-                    ),
-                  );
-                },
+                          },
+                          // Product Card
+                          child: ProductCard(
+                            imageUrl: imgUrl,
+                            brand: brand,
+                            title: product.name,
+                            price: price,
+                            originalPrice: product.offerPrice != null
+                                ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
+                                : null,
+                            discountPercentage: product.offerPrice != null
+                                ? (((product.originalPrice -
+                                                  product.offerPrice!) /
+                                              product.originalPrice) *
+                                          100)
+                                      .round()
+                                : null,
+                            isFavorite: isWishlisted,
+                            onFavoriteTap: () {
+                              if (isWishlisted) {
+                                context.read<WishlistBloc>().add(
+                                  RemoveProductFromWishlist(
+                                    productId: product.id,
+                                  ),
+                                );
+                                CustomSnackBar.show(
+                                  context,
+                                  message: 'Removed from wishlist',
+                                );
+                              } else {
+                                context.read<WishlistBloc>().add(
+                                  AddProductToWishlist(
+                                    product: product,
+                                    shop: shop,
+                                  ),
+                                );
+                                CustomSnackBar.show(
+                                  context,
+                                  message: 'Added to wishlist',
+                                );
+                              }
+                            },
+                            isNew:
+                                product.createdAt != null &&
+                                DateTime.now()
+                                        .difference(product.createdAt!)
+                                        .inDays <
+                                    7,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return AppStaggeredAnimation.staggeredList(
+                      index: index,
+                      child: itemWidget,
+                    );
+                  },
+                ),
               );
             },
           ),

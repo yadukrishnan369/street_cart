@@ -15,6 +15,7 @@ import 'package:street_cart/features/customer/shops/presentation/widgets/shimmer
 import 'package:street_cart/features/customer/shops/presentation/utils/shops_helper.dart';
 import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/features/customer/home/presentation/pages/home_page.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Customer Shops Page
 class CustomerShopsPage extends StatefulWidget {
@@ -166,11 +167,16 @@ class _CustomerShopsPageState extends State<CustomerShopsPage> {
                           FetchCustomerShops(),
                         );
                       },
-                      child: ListView.builder(
-                        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h),
-                        itemCount: shops.length,
-                        itemBuilder: (context, index) =>
-                            ShopCard(shop: shops[index]),
+                      child: AppStaggeredAnimation.limiter(
+                        child: ListView.builder(
+                          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h),
+                          itemCount: shops.length,
+                          itemBuilder: (context, index) =>
+                              AppStaggeredAnimation.staggeredList(
+                                index: index,
+                                child: ShopCard(shop: shops[index]),
+                              ),
+                        ),
                       ),
                     );
                   }

@@ -9,6 +9,7 @@ import 'package:street_cart/features/shop/notification/presentation/bloc/shop_no
 import 'package:street_cart/features/shop/notification/presentation/pages/shop_notifications_page.dart';
 import 'package:street_cart/shared/widgets/app_logo.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Shop Home App bar
 class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -55,8 +56,9 @@ class ShopHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             // Shop name
             children: [
-              Text(
+              AppTextAnimation.scale(
                 shopName,
+                key: ValueKey('shop_appbar_name_$shopName'),
                 style: ShopAppTextStyles.heading4.copyWith(
                   color: isDark
                       ? ShopAppColors.darkTextPrimary

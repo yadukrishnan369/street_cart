@@ -11,6 +11,7 @@ import 'package:street_cart/features/customer/orders/presentation/utils/customer
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/product_image_placeholder.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Recent Orders List
 class RecentOrdersList extends StatelessWidget {
@@ -25,23 +26,27 @@ class RecentOrdersList extends StatelessWidget {
     // Sort by order creation time
     final sortedOrders = OrdersHelper.getOrdersSortedByTime(orders);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Page Title
-          _SectionLabel(label: 'MY ORDERS'),
-          SizedBox(height: 8.h),
-          ...sortedOrders.map((order) {
-            final isCancellable = OrdersHelper.isCancellable(
-              CustomerOrderStatus.fromString(order.status),
-            );
-            return isCancellable
-                ? _ActiveOrderCard(order: order)
-                : _HistoryOrderCard(order: order);
-          }),
-        ],
+    return AppStaggeredAnimation.limiter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Page Title
+            _SectionLabel(label: 'MY ORDERS'),
+            SizedBox(height: 8.h),
+            ...AppStaggeredAnimation.toStaggeredList(
+              children: sortedOrders.map((order) {
+                final isCancellable = OrdersHelper.isCancellable(
+                  CustomerOrderStatus.fromString(order.status),
+                );
+                return isCancellable
+                    ? _ActiveOrderCard(order: order)
+                    : _HistoryOrderCard(order: order);
+              }).toList(),
+            ),
+          ],
+        ),
       ),
     );
   }

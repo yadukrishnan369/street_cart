@@ -21,6 +21,7 @@ import 'package:street_cart/features/shop/home/presentation/utils/shop_home_help
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'dart:async';
+import 'package:street_cart/core/animation/card_animation.dart';
 
 // Shop Home Page
 class ShopHomePage extends StatefulWidget {
@@ -147,40 +148,52 @@ class _ShopHomePageState extends State<ShopHomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Performace Stats
-                              PerformanceStats(shopId: shopId),
+                              CardAnimation(
+                                index: 0,
+                                child: PerformanceStats(shopId: shopId),
+                              ),
                               SizedBox(height: 20.h),
                               // Weekly Sales Card
-                              WeeklySalesCard(shopId: shopId),
+                              CardAnimation(
+                                index: 1,
+                                child: WeeklySalesCard(shopId: shopId),
+                              ),
                               SizedBox(height: 20.h),
                               // Quick Actions
-                              QuickActions(
-                                onAddProductTap: () {
-                                  if (shopId.isNotEmpty) {
-                                    ShopHomeHelper.onAddProductTap(
-                                      context,
-                                      shopId,
-                                    );
-                                  }
-                                },
-                                onViewOrdersTap: () {
-                                  ShopHomeHelper.onViewOrdersTap(context);
-                                },
-                                onEditProfileTap: () {
-                                  if (authState.status ==
-                                      ShopAuthStatus.authenticated) {
-                                    final profile = authState.shop;
-                                    if (profile != null) {
-                                      ShopHomeHelper.onEditProfileTap(
+                              CardAnimation(
+                                index: 2,
+                                child: QuickActions(
+                                  onAddProductTap: () {
+                                    if (shopId.isNotEmpty) {
+                                      ShopHomeHelper.onAddProductTap(
                                         context,
-                                        profile,
+                                        shopId,
                                       );
                                     }
-                                  }
-                                },
+                                  },
+                                  onViewOrdersTap: () {
+                                    ShopHomeHelper.onViewOrdersTap(context);
+                                  },
+                                  onEditProfileTap: () {
+                                    if (authState.status ==
+                                        ShopAuthStatus.authenticated) {
+                                      final profile = authState.shop;
+                                      if (profile != null) {
+                                        ShopHomeHelper.onEditProfileTap(
+                                          context,
+                                          profile,
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
                               ),
                               SizedBox(height: 20.h),
                               // Recent Orders List
-                              RecentOrdersList(shopId: shopId),
+                              CardAnimation(
+                                index: 3,
+                                child: RecentOrdersList(shopId: shopId),
+                              ),
                             ],
                           );
                         },

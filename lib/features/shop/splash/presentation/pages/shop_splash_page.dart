@@ -15,6 +15,7 @@ import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_b
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_event.dart';
 import 'package:street_cart/features/shop/splash/presentation/bloc/shop_splash_state.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Shop Splash Page
 class ShopSplashPage extends StatefulWidget {
@@ -128,7 +129,7 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                     ),
                     SizedBox(height: 48.h),
                     // App name and Titles
-                    Text(
+                    AppTextAnimation.scale(
                       'Street Cart',
                       style: ShopAppTextStyles.heading1.copyWith(
                         fontSize: 32.sp,
@@ -139,14 +140,14 @@ class _ShopSplashPageState extends State<ShopSplashPage> {
                       ),
                     ),
                     SizedBox(height: 12.h),
-                    Text(
+                    AppTextAnimation.scale(
                       'Manage your shop.',
                       style: ShopAppTextStyles.heading3.copyWith(
                         color: ShopAppColors.primary,
                       ),
                     ),
                     SizedBox(height: 8.h),
-                    Text(
+                    AppTextAnimation.scale(
                       'Reach nearby customers effortlessly.',
                       style: ShopAppTextStyles.bodyMedium.copyWith(
                         color: isDark

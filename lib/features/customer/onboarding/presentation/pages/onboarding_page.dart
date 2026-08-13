@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 import 'package:street_cart/core/theme/customer/customer_text_styles.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/customer/auth/presentation/pages/login_page.dart';
@@ -111,8 +112,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   ),
                                 ),
                                 40.verticalSpace,
-                                Text(
+                                AppTextAnimation.fade(
                                   item['title']!,
+                                  key: ValueKey('onboarding_title_$index'),
                                   style: CustomerAppTextStyles.heading2
                                       .copyWith(
                                         color: isDark
@@ -120,6 +122,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                             : CustomerAppColors.textPrimary,
                                       ),
                                   textAlign: TextAlign.center,
+                                  duration: const Duration(milliseconds: 1000),
                                 ),
                                 16.verticalSpace,
                                 Text(

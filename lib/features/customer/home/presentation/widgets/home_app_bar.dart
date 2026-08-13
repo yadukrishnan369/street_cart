@@ -7,6 +7,7 @@ import 'package:street_cart/features/customer/notification/presentation/bloc/cus
 import 'package:street_cart/features/customer/notification/presentation/bloc/customer_notifications_state.dart';
 import 'package:street_cart/features/customer/notification/presentation/pages/customer_notifications_page.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Home App Bar
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -69,11 +70,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                               : CustomerAppColors.textSecondary,
                         ),
                       ),
-                      Text(
+                      AppTextAnimation.scale(
                         hasLocation
                             ? (address ?? 'Unknown Location')
                             : 'Select precise location',
-                        overflow: TextOverflow.ellipsis,
+                        key: ValueKey('appbar_location_${address ?? 'none'}'),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,

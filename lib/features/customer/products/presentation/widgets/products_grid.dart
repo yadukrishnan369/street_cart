@@ -6,6 +6,7 @@ import 'package:street_cart/features/customer/products/presentation/pages/custom
 import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.dart';
 import 'package:street_cart/features/shop/products/data/models/product_model.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Product Grid View
 class ProductsGrid extends StatelessWidget {
@@ -26,86 +27,92 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.75,
-        crossAxisSpacing: 16.w,
-        mainAxisSpacing: 16.h,
-      ),
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        final product = products[index];
-        final isWishlisted = wishlistedProductIds.contains(product.id);
-        final shopName = shopNames[product.shopId] ?? 'Unknown Shop';
-        final imgUrl = product.images.isNotEmpty ? product.images.first : '';
-        final price = product.offerPrice != null
-            ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
-            : '₹${PriceUtils.formatPrice(product.originalPrice)}';
-        final isNew =
-            product.createdAt != null &&
-            DateTime.now().difference(product.createdAt!).inDays <= 2;
+    return AppStaggeredAnimation.limiter(
+      child: GridView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.75,
+          crossAxisSpacing: 16.w,
+          mainAxisSpacing: 16.h,
+        ),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final isWishlisted = wishlistedProductIds.contains(product.id);
+          final shopName = shopNames[product.shopId] ?? 'Unknown Shop';
+          final imgUrl = product.images.isNotEmpty ? product.images.first : '';
+          final price = product.offerPrice != null
+              ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
+              : '₹${PriceUtils.formatPrice(product.originalPrice)}';
+          final isNew =
+              product.createdAt != null &&
+              DateTime.now().difference(product.createdAt!).inDays <= 2;
 
-        final shop = shops.firstWhere(
-          (s) => s.uid == product.shopId,
-          orElse: () => ShopProfileModel(
-            uid: product.shopId,
-            ownerName: '',
-            shopName: shopName,
-            email: '',
-            category: '',
-            description: '',
-            gstNumber: '',
-            businessLicenseUrl: '',
-            ownerIdUrl: '',
-            isApproved: true,
-            role: 'shop',
-            isProfileCompleted: true,
-            profileImageUrl: '',
-            phone: '',
-            deliveryRadius: 5.0,
-            fullAddress: 'Address Unknown',
-            landmark: '',
-            city: '',
-            pincode: '',
-            district: '',
-            state: '',
-            paymentMethods: [],
-          ),
-        );
-        // Navigate to Details Page
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              AppPageTransitions.slide(
-                CustomerProductDetailPage(product: product, shop: shop),
+          final shop = shops.firstWhere(
+            (s) => s.uid == product.shopId,
+            orElse: () => ShopProfileModel(
+              uid: product.shopId,
+              ownerName: '',
+              shopName: shopName,
+              email: '',
+              category: '',
+              description: '',
+              gstNumber: '',
+              businessLicenseUrl: '',
+              ownerIdUrl: '',
+              isApproved: true,
+              role: 'shop',
+              isProfileCompleted: true,
+              profileImageUrl: '',
+              phone: '',
+              deliveryRadius: 5.0,
+              fullAddress: 'Address Unknown',
+              landmark: '',
+              city: '',
+              pincode: '',
+              district: '',
+              state: '',
+              paymentMethods: [],
+            ),
+          );
+          // Navigate to Details Page
+          return AppStaggeredAnimation.staggeredGrid(
+            index: index,
+            columnCount: 2,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  AppPageTransitions.slide(
+                    CustomerProductDetailPage(product: product, shop: shop),
+                  ),
+                );
+              },
+              // Product Card
+              child: ProductCard(
+                imageUrl: imgUrl,
+                brand: shopName,
+                title: product.name,
+                price: price,
+                originalPrice: product.offerPrice != null
+                    ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
+                    : null,
+                discountPercentage: product.offerPrice != null
+                    ? (((product.originalPrice - product.offerPrice!) /
+                                  product.originalPrice) *
+                              100)
+                          .round()
+                    : null,
+                isFavorite: isWishlisted,
+                isNew: isNew,
+                onFavoriteTap: () => onFavoriteTap(product, isWishlisted),
               ),
-            );
-          },
-          // Product Card
-          child: ProductCard(
-            imageUrl: imgUrl,
-            brand: shopName,
-            title: product.name,
-            price: price,
-            originalPrice: product.offerPrice != null
-                ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
-                : null,
-            discountPercentage: product.offerPrice != null
-                ? (((product.originalPrice - product.offerPrice!) /
-                              product.originalPrice) *
-                          100)
-                      .round()
-                : null,
-            isFavorite: isWishlisted,
-            isNew: isNew,
-            onFavoriteTap: () => onFavoriteTap(product, isWishlisted),
-          ),
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 }

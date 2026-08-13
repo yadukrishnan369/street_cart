@@ -8,6 +8,7 @@ import 'package:street_cart/features/shop/orders/presentation/pages/shop_order_r
 import 'package:street_cart/features/shop/orders/presentation/widgets/shop_order_card.dart';
 import 'package:street_cart/features/shop/orders/presentation/utils/shop_orders_helper.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Returned Orders View
 class ReturnedOrdersView extends StatelessWidget {
@@ -28,52 +29,62 @@ class ReturnedOrdersView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async =>
           context.read<ShopOrdersBloc>().add(FetchShopOrdersEvent(shopId)),
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: listItems.length,
-        itemBuilder: (context, idx) {
-          final item = listItems[idx];
-          // Section Titles
-          if (item is String) {
-            return Padding(
-              padding: EdgeInsets.only(left: 20.w, top: 20.h, bottom: 8.h),
-              child: Text(
-                item.toUpperCase(),
-                style: TextStyle(
-                  color: ShopAppColors.primary,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 13.sp,
-                  letterSpacing: 0.8,
-                ),
-              ),
-            );
-          }
-          final order = item as OrderModel;
-          return GestureDetector(
-            onTap: () {
-              // Navigate to Order Returned Details Page
-              Navigator.push(
-                context,
-                AppPageTransitions.slide(
-                  BlocProvider.value(
-                    value: context.read<ShopOrdersBloc>(),
-                    child: ShopOrderReturnedDetailsPage(
-                      order: order,
-                      shopId: shopId,
-                    ),
+      child: AppStaggeredAnimation.limiter(
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: listItems.length,
+          itemBuilder: (context, idx) {
+            final item = listItems[idx];
+
+            Widget childWidget;
+            // Section Titles
+            if (item is String) {
+              childWidget = Padding(
+                padding: EdgeInsets.only(left: 20.w, top: 20.h, bottom: 8.h),
+                child: Text(
+                  item.toUpperCase(),
+                  style: TextStyle(
+                    color: ShopAppColors.primary,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13.sp,
+                    letterSpacing: 0.8,
                   ),
                 ),
               );
-            },
-            // Shop Order Card
-            child: ShopOrderCard(
-              order: order,
-              shopId: shopId,
-              isReturnedView: true,
-              onUpdateStatus: (_) {},
-            ),
-          );
-        },
+            } else {
+              final order = item as OrderModel;
+              childWidget = GestureDetector(
+                onTap: () {
+                  // Navigate to Order Returned Details Page
+                  Navigator.push(
+                    context,
+                    AppPageTransitions.slide(
+                      BlocProvider.value(
+                        value: context.read<ShopOrdersBloc>(),
+                        child: ShopOrderReturnedDetailsPage(
+                          order: order,
+                          shopId: shopId,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                // Shop Order Card
+                child: ShopOrderCard(
+                  order: order,
+                  shopId: shopId,
+                  isReturnedView: true,
+                  onUpdateStatus: (_) {},
+                ),
+              );
+            }
+
+            return AppStaggeredAnimation.staggeredList(
+              index: idx,
+              child: childWidget,
+            );
+          },
+        ),
       ),
     );
   }

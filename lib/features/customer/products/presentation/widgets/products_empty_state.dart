@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 
 // Product Empty State
@@ -25,7 +26,7 @@ class ProductsEmptyState extends StatelessWidget {
               ),
               SizedBox(height: 12.h),
               // Title
-              Text(
+              AppTextAnimation.scale(
                 "No products found",
                 style: TextStyle(
                   fontSize: 16.sp,
@@ -35,7 +36,7 @@ class ProductsEmptyState extends StatelessWidget {
               ),
               SizedBox(height: 4.h),
               // Subtitle
-              Text(
+              AppTextAnimation.scale(
                 "No products match your search or filter options.",
                 style: TextStyle(
                   fontSize: 12.sp,

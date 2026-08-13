@@ -10,6 +10,7 @@ import 'package:street_cart/features/customer/products/presentation/pages/custom
 import 'package:street_cart/shared/components/customer_product_card.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Wish List Grid
 class WishlistGrid extends StatelessWidget {
@@ -34,76 +35,83 @@ class WishlistGrid extends StatelessWidget {
         ),
         Expanded(
           // Products Grid View
-          child: GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: 16.w,
-              mainAxisSpacing: 16.h,
-            ),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
-              final product = item.product;
-              final shop = item.shop;
-              final priceText = product.offerPrice != null
-                  ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
-                  : '₹${PriceUtils.formatPrice(product.originalPrice)}';
+          child: AppStaggeredAnimation.limiter(
+            child: GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16.w,
+                mainAxisSpacing: 16.h,
+              ),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final product = item.product;
+                final shop = item.shop;
+                final priceText = product.offerPrice != null
+                    ? '₹${PriceUtils.formatPrice(product.offerPrice!)}'
+                    : '₹${PriceUtils.formatPrice(product.originalPrice)}';
 
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    AppPageTransitions.slide(
-                      CustomerProductDetailPage(
-                        product: product,
-                        shop: shop,
-                        initialColor: item.selectedColor,
-                        initialSize: item.selectedSize,
-                      ),
+                return AppStaggeredAnimation.staggeredGrid(
+                  index: index,
+                  columnCount: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        AppPageTransitions.slide(
+                          CustomerProductDetailPage(
+                            product: product,
+                            shop: shop,
+                            initialColor: item.selectedColor,
+                            initialSize: item.selectedSize,
+                          ),
+                        ),
+                      ).then((_) {
+                        if (context.mounted) {
+                          context.read<WishlistBloc>().add(LoadWishlist());
+                        }
+                      });
+                    },
+                    // Wish List Product Items
+                    child: ProductCard(
+                      imageUrl: product.images.isNotEmpty
+                          ? product.images.first
+                          : '',
+                      brand: shop.shopName,
+                      title: product.name,
+                      price: priceText,
+                      originalPrice: product.offerPrice != null
+                          ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
+                          : null,
+                      discountPercentage: product.offerPrice != null
+                          ? (((product.originalPrice - product.offerPrice!) /
+                                        product.originalPrice) *
+                                    100)
+                                .round()
+                          : null,
+                      isFavorite: true,
+                      onFavoriteTap: () {
+                        context.read<WishlistBloc>().add(
+                          RemoveProductFromWishlist(productId: product.id),
+                        );
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Removed from wishlist',
+                        );
+                      },
+                      isNew:
+                          product.createdAt != null &&
+                          DateTime.now().difference(product.createdAt!).inDays <
+                              7,
+                      selectedColor: item.selectedColor,
+                      selectedSize: item.selectedSize,
                     ),
-                  ).then((_) {
-                    if (context.mounted) {
-                      context.read<WishlistBloc>().add(LoadWishlist());
-                    }
-                  });
-                },
-                // Wish List Product Items
-                child: ProductCard(
-                  imageUrl: product.images.isNotEmpty
-                      ? product.images.first
-                      : '',
-                  brand: shop.shopName,
-                  title: product.name,
-                  price: priceText,
-                  originalPrice: product.offerPrice != null
-                      ? '₹${PriceUtils.formatPrice(product.originalPrice)}'
-                      : null,
-                  discountPercentage: product.offerPrice != null
-                      ? (((product.originalPrice - product.offerPrice!) /
-                                    product.originalPrice) *
-                                100)
-                            .round()
-                      : null,
-                  isFavorite: true,
-                  onFavoriteTap: () {
-                    context.read<WishlistBloc>().add(
-                      RemoveProductFromWishlist(productId: product.id),
-                    );
-                    CustomSnackBar.show(
-                      context,
-                      message: 'Removed from wishlist',
-                    );
-                  },
-                  isNew:
-                      product.createdAt != null &&
-                      DateTime.now().difference(product.createdAt!).inDays < 7,
-                  selectedColor: item.selectedColor,
-                  selectedSize: item.selectedSize,
-                ),
-              );
-            },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],

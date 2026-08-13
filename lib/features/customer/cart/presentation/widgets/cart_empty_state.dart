@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
 import 'package:street_cart/features/customer/products/presentation/pages/customer_products_page.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Cart Empty State
 class CartEmptyState extends StatelessWidget {
@@ -33,7 +34,7 @@ class CartEmptyState extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
-            Text(
+            AppTextAnimation.scale(
               'Your Cart is Empty',
               style: TextStyle(
                 fontSize: 20.sp,
@@ -42,6 +43,7 @@ class CartEmptyState extends StatelessWidget {
                     ? CustomerAppColors.darkTextPrimary
                     : CustomerAppColors.textPrimary,
               ),
+              duration: const Duration(milliseconds: 1000),
             ),
             SizedBox(height: 12.h),
             Text(

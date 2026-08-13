@@ -17,6 +17,8 @@ import 'empty_recent_orders_view.dart';
 import 'package:street_cart/shared/widgets/primary_button.dart';
 import 'package:street_cart/features/shop/home/presentation/utils/shop_home_helper.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Recent Orders List
 class RecentOrdersList extends StatelessWidget {
@@ -45,13 +47,14 @@ class RecentOrdersList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // title
               children: [
-                Text(
+                AppTextAnimation.fade(
                   'New Orders',
                   style: ShopAppTextStyles.bodyLargeBold.copyWith(
                     color: isDark
                         ? ShopAppColors.darkTextPrimary
                         : ShopAppColors.textPrimary,
                   ),
+                  duration: const Duration(milliseconds: 1000),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -80,42 +83,48 @@ class RecentOrdersList extends StatelessWidget {
             else if (displayOrders.isEmpty)
               const EmptyRecentOrdersView()
             else
-              ...displayOrders.map((order) {
-                final uiData = ShopHomeHelper.getOrderItemUIData(
-                  order: order,
-                  shopId: shopId,
-                );
-                if (uiData.isEmpty) return const SizedBox.shrink();
+              AppStaggeredAnimation.limiter(
+                child: Column(
+                  children: AppStaggeredAnimation.toStaggeredList(
+                    children: displayOrders.map((order) {
+                      final uiData = ShopHomeHelper.getOrderItemUIData(
+                        order: order,
+                        shopId: shopId,
+                      );
+                      if (uiData.isEmpty) return const SizedBox.shrink();
 
-                return GestureDetector(
-                  onTap: () {
-                    // Navigate to Shop Order Details Page
-                    Navigator.push(
-                      context,
-                      AppPageTransitions.slide(
-                        BlocProvider(
-                          create: (_) =>
-                              sl<ShopOrdersBloc>()
-                                ..add(FetchShopOrdersEvent(shopId)),
-                          child: ShopOrderDetailsPage(
-                            order: order,
-                            shopId: shopId,
-                          ),
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigate to Shop Order Details Page
+                          Navigator.push(
+                            context,
+                            AppPageTransitions.slide(
+                              BlocProvider(
+                                create: (_) =>
+                                    sl<ShopOrdersBloc>()
+                                      ..add(FetchShopOrdersEvent(shopId)),
+                                child: ShopOrderDetailsPage(
+                                  order: order,
+                                  shopId: shopId,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: _buildOrderItem(
+                          order.deliveryAddress.fullName,
+                          uiData['displayName'] as String,
+                          '₹${PriceUtils.formatPrice(uiData['totalAmount'] as double)}',
+                          uiData['paymentMethodLabel'] as String,
+                          uiData['productImage'],
+                          uiData['badgeColor'] as Color,
+                          isDark,
                         ),
-                      ),
-                    );
-                  },
-                  child: _buildOrderItem(
-                    order.deliveryAddress.fullName,
-                    uiData['displayName'] as String,
-                    '₹${PriceUtils.formatPrice(uiData['totalAmount'] as double)}',
-                    uiData['paymentMethodLabel'] as String,
-                    uiData['productImage'],
-                    uiData['badgeColor'] as Color,
-                    isDark,
+                      );
+                    }).toList(),
                   ),
-                );
-              }),
+                ),
+              ),
             // View All Orders
             if (state is ShopHomeDataLoaded) ...[
               SizedBox(height: 8.h),

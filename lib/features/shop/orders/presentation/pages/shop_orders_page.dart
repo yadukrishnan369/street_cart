@@ -17,6 +17,7 @@ import 'package:street_cart/features/shop/home/presentation/pages/shop_home_page
 import 'package:street_cart/shared/widgets/app_error_view.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Shop Orders Page
 class ShopOrdersPage extends StatelessWidget {
@@ -132,44 +133,49 @@ class ShopOrdersPage extends StatelessWidget {
                         onRefresh: () async => context
                             .read<ShopOrdersBloc>()
                             .add(FetchShopOrdersEvent(shopId)),
-                        child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: filteredList.length,
-                          itemBuilder: (context, index) {
-                            final order = filteredList[index];
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  AppPageTransitions.slide(
-                                    BlocProvider.value(
-                                      value: context.read<ShopOrdersBloc>(),
-                                      child: ShopOrderDetailsPage(
-                                        order: order,
-                                        shopId: shopId,
-                                        isCancelledView: tabIndex == 4,
+                        child: AppStaggeredAnimation.limiter(
+                          child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: filteredList.length,
+                            itemBuilder: (context, index) {
+                              final order = filteredList[index];
+                              return AppStaggeredAnimation.staggeredList(
+                                index: index,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      AppPageTransitions.slide(
+                                        BlocProvider.value(
+                                          value: context.read<ShopOrdersBloc>(),
+                                          child: ShopOrderDetailsPage(
+                                            order: order,
+                                            shopId: shopId,
+                                            isCancelledView: tabIndex == 4,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    );
+                                  },
+                                  // Shop Order Card
+                                  child: ShopOrderCard(
+                                    order: order,
+                                    shopId: shopId,
+                                    isCancelledView: tabIndex == 4,
+                                    onUpdateStatus: (nextStatus) {
+                                      context.read<ShopOrdersBloc>().add(
+                                        UpdateOrderStatusEvent(
+                                          shopId: shopId,
+                                          orderId: order.id,
+                                          newStatus: nextStatus,
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                              // Shop Order Card
-                              child: ShopOrderCard(
-                                order: order,
-                                shopId: shopId,
-                                isCancelledView: tabIndex == 4,
-                                onUpdateStatus: (nextStatus) {
-                                  context.read<ShopOrdersBloc>().add(
-                                    UpdateOrderStatusEvent(
-                                      shopId: shopId,
-                                      orderId: order.id,
-                                      newStatus: nextStatus,
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
                     }),

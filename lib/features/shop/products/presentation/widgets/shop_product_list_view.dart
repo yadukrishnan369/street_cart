@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/products/presentation/bloc/shop_produc
 import 'package:street_cart/features/shop/products/presentation/widgets/product_list_item.dart';
 import 'package:street_cart/features/shop/products/presentation/widgets/empty_shop_products_view.dart';
 import 'package:street_cart/features/shop/products/presentation/utils/products_page_helper.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Shop Product List View
 class ShopProductListView extends StatelessWidget {
@@ -40,25 +41,30 @@ class ShopProductListView extends StatelessWidget {
         productsBloc.add(LoadShopProductsEvent(shopId));
       },
       color: ShopAppColors.primary,
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(16.w),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          // Product List Item
-          return ProductListItem(
-            product: product,
-            shopId: shopId,
-            productsBloc: productsBloc,
-            onDeleteTap: () => ProductsPageHelper.confirmDelete(
-              context: context,
-              shopId: shopId,
-              product: product,
-              productsBloc: productsBloc,
-            ),
-          );
-        },
+      child: AppStaggeredAnimation.limiter(
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(16.w),
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            // Product List Item
+            return AppStaggeredAnimation.staggeredList(
+              index: index,
+              child: ProductListItem(
+                product: product,
+                shopId: shopId,
+                productsBloc: productsBloc,
+                onDeleteTap: () => ProductsPageHelper.confirmDelete(
+                  context: context,
+                  shopId: shopId,
+                  product: product,
+                  productsBloc: productsBloc,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

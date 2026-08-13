@@ -7,6 +7,7 @@ import 'package:street_cart/features/shop/auth/data/models/shop_profile_model.da
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:street_cart/shared/widgets/shop_image_placeholder.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
+import 'package:street_cart/core/animation/staggered_animation.dart';
 
 // Shops List Section
 class ShopsListSection extends StatelessWidget {
@@ -108,13 +109,18 @@ class ShopsListSection extends StatelessWidget {
         SizedBox(height: 12.h),
         SizedBox(
           height: 90.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            itemCount: shops.length,
-            itemBuilder: (context, index) {
-              return _buildShopCard(context, shops[index]);
-            },
+          child: AppStaggeredAnimation.limiter(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: shops.length,
+              itemBuilder: (context, index) {
+                return AppStaggeredAnimation.staggeredList(
+                  index: index,
+                  child: _buildShopCard(context, shops[index]),
+                );
+              },
+            ),
           ),
         ),
       ],

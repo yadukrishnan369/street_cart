@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/onboarding/data/models/onboarding_content.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Onboarding Page View widget
 class ShopOnboardingPageView extends StatelessWidget {
@@ -43,9 +44,9 @@ class ShopOnboardingPageView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 48.h),
-                // Page Title
-                Text(
+                AppTextAnimation.fade(
                   content.title,
+                  key: ValueKey('shop_onboarding_title_$index'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 28.sp,
@@ -54,6 +55,7 @@ class ShopOnboardingPageView extends StatelessWidget {
                         ? ShopAppColors.darkTextPrimary
                         : ShopAppColors.textPrimary,
                   ),
+                  duration: const Duration(milliseconds: 1000),
                 ),
                 SizedBox(height: 16.h),
                 // Page Description

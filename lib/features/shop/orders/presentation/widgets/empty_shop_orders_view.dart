@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
+import 'package:street_cart/core/animation/text_animation.dart';
 
 // Empty Shop Orders View
 class EmptyShopOrdersView extends StatelessWidget {
@@ -88,9 +89,9 @@ class EmptyShopOrdersView extends StatelessWidget {
                   child: Icon(icon, size: 64.sp, color: ShopAppColors.primary),
                 ),
                 SizedBox(height: 24.h),
-                // Title
-                Text(
+                AppTextAnimation.fade(
                   title,
+                  key: ValueKey('empty_orders_title_${title}'),
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
@@ -99,11 +100,13 @@ class EmptyShopOrdersView extends StatelessWidget {
                         : ShopAppColors.textPrimary,
                     letterSpacing: -0.5,
                   ),
+                  duration: const Duration(milliseconds: 1000),
                 ),
                 SizedBox(height: 8.h),
                 // Description
-                Text(
+                AppTextAnimation.fade(
                   description,
+                  key: ValueKey('empty_orders_desc_${description}'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14.sp,
@@ -112,6 +115,7 @@ class EmptyShopOrdersView extends StatelessWidget {
                         : Colors.grey[500],
                     height: 1.5,
                   ),
+                  duration: const Duration(milliseconds: 1200),
                 ),
               ],
             ),

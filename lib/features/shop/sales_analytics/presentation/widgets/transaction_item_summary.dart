@@ -22,9 +22,15 @@ class TransactionItemSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final isReturned =
+        order.returnStatus != null && order.returnStatus!.isNotEmpty;
+    final isCancelled = order.status.toLowerCase() == 'cancelled';
+
     final summaryData = ShopOrdersHelper.getItemSummaryCardData(
       order: order,
       shopId: shopId,
+      isReturnedView: isReturned,
+      isCancelledView: isCancelled,
     );
 
     final shopItems = (summaryData['shopItems'] as List<OrderItemModel>?) ?? [];
