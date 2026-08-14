@@ -101,6 +101,28 @@ class CustomerShopsRemoteDataSourceImpl
         return [];
       }
 
+      final ordersSnap = await _firestore.collection('orders').get();
+      final shopSoldItems = <String, int>{};
+      for (final doc in ordersSnap.docs) {
+        final data = doc.data();
+        final items = data['items'] as List<dynamic>? ?? [];
+        for (final item in items) {
+          final sId = item['shop_id'] as String?;
+          final qty = (item['quantity'] as num?)?.toInt() ?? 1;
+          if (sId != null) {
+            shopSoldItems[sId] = (shopSoldItems[sId] ?? 0) + qty;
+          }
+        }
+      }
+
+      filteredShops.sort((a, b) {
+        final aSold = shopSoldItems[a.uid] ?? 0;
+        final bSold = shopSoldItems[b.uid] ?? 0;
+        final aPriority = aSold + a.reviewsCount;
+        final bPriority = bSold + b.reviewsCount;
+        return bPriority.compareTo(aPriority);
+      });
+
       return filteredShops;
     } catch (e) {
       throw Exception('Failed to fetch nearby shops: $e');

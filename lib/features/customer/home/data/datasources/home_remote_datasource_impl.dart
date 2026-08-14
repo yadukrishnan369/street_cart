@@ -38,6 +38,8 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
           popularProducts: [],
           newArrivals: [],
           bestSellers: [],
+          hasMoreShops: false,
+          allNearbyShops: [],
         );
       }
 
@@ -68,6 +70,8 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
       final categories = await _getProductCategories();
 
       List<ShopProfileModel> nearbyShops = [];
+      List<ShopProfileModel> allNearbyShops = [];
+      bool hasMoreShops = false;
       List<ProductModel> nearbyProducts = [];
       List<ProductModel> recommendedProducts = [];
       List<ProductModel> popularProducts = [];
@@ -75,9 +79,11 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
       List<ProductModel> bestSellers = [];
 
       if (lat != null && lng != null) {
-        nearbyShops = await _getNearbyShops(lat, lng);
-        if (nearbyShops.isNotEmpty) {
-          final shopIds = nearbyShops.map((s) => s.uid).toList();
+        allNearbyShops = await _getNearbyShops(lat, lng);
+        hasMoreShops = allNearbyShops.length > 5;
+        nearbyShops = allNearbyShops.take(5).toList();
+        if (allNearbyShops.isNotEmpty) {
+          final shopIds = allNearbyShops.map((s) => s.uid).toList();
           nearbyProducts = await _getShopsProducts(shopIds);
 
           // Recommended Products based on recent search queries and users previous orders/categories
@@ -243,6 +249,8 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
         popularProducts: popularProducts,
         newArrivals: newArrivals,
         bestSellers: bestSellers,
+        hasMoreShops: hasMoreShops,
+        allNearbyShops: allNearbyShops,
       );
     } catch (e) {
       throw Exception('Failed to get home data: $e');
@@ -314,7 +322,21 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
         }
         allShops.add(shop);
       }
-      return allShops.where((shop) {
+      final ordersSnap = await _firestore.collection('orders').get();
+      final shopSoldItems = <String, int>{};
+      for (final doc in ordersSnap.docs) {
+        final data = doc.data();
+        final items = data['items'] as List<dynamic>? ?? [];
+        for (final item in items) {
+          final sId = item['shop_id'] as String?;
+          final qty = (item['quantity'] as num?)?.toInt() ?? 1;
+          if (sId != null) {
+            shopSoldItems[sId] = (shopSoldItems[sId] ?? 0) + qty;
+          }
+        }
+      }
+
+      final filteredShops = allShops.where((shop) {
         if (shop.isSuspended) return false;
         if (shop.latitude == null || shop.longitude == null) return false;
 
@@ -326,6 +348,16 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
         );
         return distance <= shop.deliveryRadius;
       }).toList();
+
+      filteredShops.sort((a, b) {
+        final aSold = shopSoldItems[a.uid] ?? 0;
+        final bSold = shopSoldItems[b.uid] ?? 0;
+        final aPriority = aSold + a.reviewsCount;
+        final bPriority = bSold + b.reviewsCount;
+        return bPriority.compareTo(aPriority);
+      });
+
+      return filteredShops;
     } catch (e) {
       throw Exception('Failed to get nearby shops: $e');
     }

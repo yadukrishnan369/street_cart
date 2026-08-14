@@ -14,7 +14,6 @@ import 'package:street_cart/features/customer/products/presentation/bloc/wishlis
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/features/customer/home/domain/repositories/i_home_repository.dart';
-import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 import 'package:street_cart/features/customer/home/presentation/widgets/products_empty_state.dart';
 import 'package:street_cart/core/animation/staggered_animation.dart';
 
@@ -31,32 +30,20 @@ class ProductsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Filter products by selected shop business category
-    final recommended = HomeHelper.filterProductsByBusinessCategory(
-      products: homeData.recommendedProducts,
-      shops: homeData.nearbyShops,
-      selectedCategory: selectedCategory,
-    );
-    final popular = HomeHelper.filterProductsByBusinessCategory(
-      products: homeData.popularProducts,
-      shops: homeData.nearbyShops,
-      selectedCategory: selectedCategory,
-    );
-    final trending = HomeHelper.filterProductsByBusinessCategory(
-      products: homeData.nearbyProducts,
-      shops: homeData.nearbyShops,
-      selectedCategory: selectedCategory,
-    );
-    final newArrivals = HomeHelper.filterProductsByBusinessCategory(
-      products: homeData.newArrivals,
-      shops: homeData.nearbyShops,
-      selectedCategory: selectedCategory,
-    );
-    final bestSellers = HomeHelper.filterProductsByBusinessCategory(
-      products: homeData.bestSellers,
-      shops: homeData.nearbyShops,
-      selectedCategory: selectedCategory,
-    );
+    final recommended = homeData.getRecommended(selectedCategory);
+    final hasMoreRecommended = homeData.hasMoreRecommended(selectedCategory);
+
+    final popular = homeData.getPopular(selectedCategory);
+    final hasMorePopular = homeData.hasMorePopular(selectedCategory);
+
+    final trending = homeData.getTrending(selectedCategory);
+    final hasMoreTrending = homeData.hasMoreTrending(selectedCategory);
+
+    final newArrivals = homeData.getNewArrivals(selectedCategory);
+    final hasMoreNewArrivals = homeData.hasMoreNewArrivals(selectedCategory);
+
+    final bestSellers = homeData.getBestSellers(selectedCategory);
+    final hasMoreBestSellers = homeData.hasMoreBestSellers(selectedCategory);
 
     final hasAnyProducts =
         recommended.isNotEmpty ||
@@ -75,7 +62,8 @@ class ProductsSection extends StatelessWidget {
         _HorizontalProductSection(
           title: 'Recommended for you',
           products: recommended,
-          shops: homeData.nearbyShops,
+          shops: homeData.allNearbyShops,
+          hasMore: hasMoreRecommended,
           onViewAllTap: () {
             Navigator.push(
               context,
@@ -90,7 +78,8 @@ class ProductsSection extends StatelessWidget {
         _HorizontalProductSection(
           title: 'Popular products',
           products: popular,
-          shops: homeData.nearbyShops,
+          shops: homeData.allNearbyShops,
+          hasMore: hasMorePopular,
           onViewAllTap: () {
             Navigator.push(
               context,
@@ -105,7 +94,8 @@ class ProductsSection extends StatelessWidget {
         _HorizontalProductSection(
           title: 'Trending Nearby you',
           products: trending,
-          shops: homeData.nearbyShops,
+          shops: homeData.allNearbyShops,
+          hasMore: hasMoreTrending,
           onViewAllTap: () {
             Navigator.push(
               context,
@@ -120,7 +110,8 @@ class ProductsSection extends StatelessWidget {
         _HorizontalProductSection(
           title: 'New arrivals',
           products: newArrivals,
-          shops: homeData.nearbyShops,
+          shops: homeData.allNearbyShops,
+          hasMore: hasMoreNewArrivals,
           onViewAllTap: () {
             Navigator.push(
               context,
@@ -135,7 +126,8 @@ class ProductsSection extends StatelessWidget {
         _HorizontalProductSection(
           title: 'Best sellers',
           products: bestSellers,
-          shops: homeData.nearbyShops,
+          shops: homeData.allNearbyShops,
+          hasMore: hasMoreBestSellers,
           onViewAllTap: () {
             Navigator.push(
               context,
@@ -189,12 +181,14 @@ class _HorizontalProductSection extends StatelessWidget {
   final List<ProductModel> products;
   final List<ShopProfileModel> shops;
   final VoidCallback onViewAllTap;
+  final bool hasMore;
 
   const _HorizontalProductSection({
     required this.title,
     required this.products,
     required this.shops,
     required this.onViewAllTap,
+    required this.hasMore,
   });
 
   @override
@@ -207,7 +201,6 @@ class _HorizontalProductSection extends StatelessWidget {
     }
 
     final shopNames = {for (final s in shops) s.uid: s.shopName};
-    final displayProducts = products.take(6).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,17 +221,18 @@ class _HorizontalProductSection extends StatelessWidget {
                       : CustomerAppColors.textPrimary,
                 ),
               ),
-              GestureDetector(
-                onTap: onViewAllTap,
-                child: Text(
-                  'View all',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: CustomerAppColors.primary,
+              if (hasMore)
+                GestureDetector(
+                  onTap: onViewAllTap,
+                  child: Text(
+                    'View all',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: CustomerAppColors.primary,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -255,11 +249,11 @@ class _HorizontalProductSection extends StatelessWidget {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  itemCount: displayProducts.length + 1,
+                  itemCount: hasMore ? products.length + 1 : products.length,
                   itemBuilder: (context, index) {
                     Widget itemWidget;
 
-                    if (index == displayProducts.length) {
+                    if (index == products.length) {
                       // View all card
                       itemWidget = GestureDetector(
                         onTap: onViewAllTap,
@@ -314,7 +308,7 @@ class _HorizontalProductSection extends StatelessWidget {
                         ),
                       );
                     } else {
-                      final product = displayProducts[index];
+                      final product = products[index];
                       final imgUrl = product.images.isNotEmpty
                           ? product.images.first
                           : '';

@@ -12,8 +12,15 @@ import 'package:street_cart/core/animation/staggered_animation.dart';
 // Shops List Section
 class ShopsListSection extends StatelessWidget {
   final List<ShopProfileModel> shops;
+  final bool hasMoreShops;
+  final int totalShopsCount;
 
-  const ShopsListSection({super.key, required this.shops});
+  const ShopsListSection({
+    super.key,
+    required this.shops,
+    required this.hasMoreShops,
+    required this.totalShopsCount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +85,7 @@ class ShopsListSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${shops.length} ${shops.length == 1 ? 'shop' : 'shops'} near by you',
+                '$totalShopsCount ${totalShopsCount == 1 ? 'shop' : 'shops'} near by you',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
@@ -87,22 +94,23 @@ class ShopsListSection extends StatelessWidget {
                       : CustomerAppColors.textPrimary,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    AppPageTransitions.slide(const CustomerShopsPage()),
-                  );
-                },
-                child: Text(
-                  'See all Shops',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: CustomerAppColors.primary,
+              if (hasMoreShops)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      AppPageTransitions.slide(const CustomerShopsPage()),
+                    );
+                  },
+                  child: Text(
+                    'See all Shops',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: CustomerAppColors.primary,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

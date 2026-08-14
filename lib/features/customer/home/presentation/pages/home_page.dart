@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                 CategoriesRow(
                                   categories:
                                       HomeHelper.extractBusinessCategories(
-                                        homeState.homeData.nearbyShops,
+                                        homeState.homeData.allNearbyShops,
                                       ),
                                   selectedCategory: homeState.selectedCategory,
                                   onCategorySelected: (cat) {
@@ -160,6 +160,9 @@ class _HomePageState extends State<HomePage> {
                                 // Shop List Section
                                 ShopsListSection(
                                   shops: homeState.homeData.nearbyShops,
+                                  hasMoreShops: homeState.homeData.hasMoreShops,
+                                  totalShopsCount:
+                                      homeState.homeData.allNearbyShops.length,
                                 ),
                                 SizedBox(height: 16.h),
                                 // Products Section
