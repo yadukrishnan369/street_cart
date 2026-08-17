@@ -128,4 +128,16 @@ class AppPageTransitions {
       curve: Curves.easeInOut,
     );
   }
+
+  // No transition (zero duration) for immediate screen switches
+  static Route<T> none<T>(Widget page) {
+    return PageRouteBuilder<T>(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+    );
+  }
 }

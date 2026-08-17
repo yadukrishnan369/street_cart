@@ -182,7 +182,7 @@ class NormalReviewBody extends StatelessWidget {
                           // Navigation for Shop home page
                           Navigator.pushAndRemoveUntil(
                             context,
-                            AppPageTransitions.slide(const ShopHomePage()),
+                            AppPageTransitions.none(const ShopHomePage()),
                             (route) => false,
                           );
                         }

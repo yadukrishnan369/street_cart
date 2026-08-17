@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "274190319065-4249ktre2medkodrmm4110dhgm45bina.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.street_cart",
+            "certificate_hash": "c8a98b6c8fbf8f0b090ed635ac0569d631c04a88"
+          }
+        },
+        {
           "client_id": "274190319065-mvhaoj8kk3echdfmergan0j44rp32kmn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -59,6 +67,14 @@
           }
         },
         {
+          "client_id": "274190319065-p6lrd4s067ppi5dl59l4apkcouiuktik.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.streetcart.customer",
+            "certificate_hash": "c8a98b6c8fbf8f0b090ed635ac0569d631c04a88"
+          }
+        },
+        {
           "client_id": "274190319065-5693fsktr3kejpmlod1anmlq46jb7ed0.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -87,6 +103,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "274190319065-9tojb44c6ankd77q4ec6ssu7k3j3tmpk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.streetcart.shop",
+            "certificate_hash": "c8a98b6c8fbf8f0b090ed635ac0569d631c04a88"
+          }
+        },
         {
           "client_id": "274190319065-bgteih1rh6hg4mnas4n66npm0ncd7bqc.apps.googleusercontent.com",
           "client_type": 1,

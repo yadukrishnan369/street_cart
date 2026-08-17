@@ -40,7 +40,7 @@ class _ShopLoginPageState extends State<ShopLoginPage> {
           // Navigate to Shop Home Page
           Navigator.pushAndRemoveUntil(
             context,
-            AppPageTransitions.slide(const ShopHomePage()),
+            AppPageTransitions.none(const ShopHomePage()),
             (route) => false,
           );
         } else if (state.status == ShopAuthStatus.failure &&
