@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/customer/customer_app_colors.dart';
+import 'package:street_cart/features/customer/home/presentation/utils/home_helper.dart';
 
 // Categories Row
 class CategoriesRow extends StatelessWidget {
@@ -17,7 +18,10 @@ class CategoriesRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayCategories = ['All', ...categories.where((c) => c != 'All')];
+    final displayCategories = HomeHelper.getDisplayCategories(categories);
+    if (displayCategories.isEmpty) {
+      return const SizedBox.shrink();
+    }
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 

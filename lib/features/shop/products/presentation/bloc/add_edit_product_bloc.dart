@@ -25,19 +25,25 @@ class AddEditProductBloc
     // Variant Draft details events
     on<InitVariantDraftEvent>((event, emit) {
       final existing = event.existingVariant;
-      final sizes = {
-        for (final size in event.availableSizes)
-          size: existing?.sizes[size] ?? 0,
-      };
       final initialColor =
           existing?.colorName ??
           (event.availableColors.isNotEmpty
               ? event.availableColors.keys.first
               : '');
+      final initialHex =
+          existing?.colorHex ??
+          (event.availableColors.isNotEmpty
+              ? (event.availableColors[initialColor] ?? '')
+              : '');
+      final sizes = {
+        for (final size in event.availableSizes)
+          size: existing?.sizes[size] ?? 0,
+      };
       emit(
         state.copyWith(
           editingVariant: VariantDraft(
             colorName: initialColor,
+            colorHex: initialHex,
             images: List<dynamic>.from(existing?.images ?? []),
             sizes: sizes,
           ),
@@ -52,6 +58,7 @@ class AddEditProductBloc
           state.copyWith(
             editingVariant: state.editingVariant!.copyWith(
               colorName: event.colorName,
+              colorHex: event.colorHex,
             ),
           ),
         );
@@ -104,6 +111,7 @@ class AddEditProductBloc
         .map(
           (v) => VariantDraft(
             colorName: v.colorName,
+            colorHex: v.colorHex,
             images: List<dynamic>.from(v.images),
             sizes: Map<String, int>.from(v.sizes),
           ),
@@ -261,6 +269,7 @@ class AddEditProductBloc
         .map(
           (v) => VariantImageDraft(
             colorName: v.colorName,
+            colorHex: v.colorHex,
             imagesOrFiles: List<dynamic>.from(v.images),
             sizes: Map<String, int>.from(v.sizes),
           ),

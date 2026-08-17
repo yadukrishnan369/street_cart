@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 class VariantDraft extends Equatable {
   // Color name
   final String colorName;
+  // Hex code, empty when using a named color
+  final String colorHex;
 
   // Images
   final List<dynamic> images;
@@ -12,6 +14,7 @@ class VariantDraft extends Equatable {
 
   const VariantDraft({
     required this.colorName,
+    this.colorHex = '',
     this.images = const [],
     this.sizes = const {},
   });
@@ -22,16 +25,18 @@ class VariantDraft extends Equatable {
 
   VariantDraft copyWith({
     String? colorName,
+    String? colorHex,
     List<dynamic>? images,
     Map<String, int>? sizes,
   }) => VariantDraft(
     colorName: colorName ?? this.colorName,
+    colorHex: colorHex ?? this.colorHex,
     images: images ?? this.images,
     sizes: sizes ?? this.sizes,
   );
 
   @override
-  List<Object?> get props => [colorName, images, sizes];
+  List<Object?> get props => [colorName, colorHex, images, sizes];
 }
 
 class AddEditProductState extends Equatable {

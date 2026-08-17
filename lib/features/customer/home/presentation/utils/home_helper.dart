@@ -39,6 +39,19 @@ class HomeHelper {
         .toList();
   }
 
+  // display categories list for category row chips
+  static List<String> getDisplayCategories(List<String> categories) {
+    final filteredCategories = categories
+        .where((c) => c.toLowerCase() != 'all')
+        .toList();
+    if (filteredCategories.isEmpty) {
+      return [];
+    }
+    return filteredCategories.length > 1
+        ? ['All', ...filteredCategories]
+        : filteredCategories;
+  }
+
   // filters list of products according to shop business category label
   static List<ProductModel> filterProductsByBusinessCategory({
     required List<ProductModel> products,

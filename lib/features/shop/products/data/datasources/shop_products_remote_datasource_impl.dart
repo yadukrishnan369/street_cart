@@ -233,6 +233,7 @@ class ShopProductsRemoteDataSourceImpl
       resolved.add(
         ProductVariantModel(
           colorName: draft.colorName,
+          colorHex: draft.colorHex,
           images: urls,
           sizes: draft.sizes,
         ),

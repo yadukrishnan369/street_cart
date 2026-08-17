@@ -2,6 +2,7 @@ import 'dart:io';
 
 class VariantImageDraft {
   final String colorName;
+  final String colorHex; // hex code
 
   // Each entry is either a File to upload or a String existing URL
   final List<dynamic> imagesOrFiles;
@@ -10,6 +11,7 @@ class VariantImageDraft {
 
   const VariantImageDraft({
     required this.colorName,
+    this.colorHex = '',
     required this.imagesOrFiles,
     required this.sizes,
   });

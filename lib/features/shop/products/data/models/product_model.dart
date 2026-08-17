@@ -61,6 +61,18 @@ class ProductModel {
             .toList()
       : colors;
 
+  // Map of colorName - colorHex for display widgets
+  Map<String, String> get colorsWithHex {
+    if (!hasVariants) return {};
+    final map = <String, String>{};
+    for (final v in variants) {
+      if (v.sizes.values.any((qty) => qty > 0) || v.images.isNotEmpty) {
+        map[v.colorName] = v.colorHex;
+      }
+    }
+    return map;
+  }
+
   // All distinct size keys across variants
   List<String> get allSizes {
     if (!hasVariants) return sizes;

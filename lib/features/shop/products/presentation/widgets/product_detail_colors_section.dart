@@ -43,7 +43,10 @@ class ProductDetailColorsSection extends StatelessWidget {
           spacing: 12.w,
           runSpacing: 12.h,
           children: product.allColors.map((colorName) {
-            final color = ShopAppColors.getColorFromName(colorName);
+            final hexCode = product.colorsWithHex[colorName] ?? '';
+            final color = ShopAppColors.getColorFromName(
+              hexCode.isNotEmpty ? hexCode : colorName,
+            );
             final isWhite = color.toARGB32() == 0xFFFFFFFF;
             final isSelected = uiState.selectedColor == colorName;
             return GestureDetector(

@@ -6,12 +6,14 @@ import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 // Product Color Selection
 class ProductColorSelection extends StatelessWidget {
   final List<String> colors;
+  final Map<String, String> colorsWithHex; // colorName - hex, for custom colors
   final String? selectedColor;
   final ValueChanged<String> onColorSelected;
 
   const ProductColorSelection({
     super.key,
     required this.colors,
+    this.colorsWithHex = const {},
     required this.selectedColor,
     required this.onColorSelected,
   });
@@ -53,7 +55,11 @@ class ProductColorSelection extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: colors.map((colorName) {
-              final color = ShopAppColors.getColorFromName(colorName);
+              // stored hex, fall back to name-based
+              final hexCode = colorsWithHex[colorName] ?? '';
+              final color = ShopAppColors.getColorFromName(
+                hexCode.isNotEmpty ? hexCode : colorName,
+              );
               final isSelected = selectedColor == colorName;
               final isWhite = color.toARGB32() == 0xFFFFFFFF;
               return GestureDetector(

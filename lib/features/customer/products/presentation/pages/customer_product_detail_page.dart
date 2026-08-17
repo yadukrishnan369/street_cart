@@ -132,6 +132,7 @@ class CustomerProductDetailPage extends StatelessWidget {
                         if (product.allColors.isNotEmpty)
                           ProductColorSelection(
                             colors: product.allColors,
+                            colorsWithHex: product.colorsWithHex,
                             selectedColor: selectedColor,
                             onColorSelected: (color) {
                               context.read<CustomerProductsBloc>().add(

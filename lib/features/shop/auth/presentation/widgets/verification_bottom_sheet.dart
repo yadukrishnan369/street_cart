@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:street_cart/core/theme/shop/shop_app_colors.dart';
 import 'package:street_cart/features/shop/auth/presentation/bloc/shop_auth_bloc.dart';
+import 'package:street_cart/features/shop/auth/presentation/pages/login_page.dart';
+import 'package:street_cart/core/navigation/page_transitions.dart';
 import 'package:street_cart/shared/widgets/custom_snackbar.dart';
 
 // Shop Verification Bottom Sheet
@@ -23,7 +25,11 @@ class ShopVerificationBottomSheet extends StatelessWidget {
     return BlocConsumer<ShopAuthBloc, ShopAuthState>(
       listener: (context, state) {
         if (state.status == ShopAuthStatus.initial) {
-          Navigator.pop(context);
+          Navigator.pushAndRemoveUntil(
+            context,
+            AppPageTransitions.slide(const ShopLoginPage()),
+            (route) => false,
+          );
           CustomSnackBar.show(
             context,
             message: 'Verification cancelled or expired. Please try again.',

@@ -38,14 +38,21 @@ class _ShopProfileSetupPageState extends State<ShopProfileSetupPage> {
                 state.shop!.isProfileCompleted &&
                 !state.shop!.isRejected);
 
-        if (isSuccess && !state.isProfileSetupNavigated) {
-          context.read<ShopAuthBloc>().add(ShopMarkProfileSetupNavigated());
-          // Navigate to Shop Location Permission Page
-          Navigator.pushAndRemoveUntil(
-            context,
-            AppPageTransitions.slide(const ShopLocationPermissionPage()),
-            (route) => false,
-          );
+        if (isSuccess) {
+          if (!state.isProfileSetupNavigated) {
+            context.read<ShopAuthBloc>().add(ShopMarkProfileSetupNavigated());
+            // Navigate to Shop Location Permission Page
+            Navigator.pushAndRemoveUntil(
+              context,
+              AppPageTransitions.slide(const ShopLocationPermissionPage()),
+              (route) => false,
+            );
+          } else if (state.status == ShopAuthStatus.profileSetupSuccess) {
+            // Navigate back to AccountReviewPage since they resubmitted
+            // Pop ShopProfileSetupPage and RejectionDetailsPage
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
         } else if (state.status == ShopAuthStatus.failure &&
             state.errorMessage != null) {
           CustomSnackBar.show(context, message: state.errorMessage!);

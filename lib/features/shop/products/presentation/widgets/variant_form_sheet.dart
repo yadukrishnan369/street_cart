@@ -120,9 +120,13 @@ class _VariantFormSheetState extends State<VariantFormSheet> {
                         ColorSelector(
                           availableColors: widget.availableColors,
                           selectedColor: draft.colorName,
-                          onSelected: (c) => context
-                              .read<AddEditProductBloc>()
-                              .add(UpdateDraftColorEvent(c)),
+                          onSelected: (c) =>
+                              context.read<AddEditProductBloc>().add(
+                                UpdateDraftColorEvent(
+                                  c,
+                                  colorHex: widget.availableColors[c] ?? '',
+                                ),
+                              ),
                         ),
                         SizedBox(height: 24.h),
                         // Section Label

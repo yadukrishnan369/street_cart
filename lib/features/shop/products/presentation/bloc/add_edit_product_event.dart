@@ -112,7 +112,8 @@ class InitVariantDraftEvent extends AddEditProductEvent {
 // Update Draft Color Event
 class UpdateDraftColorEvent extends AddEditProductEvent {
   final String colorName;
-  const UpdateDraftColorEvent(this.colorName);
+  final String colorHex;
+  const UpdateDraftColorEvent(this.colorName, {this.colorHex = ''});
 }
 
 // Update Draft Images Event

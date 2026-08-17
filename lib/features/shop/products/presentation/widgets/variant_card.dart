@@ -25,7 +25,11 @@ class VariantCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final color = ShopAppColors.getColorFromName(variant.colorName);
+    // display color -  prefer stored hex, fall back to name-based
+    final colorKey = variant.colorHex.isNotEmpty
+        ? variant.colorHex
+        : variant.colorName;
+    final color = ShopAppColors.getColorFromName(colorKey);
     final isWhite = color.toARGB32() == 0xFFFFFFFF;
 
     return Container(

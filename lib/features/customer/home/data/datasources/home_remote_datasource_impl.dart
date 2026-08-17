@@ -232,6 +232,16 @@ class HomeRemoteDataSourceImpl implements IHomeRemoteDataSource {
             if (a.salesCount != b.salesCount) {
               return b.salesCount.compareTo(a.salesCount);
             }
+
+            // Prioritize products with active offers (discounted products)
+            final hasOfferA =
+                a.offerPrice != null && a.offerPrice! < a.originalPrice;
+            final hasOfferB =
+                b.offerPrice != null && b.offerPrice! < b.originalPrice;
+            if (hasOfferA != hasOfferB) {
+              return hasOfferB ? 1 : -1; // Bring items with offers to the top
+            }
+
             if (a.createdAt == null && b.createdAt == null) return 0;
             if (a.createdAt == null) return 1;
             if (b.createdAt == null) return -1;
