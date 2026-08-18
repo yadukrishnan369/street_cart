@@ -77,43 +77,39 @@ Street Cart is built following clean architecture principles:
 ### Customer App
 *Home* | *Products* | *Product Details*
 :---:|:---:|:---:
-![Home](screenshots/customer/home.jpg) | ![Products](screenshots/customer/products.jpg) | ![Product Details](screenshots/customer/product-details.jpg)
+<img src="screenshots/customer/home.jpg" width="220" alt="Home"> | <img src="screenshots/customer/products.jpg" width="220" alt="Products"> | <img src="screenshots/customer/product-details.jpg" width="220" alt="Product Details">
 
 *Cart* | *Checkout* | *Order Details*
 :---:|:---:|:---:
-![Cart](screenshots/customer/cart.jpg) | ![Checkout](screenshots/customer/checkout.jpg) | ![Order Details](screenshots/customer/order-details.jpg)
+<img src="screenshots/customer/cart.jpg" width="220" alt="Cart"> | <img src="screenshots/customer/checkout.jpg" width="220" alt="Checkout"> | <img src="screenshots/customer/order-details.jpg" width="220" alt="Order Details">
 
 *Settings*
 :---:
-![Settings](screenshots/customer/settings.jpg)
+<img src="screenshots/customer/settings.jpg" width="220" alt="Settings">
 
 
 ### Street Cart Business Partner
 *Home* | *Products* | *Product Details*
 :---:|:---:|:---:
-![Home](screenshots/business-partner/home.jpg) | ![Products](screenshots/business-partner/products.jpg) | ![Product Details](screenshots/business-partner/product-details.jpg)
+<img src="screenshots/business-partner/home.jpg" width="220" alt="Home"> | <img src="screenshots/business-partner/products.jpg" width="220" alt="Products"> | <img src="screenshots/business-partner/product-details.jpg" width="220" alt="Product Details">
 
 *Orders* | *Order Details* | *Sales Analytics*
 :---:|:---:|:---:
-![Orders](screenshots/business-partner/orders.jpg) | ![Order Details](screenshots/business-partner/order-details.jpg) | ![Sales Analytics](screenshots/business-partner/sales-analytics.jpg)
+<img src="screenshots/business-partner/orders.jpg" width="220" alt="Orders"> | <img src="screenshots/business-partner/order-details.jpg" width="220" alt="Order Details"> | <img src="screenshots/business-partner/sales-analytics.jpg" width="220" alt="Sales Analytics">
 
 *Settings*
 :---:
-![Settings](screenshots/business-partner/settings.jpg)
+<img src="screenshots/business-partner/settings.jpg" width="220" alt="Settings">
 
 
 ### Admin Web Panel
 *Dashboard* | *Revenue* | *Shops*
 :---:|:---:|:---:
-![Dashboard](screenshots/admin/dashboard.jpg) | ![Revenue](screenshots/admin/revenue.jpg) | ![Shops](screenshots/admin/shops.jpg)
+<img src="screenshots/admin/dashboard.jpg" width="220" alt="Dashboard"> | <img src="screenshots/admin/revenue.jpg" width="220" alt="Revenue"> | <img src="screenshots/admin/shops.jpg" width="220" alt="Shops">
 
-*Customers* | *Products* | *Orders*
-:---:|:---:|:---:
-![Customers](screenshots/admin/customers.jpg) | ![Products](screenshots/admin/products.jpg) | ![Orders](screenshots/admin/orders.jpg)
-
-*Settings*
-:---:
-![Settings](screenshots/admin/settings.jpg)
+*Customers* | *Products* | *Orders* | *Settings*
+:---:|:---:|:---:|:---:
+<img src="screenshots/admin/customers.jpg" width="220" alt="Customers"> | <img src="screenshots/admin/products.jpg" width="220" alt="Products"> | <img src="screenshots/admin/orders.jpg" width="220" alt="Orders"> | <img src="screenshots/admin/settings.jpg" width="220" alt="Settings">
 
 
 ## Getting Started
